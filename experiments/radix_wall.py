@@ -58,22 +58,25 @@ def run_point(n, omega, delta, trials, base_seed):
     compiled = compile_network(net, omega)
     n0 = champion_counts(n, omega, delta)
     champ = "X1"
-    champion_wins = other_wins = blank = coexist = 0
+    champion_wins = other_wins = blank = coexist = undecided = 0
     for t in range(trials):
-        res = gillespie_fast(compiled, n0, seed_for(omega, t, base=base_seed + n),
+        res = gillespie_fast(compiled, n0,
+                             seed_for(omega, t, base=base_seed + 100003 * n),
                              species=names)
         w = classify_winner(res, blank="B")
         if w == champ:
             champion_wins += 1
         elif w == "blank":
             blank += 1
-        elif w == "coexist" or w == "undecided":
+        elif w == "coexist":
             coexist += 1
+        elif w == "undecided":
+            undecided += 1
         else:
             other_wins += 1
     return {"n": n, "omega": int(omega), "trials": trials,
             "champion_wins": champion_wins, "other_wins": other_wins,
-            "blank": blank, "coexist": coexist}
+            "blank": blank, "coexist": coexist, "undecided": undecided}
 
 
 def _champ_loss_counts(point):
@@ -147,6 +150,17 @@ def main():
         print(f"  n={n:>3}  c(n)={cval:.4g}  "
               + ("R2=%.3f band=[%d,%d]" % (fit["r2"], fit["omega_lo"], fit["omega_hi"])
                  if fit else "(no clean band)"))
+        # FRAGILE-3: surface the losing mass so a rising blank/coexist/undecided
+        # share isn't hidden inside the aggregate "error" -- sum over the omega
+        # sweep for this n.
+        tot = sum(pt["trials"] for pt in pts)
+        other_sum = sum(pt["other_wins"] for pt in pts)
+        blank_sum = sum(pt["blank"] for pt in pts)
+        coexist_sum = sum(pt["coexist"] for pt in pts)
+        undecided_sum = sum(pt["undecided"] for pt in pts)
+        print(f"    loss breakdown (sum over omega sweep, frac of {tot} trials): "
+              f"other={other_sum / tot:.4f} blank={blank_sum / tot:.4f} "
+              f"coexist={coexist_sum / tot:.4f} undecided={undecided_sum / tot:.4f}")
     _make_figure(c_of_n, args.delta, args.out)
 
 

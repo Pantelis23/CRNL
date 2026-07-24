@@ -9,6 +9,11 @@ resource conventions:
   * fixed total Omega ("same beaker, more symbol types"), and
   * fixed per-species density Omega = n*m ("fair resources per symbol").
 
+Descope note: spec §4.2 lists "survivor count over time" as an observable;
+per-trajectory survivor sampling was deliberately descoped (Task 7) in favor of
+the `undecided` budget-exhaust bin plus median consensus time as the
+coexistence proxy.
+
     python -m experiments.radix_discovery --quick
 """
 
@@ -42,7 +47,7 @@ def run_point(n, omega, trials, base_seed, max_steps):
     bins = {"single": 0, "blank": 0, "coexist": 0, "undecided": 0}
     times = []
     for t in range(trials):
-        rng = seed_for(omega, t, base=base_seed + n)
+        rng = seed_for(omega, t, base=base_seed + 100003 * n)
         n0 = symmetric_counts(n, omega, rng)
         res = gillespie_fast(compiled, n0, rng, max_steps=max_steps, species=names)
         w = classify_winner(res, blank="B")

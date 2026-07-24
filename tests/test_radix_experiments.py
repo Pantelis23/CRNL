@@ -70,6 +70,16 @@ def test_symmetric_counts_remainder_is_spread_and_seeded():
     a = symmetric_counts(3, 10, np.random.default_rng(5))
     b = symmetric_counts(3, 10, np.random.default_rng(5))
     assert list(a) == list(b)
+    # FRAGILE-4: the extra unit must not be systematically dropped on one
+    # species. A biased impl that always favors species 0 would still pass
+    # sorted(...) == [3, 3, 4] and the reproducibility check above; lock the
+    # placement index (argmax over the non-blank counts) to take more than
+    # one distinct value across many different seeds.
+    indices = []
+    for s in range(50):
+        c = symmetric_counts(3, 10, np.random.default_rng(s))
+        indices.append(int(np.argmax(c[:-1])))
+    assert len(set(indices)) > 1
 
 
 def test_symmetric_counts_no_bias_when_divisible():

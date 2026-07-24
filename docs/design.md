@@ -320,14 +320,20 @@ The universe does not compute with a vocabulary. Physical systems compute by
 relaxation — the logic is emergent from dynamics, and the output is an attractor,
 not a gate result.
 
-## 8. Extensions, deliberately out of scope for v1
+## 8. Extensions
 
-- **n-winner AM (the radix experiment).** *n* committed species plus blank,
-  pairwise disagreement Xᵢ+Xⱼ→2B and per-species autocatalysis B+Xᵢ→2Xᵢ. As *n*
-  grows at fixed Ω, the basins carve the simplex into smaller pieces,
-  separatrices crowd, and the per-symbol barrier falls — the radix-vs-margin
-  tradeoff made measurable. (The engine already handles arbitrary species/
-  reaction counts, so this is a new `networks/*.py` plus a sweep.)
+- **n-winner AM (the radix experiment) — implemented.** *n* committed species
+  plus blank, pairwise disagreement Xᵢ+Xⱼ→2B and per-species autocatalysis
+  B+Xᵢ→2Xᵢ. As *n* grows at fixed Ω, the basins carve the simplex into smaller
+  pieces, separatrices crowd, and the per-symbol barrier falls — the
+  radix-vs-margin tradeoff made measurable. See `crnl/networks/n_winner.py`,
+  the NumPy-vectorized SSA path in `crnl/vectorized.py`, and the two sweeps in
+  `experiments/radix_wall.py` (barrier c(n) / Ω_required(n)) and
+  `experiments/radix_discovery.py` (symmetric-start outcome distribution and
+  consensus time).
+
+Deliberately out of scope for v1:
+
 - **Analytic saddle height.** Predict *c(ε)* from the quasipotential before
   measuring it, then watch the data land on the line.
 - **Free-energy accounting.** Dissipation cost per restoration event, and the

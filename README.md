@@ -98,7 +98,9 @@ project's core claim — as data.
   distribution (single winner / all-blank / coexistence / undecided) and consensus
   time vs n, under fixed-total-Ω and fixed-density conventions — built to reveal
   high-n failure modes (blank collapse, long coexistence) rather than confirm a
-  prediction.
+  prediction. At the tested (n, Ω) grid the system stays robust (single-winner
+  ≈ 1.0); the cost of radix shows up instead as a falling barrier c(n) and rising
+  consensus time, not as collapse.
 
 ```bash
 python -m experiments.radix_wall --quick
@@ -106,8 +108,8 @@ python -m experiments.radix_discovery --quick
 ```
 
 The engine reaches n≈100 via a NumPy-vectorized SSA path (`crnl/vectorized.py`)
-validated to match the readable reference propensities exactly, including the
-boundary states where naive fast paths diverge.
+validated to match the readable reference propensities to 1e-12 (rtol), including
+the boundary states where naive fast paths diverge.
 
 ## Setup
 
@@ -141,13 +143,21 @@ exactly.
 | `crnl/stochastic.py` | hand-written Gillespie SSA — the lesson |
 | `crnl/classify.py` | absorption test + dwelling test + fixed-point classifier (stoichiometric-subspace aware) |
 | `crnl/networks/am.py` | AM as data: 3 species, 3 reactions, k=1 |
+| `crnl/networks/n_winner.py` | n-winner AM as data: n committed species + blank, pairwise disagreement + per-species autocatalysis |
+| `crnl/vectorized.py` | NumPy-vectorized SSA path validated against the reference propensities, letting the radix experiments reach n≈100 |
 | `experiments/restoration_wall.py` | the §4 protocol |
 | `experiments/phase_portrait.py` | the §2.3 landscape, made visible |
+| `experiments/radix_wall.py` | champion-vs-field barrier c(n) and population cost Ω_required(n) as the alphabet grows |
+| `experiments/radix_discovery.py` | symmetric-start outcome distribution and consensus time vs alphabet size |
 | `tests/test_engine.py` | the verification suite |
+| `tests/test_n_winner.py` | n-winner network construction and stoichiometry checks |
+| `tests/test_radix_experiments.py` | radix_wall / radix_discovery helper and fit checks |
 | `docs/design.md` | full design rationale |
 
 The engine is general: it takes species, reactions, and rate constants and
 derives both dynamics from that same data. AM is the first network loaded into
-the engine — it is not the engine. The out-of-scope-for-v1 extensions (n-winner
-AM / the radix experiment, analytic saddle height, free-energy accounting) are
-sketched at the end of `docs/design.md`.
+the engine — it is not the engine. n-winner AM / the radix experiment is now
+implemented (see the Radix experiment section above and
+`experiments/radix_wall.py` / `radix_discovery.py`). The remaining
+out-of-scope-for-v1 extensions — analytic saddle height and free-energy
+accounting — are sketched at the end of `docs/design.md`.

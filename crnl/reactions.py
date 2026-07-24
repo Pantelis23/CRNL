@@ -194,7 +194,10 @@ class ReactionNetwork:
                 for d in range(coeff):
                     comb *= ni - d
                 a[j] *= comb / _factorial(coeff)
-        # numerical floor: falling factorials can go negative if ni < coeff.
+        # For any valid integer state the falling factorial is exactly 0 when
+        # ni < coeff (one factor (ni - d) hits 0), so the propensity is 0, never
+        # negative -- this clip is a defensive no-op on integer inputs, kept only
+        # to guard against non-integer states passed in by exploratory callers.
         return np.clip(a, 0.0, None)
 
 

@@ -156,3 +156,30 @@ def test_gillespie_fast_absorbs_am():
     r = gillespie_fast(compiled, np.array([21, 19, 0]), seed_for(omega, 3))
     assert r.absorbed
     assert r.n_final.sum() == omega  # count conserved
+
+
+from crnl.stochastic import SSAResult
+
+
+def _result(species, counts, absorbed=True):
+    return SSAResult(t_final=1.0, n_final=np.array(counts), steps=1,
+                     absorbed=absorbed, species=list(species))
+
+
+def test_classify_winner_bins():
+    from crnl.classify import classify_winner
+    sp = ["X1", "X2", "X3", "B"]
+    assert classify_winner(_result(sp, [7, 0, 0, 3])) == "X1"
+    assert classify_winner(_result(sp, [0, 0, 0, 10])) == "blank"
+    assert classify_winner(_result(sp, [4, 3, 0, 3])) == "coexist"
+    assert classify_winner(_result(sp, [4, 0, 0, 6], absorbed=False)) == "undecided"
+
+
+def test_classify_am_outcome_unchanged():
+    # existing behavior preserved: AM single winners, blank -> "B", undecided
+    from crnl.classify import classify_am_outcome
+    sp = ["X", "Y", "B"]
+    assert classify_am_outcome(_result(sp, [10, 0, 0])) == "X"
+    assert classify_am_outcome(_result(sp, [0, 8, 0])) == "Y"
+    assert classify_am_outcome(_result(sp, [0, 0, 12])) == "B"
+    assert classify_am_outcome(_result(sp, [5, 5, 2], absorbed=False)) == "undecided"

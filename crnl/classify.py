@@ -42,6 +42,26 @@ def is_absorbing(net: ReactionNetwork, n, omega: float) -> bool:
     return float(net.propensities(np.asarray(n), cs).sum()) <= 0.0
 
 
+def classify_winner(result, blank: str = "B") -> str:
+    """General n-outcome absorption classifier (spec §3.3).
+
+    Returns a committed species name (single winner), "blank" (all committed
+    zero -- the (0,...,0,Omega) corner), "coexist" (absorbed with >=2 surviving
+    committed species -- impossible in AM, possible in n-winner), or "undecided"
+    (budget exhausted, not absorbed -> the dwelling regime).
+    """
+    idx = {s: i for i, s in enumerate(result.species)}
+    committed = [s for s in result.species if s != blank]
+    if not result.absorbed:
+        return "undecided"
+    survivors = [s for s in committed if result.n_final[idx[s]] > 0]
+    if len(survivors) == 0:
+        return "blank"
+    if len(survivors) == 1:
+        return survivors[0]
+    return "coexist"
+
+
 def classify_am_outcome(result, species_order=("X", "Y", "B")) -> str:
     """Bin an SSA absorption of AM into {'X', 'Y', 'B', 'undecided'}.
 
@@ -52,19 +72,12 @@ def classify_am_outcome(result, species_order=("X", "Y", "B")) -> str:
     there; the stochastic view lands there with nonzero probability because it
     can hit the corner exactly at integer count. It gets its own bin.
     """
-    idx = {s: i for i, s in enumerate(result.species)}
-    nX = result.n_final[idx["X"]]
-    nY = result.n_final[idx["Y"]]
-    nB = result.n_final[idx["B"]]
-    if not result.absorbed:
-        return "undecided"
-    if nX > 0 and nY == 0:
-        return "X"
-    if nY > 0 and nX == 0:
-        return "Y"
-    if nX == 0 and nY == 0:
-        return "B"  # all-blank: the finite-Omega outcome the ODE denies
-    return "undecided"
+    w = classify_winner(result, blank="B")
+    if w == "blank":
+        return "B"
+    if w == "coexist":
+        return "undecided"  # AM has no coexisting absorbing state; treat as non-decision
+    return w
 
 
 # --------------------------------------------------------------------------- #

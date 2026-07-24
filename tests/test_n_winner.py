@@ -68,3 +68,49 @@ def test_n_winner_symmetric_point_is_unstable():
         assert np.allclose(nw.rhs(state), 0.0, atol=1e-9)
         fp = classify.classify_fixed_point(nw, state)
         assert fp.kind in ("unstable", "saddle"), f"n={n} symmetric was {fp.kind}"
+
+
+from crnl.reactions import Reaction, ReactionNetwork
+from crnl.networks.am import approximate_majority as _am  # noqa: F401
+
+
+def _reference_props(net, n, omega):
+    return net.propensities(np.asarray(n), net.stochastic_constants(omega))
+
+
+@pytest.mark.parametrize("net", [
+    ReactionNetwork(["A"], [Reaction({"A": 1}, {}, 1.0)]),                  # unimolecular
+    ReactionNetwork(["A", "B", "C"], [Reaction({"A": 1, "B": 1}, {"C": 2}, 1.0)]),  # hetero
+    ReactionNetwork(["A", "B"], [Reaction({"A": 2}, {"B": 1}, 1.0)]),       # homodimer
+    approximate_majority(),
+    n_winner(3),
+])
+def test_vectorized_matches_reference_on_small_states(net):
+    # spec FRAGILE-2: cover the boundary n_i < coeff regime EXHAUSTIVELY for
+    # small states (each count in 0..3), not just random large counts -- this is
+    # where the homodimer/falling-factorial zeroing lives.
+    from itertools import product
+    from crnl.vectorized import compile_network, propensities_fast
+
+    omega = 10.0
+    compiled = compile_network(net, omega)
+    ns = net.n_species
+    for combo in product(range(4), repeat=ns):
+        state = np.array(combo, dtype=np.int64)
+        got = propensities_fast(compiled, state)
+        exp = _reference_props(net, state, omega)
+        # tight rtol; bit-exact == is not portable across multiply order (spec §6.2)
+        assert np.allclose(got, exp, rtol=1e-12, atol=1e-15), (combo, got, exp)
+
+
+def test_vectorized_matches_reference_on_random_large_states():
+    from crnl.vectorized import compile_network, propensities_fast
+    net = n_winner(6)
+    omega = 200.0
+    compiled = compile_network(net, omega)
+    rng = np.random.default_rng(1)
+    for _ in range(200):
+        state = rng.integers(0, 60, size=net.n_species)
+        got = propensities_fast(compiled, state)
+        exp = _reference_props(net, state, omega)
+        assert np.allclose(got, exp, rtol=1e-12, atol=1e-15)

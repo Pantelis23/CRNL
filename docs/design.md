@@ -332,9 +332,65 @@ not a gate result.
   `experiments/radix_discovery.py` (symmetric-start outcome distribution and
   consensus time).
 
+- **Analytic saddle height — implemented.** Predict *c(ε)* from the
+  quasipotential before measuring it, then watch the data land on the line. The
+  derivation is §9 below; the test is `experiments/quasipotential.py`.
+
 Deliberately out of scope for v1:
 
-- **Analytic saddle height.** Predict *c(ε)* from the quasipotential before
-  measuring it, then watch the data land on the line.
 - **Free-energy accounting.** Dissipation cost per restoration event, and the
-  Landauer-adjacent floor beneath it.
+  Landauer-adjacent floor beneath it. AM as written is irreversible, so its
+  dissipation is formally infinite — measuring it requires rebuilding AM as a
+  reversible CRN with finite ΔG, which changes the model rather than extending it.
+
+## 9. Deriving the barrier: c(ε) from the saddle
+
+§2.4 asserts *P(error) ~ exp(−c(ε)·Ω)* and leaves *c* to be fitted. It can be
+derived instead, from the saddle geometry plus finite-count noise, with no free
+parameters.
+
+**Step 1 — reduce to the decision coordinate.** The quantity that decides the
+outcome is the committed difference *δ = x − y*. Subtracting the reduced ODEs of
+§2.2:
+
+    dδ/dt = x(1 − x − 2y) − y(1 − 2x − y) = δ·(1 − x − y) = δ·b
+
+At the symmetric saddle (x = y = b = ⅓) this is *dδ/dt = (1/3)·δ*: the decision
+direction is linearly **unstable** with rate λ = 1/3 — exactly the positive
+eigenvalue in the §2.3 table, now with its meaning attached. This is the
+restoring amplification, seen from the decision axis.
+
+**Step 2 — the noise on δ.** Only the two recruitment reactions move δ (r1 sends
+X+Y→2B and leaves δ unchanged); each firing shifts δ by ±1/Ω. At the saddle both
+fire at rate Ω/9, so the diffusion coefficient of δ is
+
+    D_δ = ½·[ (1/Ω)²·(Ω/9) + (1/Ω)²·(Ω/9) ] = 1/(9Ω)
+
+Noise is O(1/Ω) — this is where finite population enters, and it is the only place
+it does.
+
+**Step 3 — the splitting probability.** Near the saddle δ obeys a linearly
+*unstable* Ornstein–Uhlenbeck equation,
+
+    dδ = λ·δ·dt + √(2 D_δ)·dW
+
+For such a process the eventual sign is fixed early, and the effective Gaussian
+spread at the decision point is σ² = D_δ/λ = 1/(3Ω). Starting from bias δ₀, the
+wrong basin is reached with probability
+
+    P(error) = Φ(−δ₀/σ) ~ exp( −δ₀²/(2σ²) ) = exp( −(3/2)·δ₀²·Ω )
+
+**The result.**
+
+    c(ε) = (3/2)·ε²
+
+The barrier is **quadratic in the bias**, with prefactor κ = 3/2 set entirely by
+the saddle's eigenvalue and the recruitment rates. Both halves are testable, and
+both hold: the measured exponent is 2.08, and the measured prefactor descends
+toward 1.5 as ε → 0 (1.586 at ε = 0.04). See FINDINGS §2.
+
+Two caveats worth keeping visible. The derivation linearizes about the saddle, so
+it is a *small-bias* expansion — the measured prefactor drifts upward at larger ε,
+as it should. And δ₀ is not exactly ε: the bias amplifies during the initial
+B-buildup transient (dδ/dt = δ·b > 0), so the δ₀ that reaches the saddle slightly
+exceeds the ε that was dialled in.

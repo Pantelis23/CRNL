@@ -16,6 +16,7 @@ for it. CRNL runs one such motif (Approximate Majority) two ways —
 measures the gap. Everything it teaches lives in that difference.
 
 > Full rationale and derivations: [`docs/design.md`](docs/design.md).
+> **All measured results, with caveats and open questions: [`FINDINGS.md`](FINDINGS.md).**
 
 ## The one-paragraph physics
 
@@ -111,6 +112,57 @@ The engine reaches n≈100 via a NumPy-vectorized SSA path (`crnl/vectorized.py`
 validated to match the readable reference propensities to 1e-12 (rtol), including
 the boundary states where naive fast paths diverge.
 
+## Scaling laws, theory, and expansion
+
+Four further results; numbers and caveats in [`FINDINGS.md`](FINDINGS.md), raw data
+in `results/`.
+
+### Predicting the barrier — `experiments/quasipotential.py`
+
+![quasipotential](experiments/quasipotential.png)
+
+The barrier is *derived*, not fitted: reducing AM to its decision coordinate gives
+an unstable direction with rate λ=⅓ and finite-count diffusion D=1/(9Ω), hence
+**c(ε) = (3/2)·ε²** (`docs/design.md` §9). Measured exponent **2.08**, and the
+prefactor descends toward the predicted 1.5 as ε→0 (**1.586** at ε=0.04) — a
+first-principles prediction with no fitted parameters.
+
+### Radix scaling — `experiments/radix_scaling.py`
+
+![radix scaling](experiments/radix_scaling.png)
+
+c(n) falls ~7× from n=2 to n=32 and then **saturates** at ≈0.0022 (confirmed to
+n=64), while the population cost Ω_required rises ~13×. Under a fixed pairwise
+margin the radix penalty on the *margin* is bounded; the price is paid in Ω.
+
+### Freeze-out in an expanding volume — `experiments/expansion.py`, `experiments/freezeout_scaling.py`
+
+![freeze-out scaling](experiments/freezeout_scaling.png)
+
+Let the volume expand as Ω(t)=Ω₀e^{Ht} and restoration must beat the dilution. Above
+a critical rate the decision **freezes half-made**, locking in a relic — the chemical
+analogue of cosmological freeze-out. Six system sizes spanning ×32 collapse onto one
+master curve (**Hc≈0.055, a≈0.38**), so it is a genuine finite-size-scaling
+transition, not a crossover. Bigger alphabets freeze *more* easily
+(`expansion_radix.py`: H* falls 0.121→0.071 across n=2→16).
+
+### Deep cascades — `experiments/cascade.py`
+
+![cascade](experiments/cascade.png)
+
+Why restoration matters at all: a non-restoring cascade decays to a coin flip by
+depth ~22, while the restoring AM cascade still carries the bit at depth 45.
+Restoration does not zero the per-stage error — it makes it exponentially small in
+Ω, so survivable depth scales like e^{cΩ}.
+
+```bash
+python -m experiments.quasipotential --quick
+python -m experiments.radix_scaling --quick
+python -m experiments.freezeout_scaling --quick
+python -m experiments.expansion --quick
+python -m experiments.cascade --quick
+```
+
 ## Setup
 
 Requires Python 3.10+.
@@ -149,6 +201,15 @@ exactly.
 | `experiments/phase_portrait.py` | the §2.3 landscape, made visible |
 | `experiments/radix_wall.py` | champion-vs-field barrier c(n) and population cost Ω_required(n) as the alphabet grows |
 | `experiments/radix_discovery.py` | symmetric-start outcome distribution and consensus time vs alphabet size |
+| `crnl/expanding.py` | exact SSA in an exponentially expanding volume; freeze-out |
+| `experiments/radix_scaling.py` | adaptive per-n sweep giving the c(n) scaling law and Ω_required(n) |
+| `experiments/quasipotential.py` | derives c(ε)=(3/2)ε² from the saddle and tests it against data |
+| `experiments/expansion.py` | freeze-out transition, relic abundance, frozen compositions |
+| `experiments/freezeout_scaling.py` | finite-size-scaling collapse: is freeze-out a real transition? |
+| `experiments/expansion_radix.py` | freeze-out vs alphabet size — bigger alphabets freeze easier |
+| `experiments/cascade.py` | signal survival across a deep cascade, restoring vs non-restoring |
+| `results/` | raw JSON behind every figure and table in FINDINGS.md |
+| `FINDINGS.md` | all measured results, caveats, and open questions |
 | `tests/test_engine.py` | the verification suite |
 | `tests/test_n_winner.py` | n-winner network construction and stoichiometry checks |
 | `tests/test_radix_experiments.py` | radix_wall / radix_discovery helper and fit checks |

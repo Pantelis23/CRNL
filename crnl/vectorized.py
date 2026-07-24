@@ -64,3 +64,49 @@ def propensities_fast(compiled: Compiled, n: np.ndarray) -> np.ndarray:
     a = compiled.cs.copy()
     np.multiply.at(a, compiled.react_rx, combs)        # product per reaction
     return np.clip(a, 0.0, None)
+
+
+from .stochastic import SSAResult  # noqa: E402  (kept near use for clarity)
+
+
+def gillespie_fast(
+    compiled: Compiled,
+    n0,
+    rng: np.random.Generator,
+    max_steps: int = 10_000_000,
+    t_max: float = np.inf,
+    species=None,
+) -> SSAResult:
+    """Exact Gillespie SSA using the vectorized propensities.
+
+    Same algorithm and RNG draw-order as crnl.stochastic.gillespie (draw tau,
+    then select reaction), so it is the same Markov chain; only the propensity
+    evaluation is vectorized. `species` labels the result for the classifier; if
+    None, positional labels s0,s1,... are used (Compiled carries no names).
+    """
+    S = compiled.S
+    n = np.array(n0, dtype=np.int64)
+    t = 0.0
+    steps = 0
+    absorbed = False
+    n_rx = compiled.n_reactions
+
+    while steps < max_steps and t < t_max:
+        a = propensities_fast(compiled, n)
+        a0 = a.sum()
+        if a0 <= 0.0:
+            absorbed = True
+            break
+        tau = -np.log(rng.random()) / a0
+        j = int(np.searchsorted(np.cumsum(a), rng.random() * a0))
+        if j >= n_rx:
+            j = n_rx - 1
+        n = n + S[:, j]
+        t += tau
+        steps += 1
+
+    labels = list(species) if species is not None else [
+        f"s{i}" for i in range(compiled.n_species)]
+    return SSAResult(
+        t_final=t, n_final=n, steps=steps, absorbed=absorbed, species=labels,
+    )

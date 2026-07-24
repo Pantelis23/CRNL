@@ -114,3 +114,45 @@ def test_vectorized_matches_reference_on_random_large_states():
         got = propensities_fast(compiled, state)
         exp = _reference_props(net, state, omega)
         assert np.allclose(got, exp, rtol=1e-12, atol=1e-15)
+
+
+def test_gillespie_fast_matches_reference_distribution():
+    # The fast SSA is the same Markov chain as the reference (propensities agree
+    # to 1e-12); assert their AM outcome DISTRIBUTIONS agree within statistics.
+    # Bit-identical trajectories are not asserted (float multiply-order can flip
+    # a measure-zero selection tie), but the chains are statistically identical.
+    from crnl.vectorized import compile_network, gillespie_fast
+    from crnl import gillespie, seed_for
+    from crnl import classify
+
+    net = approximate_majority()
+    omega = 50
+    n0 = np.array([26, 24, 0])
+    trials = 800
+
+    ref_x = 0
+    for t in range(trials):
+        r = gillespie(net, n0, omega, seed_for(omega, t))
+        ref_x += classify.classify_am_outcome(r) == "X"
+
+    compiled = compile_network(net, omega)
+    fast_x = 0
+    for t in range(trials):
+        r = gillespie_fast(compiled, n0, seed_for(omega, t), species=list(net.species))
+        fast_x += classify.classify_am_outcome(r) == "X"
+
+    p_ref = ref_x / trials
+    p_fast = fast_x / trials
+    se = (p_ref * (1 - p_ref) / trials) ** 0.5
+    assert abs(p_fast - p_ref) <= 4 * se + 1e-9, (p_ref, p_fast)
+
+
+def test_gillespie_fast_absorbs_am():
+    from crnl.vectorized import compile_network, gillespie_fast
+    from crnl import seed_for
+    net = approximate_majority()
+    omega = 40
+    compiled = compile_network(net, omega)
+    r = gillespie_fast(compiled, np.array([21, 19, 0]), seed_for(omega, 3))
+    assert r.absorbed
+    assert r.n_final.sum() == omega  # count conserved

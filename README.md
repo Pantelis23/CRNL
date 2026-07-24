@@ -86,6 +86,29 @@ a clean `exp(−c·Ω)` squarely in the accessible window. The experiment stays 
 parameterized by `--bias`, so 51/49 is one flag away; it simply shows the
 crossover rather than the wall.
 
+## Radix experiment (n-winner AM)
+
+Generalizes AM to n committed symbols to measure **radix vs. margin** — the
+project's core claim — as data.
+
+- `experiments/radix_wall.py` — champion-vs-field. One symbol leads each rival by
+  a fixed pairwise margin δ (55/45 at n=2). Measures the barrier `c(n)` and the
+  population `Ω_required(n)` to hold a fixed reliability as the alphabet grows.
+- `experiments/radix_discovery.py` — symmetric start. Characterizes the outcome
+  distribution (single winner / all-blank / coexistence / undecided) and consensus
+  time vs n, under fixed-total-Ω and fixed-density conventions — built to reveal
+  high-n failure modes (blank collapse, long coexistence) rather than confirm a
+  prediction.
+
+```bash
+python -m experiments.radix_wall --quick
+python -m experiments.radix_discovery --quick
+```
+
+The engine reaches n≈100 via a NumPy-vectorized SSA path (`crnl/vectorized.py`)
+validated to match the readable reference propensities exactly, including the
+boundary states where naive fast paths diverge.
+
 ## Setup
 
 Requires Python 3.10+.

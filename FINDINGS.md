@@ -198,15 +198,29 @@ margin 0.1), sweeping budget × n (`results/eir_bridge.json`):
 
 - **Freeze-out appears.** Decision quality rises with annealing budget and
   saturates; a fast quench leaves the planner frozen near random.
-- **Decode reliability falls with option count:** large-budget ceiling 0.90 (n=2) →
-  0.535 (n=8) → 0.223 (n=32), staying above the 1/n random baseline but by a
-  shrinking margin.
+- **Decode reliability falls with option count**, staying above the 1/n random
+  baseline but by a shrinking margin.
 
-**Caveat — the radix half is suggestive, not established.** EIR was run with
-*fixed* hyperparameters (`noise_start=0.15`, `lr=0.1`, `spsa_samples=6`) at every n.
-A fair test would tune per n; some of that falloff is untuned hyperparameters rather
-than intrinsic basin crowding. The freeze-out half (quality vs. budget at fixed n)
-is not subject to that objection.
+**The radix half was then tested under control, and it holds.** The first pass used
+*fixed* hyperparameters at every n, which conflates a real effect with settings that
+merely suited small n. Re-run with **each n given its own best `(lr, noise_start)`**
+over a 3×3 grid at a large fixed budget (`eir/tools/crnl_bridge.py --mode radix`):
+
+| n | 2 | 3 | 4 | 6 | 8 | 12 | 16 | 24 | 32 |
+|---|---|---|---|---|---|----|----|----|----|
+| P tuned | 0.957 | 0.847 | 0.797 | 0.687 | 0.590 | 0.507 | 0.423 | 0.330 | 0.267 |
+| P untuned | 0.867 | 0.797 | 0.747 | 0.657 | 0.557 | 0.480 | 0.397 | 0.300 | 0.233 |
+| tuning gain | +0.09 | +0.05 | +0.05 | +0.03 | +0.03 | +0.03 | +0.03 | +0.03 | +0.03 |
+
+Per-n tuning lifts every point by a near-constant +0.03…+0.09 — it shifts the curve
+without flattening it. **The falloff is structural, not a hyperparameter artifact.**
+
+**Remaining caveat.** This is one test problem (a single decision variable with a
+uniform cost gap). It shows the phenomenon exists in EIR; it does not establish the
+same *mechanism* as CRNL's basin crowding — EIR's `FieldBackend` also stops early
+once it ever hard-decodes the true optimum, so part of the n-dependence is a search
+effect (fewer chances to hit a smaller target) rather than margin erosion. Telling
+those two apart would need a variant that disables early stopping.
 
 ---
 
@@ -217,7 +231,10 @@ is not subject to that objection.
    collapse fit.
 2. **Is the radix saturation convention-dependent?** (§3) Predicted yes — fixed
    champion-share or symmetric-plurality framings should behave differently.
-3. **A controlled EIR radix test** (§8) with per-n hyperparameter tuning.
+3. ~~A controlled EIR radix test with per-n hyperparameter tuning.~~ **Done** — the
+   penalty survives tuning (§8). Still open: whether EIR's falloff shares CRNL's
+   *mechanism* (basin crowding) or is partly a search effect, which needs a variant
+   with early stopping disabled.
 4. **Free-energy accounting.** Not started. AM as written is irreversible, so its
    dissipation is formally infinite; measuring the cost of restoration requires
    rebuilding it as a reversible CRN with finite ΔG. This is the design doc's §8

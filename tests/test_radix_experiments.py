@@ -50,3 +50,29 @@ def test_fit_c_recovers_known_slope():
     fit = fit_c(omegas, champ_loss_counts, trials)
     assert fit is not None
     assert fit["c"] == pytest.approx(c_true, rel=0.05)
+
+
+def test_symmetric_counts_equal_partition():
+    from experiments.radix_discovery import symmetric_counts
+    rng = np.random.default_rng(0)
+    c = symmetric_counts(4, 100, rng)          # divisible: exactly equal
+    assert list(c) == [25, 25, 25, 25, 0]
+
+
+def test_symmetric_counts_remainder_is_spread_and_seeded():
+    from experiments.radix_discovery import symmetric_counts
+    # 10 committed over 3 species: base 3 each, remainder 1 -> one species gets 4
+    c = symmetric_counts(3, 10, np.random.default_rng(1))
+    assert c[-1] == 0
+    assert c[:-1].sum() == 10
+    assert sorted(c[:-1]) == [3, 3, 4]
+    # seeded remainder placement is reproducible
+    a = symmetric_counts(3, 10, np.random.default_rng(5))
+    b = symmetric_counts(3, 10, np.random.default_rng(5))
+    assert list(a) == list(b)
+
+
+def test_symmetric_counts_no_bias_when_divisible():
+    from experiments.radix_discovery import symmetric_counts
+    c = symmetric_counts(5, 50, np.random.default_rng(2))
+    assert len(set(c[:-1].tolist())) == 1     # all equal, no manufactured bias

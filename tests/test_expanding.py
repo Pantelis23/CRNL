@@ -149,6 +149,29 @@ def test_negative_hubble_is_rejected():
                             species=list(net.species))
 
 
+def test_critical_h_interpolates_crossing():
+    from experiments.expansion_radix import critical_h
+    rows = [
+        {"hubble": 0.01, "D": 1.0},
+        {"hubble": 0.1, "D": 0.6},
+        {"hubble": 1.0, "D": 0.2},   # crossing 0.5 between H=0.1 and H=1.0
+    ]
+    hs = critical_h(rows, level=0.5)
+    assert 0.1 < hs < 1.0
+    # returns nan if the level is never crossed
+    assert np.isnan(critical_h([{"hubble": 0.1, "D": 0.9},
+                                {"hubble": 1.0, "D": 0.8}], level=0.5))
+
+
+def test_n_winner_bigger_alphabet_freezes_easier():
+    # ties radix + expansion: at a fixed intermediate H, a larger alphabet is
+    # more frozen (lower winner-dominance D) than a smaller one.
+    from experiments.expansion_radix import run_point
+    d2 = run_point(2, 160, 0.08, 800, 0)["D"]
+    d8 = run_point(8, 160, 0.08, 800, 0)["D"]
+    assert d2 - d8 > 0.1       # n=8 is clearly more frozen (less decided) than n=2
+
+
 def test_expanding_conserves_count():
     net = approximate_majority()
     omega = 100

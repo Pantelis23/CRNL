@@ -191,6 +191,7 @@ def gillespie_instrumented(
     omega: float | None = None,
     max_steps: int = 10_000_000,
     t_max: float = np.inf,
+    halt_before_tmax: bool = False,
     species=None,
 ) -> InstrumentedResult:
     """Exact SSA with an entropy-production counter, a stop predicate, and flips.
@@ -210,6 +211,17 @@ def gillespie_instrumented(
     `stop(n) -> bool` halts at the first satisfying state (checked on the
     initial state too). `flip_arm` enables flip counting on
     delta = (n[i] - n[j])/omega for flip_index = (i, j), and requires `omega`.
+
+    `halt_before_tmax` matters whenever the counter is compared against a
+    fixed-time-window expectation. gillespie_fast's convention -- inherited here
+    so the two loops stay bit-identical -- is to APPLY the jump that crosses
+    t_max, so net_firings includes one reaction beyond the window. Measured bias
+    at gamma=0.3, Omega=30, t_max=2: +0.62 firings, +6.7%, which is z = +13 at
+    20000 trials but sits inside 4 SEM at 800 -- i.e. a comparison against an
+    exact <M(t)> passes at low trial counts and FAILS as you add trials, sending
+    the reader after the innocent quadrature. Set True to stop at the last jump
+    that fits entirely within t_max. Default False preserves the bit-for-bit
+    identity pinned by test_instrumented_matches_fast_bit_for_bit.
     """
     from .vectorized import propensities_fast
 
@@ -254,6 +266,9 @@ def gillespie_instrumented(
         j = int(np.searchsorted(np.cumsum(a), rng.random() * a0))
         if j >= n_rx:
             j = n_rx - 1
+        if halt_before_tmax and t + tau > t_max:
+            t = t_max
+            break
         n = n + S[:, j]
         t += tau
         steps += 1

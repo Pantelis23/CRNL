@@ -184,12 +184,17 @@ class ReactionNetwork:
         for j, r in enumerate(self.reactions):
             for s, coeff in r.reactants.items():
                 ni = n[self._index[s]]
-                # distinct ways to choose `coeff` molecules of species s:
+                # distinct ways to choose `coeff` molecules of species s, i.e.
+                # the binomial coefficient C(ni, coeff):
                 #   ni * (ni-1) * ... * (ni-coeff+1) / coeff!
-                # The /coeff! symmetry factor is cancelled by the coeff! folded
-                # into c (see stochastic_constants). So here we use the falling
-                # factorial *without* dividing by coeff!, and the factorials in
-                # c supply exactly the 1/coeff! that combinations require.
+                # This line DOES divide by coeff!. That division is deliberately
+                # paired with the coeff! folded into c by stochastic_constants:
+                # the two cancel, so the net propensity is
+                #   k / Omega**(m-1)  *  falling_factorial(ni, coeff)
+                # e.g. homodimer 2A: c = 2k/Omega and C(n,2) = n(n-1)/2 give
+                # a = k*n(n-1)/Omega. Implement only one half of that pairing and
+                # the noise is off by a factor of coeff! while the ODE is
+                # untouched -- the bug class this module exists to prevent.
                 comb = 1.0
                 for d in range(coeff):
                     comb *= ni - d

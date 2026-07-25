@@ -134,3 +134,37 @@ def test_near_gamma_c_the_flip_is_not_channel_driven():
     strong = [flip_probability(0.05, 96, 16.0, nf, depth=40)
               for nf in (0.10, 0.45)]
     assert strong[1] / strong[0] > 1e6
+
+
+# -- the depth ceiling (FINDINGS 12.1) --------------------------------------
+
+def test_maximum_depth_is_independent_of_population():
+    """At high channel noise the bit dies at the same depth however many
+    molecules you use -- the sharpest consequence of the Omega-independent
+    floor. Measured at gamma=0.05, sigma/delta*=0.45: depth 9 at BOTH Omega=64
+    and Omega=128."""
+    from crnl.information import cost_per_bit
+
+    def death_depth(omega):
+        prof = cost_per_bit(0.05, omega, 16.0, 40, noise_frac=0.45)
+        info = np.array([r["I_bits"] for r in prof])
+        assert (info < 0.5).any(), "bit never died; widen the depth"
+        return prof[int(np.argmax(info < 0.5))]["depth"]
+
+    assert death_depth(64) == death_depth(128)
+
+
+def test_the_ceiling_grows_with_the_landscape_to_noise_ratio():
+    """D_max ~ exp(delta*^2 / 2 sigma^2): quieter channels buy exponentially
+    more depth, where more molecules buy none. Measured 9 -> 44 for
+    sigma/delta* 0.45 -> 0.35."""
+    from crnl.information import cost_per_bit
+
+    def death_depth(nf, max_depth):
+        prof = cost_per_bit(0.05, 64, 16.0, max_depth, noise_frac=nf)
+        info = np.array([r["I_bits"] for r in prof])
+        return prof[int(np.argmax(info < 0.5))]["depth"] if (info < 0.5).any() else None
+
+    loud, quieter = death_depth(0.45, 40), death_depth(0.35, 120)
+    assert loud is not None and quieter is not None
+    assert quieter > 3 * loud

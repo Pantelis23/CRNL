@@ -625,6 +625,51 @@ Other caveats: one γ-family, one `t_stage`, and `p` is inferred from the decay 
 `I(D)` rather than counted directly, so cells below the 1e-15 resolution of that fit
 are dropped and never fitted.
 
+### 12.1 A depth ceiling no population can raise
+
+§11.1 found no efficiency optimum in Ω and blamed the channel-limited regime.
+Re-running the frontier on the **population-limited** side (σ_ch/δ* = 0.15) shows
+that diagnosis was wrong: cost per bit is still monotone (28 → 887 k_BT from Ω=4 to
+96). The actual reason is simpler and more general — **information is bounded by one
+bit while cost is linear in Ω**, so at depth 30 even Ω=4 already delivers 0.71 bits
+and the numerator can improve 1.4× while the denominator rises 44×.
+
+An interior optimum therefore requires a cascade **deep enough that small systems
+fail**, and it does appear:
+
+| depth | 30 | 100 | 300 | 1000 |
+|---|---|---|---|---|
+| optimal Ω | 4 (edge) | 4 (edge) | **10** | **12** |
+| cost there | 28 | 181 | 1097 | 5061 k_BT/bit |
+
+**And the same formula predicts a hard ceiling.** At large Ω the exponent saturates
+at `δ*²/(2σ²)`, so `p` has an Ω-*independent* floor and the bit dies at a depth no
+population can extend:
+
+    D_max ~ exp(δ*² / 2σ²) / 4
+
+Measured, as the depth at which `I` falls through 0.5:
+
+| σ_ch/δ* | 0.45 | 0.35 | 0.28 | 0.22 |
+|---|---|---|---|---|
+| predicted D_max | 3.0 | 14.8 | 147 | 7664 |
+| measured, Ω=64 | **9** | 44 | 355 | >4000 |
+| measured, Ω=128 | **9** | 50 | 489 | >4000 |
+
+At σ/δ* = 0.45 the two populations die at *exactly* the same depth. The predicted
+scaling holds over the tested range (a 50× span) with a constant prefactor ≈3 that
+the saddle point drops — the same missing prefactor as §12's slope of 0.74.
+
+**This retroactively explains §10–§11.** Those experiments ran depth 30 at
+σ_ch/δ* = 0.35, where the ceiling is ≈44–50 stages. They were operating near a limit
+that no amount of population could move, which is why fidelity plateaued at 0.63 and
+why 8× the molecules bought 0.0045. The limit was never about the chemistry's
+landscape; it was about the ratio of channel noise to landscape width.
+
+**Caveats.** `D_max` is defined by an arbitrary `I = 0.5` crossing; a different
+threshold shifts the prefactor, not the scaling. One γ-family, one `t_stage`. The
+σ/δ*=0.22 row is a lower bound only — the ceiling there exceeds the tested depth.
+
 ## Open questions
 
 1. **Universality class of the freeze-out transition** (§5). Is a = 0.38 really 1/3

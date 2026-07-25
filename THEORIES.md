@@ -119,9 +119,18 @@ diverge as γ→γ_c, rather than staying pinned at 16.
 ## 2. Open questions with no theory yet
 
 - **Q1. Where does the efficiency frontier end?** §11.1's marginal cost rises 77×
-  and is *still climbing* at Ω=120. Is there an asymptote, a divergence at finite
-  information, or does it continue indefinitely? Blocked on Ω>120 cost, which the
-  chunked augmented generator partly relieves.
+  and is *still climbing* at Ω=120. §12.1 partly answers it — the frontier is
+  bounded above by the depth ceiling, since past `D_max` no Ω delivers the bit at
+  all — but the shape of the approach is unmeasured.
+- **Q7 (new). What sets the ≈3 prefactor?** §12's collapse has slope 0.74 rather
+  than 1, and §12.1's ceiling is ≈3× its prediction. Both are the same missing
+  piece: the saddle point keeps only the exponent. A Gaussian-tail (Laplace)
+  correction should supply it, and would turn two collapses into two laws.
+- **Q8 (new). Does the depth ceiling survive a better code?** `D_max ~
+  exp(δ*²/2σ²)` is for a bare repetition of one bit through one restoring stage per
+  hop. That is the weakest possible code. Whether the ceiling is a property of the
+  *chemistry* or of the *encoding* is untested and is the most interesting question
+  this section opened.
 - **Q2. Does σ's peak crossing γ_c mean anything?** §9.3: at Ω=30 the stationary
   dissipation rate peaks at γ=0.45; at Ω=60 and 120 it is still rising at γ=0.49.
   An Ω-dependent peak location that crosses the bifurcation point is either a real
@@ -137,12 +146,14 @@ diverge as γ→γ_c, rather than staying pinned at 16.
   penalty survives per-n hyperparameter tuning, so it is structural. Whether it is
   *basin crowding* (CRNL's mechanism) or partly a search effect needs a variant
   with early stopping disabled.
-- ~~**Q6. Is the 0.35 noise fraction hiding a regime?**~~ **Yes** → §12. It sits on
-  the channel-limited side, and the population-limited side is where the wall of §1
-  governs: 11 orders of magnitude in p across Ω at σ_ch/δ* = 0.10. **New question
-  (Q6a): should §10–§11 be re-run there?** The efficiency frontier of §11.1 was
-  measured entirely in the regime where molecules cannot help; on the other side it
-  may well have the optimum that §11.1 reported as absent.
+- ~~**Q6. Is the 0.35 noise fraction hiding a regime?**~~ **Yes** → §12.
+- ~~**Q6a. Does the efficiency optimum appear on the wall side?**~~ **Answered, and
+  my prediction was wrong** → §12.1. It does *not* appear at depth 30 even at
+  σ_ch/δ* = 0.15: cost per bit stays monotone (28 → 887 k_BT). The reason I gave for
+  §11.1's result — channel-limited saturation — was wrong. The real reason is that
+  **information is bounded by one bit while cost is linear in Ω**, so an optimum
+  needs a cascade deep enough that small systems fail. It duly appears at depth 300
+  (Ω\*=10) and 1000 (Ω\*=12).
 
 ---
 

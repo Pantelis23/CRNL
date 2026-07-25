@@ -41,10 +41,15 @@ from ..reactions import Reaction, ReactionNetwork
 GAMMA_C = 0.5
 
 
-def am_reversible(gamma: float, k: float = 1.0) -> ReactionNetwork:
-    """Reversible AM with every reverse rate scaled by `gamma`."""
+def _check_gamma(gamma: float) -> None:
+    """Reject non-finite or negative gamma, the one guard every function here needs."""
     if not math.isfinite(gamma) or gamma < 0:
         raise ValueError(f"gamma must be finite and >= 0, got {gamma}")
+
+
+def am_reversible(gamma: float, k: float = 1.0) -> ReactionNetwork:
+    """Reversible AM with every reverse rate scaled by `gamma`."""
+    _check_gamma(gamma)
     kr = gamma * k
     return ReactionNetwork(
         species=["X", "Y", "B"],
@@ -157,11 +162,13 @@ def lambda_antisym(gamma: float) -> float:
     eigenvalue (1-2g)/3. It is +1/3 at gamma=0 (design.md 2.3's AM saddle) and
     vanishes at gamma = 1/2 -- which is what makes GAMMA_C exact.
     """
+    _check_gamma(gamma)
     return (1.0 - 2.0 * gamma) / 3.0
 
 
 def lambda_sym(gamma: float) -> float:
     """Eigenvalue of the symmetric (1,1) mode at (1/3,1/3,1/3); always stable."""
+    _check_gamma(gamma)
     return -(1.0 + 2.0 * gamma)
 
 
@@ -171,36 +178,55 @@ def delta_star(gamma: float) -> float:
     Off-symmetry requires b* = gamma/(1+gamma), which gives
         x* = [1 +- sqrt(1 - 4 g^3/(1-g))] / (2(1+g))
     so the separation is sqrt(disc)/(1+g). The discriminant numerator factors as
-    -(2g-1)(2g^2+g+1) with the quadratic strictly positive, so the unique real
-    root is gamma = 1/2: a pitchfork, with delta* ~ (4 sqrt(2)/3) sqrt(g_c - g).
+    (1-2*gamma)*(2*gamma**2+gamma+1): the quadratic factor has discriminant -7,
+    so it is strictly positive for every real gamma, and (1-gamma) > 0 on the
+    valid domain gamma < GAMMA_C (gamma >= GAMMA_C is handled by the early
+    return below, and _check_gamma has already excluded gamma < 0). So `disc`
+    is strictly positive whenever this line runs -- there is no live "disc <= 0"
+    case to guard against. The unique real root of the numerator is gamma = 1/2:
+    a pitchfork, with delta* ~ (4 sqrt(2)/3) sqrt(g_c - g).
     """
+    _check_gamma(gamma)
     if gamma >= GAMMA_C:
         return 0.0
     disc = 1.0 - 4.0 * gamma ** 3 / (1.0 - gamma)
-    if disc <= 0.0:
-        return 0.0
     return float(np.sqrt(disc) / (1.0 + gamma))
 
 
 def fixed_points(gamma: float) -> list[dict]:
-    """All fixed points in the simplex, with stability labels.
+    """All fixed points in the simplex, with a stability field.
 
-    There are THREE for 0 < gamma < GAMMA_C -- not four. The all-blank repeller
-    (0,0,1) of irreversible AM leaves the simplex the instant gamma > 0 (there
-    db/dt = -2*gamma), and the second symmetric root is negative. So the
-    reversible model has no all-blank outcome at all.
+    `kind` is a GEOMETRIC label ({"symmetric", "attractor"}, plus "blank" for
+    the gamma=0 boundary case below) -- it does not by itself say which points
+    are stable. `stable` carries that: at gamma=0.2 the symmetric point has
+    reduced eigenvalues (+0.2, -1.4) -- a SADDLE -- while at gamma=0.7 it is
+    (-0.133, -2.4), the sole STABLE state. Both get kind="symmetric"; only
+    `stable` tells them apart, and that distinction is the entire content of
+    the bifurcation. Attractors are always stable=True (they only exist below
+    GAMMA_C, where they are the two minima).
+
+    There are THREE fixed points for 0 < gamma < GAMMA_C -- not four. The
+    all-blank repeller (0,0,1) of irreversible AM leaves the simplex the
+    instant gamma > 0 (there db/dt = -2*gamma), and the second symmetric root
+    is negative. So the reversible model has no all-blank outcome for gamma >
+    0. At gamma = 0 exactly it IS a fixed point (rhs = 0 there too), so it is
+    returned as a fourth point, kind="blank", stable=False (it is a repeller).
 
     Above GAMMA_C only the symmetric point remains, and it is stable: a single
     minimum, no threshold, nothing to restore toward.
     """
-    out = [{"x": 1 / 3, "y": 1 / 3, "b": 1 / 3, "kind": "symmetric"}]
+    _check_gamma(gamma)
+    out = [{"x": 1 / 3, "y": 1 / 3, "b": 1 / 3, "kind": "symmetric",
+            "stable": lambda_antisym(gamma) < 0.0}]
     d = delta_star(gamma)
     if d > 0.0:
         b = gamma / (1.0 + gamma)
         total = 1.0 - b                       # x + y
         hi, lo = (total + d) / 2.0, (total - d) / 2.0
-        out.append({"x": hi, "y": lo, "b": b, "kind": "attractor"})
-        out.append({"x": lo, "y": hi, "b": b, "kind": "attractor"})
+        out.append({"x": hi, "y": lo, "b": b, "kind": "attractor", "stable": True})
+        out.append({"x": lo, "y": hi, "b": b, "kind": "attractor", "stable": True})
+    if gamma == 0.0:
+        out.append({"x": 0.0, "y": 0.0, "b": 1.0, "kind": "blank", "stable": False})
     return out
 
 

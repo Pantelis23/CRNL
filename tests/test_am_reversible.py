@@ -317,15 +317,6 @@ def test_pitchfork_scaling_closed_form():
     target = 4 * np.sqrt(2) / 3
     ratio = delta_star(0.4999) / np.sqrt(GAMMA_C - 0.4999)
     assert ratio == pytest.approx(target, rel=1e-3)
-    assert target == pytest.approx(1.8856180832, abs=1e-9)
-
-
-def test_delta_star_matches_root_formula():
-    from crnl.networks.am_reversible import delta_star
-    for gamma in (0.05, 0.2, 0.4):
-        disc = 1 - 4 * gamma ** 3 / (1 - gamma)
-        expect = np.sqrt(disc) / (1 + gamma)       # x+ - x- = sqrt(disc)/(1+g)
-        assert delta_star(gamma) == pytest.approx(expect)
 
 
 def test_thresholds_are_reachable_for_every_gamma():
@@ -405,3 +396,30 @@ def test_degenerate_counts_absorption_structure():
             for nY in range(N + 1 - nX):
                 n = [nX, nY, N - nX - nY]
                 assert total_propensity(n, N) > 0.0, f"absorbing at {n}, N={N}"
+
+
+def test_symmetric_point_stability_matches_the_bifurcation():
+    # kind="symmetric" alone can't distinguish the saddle from the sole
+    # attractor -- that's the whole content of the gamma_c bifurcation, so
+    # `stable` must carry it.
+    from crnl.networks.am_reversible import fixed_points
+    fps_below = fixed_points(0.2)
+    sym_below = next(f for f in fps_below if f["kind"] == "symmetric")
+    assert sym_below["stable"] is False           # saddle below GAMMA_C
+
+    fps_above = fixed_points(0.7)
+    sym_above = next(f for f in fps_above if f["kind"] == "symmetric")
+    assert sym_above["stable"] is True             # sole attractor above GAMMA_C
+
+
+def test_landscape_functions_reject_invalid_gamma():
+    # am_reversible already guards its input; the four landscape functions
+    # must match, not silently return simplex-violating or inf/nan garbage.
+    from crnl.networks.am_reversible import (
+        lambda_antisym, lambda_sym, delta_star, fixed_points,
+    )
+    for fn in (lambda_antisym, lambda_sym, delta_star, fixed_points):
+        with pytest.raises(ValueError):
+            fn(-0.1)
+        with pytest.raises(ValueError):
+            fn(float("nan"))

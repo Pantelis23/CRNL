@@ -326,3 +326,82 @@ def test_delta_star_matches_root_formula():
         disc = 1 - 4 * gamma ** 3 / (1 - gamma)
         expect = np.sqrt(disc) / (1 + gamma)       # x+ - x- = sqrt(disc)/(1+g)
         assert delta_star(gamma) == pytest.approx(expect)
+
+
+def test_thresholds_are_reachable_for_every_gamma():
+    # regression for a real design bug: a FIXED theta=0.5 is unreachable above
+    # gamma~0.417 (delta*(0.49) = 0.187), which turns "decide" into "fluctuate
+    # past the attractor" and would make a flip counter read zero forever.
+    from crnl.networks.am_reversible import theta_decide, delta_star
+    for gamma in (0.05, 0.1, 0.2, 0.3, 0.4, 0.45, 0.49):
+        assert theta_decide(gamma) < delta_star(gamma)
+    # and the fixed value really is unreachable up there, which is why we scale
+    assert delta_star(0.49) < 0.5
+    assert delta_star(0.4) > 0.5
+
+
+def test_initial_counts_follow_project_convention():
+    # design.md 4 / restoration_wall.py: B(0) = 0, committed split to realise
+    # the bias. Total must be exactly omega.
+    from crnl.networks.am_reversible import initial_counts, delta_star
+    omega, gamma = 120, 0.3
+    n0 = initial_counts(omega, gamma)
+    assert n0.sum() == omega
+    assert n0[2] == 0                                  # B starts empty
+    realised = (n0[0] - n0[1]) / omega
+    assert realised == pytest.approx(0.2 * delta_star(gamma), abs=2 / omega)
+    assert n0[0] > n0[1]                               # X is the favoured symbol
+
+
+def test_initial_counts_by_explicit_count_difference():
+    """The gamma sweep must fix the integer count difference, not a fraction.
+
+    delta_0 = 0.2*delta_star(gamma) is NOT representable on an integer lattice at
+    any Omega, so a fraction-driven sweep makes the realised bias jitter
+    non-monotonically with gamma -- and one molecule of bias is worth ~20 k_B of
+    dissipation, which is enough to fake a fold-back in the headline curve. So
+    `initial_counts` accepts an explicit count difference, and callers sweeping
+    gamma use it.
+    """
+    from crnl.networks.am_reversible import initial_counts
+    for omega in (60, 120, 180):
+        for d in (4, 8, 12):
+            n0 = initial_counts(omega, 0.3, count_diff=d)
+            assert n0.sum() == omega
+            assert n0[2] == 0
+            assert int(n0[0]) - int(n0[1]) == d          # exact, by construction
+
+
+def test_initial_counts_rejects_an_unreachable_bias():
+    from crnl.networks.am_reversible import initial_counts
+    with pytest.raises(ValueError):
+        initial_counts(60, 0.3, count_diff=200)          # exceeds omega
+
+
+def test_degenerate_counts_absorption_structure():
+    """No absorbing state for N >= 2; EVERY state absorbing for N <= 1.
+
+    All six reactions are bimolecular, so with 0 or 1 molecules nothing can fire.
+    (At N = 2 the chain is also reducible -- three closed 2-state classes -- so
+    experiments and other tests must avoid N <= 2.)
+    """
+    net = am_reversible(0.3)
+    S = net.stoichiometry_matrix().astype(int)
+
+    def total_propensity(n, N):
+        cs = net.stochastic_constants(float(N))
+        a = net.propensities(np.array(n), cs)
+        # only count jumps that stay in the simplex
+        return sum(a[j] for j in range(6)
+                   if a[j] > 0 and (np.array(n) + S[:, j]).min() >= 0)
+
+    # N <= 1: everything is absorbing
+    for n in ([1, 0, 0], [0, 1, 0], [0, 0, 1]):
+        assert total_propensity(n, 1) == 0.0
+
+    # N >= 3: nothing is absorbing, including the corners
+    for N in (3, 5, 7):
+        for nX in range(N + 1):
+            for nY in range(N + 1 - nX):
+                n = [nX, nY, N - nX - nY]
+                assert total_propensity(n, N) > 0.0, f"absorbing at {n}, N={N}"

@@ -202,3 +202,53 @@ def fixed_points(gamma: float) -> list[dict]:
         out.append({"x": hi, "y": lo, "b": b, "kind": "attractor"})
         out.append({"x": lo, "y": hi, "b": b, "kind": "attractor"})
     return out
+
+
+def theta_decide(gamma: float, frac: float = 0.7) -> float:
+    """Decision threshold on delta = (n_X - n_Y)/Omega, scaled to the landscape.
+
+    MUST scale with delta_star(gamma). A fixed threshold (e.g. 0.5) is
+    unreachable above gamma ~ 0.417, where delta*(0.49) = 0.187: "deciding" then
+    means fluctuating *past* the attractor, which inflates the measured
+    dissipation by an order of magnitude and is a protocol artifact, not physics.
+    """
+    d = delta_star(gamma)
+    if d <= 0.0:
+        raise ValueError(
+            f"no bistable landscape at gamma={gamma} (>= GAMMA_C={GAMMA_C}); "
+            "there is no decision to threshold"
+        )
+    return frac * d
+
+
+def initial_counts(omega: int, gamma: float, bias_frac: float = 0.2,
+                   count_diff: int | None = None) -> np.ndarray:
+    """Integer start [n_X, n_Y, n_B] with B empty.
+
+    Follows the project convention (design.md 4, restoration_wall.py): B(0) = 0
+    and the committed molecules carry the bias.
+
+    Two ways to set the bias:
+
+    * `count_diff` (PREFERRED when sweeping gamma) -- an explicit integer count
+      difference n_X - n_Y, realised exactly.
+    * `bias_frac` -- a fraction of delta_star(gamma), which keeps the protocol
+      difficulty comparable across gamma in the same spirit as radix_wall.py's
+      fixed pairwise margin. But note it is NOT representable on the integer
+      lattice: at Omega=60, gamma=0.45 the target 0.0801 realises as 0.0667, 17%
+      low, and the error jitters non-monotonically with gamma. Since one molecule
+      of bias is worth ~20 k_B of dissipation, a fraction-driven gamma sweep can
+      manufacture a fold-back in the headline curve that looks like physics.
+      Use it for single-gamma work; use `count_diff` for sweeps.
+    """
+    if count_diff is None:
+        delta0 = bias_frac * delta_star(gamma)
+        count_diff = int(round(delta0 * omega))
+    if not 0 <= count_diff <= omega:
+        raise ValueError(
+            f"count_diff={count_diff} is not reachable at omega={omega}")
+    if (omega + count_diff) % 2 != 0:
+        count_diff += 1          # keep n_X, n_Y integral
+    n_x = (omega + count_diff) // 2
+    n_y = omega - n_x
+    return np.array([n_x, n_y, 0], dtype=np.int64)

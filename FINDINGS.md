@@ -241,8 +241,19 @@ space exactly one-dimensional, so the whole drive is a single number:
 
 γ→1 is equilibrium; γ→0 recovers today's irreversible AM. All measurements here are
 **exact** — the chemical master equation solved by sparse linear algebra on the
-conserved simplex (7381 states at Ω=120, 0.20 s), not sampled. A direct stochastic
-measurement of one rare flip at Ω=120 would take hundreds of hours.
+conserved simplex (7381 states at Ω=120, 0.20 s), not sampled.
+
+**Why exact, stated correctly (a corrected claim).** An earlier version of this
+section said a direct SSA measurement at Ω=120 "would take hundreds of hours." That
+is wrong wherever the exact solve is trustworthy: at measured throughput (84,000
+steps/s, ≈0.4·Ω steps per unit time) one flip at Ω=120, γ=0.35 costs **5.5 minutes**,
+and at Ω=60, γ=0.30 about **one minute**. The hundreds-of-hours regime is real but
+sits at γ ≤ 0.30 at Ω=120 (58 h per flip at γ=0.30, 3·10⁵ h at γ=0.25) — which is
+**exactly where the CME's own first-passage solve fails its validity guard**. So the
+honest statement is not "the CME is cheaper": it is that the CME is *exact, gives the
+whole MFPT field from one solve, and carries no sampling error*, while neither
+instrument currently reaches the strong-drive corner at large Ω. Rescuing that corner
+(the direct solve loses precision; a quasi-stationary eigenvalue would not) is open.
 
 ### 9.1 A landscape has a minimum price: A > 3 ln 2
 
@@ -323,7 +334,17 @@ stationary dissipation rates σ:
 |---|--------|--------|--------|
 | 30 | τ=4.6e3, σ=0.82 | τ=290, σ=1.90 | τ=42, σ=2.19 |
 | 60 | τ=1.9e5, σ=1.54 | τ=853, σ=4.00 | τ=65, σ=5.18 |
-| 120 | τ=5.5e5, σ=4.93 | τ=6.1e3, σ=7.67 | τ=102, σ=11.5 |
+| 120 | **dropped** (σ=3.01) | τ=6.1e3, σ=7.67 | τ=102, σ=11.5 |
+
+> **Corrected cell.** The (Ω=120, γ=0.30) entry previously read "τ=5.5e5, σ=4.93".
+> That is the **γ=0.35** row (τ=5.481e5, σ=4.927) published under the wrong label; the
+> real (120, 0.30) solve returns τ=3.5e8 with residual 2.5e-6 and is `valid=False`, so
+> it is one of the 11 drops counted in the caveat below. σ is unaffected — it comes
+> from the stationary solve, not the first-passage solve — and the true σ(120, 0.30) =
+> 3.01 leaves the σ story unchanged (still rising monotonically through γ=0.49 at this
+> Ω, just more steeply). Every other cell in the table was re-checked against
+> `results/dissipation_memory.json` and is correct, as is the 17,800× figure below
+> (τ = 41.7 → 7.43e5 at Ω=30, γ = 0.49 → 0.20, both valid).
 
 **Retention is exponentially sensitive to drive**: at Ω=30, raising A by 2.3×
 (γ 0.49→0.20) buys **17,800× longer memory**.

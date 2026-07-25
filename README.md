@@ -177,9 +177,12 @@ Detailed balance needs `γ³ = 1`, so **every γ < 1 is genuinely driven**, and 
 number, the cycle affinity `A(γ) = −3 ln γ`. γ→1 is equilibrium; γ→0 recovers the
 irreversible AM used everywhere above. These three experiments are **exact**: the
 chemical master equation solved by sparse linear algebra on the conserved simplex
-(7381 states at Ω=120, 0.20 s), not sampled. Measuring one rare flip at Ω=120 by
-SSA would take hundreds of hours — here the exact solver is the *cheap*
-instrument.
+(7381 states at Ω=120, 0.20 s), not sampled — no sampling error, and one solve
+yields the whole first-passage field rather than one point. Its limit is honest and
+recorded: at strong drive and large Ω the direct solve loses precision and those
+points are dropped rather than fitted, and that is the same corner where SSA becomes
+unaffordable, so **neither** instrument currently reaches it (see
+[`FINDINGS.md`](FINDINGS.md) §9).
 
 ### A landscape has a minimum price — `experiments/reversible_landscape.py`
 

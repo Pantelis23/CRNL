@@ -12,8 +12,14 @@ draft claimed 0.03 s at N=120 and 0.5 s at N=400, which is 7-20x optimistic):
     N=120:  enumerate 0.014 s | generator 0.18 s | stationary 0.20 s | ep_rate 1.7 s
     N=400:  enumerate 0.068 s | generator 2.05 s | stationary 2.45 s | ep_rate 10.6 s
 
-Still decisive against the alternative: a direct SSA measurement of one rare-flip
-lifetime at N=120 takes hundreds of hours.
+The advantage over SSA is NOT primarily wall-clock, and an earlier version of this
+docstring overstated it ("hundreds of hours at N=120"). Measured: SSA runs at ~84,000
+steps/s and ~0.4*N steps per unit time, so one flip at N=120, gamma=0.35 costs 5.5
+minutes. The real advantages are that this is exact (no sampling error) and that ONE
+solve yields the whole first-passage field. SSA only becomes hopeless at strong drive
+(58 h per flip at N=120, gamma=0.30; 3e5 h at gamma=0.25) -- which is exactly where
+first_passage's own validity guard rejects the solve, so that corner belongs to
+neither instrument yet.
 
 Provides the generator, the stationary distribution, the Schnakenberg entropy
 production rate, and first-passage quantities (crnl/cme.py is network-agnostic;

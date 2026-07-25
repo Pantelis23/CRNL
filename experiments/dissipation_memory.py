@@ -22,9 +22,11 @@ observable. The zero-power memory limit is the textbook ideal zero-leak ratchet
 (gamma->0 is a singular limit where the states become absorbing, and gamma->0 IS
 A->infinity) -- not a new result.
 
-The CME is the primary instrument here: it is exact and costs ~0.03 s at Omega=120
-where a direct SSA measurement of a rare flip would take hundreds of hours. SSA
-cross-checks are Plan 2.
+The CME is the primary instrument here because it is EXACT and one solve gives the
+whole first-passage field -- not because it is faster. (An earlier docstring claimed
+SSA would need "hundreds of hours" at Omega=120; measured, one flip at gamma=0.35
+costs 5.5 minutes. SSA only becomes hopeless at gamma <= 0.30, which is where this
+solve's own validity guard rejects the answer.) SSA cross-checks are Plan 2.
 
     python -m experiments.dissipation_memory
 """

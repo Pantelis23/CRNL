@@ -87,3 +87,152 @@ def test_ep_rate_equals_affinity_times_flux():
         assert J[1] == pytest.approx(J[2], rel=1e-8)
         A = cycle_affinity(net, pairing)
         assert sigma == pytest.approx(A * J[0], rel=1e-8)
+
+
+def test_stationary_raises_for_a_reducible_chain():
+    net = am_reversible(0.3)
+    for total in (0, 1, 2):
+        with pytest.raises(ValueError):
+            stationary(net, total, float(max(total, 1)))
+    # total = 3 is the smallest irreducible case and must succeed
+    p = stationary(net, 3, 3.0)
+    assert p.sum() == pytest.approx(1.0)
+
+
+def test_stationary_guard_prevents_a_silent_nan_return():
+    """Without the total < 3 guard this would emit a bare MatrixRankWarning and
+    return an all-NaN vector instead of raising."""
+    import warnings
+    net = am_reversible(0.3)
+    with pytest.raises(ValueError):
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            stationary(net, 1, 1.0)
+
+
+def test_first_passage_matches_a_hand_solvable_case():
+    # Absorb as soon as X is gone or Y is gone, from a symmetric start on a tiny
+    # simplex: mean time must be positive and finite, split ~ 1/2 by symmetry.
+    from crnl.cme import first_passage
+    net = am_reversible(0.3)
+    N = 9
+    res = first_passage(
+        net, N, float(N), start=np.array([3, 3, 3]),
+        is_absorbing=lambda n: n[0] == 0 or n[1] == 0,
+    )
+    assert res["valid"]
+    assert res["mean_time"] > 0.0
+    assert np.isfinite(res["mean_time"])
+    assert res["split"] == pytest.approx(0.5, abs=0.05)
+
+
+def test_first_passage_split_follows_the_bias():
+    from crnl.cme import first_passage
+    net = am_reversible(0.3)
+    N = 12
+    biased = first_passage(
+        net, N, float(N), start=np.array([8, 2, 2]),
+        is_absorbing=lambda n: n[0] == 0 or n[1] == 0,
+    )
+    assert biased["split"] > 0.8              # X strongly favoured
+
+
+def test_first_passage_guard_rejects_a_broken_solve():
+    """The guard must FAIL a case that is actually broken.
+
+    Not an if/else: this asserts valid is False. The geometry matters -- the
+    pathology needs the Part-B setup (start at the attractor, absorb on the far
+    side), where the solve returns a NEGATIVE mean time (~-6e16) at Omega=30,
+    gamma=0.02. With the easier "X or Y extinct" absorbing set the same
+    parameters solve perfectly happily, which is why an earlier version of this
+    test had zero coverage of a mandatory guard.
+    """
+    from crnl.cme import first_passage
+    from crnl.networks.am_reversible import fixed_points
+    gamma, N = 0.02, 30
+    net = am_reversible(gamma)
+    att = max((f for f in fixed_points(gamma) if f["kind"] == "attractor"),
+              key=lambda f: f["x"])
+    n_x = int(round(att["x"] * N))
+    n_b = int(round(att["b"] * N))
+    start = np.array([n_x, N - n_x - n_b, n_b])
+    res = first_passage(net, N, float(N), start,
+                        lambda n: int(n[0]) - int(n[1]) <= -0.3 * N)
+    assert res["valid"] is False
+    assert (res["mean_time"] < 0
+            or res["mean_time"] > 1e10
+            or res["residual"] > 1e-8)
+
+
+def test_first_passage_accepts_a_healthy_solve():
+    # the complement: a well-conditioned problem must pass, with a tiny residual
+    from crnl.cme import first_passage
+    net = am_reversible(0.3)
+    res = first_passage(net, 12, 12.0, np.array([7, 5, 0]),
+                        lambda n: abs(int(n[0]) - int(n[1])) >= 6)
+    assert res["valid"] is True
+    assert res["residual"] < 1e-10
+    assert 0.0 < res["mean_time"] < 1e6
+
+
+def test_decomposition_composes_with_first_passage():
+    """THE test that pins the two halves together.
+
+    `decompose` applies affinity/3; `first_passage` returns raw per-reaction
+    firings. If either side also divided by 3, every dissipation number would be
+    exactly 3x wrong -- and no test of either function alone can see it. This
+    checks the composed result against an independent solve of Qtt V = -u with
+    u_i = sum_j a_j * dS_j, i.e. entropy production integrated directly.
+    """
+    import scipy.sparse.linalg as spla
+    from crnl.cme import first_passage, generator, enumerate_states
+    from crnl.thermo import decompose, entropy_step
+
+    gamma, N = 0.3, 24
+    net = am_reversible(gamma)
+    pairing = reverse_pairing(net)
+    A = cycle_affinity(net, pairing)
+    start = np.array([14, 10, 0], dtype=np.int64)
+    theta_counts = 12
+
+    def absorbing(n):
+        return abs(int(n[0]) - int(n[1])) >= theta_counts
+
+    fp = first_passage(net, N, float(N), start, absorbing, pairing)
+    assert fp["valid"]
+    composed = decompose(start, None, fp["net_reaction_firings"], A,
+                         boundary=fp["boundary"])["total"]
+
+    # independent reference: integrate entropy production directly
+    states, index = enumerate_states(3, N)
+    absorb_mask = np.array([absorbing(s) for s in states])
+    Q = generator(net, N, float(N))
+    trans = np.where(~absorb_mask)[0]
+    tmap = {int(i): k for k, i in enumerate(trans)}
+    Qtt = Q[trans][:, trans].tocsr()
+    cs = net.stochastic_constants(float(N))
+    S = net.stoichiometry_matrix().astype(np.int64)
+    u = np.zeros(len(trans))
+    for i in trans:
+        a = net.propensities(states[i], cs)
+        acc = 0.0
+        for j in range(6):
+            if a[j] <= 0:
+                continue
+            n2 = states[i] + S[:, j]
+            if n2.min() < 0 or net.propensities(n2, cs)[pairing[j]] <= 0:
+                continue
+            acc += a[j] * entropy_step(net, pairing, j, states[i], n2, cs)
+        u[tmap[int(i)]] = acc
+    V = spla.spsolve(Qtt, -u)
+    reference = float(V[tmap[int(index[tuple(start)])]])
+
+    assert composed == pytest.approx(reference, rel=1e-6)
+
+
+def test_first_passage_requires_reachable_absorbing_set():
+    from crnl.cme import first_passage
+    net = am_reversible(0.3)
+    with pytest.raises(ValueError):
+        first_passage(net, 9, 9.0, start=np.array([3, 3, 3]),
+                      is_absorbing=lambda n: False)      # nothing absorbs

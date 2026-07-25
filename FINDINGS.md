@@ -849,22 +849,43 @@ The offset **falls ~40% across δ**, so it is not a constant. The reason is dire
 `c = λδ²/(2D₀)` predicts `c ∝ δ²` exactly, and the measured exponent is not 2.
 Fitting `c(δ)` over the three δ:
 
-| n | 2 | 8 | 16 |
-|---|---|---|---|
-| measured exponent p | 2.08 (§2) | **2.27** | **2.48** |
+| n | 2 | 8 | 16 | 32 | 64 |
+|---|---|---|---|---|---|
+| measured exponent p | 2.08 (§2) | 2.27 | 2.48 | 2.53 | **2.40** |
 
-**So the quadratic law is an n=2 property that degrades as the alphabet grows.**
-The reduction is incomplete in *shape*, not merely in amplitude, and §14's residual
-is a different question from §12's — it does not belong in the Q7 prefactor cluster.
+extended to n = 32 and 64 with all three δ measured under a single protocol
+(2000 trials, five Ω each, R² 0.986–0.999), so no point is shared with §3.
+
+**Two readings, and only one of them is solid.**
+
+*Solid:* **p > 2 at large n.** The n ≥ 16 values average 2.471 against a
+propagated 1σ of 0.21 — **3.9σ above the quadratic**. So `c ∝ δ²` genuinely fails
+for large alphabets, the reduction is incomplete in *shape* rather than amplitude,
+and §14's residual does not belong in Q7's prefactor cluster.
+
+*Solid:* **p saturates.** n=32 and n=64 differ by 0.45σ, and the n ≥ 16 spread
+(0.132) is well inside 1σ. p does **not** keep climbing.
+
+*Not solid, and an earlier version of this section over-read it:* the **monotone
+climb** from 2.08 to ≈2.47. With ±0.21 on each exponent that separation is only
+**1.9σ**, and n=2→8 alone is 0.9σ. The sequence was presented here as a clean trend
+before its uncertainty had been propagated. What the data supports is "p is about
+2.5 for n ≥ 8 and about 2.1 at n = 2", not a resolved curve.
+
+**Independent cross-check, and it passes.** Extrapolating each single-protocol fit
+back to δ = 0.10 and comparing with §3's separately-measured value: **0.00199 vs
+0.00227 (n=32) and 0.00217 vs 0.00224 (n=64)** — 12% and 3%. Two unrelated
+protocols agreeing at that level is the main reason to trust the exponents at all.
 
 What survives unchanged: the two closed forms, their exact agreement with the
 engine, `D₀(2) = 1/9` recovering `design.md` §9, and the **saturation mechanism**,
 which contains no δ and so is untouched by any of this.
 
-**Caveat on the caveat.** The two independent measurements of each cell agree only
-to ±10%, giving the exponents roughly ±0.1. At n=16, 2.48 is comfortably above 2;
-at n=8, 2.27 is about 2.7σ from it. A third δ below 0.10 would tighten both, and is
-expensive because small δ needs large Ω.
+**And p saturating is probably the same fact as c(n) saturating.** §3's explanation
+— past n ≈ 16 the champion's share has converged to δ and the field is fragmented,
+so the contest stops changing — predicts that *nothing* about the escape keeps
+evolving, the exponent included. Q9 therefore folds into §14's saturation rather
+than standing as a separate mystery.
 
 **Caveats.** The closed forms are for γ=0 (irreversible), which is what §3 measured;
 `breaking_diffusion` computes the general-γ case numerically but it is untested

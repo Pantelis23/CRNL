@@ -203,13 +203,26 @@ the transient bias amplification §2 already flags at n=2.
   ceiling factor should be independent of the *channel noise* σ if they are
   prefactors. Neither has been checked across σ, and §14 is a warning that a
   "constant" measured along one axis need not be constant along another.
-- **Q9 (new). Why does the barrier exponent grow with alphabet size?** §14.1:
-  `c ∝ δ^p` with p = 2.08 / 2.27 / 2.48 at n = 2 / 8 / 16. The quasipotential gives
-  p = 2 by construction, so something beyond a 1-D saddle reduction is carrying the
-  n-dependence — the obvious suspect being that with n−1 rivals the escape is a
-  competition among n−1 directions rather than a passage over one saddle, which a
-  scalar reduction cannot represent. Measuring p at n = 32 and 64 would say whether
-  p keeps climbing or saturates like c(n) itself does.
+- ~~**Q9. Why does the barrier exponent grow with alphabet size?**~~ **Measured at
+  n = 32 and 64 → §14.1. It does not keep growing.** p = 2.08 / 2.27 / 2.48 / 2.53 /
+  2.40 at n = 2 / 8 / 16 / 32 / 64; n=32 and n=64 differ by 0.45σ. Two things came
+  out of it:
+
+  **(a) p > 2 is solid** (3.9σ over the n ≥ 16 mean), so `c ∝ δ²` really does fail
+  for large alphabets and §14's residual is a shape problem, not a prefactor.
+
+  **(b) The *climb* was over-read.** Propagating the ±8% scatter gives ±0.21 per
+  exponent, making the 2.08 → 2.47 separation only 1.9σ. §14.1 had presented the
+  sequence as a clean trend before anyone propagated its uncertainty — the second
+  time in this file that a sequence was read as a curve without error bars (see
+  the depth-ceiling entry in §4).
+
+  **Still open (Q9a):** p saturating is *probably* the same fact as c(n)
+  saturating — §3's explanation (past n≈16 the champion's share has converged to δ
+  and the field is fragmented, so the contest stops changing) predicts that nothing
+  about the escape keeps evolving. That is a plausible unification, not a measured
+  one. It predicts the *plateau value* ≈2.47 should be derivable from the same
+  fragmented-field limit; nothing derives it yet.
 - **Q8. Does the depth ceiling survive a better code?** `D_max ~ exp(δ*²/2σ²)` is
   for a bare repetition of one bit through one restoring stage per hop — the weakest
   possible code. Whether the ceiling belongs to the *chemistry* or the *encoding* is

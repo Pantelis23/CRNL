@@ -126,11 +126,37 @@ diverge as γ→γ_c, rather than staying pinned at 16.
   than 1, and §12.1's ceiling is ≈3× its prediction. Both are the same missing
   piece: the saddle point keeps only the exponent. A Gaussian-tail (Laplace)
   correction should supply it, and would turn two collapses into two laws.
-- **Q8 (new). Does the depth ceiling survive a better code?** `D_max ~
-  exp(δ*²/2σ²)` is for a bare repetition of one bit through one restoring stage per
-  hop. That is the weakest possible code. Whether the ceiling is a property of the
-  *chemistry* or of the *encoding* is untested and is the most interesting question
-  this section opened.
+- **Q8. Does the depth ceiling survive a better code?** `D_max ~ exp(δ*²/2σ²)` is
+  for a bare repetition of one bit through one restoring stage per hop — the weakest
+  possible code. Whether the ceiling belongs to the *chemistry* or the *encoding* is
+  **still open**, and an attempt to answer it failed instructively:
+
+  **Attempt 1 (rejected — it measured nothing).** The idea was R parallel vessels
+  whose outputs are pooled, so channel noise averages down by `√R` and the ceiling
+  should become `D_max^R`. Measured, it looked spectacular: at a fixed budget of 256
+  molecules, one vessel reaches depth 9.14 while four vessels reach >3000.
+
+  **Why it does not count.** No parallel vessels were ever modelled. "R vessels" was
+  implemented as *dividing `noise_frac` by `√R` by hand*, so the result is the
+  ceiling formula restated — `D_max` depends on `σ/δ*`, therefore reducing `σ` raises
+  it — and not evidence about parallelism at all. The control confirms depth responds
+  to noise and essentially not to molecule count:
+
+  | change | effect on depth |
+  |---|---|
+  | 2× molecules at fixed σ/δ*=0.28 (Ω 64→128) | 355 → 489, **1.4×** |
+  | lower σ/δ* at fixed Ω=64 (0.45→0.28) | 8.27 → 355, **43×** |
+
+  Worse, the setup quietly assumed a **free, perfect pooling operation** — and a
+  pooler is itself a restoring element. That is exactly the error that killed Part C
+  design 1, where a free `sign()` in the harness did all the restoring while the
+  chemistry was decoration.
+
+  **What a real test needs:** R vessel distributions propagated independently, each
+  with its *own* channel draw; an explicitly modelled combining step with its own
+  dissipation and its own noise; and a statement of whether the channel noise is
+  independent per vessel or common-mode — because if it is common-mode, averaging
+  buys nothing and the whole idea collapses.
 - **Q2. Does σ's peak crossing γ_c mean anything?** §9.3: at Ω=30 the stationary
   dissipation rate peaks at γ=0.45; at Ω=60 and 120 it is still rising at γ=0.49.
   An Ω-dependent peak location that crosses the bifurcation point is either a real

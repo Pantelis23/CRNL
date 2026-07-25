@@ -100,6 +100,15 @@ def cost_per_bit(gamma: float, omega: int, t_stage: float, depth: int,
     C_in = channel_matrix(dout, din, omega, sigma)
     C_start = channel_matrix(din, din, omega, sigma)
 
+    # The start quantises onto the input lattice, and at small Omega that shift
+    # is large and SYSTEMATIC: at gamma=0.05 (delta*=0.9521) every Omega <= 20
+    # snaps to the full rail 1.0 (+5.0%) while Omega=30 lands at 0.9333 (-2.0%).
+    # Since a further-out start is an easier start, this flatters small Omega --
+    # precisely the regime where an efficiency optimum is being looked for. It is
+    # reported per row rather than buried.
+    start_idx = int(np.argmin(np.abs(din / omega - d_star)))
+    realised_start = float(din[start_idx] / omega)
+
     def propagate(sign: int):
         p = np.zeros(len(din))
         p[np.argmin(np.abs(din / omega - sign * d_star))] = 1.0
@@ -124,5 +133,7 @@ def cost_per_bit(gamma: float, omega: int, t_stage: float, depth: int,
         rows.append({
             "depth": d + 1, "I_bits": info, "ds": total,
             "kT_per_bit": (total / info) if info > 1e-12 else float("inf"),
+            "realised_start": realised_start, "delta_star": d_star,
+            "start_shift_frac": (realised_start - d_star) / d_star,
         })
     return rows

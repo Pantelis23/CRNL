@@ -529,11 +529,40 @@ Three things follow, and two invert the naive reading:
 3. **`t_stage` has an interior optimum** (~16 here): too short fails to restore, too
    long pays for idle cycling once the state has relaxed.
 
+### 11.1 There is no efficiency optimum in Ω — and why that is the wrong question
+
+Extending the grid down to Ω=4 finds **no turnaround**: cost per bit falls
+monotonically as the system shrinks (4191 → 1239 → 915 → 658 → 520 k_BT/bit at
+Ω = 120 / 30 / 20 / 10 / 4). It is not a quantization artifact — the start snaps to
+the full rail (+5.0%) for every Ω ≤ 20 but to −2.0% at Ω=30 and +0.4% at Ω=45, and
+the trend runs smoothly across that sign change.
+
+The reason is a second degeneracy, pointing the opposite way to the depth-1 one:
+**the ratio is minimized by a system that barely transmits.** At Ω=4 the "cheapest"
+cell carries **0.12 bits**. So unconstrained cost-per-bit does not identify an
+operating point either, and the well-posed question fixes the information first.
+
+**Efficient frontier** — cheapest total ΔS for each level of information actually
+delivered to depth 30 (every point at γ=0.05, t\*=16):
+
+| I (bits) | 0.12 | 0.25 | 0.38 | 0.46 | 0.52 | 0.57 | 0.60 | 0.62 | 0.63 |
+|---|---|---|---|---|---|---|---|---|---|
+| Ω | 4 | 8 | 14 | 20 | 30 | 45 | 60 | 90 | 120 |
+| total ΔS | 62 | 153 | 287 | 420 | 646 | 978 | 1310 | 1982 | 2655 |
+| marginal k_BT/bit | — | 712 | 992 | 1741 | 3615 | 6655 | 13014 | 27548 | **54689** |
+
+**The marginal cost of information rises 77×** along that ladder. Half a bit costs
+646 k_BT; the next 0.11 bits cost 2000 more. Fidelity is not merely expensive — its
+price accelerates, and the last fraction of a bit is unaffordable at any population
+this method can reach. (Steps at constant Ω are excluded from that ratio: those are
+stage-time tuning, a free lunch, not purchased fidelity.)
+
 **Caveats.** Single test problem, symmetric rates, `σ_ch = 0.35·δ*` still a choice
-(δ*(0)=1 makes §7 the γ→0 member). The cheapest cell sits at the *edge* of the Ω grid,
-so the true optimum may lie below Ω=30, where finite-count noise eventually destroys
-the landscape — untested. Ω ≤ 120 by cost. The measure is comparator-free but not
-convention-free: `noise_frac` and D remain stated inputs.
+(δ*(0)=1 makes §7 the γ→0 member). Ω ≤ 120 by cost, so the frontier's top end is
+grid-limited, not physical. The measure is comparator-free but **not**
+convention-free: `noise_frac`, the depth D, and the 0.05-bit floor on the frontier
+remain stated inputs. The frontier is a Pareto set over a discrete grid, so its
+points are the best *tested* cells, not proven optima.
 
 ## Open questions
 
@@ -561,10 +590,12 @@ convention-free: `noise_frac` and D remain stated inputs.
    fidelity at γ=0.45, so if a threshold exists it is far outside reach, and the
    honest answer may be that there is none.
 7. ~~A comparator that needs no convention.~~ **Done** (§11): k_BT per bit
-   delivered needs no control at all. Still open: it is comparator-free but not
-   convention-free — `noise_frac` and the depth D remain stated inputs — and the
-   cheapest cell sits at the edge of the Ω grid, so the efficiency optimum may lie
-   below Ω=30 where finite counts eventually destroy the landscape.
+   delivered needs no control at all, and §11.1 shows there is no efficiency optimum
+   in Ω — the ratio is minimized by a system that barely transmits, so the
+   information must be fixed first. Still open: the frontier's marginal cost rises
+   77× over the tested range and is still climbing at Ω=120, so **where it ends is
+   unknown**; and the measure remains convention-dependent through `noise_frac`, D,
+   and the 0.05-bit floor.
 8. **Is `t_stage` hiding anything?** §10.2 reports one point (t=8) on an axis. Cost
    grows linearly in t while fidelity saturates, so "cost per stage" has no canonical
    value; the plateau fidelity and its price are the better observables and are not

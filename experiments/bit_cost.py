@@ -57,6 +57,55 @@ def sweep(gammas, omegas, t_stages, depth, noise_frac, chunk):
     return rows
 
 
+#: Points delivering less than this are not operating points -- a cell that
+#: transmits 0.005 bits has an enormous cost-per-bit and a meaningless marginal,
+#: and including such rows made the frontier's headline ratio (23383x) an
+#: artifact of dividing by almost-zero information rather than a statement about
+#: diminishing returns.
+MIN_BITS = 0.05
+
+
+def frontier(rows, min_bits: float = MIN_BITS):
+    """Pareto frontier of (information delivered, total dissipation).
+
+    Unconstrained cost-per-bit is degenerate in the opposite direction from the
+    depth-1 trap: it is minimised by shrinking the system until it transmits
+    almost nothing (Omega=4 scores 520 kT/bit while carrying 0.12 bits). So the
+    well-posed question fixes the information first -- what does it cost to
+    actually get I* bits to depth D?
+
+    Built as a Pareto set rather than against a list of targets: with targets,
+    two consecutive ones often select the SAME cell, giving dI = 0 and a
+    marginal cost of inf or 0 that means nothing. A point is on the frontier if
+    no other point delivers at least as much information for less dissipation.
+    """
+    finite = [r for r in rows if math.isfinite(r["kT_per_bit"])
+              and r["I_bits"] >= min_bits]
+    out = []
+    for r in sorted(finite, key=lambda r: (r["ds_total"], -r["I_bits"])):
+        # require a real information GAIN, so two cells differing at the fourth
+        # decimal do not both land on the frontier with a meaningless marginal
+        if not out or r["I_bits"] > out[-1]["I_bits"] + 1e-3:
+            out.append({"omega": r["omega"], "t_stage": r["t_stage"],
+                        "gamma": r["gamma"], "I_bits": r["I_bits"],
+                        "ds_total": r["ds_total"],
+                        "kT_per_bit": r["kT_per_bit"]})
+    # Marginal cost is undefined for the first point (there is nothing to be
+    # marginal to -- ds/I there is an AVERAGE, a different quantity, and
+    # printing it in the same column invites reading a fall where none exists).
+    prev = None
+    for row in out:
+        if prev is None:
+            row["marginal_kT_per_bit"] = None
+        else:
+            dS = row["ds_total"] - prev["ds_total"]
+            dI = row["I_bits"] - prev["I_bits"]
+            # near-ties in cost between two cells make the marginal meaningless
+            row["marginal_kT_per_bit"] = (dS / dI) if dS > 1e-6 else None
+        prev = row
+    return out
+
+
 def make_figure(rows, depth, out_path):
     import matplotlib
     matplotlib.use("Agg")
@@ -126,7 +175,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--gammas", type=float, nargs="+",
                    default=[0.05, 0.15, 0.30, 0.45])
-    p.add_argument("--omegas", type=int, nargs="+", default=[30, 60, 120])
+    p.add_argument("--omegas", type=int, nargs="+",
+                   default=[4, 8, 14, 20, 30, 45, 60, 90, 120])
     p.add_argument("--t-stages", type=float, nargs="+",
                    default=[4.0, 16.0, 64.0])
     p.add_argument("--depth", type=int, default=30,
@@ -144,6 +194,7 @@ def main():
     if args.quick:
         args.gammas, args.omegas = [0.05, 0.30], [30]
         args.t_stages, args.depth = [4.0, 16.0], 12
+        args.omegas = [8, 30]
 
     if args.depth < 5:
         p.error(f"--depth {args.depth} is too shallow to be well posed: below "
@@ -176,11 +227,39 @@ def main():
               "ERASURE, not transmission, so this is a scale comparison and not "
               "a claim that the bound is approached.")
 
+    front = frontier(rows)
+    print(f"\nEFFICIENT FRONTIER at depth {args.depth} -- cheapest total ΔS for "
+          f"each level of information delivered (≥ {MIN_BITS} bits).\n"
+          "(The well-posed form: unconstrained cost/bit is minimised by a system "
+          "that transmits almost nothing.)")
+    print(f"{'I bits':>7} {'Omega':>6} {'t*':>5} {'gamma':>6} {'total ΔS':>9} "
+          f"{'kT/bit':>9} {'marginal kT/bit':>16}")
+    for f in front:
+        m = f["marginal_kT_per_bit"]
+        mtxt = "-" if m is None else f"{m:.0f}"
+        print(f"{f['I_bits']:>7.4f} {f['omega']:>6} {f['t_stage']:>5.0f} "
+              f"{f['gamma']:>6.2f} {f['ds_total']:>9.1f} {f['kT_per_bit']:>9.1f} "
+              f"{mtxt:>16}")
+    # Restrict the summary to steps that BUY population. A step at constant
+    # Omega is a stage-time improvement -- a free lunch from tuning, not from
+    # spending -- and its tiny marginal (8 kT/bit here) would anchor the ratio
+    # to something that is not about diminishing returns at all.
+    ladder = [(front[i]["marginal_kT_per_bit"], front[i - 1]["omega"],
+               front[i]["omega"]) for i in range(1, len(front))
+              if front[i]["marginal_kT_per_bit"] is not None
+              and front[i]["omega"] != front[i - 1]["omega"]]
+    if len(ladder) > 1:
+        lo, hi = min(m for m, _, _ in ladder), max(m for m, _, _ in ladder)
+        print(f"\nAcross the population ladder the marginal cost of information "
+              f"rises {hi / lo:.0f}x ({lo:.0f} -> {hi:.0f} k_BT per additional "
+              "bit): sharply diminishing returns. Steps at constant Omega are "
+              "excluded -- those are stage-time tuning, not purchased fidelity.")
+
     os.makedirs(os.path.dirname(os.path.abspath(args.data)), exist_ok=True)
     with open(args.data, "w") as fh:
         json.dump({"depth": args.depth, "noise_frac": args.noise_frac,
                    "omegas": args.omegas, "t_stages": args.t_stages,
-                   "rows": rows}, fh, indent=2)
+                   "frontier": front, "rows": rows}, fh, indent=2)
     print(f"wrote data -> {args.data}")
     make_figure(rows, args.depth, args.out)
 

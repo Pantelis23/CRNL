@@ -261,6 +261,13 @@ falls), and **reliability is bought superlinearly** — quadrupling Ω buys 21% 
 information at 3.4× the price. Depth is part of the question: at depth 1 the measure
 rewards a stage that does nothing, so the experiment refuses `--depth < 5`.
 
+Extending down to Ω=4 finds **no efficiency optimum** — cost per bit falls all the
+way, because the ratio is minimized by a system that barely transmits (Ω=4 carries
+0.12 bits). So the experiment reports an **efficient frontier** instead: cheapest
+total ΔS for each level of information actually delivered. Along it the **marginal
+cost of information rises 77×** — half a bit costs 646 k_BT, the next 0.11 bits cost
+2000 more.
+
 Full tables, the γ→0 caveat, the protocol trap that produced a convincing false
 dissipation optimum, the two discarded Part C designs, and a withdrawn claim:
 [`FINDINGS.md`](FINDINGS.md) §9–§11.

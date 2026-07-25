@@ -377,6 +377,109 @@ window (at Ω=30 it peaks at γ=0.45; at Ω=60 and 120 it is still rising at γ=
 large Ω, where the MFPT linear solve returns a negative time (−5.9e15 at Ω=60,
 γ=0.10) — those are reported, never fitted.
 
+## 10. Sampling confirms the exact numbers; and what a restoring stage costs — `dissipation_decision.py --ssa-trials`, `dissipation_memory.py --ssa`, `dissipation_cascade.py`
+
+§9 is entirely exact linear algebra. This section does two things: checks it by
+sampling, and finally prices a *restoring cascade stage* — the measurement
+`design.md` §8 asked for and §7 left unpriced.
+
+### 10.1 The exact solve and the SSA agree
+
+An instrumented Gillespie loop (`crnl/thermo.py`) accumulates entropy production as
+an **integer counter** — no logarithms in the hot loop — using §9.2's closed form. It
+is pinned bit-for-bit against the verified `gillespie_fast` on the same seed.
+
+Part A, Ω=120, 20 000 trials per γ:
+
+| γ | ⟨M⟩ exact | ⟨M⟩ sampled | agreement | P(err) exact | P(err) sampled |
+|---|-----------|-------------|-----------|--------------|----------------|
+| 0.30 | 339.1 | 337.9 ± 1.40 | 0.86 SEM | 0.0971 | 0.0967 ± 0.0021 |
+| 0.45 | 445.7 | 445.7 ± 2.57 | 0.00 SEM | 0.3457 | 0.3509 ± 0.0034 |
+
+Part B compares the lifetime τ against a hysteretic flip counter. Seed-averaged over
+8 trajectories, the ratio τ_SSA/τ_CME is **0.868–1.043** across six (Ω, γ) points.
+
+Two things this cross-check caught, both of which would have been published:
+
+- **The flip-rate convention was inverted.** A one-way Schmitt counter gives
+  `flips/T → 1/τ`; `1/(2τ)` is the *round-trip* rate. The wrong convention produced
+  ratios of 0.37–0.58 with 52–82 flips — a confident false alarm, and the original
+  note told the reader to "fix" the correct code.
+- **A single trajectory is not a measurement.** One run has sd ≈ 0.26 in the ratio;
+  the first sweep produced 1.50 and 1.58, which over 8 seeds became 0.950 ± 0.091 and
+  1.047 ± 0.112. A predicted arm-vs-attractor offset of ~0.8 also **failed to appear**
+  (mean 0.97) — it confused an MFPT-from-the-arm with the mean time between crossings
+  of a long trajectory, which is set by the full dwell.
+
+**The ⟨M⟩ column carries the power**, not P(error): a 20% protocol error is 15.7 SEM
+in ⟨M⟩ at 2000 trials but only 2.9 SEM in P(error).
+
+### 10.2 A restoring stage costs more exactly where it works less
+
+A stage seeds a fresh vessel (B=0) from the previous stage's transmitted output, runs
+for a **fixed time**, and emits the δ the chemistry actually reached — no threshold,
+no `sign()`, no renormalization. Channel noise is in landscape units,
+`σ_ch = 0.35·δ*(γ)`; since **δ*(0) = 1 exactly**, §7 is the γ→0 member of this family.
+Everything is exact (an augmented generator, no sampling, no quadrature).
+
+Depth 30, both control conventions reported:
+
+| γ | A | Ω=30 ΔS/stage → fidelity | Ω=60 | Ω=120 |
+|---|---|---|---|---|
+| 0.05 | 8.99 | 21.7 → 0.886 | 44.1 → 0.910 | 89.5 → **0.921** |
+| 0.15 | 5.69 | 20.0 → 0.807 | 41.1 → 0.862 | 83.3 → 0.890 |
+| 0.30 | 3.61 | 26.7 → 0.562 | 57.0 → 0.632 | 116.9 → 0.698 |
+| 0.45 | 2.40 | 30.5 → 0.500 | 69.3 → 0.501 | 149.1 → **0.502** |
+
+**At Ω=120, 1.67× the free energy per stage buys a total loss of function** (89.5 k_BT
+→ 0.921 versus 149.1 k_BT → 0.502, a coin flip). Cost rises toward γ_c because the
+shrinking landscape demands more cycling to hold a bit it can no longer hold. So
+restoration does not degrade gracefully into cheapness — **it degrades into paying
+more for nothing.** Cost is extensive in Ω throughout, consistent with §9.2.
+
+Robust across both controls and every Ω: fidelity falls monotonically as γ→γ_c, and
+rises monotonically with Ω. Near γ_c a "restoring" stage is genuinely worse than a
+passive channel — at γ=0.45 it sits at the coin flip for Ω = 30, 60, 120 **and 240**,
+at every stage time from 0.5 to 150, while its single-stage flip rate falls 340×.
+**8× the population buys 0.0045 of depth-30 fidelity there.**
+
+### 10.3 A withdrawn claim, and the two designs that produced it
+
+An earlier version of this section claimed **"restoration requires a minimum Ω as well
+as a minimum affinity."** *It is withdrawn.* It was an artifact of the control.
+
+The control walked a lattice hard-limited at ±1 — an **absolute** dynamic range —
+while its noise was scaled by δ*(γ). That mismatch grows with γ, in exactly the
+direction of the claimed effect. Rail the control to the chemistry's own ±δ*(γ) and it
+becomes γ-independent (0.5245/0.5226/0.5257/0.5269 — spread 0.003, versus 0.154 for
+the ±1 control), and the crossover disappears:
+
+| γ=0.30 | chemistry | control ±1 | control ±δ* |
+|---|---|---|---|
+| Ω=30 | 0.5617 | 0.5945 → **loses** | 0.5196 → **wins** |
+| Ω=60 | 0.6321 | 0.5921 → wins | 0.5257 → wins |
+
+The chemistry arm is *identical* in both columns. Under §7's absolute-σ convention the
+crossover exists but relocates to Ω ∈ (60, 120]. A crossover whose location depends on
+the comparator is a property of the comparator. `dissipation_cascade.py` now prints
+both columns on every row and flags disagreement; **1 of 12 cells disagrees, and it is
+exactly this one.**
+
+The design before that failed differently and worse: it stopped a stage at
+`0.7·δ*(γ)` and emitted ±1. Since ±1 exceeds δ*, the stop predicate fired on the
+*initial* state — **83–96% of stages ran zero reactions**, the harness performed the
+restoration for free, and the survival curve was a bare `sign()` limiter. The reported
+cost fell with γ mostly because the *no-op fraction* rose (5.0× of the measured 7.7×
+fall). Both failures are the §9.2 artifact class: a landscape that shrinks with γ,
+hidden once in a duty cycle and once in a comparator's dynamic range.
+
+**Caveats.** Single test problem, symmetric rate constants. `σ_ch = 0.35·δ*` is a
+*choice* (δ*(0)=1 makes §7 its γ→0 member, but §7 starts from a weak 0.3 signal and so
+opens at 0.80 where a rail start opens near 1.0 — the comparison is directional, not
+quantitative). `ΔS/stage` averages a non-stationary sequence and is meaningless without
+its depth. Ω ≤ 120 by cost. `t_stage = 8` is one point on an axis, not a canonical
+value.
+
 ## Open questions
 
 1. **Universality class of the freeze-out transition** (§5). Is a = 0.38 really 1/3
@@ -397,7 +500,17 @@ large Ω, where the MFPT linear solve returns a negative time (−5.9e15 at Ω=6
    Now unblocked: §9's reversible infrastructure is what it needs. Note the closed-form
    EP identity of §9.2 fails there, which is why `thermo.entropy_step` exists as the
    general primitive.
-6. **The SSA half of the dissipation work** (Plan 2): instrument the Gillespie loop
-   with an integer cycle counter and cross-check §9's exact numbers by sampling, plus
-   the cost of a *restoring cascade stage* against the non-restoring baseline of §7 —
-   the one measurement that prices restoration as this project defines it.
+6. ~~The SSA half of the dissipation work.~~ **Done** (§10). Sampling confirms §9
+   (⟨M⟩ to 0.86 SEM at Ω=120), and a restoring stage is priced. Still open: whether
+   there is *any* population at which a stage restores near γ_c — 8× buys 0.0045 of
+   fidelity at γ=0.45, so if a threshold exists it is far outside reach, and the
+   honest answer may be that there is none.
+7. **A comparator that needs no convention.** §10.3 withdrew a claim because the
+   passive control's dynamic range was a free parameter, and §10.2's verdicts still
+   depend on it in 1 of 12 cells. A control derived from the chemistry rather than
+   chosen — or a cost-per-bit-transmitted measure that needs no control at all —
+   would remove the last place this experiment can fool itself.
+8. **Is `t_stage` hiding anything?** §10.2 reports one point (t=8) on an axis. Cost
+   grows linearly in t while fidelity saturates, so "cost per stage" has no canonical
+   value; the plateau fidelity and its price are the better observables and are not
+   yet swept.

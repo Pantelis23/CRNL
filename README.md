@@ -227,13 +227,32 @@ corrected claim: restoration requires a minimum **affinity**, not a minimum
 dissipation rate. Deciding costs `O(Ω)·A` and every cascade stage pays again;
 holding a decided state costs no power in the zero-leak limit.
 
-Full tables, the γ→0 caveat, and the protocol trap that produced a convincing
-false dissipation optimum: [`FINDINGS.md`](FINDINGS.md) §9.
+### The price of a restoring stage — `experiments/dissipation_cascade.py`
+
+![dissipation of a cascade stage](experiments/dissipation_cascade.png)
+
+§7 showed *why* restoration matters but could not price it. Here a stage seeds a
+fresh vessel from the previous stage's output, runs for a fixed time, and emits the
+composition the chemistry actually reached — no threshold, no `sign()`, no
+renormalization — with the cascade solved exactly as a matrix product. The result
+is not that weak drive is cheap: **at Ω=120, 1.67× the free energy per stage buys a
+total loss of function** (89.5 k_BT → fidelity 0.921 at γ=0.05, versus 149.1 k_BT →
+0.502, a coin flip, at γ=0.45). Restoration degrades into paying more for nothing.
+
+Every cell reports **two** control conventions, because an earlier headline
+("restoration requires a minimum Ω") turned out to be a property of the comparator
+rather than the chemistry and was withdrawn; the script flags the 1 of 12 cells
+where the conventions still disagree instead of picking one.
+
+Full tables, the γ→0 caveat, the protocol trap that produced a convincing false
+dissipation optimum, and the two discarded Part C designs:
+[`FINDINGS.md`](FINDINGS.md) §9–§10.
 
 ```bash
 python -m experiments.reversible_landscape
 python -m experiments.dissipation_decision --omega 60
 python -m experiments.dissipation_memory --omegas 30 60
+python -m experiments.dissipation_cascade --quick
 ```
 
 ## Setup
@@ -271,8 +290,9 @@ exactly.
 | `crnl/networks/n_winner.py` | n-winner AM as data: n committed species + blank, pairwise disagreement + per-species autocatalysis |
 | `crnl/vectorized.py` | NumPy-vectorized SSA path validated against the reference propensities, letting the radix experiments reach n≈100 |
 | `crnl/networks/am_reversible.py` | reversible AM as data: γ-scaled reverse rates, derived reverse pairing, cycle affinity from the null space, closed-form fixed points and γ_c |
-| `crnl/thermo.py` | stochastic thermodynamics primitives: per-jump entropy production, and the boundary/cycle decomposition (the only place the A/3 per-cycle-reaction factor lives) |
+| `crnl/thermo.py` | stochastic thermodynamics primitives: per-jump entropy production, the boundary/cycle decomposition (the only place the A/3 factor lives), and the instrumented SSA loop with its integer counter and flip trigger |
 | `crnl/cme.py` | exact chemical master equation on the conserved simplex — generator, stationary distribution, dissipation rate, first-passage times and splitting probabilities by sparse solve |
+| `crnl/cascade_exact.py` | exact per-stage cascade kernel (augmented generator, two alphabets) and the passive control whose dynamic range is an explicit axis |
 | `experiments/restoration_wall.py` | the §4 protocol |
 | `experiments/phase_portrait.py` | the §2.3 landscape, made visible |
 | `experiments/radix_wall.py` | champion-vs-field barrier c(n) and population cost Ω_required(n) as the alphabet grows |
@@ -287,6 +307,7 @@ exactly.
 | `experiments/reversible_landscape.py` | the pitchfork at γ_c = 1/2: bistability vs drive, and the minimum affinity a landscape costs |
 | `experiments/dissipation_decision.py` | exact free-energy cost of *deciding* vs error probability, split into boundary and cycle terms |
 | `experiments/dissipation_memory.py` | exact lifetime τ and dissipation rate σ of a decided state — the cost of *remembering* |
+| `experiments/dissipation_cascade.py` | the price of a restoring stage vs a passive channel, reported under two control conventions |
 | `results/` | raw JSON behind every figure and table in FINDINGS.md |
 | `FINDINGS.md` | all measured results, caveats, and open questions |
 | `tests/test_engine.py` | the verification suite |
@@ -295,6 +316,9 @@ exactly.
 | `tests/test_am_reversible.py` | reversible network construction, reverse pairing, affinity, γ_c and the fixed-point branch |
 | `tests/test_thermo.py` | per-jump entropy production against the closed form, and the decomposition identity |
 | `tests/test_cme.py` | exact-solver checks: stationarity, detailed balance at γ=1 (σ=0), first-passage residuals |
+| `tests/test_thermo_ssa.py` | instrumented SSA: bit-for-bit identity with `gillespie_fast`, counter vs the exact ⟨M⟩, flip hysteresis, reversible SSA→ODE |
+| `tests/test_thermo_laws.py` | detailed balance and the second law in the forms that survive measurement (both naive statements are false) |
+| `tests/test_cascade_exact.py` | cascade kernel invariants — the parity trap, the exact ⟨M⟩ oracle, and a regression guard on the withdrawn minimum-Ω claim |
 | `docs/design.md` | full design rationale |
 
 The engine is general: it takes species, reactions, and rate constants and

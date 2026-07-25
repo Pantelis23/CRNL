@@ -184,6 +184,12 @@ scales with the landscape was held fixed while the landscape shrank.*
 | **"τ_SSA/τ_CME ≈ 0.8 from an arm-vs-attractor offset."** | Seed-averaged measurement gives 0.97 with no offset visible. The prediction conflated an MFPT-from-the-arm with the mean time between crossings of a long stationary trajectory, which is dominated by the dwell near the attractor. §10.1. |
 | **"The cascade's decay length ξ grows like the restoration wall e^{cΩ}."** | Fit directly: ln ξ vs Ω has R²=0.69 and ξ saturates (24→76 for 15× Ω). Superseded by **T1**, which explains why — the cascade is channel-limited, so ξ cannot inherit the finite-count scaling. |
 
+**A second pattern, from the depth-ceiling correction.** A threshold observable
+(the first *integer* depth below I=0.5) reported two different states as identical,
+because 0.474796 and 0.495227 both round the same way — and the second was 0.005
+from rounding the other way. Quantised observables hide trends and then present the
+gap as an invariance. Quote the continuous quantity; round only at display.
+
 **The pattern worth remembering.** In every case the error was invisible to the
 guard that was supposed to catch it, because the guard watched the wrong quantity:
 `θ/δ*` was correctly constant while the *input* relative to θ was not; the control's

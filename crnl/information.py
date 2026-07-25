@@ -213,3 +213,38 @@ def crossover_omega(gamma: float, noise_frac: float = 0.35) -> float:
     """Population at which the restoration wall gives way to the channel floor."""
     sigma = noise_frac * delta_star(gamma)
     return float(1.0 / (2.0 * wall_coefficient(gamma) * sigma ** 2))
+
+
+def depth_at_information(gamma: float, omega: int, t_stage: float,
+                         target: float = 0.5, max_depth: int = 200,
+                         noise_frac: float = 0.35,
+                         chunk: int = 64) -> float | None:
+    """Depth at which I(b;X_D) falls through `target`, as a FLOAT.
+
+    Returns the linearly interpolated crossing, not the first integer depth
+    below the target, and this distinction is not pedantry -- it produced a
+    published overstatement.
+
+    Reporting the integer at gamma=0.05, sigma/delta*=0.45 gives depth 9 at BOTH
+    Omega=64 and Omega=128, which read as an exact population-independent
+    ceiling. The underlying curves are not equal at all: I at depth 9 is
+    0.474796 versus 0.495227, and Omega=128 sits 0.005 away from not crossing
+    there. At Omega=256 it does not (I = 0.504351) and the integer jumps to 10.
+    Interpolated, the three are 8.271 / 8.861 / 9.138 -- a convergent creep
+    toward D_inf ~ 9.4, which is the true (and still strong) claim.
+
+    Returns None if the information never reaches the target within max_depth,
+    so a lower bound is never mistaken for a measurement.
+    """
+    prof = cost_per_bit(gamma, omega, t_stage, max_depth, noise_frac, chunk)
+    info = np.array([r["I_bits"] for r in prof])
+    below = info < target
+    if not below.any():
+        return None
+    i = int(np.argmax(below))
+    if i == 0:
+        return 1.0
+    hi, lo = info[i - 1], info[i]
+    if hi <= lo:
+        return float(i + 1)
+    return float(i + (hi - target) / (hi - lo))

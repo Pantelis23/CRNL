@@ -673,7 +673,11 @@ it breaks at Ω=256, where the integer crossing reads **10**. Interpolating the
 | increment per doubling | — | +0.91 | +0.83 | +0.59 | **+0.28** |
 
 The increments shrink by roughly half each doubling (ratios 0.91, 0.71, 0.47), giving
-a geometric limit of **D∞ ≈ 9.4**. So the ceiling is real — a **16× population change
+a geometric limit of **D∞ ≈ 9.4**. The two "9"s were never the same number — at depth
+9 the information is **0.474796 at Ω=64 and 0.495227 at Ω=128**, and Ω=128 sits
+0.005 away from not crossing there at all, which is the entire margin by which the
+integer agreed. `information.depth_at_information` now returns the float crossing so
+the continuous quantity is the default and rounding happens only at display. So the ceiling is real — a **16× population change
 buys 1.4× depth, and convergent** — but it is a limit approached, not a constant hit.
 For contrast, in the wall regime (σ/δ* = 0.10) `p` falls **eleven orders of
 magnitude** over the same population range, so there the depth grows without bound.

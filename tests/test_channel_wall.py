@@ -138,28 +138,6 @@ def test_near_gamma_c_the_flip_is_not_channel_driven():
 
 # -- the depth ceiling (FINDINGS 12.1) --------------------------------------
 
-def _death_depth(omega, noise_frac, max_depth, gamma=0.05):
-    """Interpolated depth at which I(b;X_D) falls through 0.5.
-
-    INTERPOLATED, not the integer crossing. An earlier version of this test
-    asserted death_depth(64) == death_depth(128) at sigma/delta*=0.45 and passed
-    -- but only because integer rounding hid a slow creep, and the equality
-    BREAKS at Omega=256 (which reads 10). The real claim is convergence, so the
-    test has to measure a continuous quantity.
-    """
-    from crnl.information import cost_per_bit
-
-    prof = cost_per_bit(gamma, omega, 16.0, max_depth, noise_frac=noise_frac)
-    info = np.array([r["I_bits"] for r in prof])
-    if not (info < 0.5).any():
-        return None
-    i = int(np.argmax(info < 0.5))
-    if i == 0:
-        return 1.0
-    y0, y1 = info[i - 1], info[i]
-    return float(i + (y0 - 0.5) / (y0 - y1))
-
-
 def test_depth_ceiling_converges_rather_than_growing_with_population():
     """The honest form of the ceiling claim.
 
@@ -169,7 +147,10 @@ def test_depth_ceiling_converges_rather_than_growing_with_population():
     the wall regime, where p falls eleven orders of magnitude over the same
     range and depth grows without bound.
     """
-    ds = [_death_depth(om, 0.45, 40) for om in (16, 32, 64, 128)]
+    from crnl.information import depth_at_information
+
+    ds = [depth_at_information(0.05, om, 16.0, 0.5, 40, 0.45)
+          for om in (16, 32, 64, 128)]
     assert all(d is not None for d in ds)
     assert ds == sorted(ds)                       # still creeping up
     incs = [ds[i] - ds[i - 1] for i in range(1, len(ds))]
@@ -179,15 +160,31 @@ def test_depth_ceiling_converges_rather_than_growing_with_population():
 
 def test_the_ceiling_grows_with_the_landscape_to_noise_ratio():
     """D_max ~ exp(delta*^2 / 2 sigma^2): quieter channels buy exponentially
-    more depth, where more molecules buy none. Measured 9 -> 44 for
+    more depth, where more molecules buy none. Measured 8.27 -> ~43 for
     sigma/delta* 0.45 -> 0.35."""
-    from crnl.information import cost_per_bit
+    from crnl.information import depth_at_information
 
-    def death_depth(nf, max_depth):
-        prof = cost_per_bit(0.05, 64, 16.0, max_depth, noise_frac=nf)
-        info = np.array([r["I_bits"] for r in prof])
-        return prof[int(np.argmax(info < 0.5))]["depth"] if (info < 0.5).any() else None
-
-    loud, quieter = death_depth(0.45, 40), death_depth(0.35, 120)
+    loud = depth_at_information(0.05, 64, 16.0, 0.5, 40, 0.45)
+    quieter = depth_at_information(0.05, 64, 16.0, 0.5, 120, 0.35)
     assert loud is not None and quieter is not None
     assert quieter > 3 * loud
+
+
+def test_the_float_crossing_separates_what_the_integer_conflates():
+    """A regression guard on a lesson, not a mechanism.
+
+    The integer death depth reads 9 at BOTH Omega=64 and Omega=128, which was
+    published as an exact population-independent ceiling. The curves are not
+    equal: I at depth 9 is 0.4748 vs 0.4952, and Omega=128 is 0.005 from not
+    crossing there at all. Any future use must take the float.
+    """
+    from crnl.information import cost_per_bit, depth_at_information
+
+    i9 = [cost_per_bit(0.05, om, 16.0, 10, noise_frac=0.45)[8]["I_bits"]
+          for om in (64, 128)]
+    assert i9[0] < 0.5 and i9[1] < 0.5           # both round to the same integer
+    assert abs(i9[1] - i9[0]) > 0.015            # yet are plainly different
+
+    floats = [depth_at_information(0.05, om, 16.0, 0.5, 40, 0.45)
+              for om in (64, 128)]
+    assert floats[1] - floats[0] > 0.3, floats   # the float sees the gap

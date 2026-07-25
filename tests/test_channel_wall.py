@@ -138,20 +138,43 @@ def test_near_gamma_c_the_flip_is_not_channel_driven():
 
 # -- the depth ceiling (FINDINGS 12.1) --------------------------------------
 
-def test_maximum_depth_is_independent_of_population():
-    """At high channel noise the bit dies at the same depth however many
-    molecules you use -- the sharpest consequence of the Omega-independent
-    floor. Measured at gamma=0.05, sigma/delta*=0.45: depth 9 at BOTH Omega=64
-    and Omega=128."""
+def _death_depth(omega, noise_frac, max_depth, gamma=0.05):
+    """Interpolated depth at which I(b;X_D) falls through 0.5.
+
+    INTERPOLATED, not the integer crossing. An earlier version of this test
+    asserted death_depth(64) == death_depth(128) at sigma/delta*=0.45 and passed
+    -- but only because integer rounding hid a slow creep, and the equality
+    BREAKS at Omega=256 (which reads 10). The real claim is convergence, so the
+    test has to measure a continuous quantity.
+    """
     from crnl.information import cost_per_bit
 
-    def death_depth(omega):
-        prof = cost_per_bit(0.05, omega, 16.0, 40, noise_frac=0.45)
-        info = np.array([r["I_bits"] for r in prof])
-        assert (info < 0.5).any(), "bit never died; widen the depth"
-        return prof[int(np.argmax(info < 0.5))]["depth"]
+    prof = cost_per_bit(gamma, omega, 16.0, max_depth, noise_frac=noise_frac)
+    info = np.array([r["I_bits"] for r in prof])
+    if not (info < 0.5).any():
+        return None
+    i = int(np.argmax(info < 0.5))
+    if i == 0:
+        return 1.0
+    y0, y1 = info[i - 1], info[i]
+    return float(i + (y0 - 0.5) / (y0 - y1))
 
-    assert death_depth(64) == death_depth(128)
+
+def test_depth_ceiling_converges_rather_than_growing_with_population():
+    """The honest form of the ceiling claim.
+
+    At sigma/delta* = 0.45 the interpolated death depth is 6.53 / 7.44 / 8.27 /
+    8.86 / 9.14 at Omega = 16 / 32 / 64 / 128 / 256 -- increments halving each
+    doubling, geometric limit ~9.4. A 16x population buys 1.4x depth. Contrast
+    the wall regime, where p falls eleven orders of magnitude over the same
+    range and depth grows without bound.
+    """
+    ds = [_death_depth(om, 0.45, 40) for om in (16, 32, 64, 128)]
+    assert all(d is not None for d in ds)
+    assert ds == sorted(ds)                       # still creeping up
+    incs = [ds[i] - ds[i - 1] for i in range(1, len(ds))]
+    assert all(incs[i] < incs[i - 1] for i in range(1, len(incs))), incs
+    assert ds[-1] / ds[0] < 1.6                   # 8x population, <1.6x depth
 
 
 def test_the_ceiling_grows_with_the_landscape_to_noise_ratio():

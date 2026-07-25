@@ -653,12 +653,31 @@ Measured, as the depth at which `I` falls through 0.5:
 | σ_ch/δ* | 0.45 | 0.35 | 0.28 | 0.22 |
 |---|---|---|---|---|
 | predicted D_max | 3.0 | 14.8 | 147 | 7664 |
-| measured, Ω=64 | **9** | 44 | 355 | >4000 |
-| measured, Ω=128 | **9** | 50 | 489 | >4000 |
+| measured, Ω=64 | 9 | 44 | 355 | >4000 |
+| measured, Ω=128 | 9 | 50 | 489 | >4000 |
 
-At σ/δ* = 0.45 the two populations die at *exactly* the same depth. The predicted
-scaling holds over the tested range (a 50× span) with a constant prefactor ≈3 that
-the saddle point drops — the same missing prefactor as §12's slope of 0.74.
+The predicted scaling holds over the tested range (a 50× span) with a constant
+prefactor ≈3 that the saddle point drops — the same missing prefactor as §12's slope
+of 0.74.
+
+**A correction, because the first version of this section overstated it.** It read
+"at σ/δ* = 0.45 the two populations die at *exactly* the same depth." They do — but
+that is **integer rounding across two adjacent points**, not an exact invariance, and
+it breaks at Ω=256, where the integer crossing reads **10**. Interpolating the
+`I = 0.5` crossing shows what is really happening:
+
+| Ω | 16 | 32 | 64 | 128 | 256 |
+|---|---|---|---|---|---|
+| exponent, % of ceiling | 88.8 | 94.1 | 96.9 | 98.5 | **99.2** |
+| interpolated death depth | 6.53 | 7.44 | 8.27 | 8.86 | **9.14** |
+| increment per doubling | — | +0.91 | +0.83 | +0.59 | **+0.28** |
+
+The increments shrink by roughly half each doubling (ratios 0.91, 0.71, 0.47), giving
+a geometric limit of **D∞ ≈ 9.4**. So the ceiling is real — a **16× population change
+buys 1.4× depth, and convergent** — but it is a limit approached, not a constant hit.
+For contrast, in the wall regime (σ/δ* = 0.10) `p` falls **eleven orders of
+magnitude** over the same population range, so there the depth grows without bound.
+That contrast, not the equality of two integers, is the finding.
 
 **This retroactively explains §10–§11.** Those experiments ran depth 30 at
 σ_ch/δ* = 0.35, where the ceiling is ≈44–50 stages. They were operating near a limit

@@ -147,3 +147,58 @@ def cycle_affinity(net: ReactionNetwork, pairing: np.ndarray) -> float:
         for ci, (a, b) in zip(c, pairs)
     ))
     return abs(A)
+
+
+def lambda_antisym(gamma: float) -> float:
+    """Restoring gain: the unstable eigenvalue of the decision mode (1,-1).
+
+    At the symmetric point (1/3,1/3,1/3) the Jacobian's (x,y) block has
+    off-diagonal -(2+2g)/3 and diagonal -(1+4g)/3, so the (1,-1) mode has
+    eigenvalue (1-2g)/3. It is +1/3 at gamma=0 (design.md 2.3's AM saddle) and
+    vanishes at gamma = 1/2 -- which is what makes GAMMA_C exact.
+    """
+    return (1.0 - 2.0 * gamma) / 3.0
+
+
+def lambda_sym(gamma: float) -> float:
+    """Eigenvalue of the symmetric (1,1) mode at (1/3,1/3,1/3); always stable."""
+    return -(1.0 + 2.0 * gamma)
+
+
+def delta_star(gamma: float) -> float:
+    """Separation x* - y* of the two attractors; 0 at and above GAMMA_C.
+
+    Off-symmetry requires b* = gamma/(1+gamma), which gives
+        x* = [1 +- sqrt(1 - 4 g^3/(1-g))] / (2(1+g))
+    so the separation is sqrt(disc)/(1+g). The discriminant numerator factors as
+    -(2g-1)(2g^2+g+1) with the quadratic strictly positive, so the unique real
+    root is gamma = 1/2: a pitchfork, with delta* ~ (4 sqrt(2)/3) sqrt(g_c - g).
+    """
+    if gamma >= GAMMA_C:
+        return 0.0
+    disc = 1.0 - 4.0 * gamma ** 3 / (1.0 - gamma)
+    if disc <= 0.0:
+        return 0.0
+    return float(np.sqrt(disc) / (1.0 + gamma))
+
+
+def fixed_points(gamma: float) -> list[dict]:
+    """All fixed points in the simplex, with stability labels.
+
+    There are THREE for 0 < gamma < GAMMA_C -- not four. The all-blank repeller
+    (0,0,1) of irreversible AM leaves the simplex the instant gamma > 0 (there
+    db/dt = -2*gamma), and the second symmetric root is negative. So the
+    reversible model has no all-blank outcome at all.
+
+    Above GAMMA_C only the symmetric point remains, and it is stable: a single
+    minimum, no threshold, nothing to restore toward.
+    """
+    out = [{"x": 1 / 3, "y": 1 / 3, "b": 1 / 3, "kind": "symmetric"}]
+    d = delta_star(gamma)
+    if d > 0.0:
+        b = gamma / (1.0 + gamma)
+        total = 1.0 - b                       # x + y
+        hi, lo = (total + d) / 2.0, (total - d) / 2.0
+        out.append({"x": hi, "y": lo, "b": b, "kind": "attractor"})
+        out.append({"x": lo, "y": hi, "b": b, "kind": "attractor"})
+    return out

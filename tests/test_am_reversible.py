@@ -244,3 +244,85 @@ def test_cycle_affinity_is_order_independent():
     A_reordered = cycle_affinity(reordered, reverse_pairing(reordered))
     assert A_reordered == pytest.approx(A_canonical)
     assert A_reordered == pytest.approx(-3.0 * np.log(gamma))
+
+
+def test_symmetric_point_is_a_fixed_point_at_every_gamma():
+    # surprising but exact: at (1/3,1/3,1/3) the three net fluxes are equal and
+    # the three stoichiometric vectors sum to zero, so S.v = 0 for every gamma.
+    for gamma in (0.0, 0.2, 0.5, 0.8, 1.0):
+        net = am_reversible(gamma)
+        assert np.allclose(net.rhs([1 / 3, 1 / 3, 1 / 3]), 0.0, atol=1e-12)
+
+
+def test_decision_mode_eigenvalue_matches_closed_form():
+    """Both closed-form eigenvalues, against the engine's numeric Jacobian.
+
+    The engine returns the FULL 3x3 Jacobian in (x, y, b). The closed forms are
+    properties of the REDUCED system with b = 1 - x - y, so the reduction must be
+    applied first: dF/dx|reduced = dF/dx - dF/db, since db/dx = db/dy = -1.
+    Skipping that step happens to give the right antisymmetric eigenvalue by
+    coincidence, but the symmetric one comes out a factor of 3 wrong
+    (-1/3 instead of -1 at gamma=0).
+    """
+    from crnl.deterministic import jacobian
+    from crnl.networks.am_reversible import lambda_antisym, lambda_sym
+    for gamma in (0.0, 0.1, 0.25, 0.4, 0.5, 0.6):
+        J = jacobian(am_reversible(gamma), [1 / 3, 1 / 3, 1 / 3])
+        Jr = J[:2, :2] - J[:2, 2:3]        # eliminate b by the conservation law
+        assert Jr[0, 0] - Jr[0, 1] == pytest.approx(lambda_antisym(gamma), abs=1e-9)
+        assert Jr[0, 0] + Jr[0, 1] == pytest.approx(lambda_sym(gamma), abs=1e-9)
+
+
+def test_restoring_gain_recovers_irreversible_am_at_gamma_zero():
+    from crnl.networks.am_reversible import lambda_antisym
+    # design.md 2.3's AM saddle eigenvalue is +1/3; it is the gamma->0 limit here
+    assert lambda_antisym(0.0) == pytest.approx(1 / 3)
+    assert lambda_antisym(GAMMA_C) == pytest.approx(0.0)
+    assert lambda_antisym(0.6) < 0.0
+
+
+def test_pure_corner_is_not_a_fixed_point():
+    for gamma in (0.25, 0.7):
+        net = am_reversible(gamma)
+        r = net.rhs([1.0, 0.0, 0.0])
+        assert r[0] == pytest.approx(-gamma)      # dx/dt = -gamma
+        assert r[2] == pytest.approx(+gamma)
+
+
+def test_attractors_and_blank_population():
+    from crnl.networks.am_reversible import fixed_points
+    for gamma in (0.05, 0.2, 0.3, 0.45):
+        fps = fixed_points(gamma)
+        assert len(fps) == 3                       # 3, not 4: all-blank left the simplex
+        attractors = [f for f in fps if f["kind"] == "attractor"]
+        assert len(attractors) == 2
+        for f in attractors:
+            assert f["b"] == pytest.approx(gamma / (1 + gamma))   # b* = g/(1+g)
+            assert np.allclose(am_reversible(gamma).rhs([f["x"], f["y"], f["b"]]),
+                               0.0, atol=1e-9)
+
+
+def test_only_symmetric_point_above_gamma_c():
+    from crnl.networks.am_reversible import fixed_points, delta_star
+    for gamma in (0.5, 0.7):
+        fps = fixed_points(gamma)
+        assert len(fps) == 1
+        assert fps[0]["kind"] == "symmetric"
+        assert delta_star(gamma) == 0.0
+
+
+def test_pitchfork_scaling_closed_form():
+    from crnl.networks.am_reversible import delta_star
+    # delta* / sqrt(gamma_c - gamma) -> 4*sqrt(2)/3 as gamma -> gamma_c
+    target = 4 * np.sqrt(2) / 3
+    ratio = delta_star(0.4999) / np.sqrt(GAMMA_C - 0.4999)
+    assert ratio == pytest.approx(target, rel=1e-3)
+    assert target == pytest.approx(1.8856180832, abs=1e-9)
+
+
+def test_delta_star_matches_root_formula():
+    from crnl.networks.am_reversible import delta_star
+    for gamma in (0.05, 0.2, 0.4):
+        disc = 1 - 4 * gamma ** 3 / (1 - gamma)
+        expect = np.sqrt(disc) / (1 + gamma)       # x+ - x- = sqrt(disc)/(1+g)
+        assert delta_star(gamma) == pytest.approx(expect)

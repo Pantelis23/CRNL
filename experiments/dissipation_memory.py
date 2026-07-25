@@ -48,6 +48,94 @@ from crnl.networks.am_reversible import (
     fixed_points,
     reverse_pairing,
 )
+from crnl.stochastic import seed_for
+from crnl.thermo import gillespie_instrumented
+from crnl.vectorized import compile_network
+
+STEPS_PER_SECOND = 84_000.0      # measured on this engine, reversible AM
+STEPS_PER_UNIT_TIME = 0.4        # x Omega; measured 0.38-0.48 across (gamma, Omega)
+
+
+def ssa_flip_rate(gamma: float, omega: int, tau_cme: float, max_seconds: float,
+                  seed: int = 0, theta_frac: float = 0.7,
+                  target_flips: int = 30, n_seeds: int = 8) -> dict:
+    """Measure the flip rate by SSA and compare with 1/tau from the CME.
+
+    GATED ON THE CME, BY DESIGN: the exact tau prices the run BEFORE paying for
+    it. And the budget is ENFORCED, not merely accepted -- an earlier draft took
+    max_seconds as an argument and never used it, so raising it to 3600 admitted
+    a 1.8 h run with max_steps as the only backstop.
+
+    CONVENTION: FlipCounter counts ONE-WAY crossings, so flips/T -> 1/tau.
+    Using 1/(2 tau) (the ROUND-TRIP rate) halves tau_ssa and was measured to
+    give ratios of 0.37-0.58 with 52-82 flips -- a false alarm outside sampling
+    An arm-vs-attractor offset was PREDICTED (the flip clock starts at the arm,
+    the CME's tau at the attractor) and estimated at 0.77-0.85 from direct
+    MFPT-from-arm runs. Seed-averaged measurement does NOT show it: six points
+    give 0.946/0.980/0.964/1.043/1.038/0.868, mean 0.97, every one within ~1.5
+    SEM of 1.0. The prediction confused two different quantities -- an MFPT from
+    the arm is not the mean time between crossings of a long stationary
+    trajectory, which is dominated by the full dwell near the attractor. Expect
+    ~1.0; a systematic 0.8 would now be evidence of a real problem.
+
+    AVERAGES OVER n_seeds INDEPENDENT TRAJECTORIES, and this is not optional.
+    A single trajectory carrying ~30 flips has a measured spread of sd = 0.16 to
+    0.32 in the ratio tau_SSA/tau_CME, so an individual point lands anywhere in
+    [0.64, 1.58] with no bug present at all -- a first run of this sweep produced
+    exactly two such outliers (1.50 at Omega=60 gamma=0.45, 1.58 at Omega=120
+    gamma=0.49) and they were pure sampling noise: the SAME points over 8 seeds
+    give 0.950 +- 0.091 and 1.047 +- 0.112. Reporting one trajectory would mean
+    publishing the tail of a distribution as if it were a measurement, and would
+    make any real factor-level discrepancy indistinguishable from luck.
+    """
+    arm = theta_frac * delta_star(gamma)
+    net = am_reversible(gamma)
+    pairing = reverse_pairing(net)
+    comp = compile_network(net, float(omega))
+
+    att = [f for f in fixed_points(gamma) if f["kind"] == "attractor"]
+    hi = max(att, key=lambda f: f["x"])
+    n_x = int(round(hi["x"] * omega))
+    n_b = int(round(hi["b"] * omega))
+    start = np.array([n_x, omega - n_x - n_b, n_b], dtype=np.int64)
+
+    t_needed = tau_cme * target_flips
+    # hard cap from the budget, SHARED across the seeds so the total run cannot
+    # outlive it -- a per-seed cap would silently cost n_seeds times the budget.
+    max_steps = max(1, int(max_seconds * STEPS_PER_SECOND / n_seeds))
+
+    taus, flips_all, steps_all, budget_hit = [], [], [], False
+    for s in range(n_seeds):
+        r = gillespie_instrumented(comp, start, seed_for(omega, s, base=seed),
+                                   pairing, flip_arm=arm, omega=omega,
+                                   t_max=t_needed, max_steps=max_steps,
+                                   species=list(net.species))
+        flips_all.append(r.flips)
+        steps_all.append(r.steps)
+        budget_hit |= r.steps >= max_steps
+        if r.flips > 0 and r.t_final > 0:
+            taus.append(r.t_final / r.flips)          # = 1 / rate
+
+    total_flips = int(sum(flips_all))
+    if not taus:
+        nan = float("nan")
+        return {"flips": total_flips, "n_seeds": n_seeds, "tau_ssa": nan,
+                "tau_ssa_sem": nan, "flip_rate": nan, "enough": False,
+                "budget_hit": budget_hit, "t_target": t_needed,
+                "steps": int(sum(steps_all))}
+    taus = np.array(taus)
+    mean = float(taus.mean())
+    sem = float(taus.std(ddof=1) / np.sqrt(len(taus))) if len(taus) > 1 else 0.0
+    return {
+        "flips": total_flips, "n_seeds": n_seeds, "seeds_used": len(taus),
+        "steps": int(sum(steps_all)),
+        "tau_ssa": mean, "tau_ssa_sem": sem,
+        "flip_rate": 1.0 / mean if mean > 0 else float("nan"),
+        # 10 flips was the old single-trajectory bar; with n_seeds trajectories
+        # the meaningful quantity is the pooled count.
+        "enough": total_flips >= 60 and len(taus) >= 3,
+        "budget_hit": budget_hit, "t_target": t_needed,
+    }
 
 
 def run_point(gamma: float, omega: int, theta_frac: float = 0.7) -> dict:
@@ -81,7 +169,11 @@ def run_point(gamma: float, omega: int, theta_frac: float = 0.7) -> dict:
         "tau": tau,
         "sigma": sigma,
         "sigma_tau": sigma * tau if fp["valid"] else float("nan"),
-        "flip_rate": 1.0 / (2.0 * tau) if fp["valid"] and tau > 0 else float("nan"),
+        # ONE-WAY crossing rate, matching FlipCounter's convention and the SSA
+        # cross-check above. 1/(2 tau) is the ROUND-TRIP rate; using it here made
+        # the exact and sampled columns disagree by exactly 2 while both were
+        # internally correct.
+        "flip_rate": 1.0 / tau if fp["valid"] and tau > 0 else float("nan"),
         "valid": fp["valid"],
         "residual": fp["residual"],
     }
@@ -137,6 +229,14 @@ def main():
     p.add_argument("--out", default=os.path.join(here, "dissipation_memory.png"))
     p.add_argument("--data", default=os.path.join(
         here, os.pardir, "results", "dissipation_memory.json"))
+    p.add_argument("--ssa", action="store_true")
+    p.add_argument("--max-seconds", type=float, default=60.0,
+                   help="per-point wall-clock ceiling, ENFORCED via max_steps")
+    p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--ssa-seeds", type=int, default=8,
+                   help="independent trajectories per SSA point. NOT optional at "
+                        "1: a single trajectory has sd ~0.26 in the ratio, so it "
+                        "publishes the tail of a distribution as a measurement")
     args = p.parse_args()
 
     print("Part B: exact cost of remembering (CME; SSA cross-checks are Plan 2)")
@@ -157,6 +257,35 @@ def main():
     dropped = [(r["omega"], r["gamma"]) for r in rows if not r["valid"]]
     if dropped:
         print(f"\nDROPPED (solve invalid, e.g. tau<0 or >1e14): {dropped}")
+
+    if args.ssa:
+        print(f"\nSSA cross-check of tau (budget {args.max_seconds:.0f}s/point; "
+              "flip rate compared against 1/tau -- see ssa_flip_rate docstring). "
+              "Expect ratio ~1.0; the predicted arm-vs-attractor offset does "
+              "not survive seed-averaged measurement.")
+        print(f"{'Omega':>6} {'gamma':>6} {'tau CME':>11} {'tau SSA':>20} "
+              f"{'flips':>6} {'ratio':>16}")
+        for r in rows:
+            if not r["valid"]:
+                continue
+            # x n_seeds: the budget must price ALL the trajectories, not one
+            predicted = (r["tau"] * 30 * STEPS_PER_UNIT_TIME * r["omega"]
+                         / STEPS_PER_SECOND)
+            if predicted > args.max_seconds:
+                print(f"{r['omega']:>6} {r['gamma']:>6.2f} {r['tau']:>11.4g} "
+                      f"{'skipped':>11} {'-':>6} {'-':>7}  "
+                      f"(~{predicted:.0f}s predicted)")
+                continue
+            s = ssa_flip_rate(r["gamma"], r["omega"], r["tau"], args.max_seconds,
+                              args.seed, args.theta_frac, n_seeds=args.ssa_seeds)
+            r["ssa"] = {k: v for k, v in s.items()}     # no wall-clock in the JSON
+            ratio = s["tau_ssa"] / r["tau"] if s["enough"] else float("nan")
+            r_sem = s["tau_ssa_sem"] / r["tau"] if s["enough"] else float("nan")
+            print(f"{r['omega']:>6} {r['gamma']:>6.2f} {r['tau']:>11.4g} "
+                  f"{s['tau_ssa']:>13.4g}±{s['tau_ssa_sem']:<6.3g} "
+                  f"{s['flips']:>6} {ratio:>9.3f}±{r_sem:<6.3f}"
+                  + ("" if s["enough"] else "  (too few flips: not a measurement)")
+                  + ("  BUDGET HIT" if s["budget_hit"] else ""))
 
     os.makedirs(os.path.dirname(os.path.abspath(args.data)), exist_ok=True)
     with open(args.data, "w") as fh:

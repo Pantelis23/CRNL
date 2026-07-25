@@ -302,6 +302,20 @@ python -m experiments.dissipation_cascade --quick
 python -m experiments.bit_cost --quick
 ```
 
+## License
+
+Apache License 2.0 — see [](LICENSE) and [](NOTICE).
+
+Apache 2.0 rather than MIT for two reasons specific to this work. It carries an
+**explicit patent grant** with defensive termination (§3), which matters in
+molecular and chemical computing where MIT's silence on patents leaves a real
+ambiguity for anyone building a physical implementation from these results. And
+§4(b) requires a modified version to state that it changed the files — which
+matters here because much of the repo is a *measurement record* with corrections
+and withdrawn claims in it, and a fork's numbers should not be mistaken for these.
+
+Citing it: [](CITATION.cff).
+
 ## Setup
 
 Requires Python 3.10+.

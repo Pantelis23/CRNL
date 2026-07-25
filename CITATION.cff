@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+title: "CRNL — Chemical Reaction Network Landscape"
+message: "If you use this software or its measured results, please cite it."
+type: software
+authors:
+  - given-names: Panteleimon-Panagiotis
+    family-names: Christou
+    alias: Pantelis
+repository-code: "https://github.com/Pantelis23/CRNL"
+abstract: >-
+  A simulation rig for making signal restoration measurable. The same chemical
+  reaction network is run deterministically (mass-action ODEs) and stochastically
+  (exact Gillespie SSA), and the gap between them is the subject. Results include
+  the restoration wall P(error) ~ exp(-c(eps)*Omega) with c(eps) = (3/2)eps^2
+  derived from the saddle geometry; a chemical freeze-out transition under volume
+  expansion; the free-energy cost of restoration from exact chemical master
+  equation solves, including the bifurcation at gamma_c = 1/2 where a landscape
+  costs a minimum affinity of 3 ln 2; and a crossover between the restoration
+  wall and an Omega-independent channel floor that sets a maximum cascade depth.
+keywords:
+  - chemical reaction networks
+  - approximate majority
+  - Gillespie algorithm
+  - stochastic thermodynamics
+  - signal restoration
+  - chemical master equation
+license: Apache-2.0

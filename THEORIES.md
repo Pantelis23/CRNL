@@ -139,13 +139,24 @@ diverge as γ→γ_c, rather than staying pinned at 16.
   **Why it does not count.** No parallel vessels were ever modelled. "R vessels" was
   implemented as *dividing `noise_frac` by `√R` by hand*, so the result is the
   ceiling formula restated — `D_max` depends on `σ/δ*`, therefore reducing `σ` raises
-  it — and not evidence about parallelism at all. The control confirms depth responds
-  to noise and essentially not to molecule count:
+  it — and not evidence about parallelism at all. **That, alone, is the reason it is
+  rejected.**
 
-  | change | effect on depth |
+  **And then I over-corrected.** The first version of this entry justified the
+  rejection with a second claim: that "depth responds to noise and essentially not to
+  molecule count," citing 355 → 489 (1.4×) for Ω 64→128. That is the *flattest step
+  at the most saturated noise level*, chosen after I had already decided to reject.
+  Measured properly across an 8× population sweep:
+
+  | σ_ch/δ* | Ω = 16 → 128 (8× molecules) |
   |---|---|
-  | 2× molecules at fixed σ/δ*=0.28 (Ω 64→128) | 355 → 489, **1.4×** |
-  | lower σ/δ* at fixed Ω=64 (0.45→0.28) | 8.27 → 355, **43×** |
+  | 0.28 | 90.9 → 488.6 = **5.4×** |
+  | 0.35 | 22.6 → 49.8 = **2.2×** |
+
+  Molecule count moves the depth substantially; it saturates, and how quickly depends
+  on where Ω sits relative to `Ω× = 1/(2κσ²)`. The rejection stands on the modelling
+  grounds above, not on this — a cherry-picked step should not have been used to prop
+  it up, and doubt applies to corrections as well as to claims.
 
   Worse, the setup quietly assumed a **free, perfect pooling operation** — and a
   pooler is itself a restoring element. That is exactly the error that killed Part C

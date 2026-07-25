@@ -683,6 +683,13 @@ For contrast, in the wall regime (σ/δ* = 0.10) `p` falls **eleven orders of
 magnitude** over the same population range, so there the depth grows without bound.
 That contrast, not the equality of two integers, is the finding.
 
+**How tight the ceiling is depends on the noise, and σ/δ* = 0.45 is its tightest
+case.** Quoting only that row would overstate the saturation. Across an 8× population
+sweep (Ω = 16 → 128): depth grows **5.4×** at σ/δ* = 0.28 and **2.2×** at 0.35,
+against 1.4× (for 16×) at 0.45. Molecules do buy depth — with sharply diminishing
+returns that set in earlier the noisier the channel, because `Ω× = 1/(2κσ²)` falls as
+σ rises.
+
 **This retroactively explains §10–§11.** Those experiments ran depth 30 at
 σ_ch/δ* = 0.35, where the ceiling is ≈44–50 stages. They were operating near a limit
 that no amount of population could move, which is why fidelity plateaued at 0.63 and

@@ -48,6 +48,57 @@ from crnl.networks.am_reversible import (
     fixed_points,
     reverse_pairing,
 )
+from crnl.stochastic import seed_for
+from crnl.thermo import gillespie_instrumented
+from crnl.vectorized import compile_network
+
+STEPS_PER_SECOND = 84_000.0      # measured on this engine, reversible AM
+STEPS_PER_UNIT_TIME = 0.4        # x Omega; measured 0.38-0.48 across (gamma, Omega)
+
+
+def ssa_flip_rate(gamma: float, omega: int, tau_cme: float, max_seconds: float,
+                  seed: int = 0, theta_frac: float = 0.7,
+                  target_flips: int = 30) -> dict:
+    """Measure the flip rate by SSA and compare with 1/tau from the CME.
+
+    GATED ON THE CME, BY DESIGN: the exact tau prices the run BEFORE paying for
+    it. And the budget is ENFORCED, not merely accepted -- an earlier draft took
+    max_seconds as an argument and never used it, so raising it to 3600 admitted
+    a 1.8 h run with max_steps as the only backstop.
+
+    CONVENTION: FlipCounter counts ONE-WAY crossings, so flips/T -> 1/tau.
+    Using 1/(2 tau) (the ROUND-TRIP rate) halves tau_ssa and was measured to
+    give ratios of 0.37-0.58 with 52-82 flips -- a false alarm outside sampling
+    noise. A residual ratio of ~0.8 IS expected and is not a bug: the flip clock
+    starts at the ARM (0.7 delta*) while the CME's tau starts at the ATTRACTOR
+    (measured 0.77-0.85 for that offset alone).
+    """
+    arm = theta_frac * delta_star(gamma)
+    net = am_reversible(gamma)
+    pairing = reverse_pairing(net)
+    comp = compile_network(net, float(omega))
+
+    att = [f for f in fixed_points(gamma) if f["kind"] == "attractor"]
+    hi = max(att, key=lambda f: f["x"])
+    n_x = int(round(hi["x"] * omega))
+    n_b = int(round(hi["b"] * omega))
+    start = np.array([n_x, omega - n_x - n_b, n_b], dtype=np.int64)
+
+    t_needed = tau_cme * target_flips
+    # hard cap from the budget, so the run cannot outlive it
+    max_steps = int(max_seconds * STEPS_PER_SECOND)
+    r = gillespie_instrumented(comp, start, seed_for(omega, 0, base=seed),
+                               pairing, flip_arm=arm, omega=omega,
+                               t_max=t_needed, max_steps=max_steps,
+                               species=list(net.species))
+    rate = r.flips / r.t_final if r.t_final > 0 else float("nan")
+    return {
+        "flips": r.flips, "t_total": r.t_final, "steps": r.steps,
+        "flip_rate": rate,
+        "tau_ssa": (1.0 / rate) if rate > 0 else float("nan"),
+        "enough": r.flips >= 10, "budget_hit": r.steps >= max_steps,
+        "t_target": t_needed,
+    }
 
 
 def run_point(gamma: float, omega: int, theta_frac: float = 0.7) -> dict:
@@ -137,6 +188,10 @@ def main():
     p.add_argument("--out", default=os.path.join(here, "dissipation_memory.png"))
     p.add_argument("--data", default=os.path.join(
         here, os.pardir, "results", "dissipation_memory.json"))
+    p.add_argument("--ssa", action="store_true")
+    p.add_argument("--max-seconds", type=float, default=60.0,
+                   help="per-point wall-clock ceiling, ENFORCED via max_steps")
+    p.add_argument("--seed", type=int, default=0)
     args = p.parse_args()
 
     print("Part B: exact cost of remembering (CME; SSA cross-checks are Plan 2)")
@@ -157,6 +212,31 @@ def main():
     dropped = [(r["omega"], r["gamma"]) for r in rows if not r["valid"]]
     if dropped:
         print(f"\nDROPPED (solve invalid, e.g. tau<0 or >1e14): {dropped}")
+
+    if args.ssa:
+        print(f"\nSSA cross-check of tau (budget {args.max_seconds:.0f}s/point; "
+              "flip rate compared against 1/tau -- see ssa_flip_rate docstring). "
+              "A ratio near 0.8 is the arm-vs-attractor offset, not an error.")
+        print(f"{'Omega':>6} {'gamma':>6} {'tau CME':>11} {'tau SSA':>11} "
+              f"{'flips':>6} {'ratio':>7}")
+        for r in rows:
+            if not r["valid"]:
+                continue
+            predicted = (r["tau"] * 30 * STEPS_PER_UNIT_TIME * r["omega"]
+                         / STEPS_PER_SECOND)
+            if predicted > args.max_seconds:
+                print(f"{r['omega']:>6} {r['gamma']:>6.2f} {r['tau']:>11.4g} "
+                      f"{'skipped':>11} {'-':>6} {'-':>7}  "
+                      f"(~{predicted:.0f}s predicted)")
+                continue
+            s = ssa_flip_rate(r["gamma"], r["omega"], r["tau"], args.max_seconds,
+                              args.seed, args.theta_frac)
+            r["ssa"] = {k: v for k, v in s.items()}     # no wall-clock in the JSON
+            ratio = s["tau_ssa"] / r["tau"] if s["enough"] else float("nan")
+            print(f"{r['omega']:>6} {r['gamma']:>6.2f} {r['tau']:>11.4g} "
+                  f"{s['tau_ssa']:>11.4g} {s['flips']:>6} {ratio:>7.2f}"
+                  + ("" if s["enough"] else "  (too few flips: not a measurement)")
+                  + ("  BUDGET HIT" if s["budget_hit"] else ""))
 
     os.makedirs(os.path.dirname(os.path.abspath(args.data)), exist_ok=True)
     with open(args.data, "w") as fh:

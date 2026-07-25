@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from crnl.networks.am_reversible import am_reversible, reverse_pairing, GAMMA_C
+from crnl.reactions import Reaction, ReactionNetwork
 
 
 def test_structure_and_order():
@@ -68,11 +69,36 @@ def test_rejects_negative_gamma():
         am_reversible(-0.1)
 
 
+def test_rejects_nan_gamma():
+    with pytest.raises(ValueError):
+        am_reversible(float("nan"))
+
+
+def test_reverse_pairing_raises_on_ambiguity():
+    # two reverses of the same forward: A->B has two candidate reverses
+    # (B->A twice, different rates), so the pairing cannot be resolved.
+    net = ReactionNetwork(
+        species=["A", "B"],
+        reactions=[
+            Reaction({"A": 1}, {"B": 1}, 1.0, name="f:A->B"),
+            Reaction({"B": 1}, {"A": 1}, 0.5, name="r1:B->A"),
+            Reaction({"B": 1}, {"A": 1}, 0.7, name="r2:B->A"),
+        ],
+        name="ambiguous",
+    )
+    with pytest.raises(ValueError):
+        reverse_pairing(net)
+
+
 def test_gamma_zero_reproduces_irreversible_am_ode():
     """At gamma = 0 the reversible ODE must BE the irreversible AM ODE.
 
-    A deterministic control, exact and cheap: it catches a sign error or a
-    mis-built reverse reaction before any stochastic run. Parallels
+    This is a deterministic, exact and cheap control: it establishes that the
+    forward triple matches irreversible AM and that the reverse contributions
+    vanish at gamma = 0 (every reverse rate is exactly 0.0, so the reverse
+    stoichiometry never enters `rhs`). It does NOT check that the reverse
+    stoichiometry itself is correctly built -- that is pinned separately by
+    test_reverses_are_homodimers and test_structure_and_order. Parallels
     test_n_winner_2_reduces_to_am.
     """
     from crnl.networks import approximate_majority

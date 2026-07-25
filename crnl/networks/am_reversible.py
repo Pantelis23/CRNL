@@ -26,20 +26,24 @@ every gamma < 1 is genuinely driven, and gamma is the single knob.
 
 from __future__ import annotations
 
+import math
+
 import numpy as np
 
 from ..reactions import Reaction, ReactionNetwork
 
 #: The bistability threshold. Above this the landscape has a single minimum and
 #: no population size can restore, because there is nothing to restore toward.
-#: Derived in docs/superpowers/specs/2026-07-25-dissipation-design.md §2.4.
+#: At the symmetric fixed point (1/3, 1/3, 1/3), the transverse (decision) mode
+#: of the reduced system has eigenvalue (1 - 2*gamma)/3, which vanishes at
+#: gamma = 1/2.
 GAMMA_C = 0.5
 
 
 def am_reversible(gamma: float, k: float = 1.0) -> ReactionNetwork:
     """Reversible AM with every reverse rate scaled by `gamma`."""
-    if gamma < 0:
-        raise ValueError(f"gamma must be >= 0, got {gamma}")
+    if not math.isfinite(gamma) or gamma < 0:
+        raise ValueError(f"gamma must be finite and >= 0, got {gamma}")
     kr = gamma * k
     return ReactionNetwork(
         species=["X", "Y", "B"],
@@ -62,13 +66,24 @@ def reverse_pairing(net: ReactionNetwork) -> np.ndarray:
     that returned a fixed table while ignoring `net` would silently mispair any
     other network (e.g. a reversible n-winner). Note that checking S columns
     negate each other is necessary but not sufficient to identify a reverse pair.
+
+    If a reaction has more than one candidate reverse, the pairing is
+    ambiguous and this raises `ValueError` rather than resolving it arbitrarily
+    (e.g. by taking the first match) -- a silent, arbitrary resolution would let
+    a downstream entropy-production sum mix fluxes from different pairs and
+    report a wrong number with no error raised.
     """
     pairing = np.full(net.n_reactions, -1, dtype=np.int64)
     for i, ri in enumerate(net.reactions):
-        for j, rj in enumerate(net.reactions):
-            if i == j:
-                continue
-            if ri.reactants == rj.products and ri.products == rj.reactants:
-                pairing[i] = j
-                break
+        matches = [j for j, rj in enumerate(net.reactions)
+                   if j != i
+                   and ri.reactants == rj.products
+                   and ri.products == rj.reactants]
+        if len(matches) > 1:
+            raise ValueError(
+                f"reaction {i} ({ri.name!r}) has {len(matches)} candidate "
+                f"reverses {matches}; the pairing is ambiguous"
+            )
+        if matches:
+            pairing[i] = matches[0]
     return pairing

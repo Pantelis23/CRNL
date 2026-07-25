@@ -480,6 +480,61 @@ quantitative). `ΔS/stage` averages a non-stationary sequence and is meaningless
 its depth. Ω ≤ 120 by cost. `t_stage = 8` is one point on an axis, not a canonical
 value.
 
+## 11. The cost of a bit, with no comparator — `bit_cost.py`
+
+Every verdict in §10 needed a passive control, and §10.3 withdrew a claim because
+that control's dynamic range was a free parameter. This removes the comparator.
+
+Send `b = ±1` equiprobably as `δ₀ = ±δ*(γ)`. After D stages the two output
+distributions are mirror images, so `I(b;X_D) = H(mixture) − H(p₊)` is exactly what
+survived. Divide cumulative dissipation by it: **k_BT per bit delivered**. No rails
+to choose, no tie band, and comparable to `k_B T ln 2` in the units it is stated in.
+
+**Depth is part of the question, not a nuisance parameter** — and this is the third
+time this project has hit the same trap. At **depth 1 the measure is degenerate**: a
+stage with `t_stage → 0` does nothing, costs nothing, and still scores well because
+one channel application barely damages a bit sitting on a rail. Measured at γ=0.15,
+Ω=30: **0.89 k_BT/bit at t=0.05 versus 20.2 at t=16** — the cheapest "restoration
+event" is the one that does not restore. (The earlier two forms were a stop predicate
+firing on the initial state, and a control free to have different rails.) At depth 30
+the ordering **reverses** — t=0.05 costs 5493 and t=1 costs 155 984 — because a
+passive channel loses the bit outright there. `cost_per_bit` therefore requires a
+depth and the experiment refuses `--depth < 5`.
+
+### Cheapest bit at depth 30 (exact, per (γ, Ω) over a t_stage grid)
+
+| Ω | γ=0.05 | γ=0.15 | γ=0.30 | γ=0.45 |
+|---|--------|--------|--------|--------|
+| 30 | **1239** | 1649 | 52 337 | ~6·10⁸ |
+| 60 | 2195 | 2421 | 14 257 | ~3·10⁸ |
+| 120 | 4191 | 4244 | 12 345 | ~3·10⁸ |
+
+(k_BT per bit; best `t_stage` per cell. Full grid in `results/bit_cost.json`.)
+
+**Cheapest bit measured: 1239 k_BT at γ=0.05, Ω=30, t_stage=16** — carrying 0.52
+bits of the original 1. That is **1787× `k_B T ln 2`**. Landauer bounds *erasure*,
+not transmission, so this is a **scale comparison, not a claim that the bound is
+approached**; it is nonetheless the first number in this project that can be put
+beside `k_B T ln 2` without inventing a protocol first.
+
+Three things follow, and two invert the naive reading:
+
+1. **Weak drive is not cheap — it delivers nothing.** Cost per bit rises ~40× from
+   γ=0.05 to γ=0.30 and diverges by γ=0.45. §9.3 showed a weak drive dissipates less
+   *power*; per bit actually delivered it is catastrophically more expensive.
+2. **Reliability is bought superlinearly.** Cost per bit *rises* with population —
+   1239 → 2195 → 4191 at Ω = 30/60/120 — while information only creeps up (0.52 →
+   0.60 → 0.63 bits). Quadrupling Ω buys 21% more information at 3.4× the price. Big
+   populations are more *reliable* and less *efficient*.
+3. **`t_stage` has an interior optimum** (~16 here): too short fails to restore, too
+   long pays for idle cycling once the state has relaxed.
+
+**Caveats.** Single test problem, symmetric rates, `σ_ch = 0.35·δ*` still a choice
+(δ*(0)=1 makes §7 the γ→0 member). The cheapest cell sits at the *edge* of the Ω grid,
+so the true optimum may lie below Ω=30, where finite-count noise eventually destroys
+the landscape — untested. Ω ≤ 120 by cost. The measure is comparator-free but not
+convention-free: `noise_frac` and D remain stated inputs.
+
 ## Open questions
 
 1. **Universality class of the freeze-out transition** (§5). Is a = 0.38 really 1/3
@@ -505,11 +560,11 @@ value.
    there is *any* population at which a stage restores near γ_c — 8× buys 0.0045 of
    fidelity at γ=0.45, so if a threshold exists it is far outside reach, and the
    honest answer may be that there is none.
-7. **A comparator that needs no convention.** §10.3 withdrew a claim because the
-   passive control's dynamic range was a free parameter, and §10.2's verdicts still
-   depend on it in 1 of 12 cells. A control derived from the chemistry rather than
-   chosen — or a cost-per-bit-transmitted measure that needs no control at all —
-   would remove the last place this experiment can fool itself.
+7. ~~A comparator that needs no convention.~~ **Done** (§11): k_BT per bit
+   delivered needs no control at all. Still open: it is comparator-free but not
+   convention-free — `noise_frac` and the depth D remain stated inputs — and the
+   cheapest cell sits at the edge of the Ω grid, so the efficiency optimum may lie
+   below Ω=30 where finite counts eventually destroy the landscape.
 8. **Is `t_stage` hiding anything?** §10.2 reports one point (t=8) on an axis. Cost
    grows linearly in t while fidelity saturates, so "cost per stage" has no canonical
    value; the plateau fidelity and its price are the better observables and are not

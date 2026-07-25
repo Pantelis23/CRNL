@@ -244,15 +244,33 @@ Every cell reports **two** control conventions, because an earlier headline
 rather than the chemistry and was withdrawn; the script flags the 1 of 12 cells
 where the conventions still disagree instead of picking one.
 
+### The cost of a bit, with no comparator — `experiments/bit_cost.py`
+
+![cost per bit](experiments/bit_cost.png)
+
+Every verdict above needs a control, and a control is a free parameter. This one
+does not: measure the mutual information between the input bit and the depth-D
+output, divide the cumulative dissipation by it, and report **k_BT per bit
+delivered**. The cheapest bit measured is **1239 k_BT** (γ=0.05, Ω=30, depth 30) —
+**1787× `k_B T ln 2`**, quoted as a scale comparison since Landauer bounds erasure
+rather than transmission.
+
+Two results invert the naive reading: **weak drive is not cheap, it delivers
+nothing** (cost per bit diverges as γ→γ_c even though §9.3's dissipation *rate*
+falls), and **reliability is bought superlinearly** — quadrupling Ω buys 21% more
+information at 3.4× the price. Depth is part of the question: at depth 1 the measure
+rewards a stage that does nothing, so the experiment refuses `--depth < 5`.
+
 Full tables, the γ→0 caveat, the protocol trap that produced a convincing false
-dissipation optimum, and the two discarded Part C designs:
-[`FINDINGS.md`](FINDINGS.md) §9–§10.
+dissipation optimum, the two discarded Part C designs, and a withdrawn claim:
+[`FINDINGS.md`](FINDINGS.md) §9–§11.
 
 ```bash
 python -m experiments.reversible_landscape
 python -m experiments.dissipation_decision --omega 60
 python -m experiments.dissipation_memory --omegas 30 60
 python -m experiments.dissipation_cascade --quick
+python -m experiments.bit_cost --quick
 ```
 
 ## Setup
@@ -293,6 +311,7 @@ exactly.
 | `crnl/thermo.py` | stochastic thermodynamics primitives: per-jump entropy production, the boundary/cycle decomposition (the only place the A/3 factor lives), and the instrumented SSA loop with its integer counter and flip trigger |
 | `crnl/cme.py` | exact chemical master equation on the conserved simplex — generator, stationary distribution, dissipation rate, first-passage times and splitting probabilities by sparse solve |
 | `crnl/cascade_exact.py` | exact per-stage cascade kernel (augmented generator, two alphabets) and the passive control whose dynamic range is an explicit axis |
+| `crnl/information.py` | mutual information of the delivered bit and the comparator-free cost-per-bit measure |
 | `experiments/restoration_wall.py` | the §4 protocol |
 | `experiments/phase_portrait.py` | the §2.3 landscape, made visible |
 | `experiments/radix_wall.py` | champion-vs-field barrier c(n) and population cost Ω_required(n) as the alphabet grows |
@@ -308,6 +327,7 @@ exactly.
 | `experiments/dissipation_decision.py` | exact free-energy cost of *deciding* vs error probability, split into boundary and cycle terms |
 | `experiments/dissipation_memory.py` | exact lifetime τ and dissipation rate σ of a decided state — the cost of *remembering* |
 | `experiments/dissipation_cascade.py` | the price of a restoring stage vs a passive channel, reported under two control conventions |
+| `experiments/bit_cost.py` | k_BT per bit delivered to depth D — no control, no rail convention |
 | `results/` | raw JSON behind every figure and table in FINDINGS.md |
 | `FINDINGS.md` | all measured results, caveats, and open questions |
 | `tests/test_engine.py` | the verification suite |
@@ -319,6 +339,7 @@ exactly.
 | `tests/test_thermo_ssa.py` | instrumented SSA: bit-for-bit identity with `gillespie_fast`, counter vs the exact ⟨M⟩, flip hysteresis, reversible SSA→ODE |
 | `tests/test_thermo_laws.py` | detailed balance and the second law in the forms that survive measurement (both naive statements are false) |
 | `tests/test_cascade_exact.py` | cascade kernel invariants — the parity trap, the exact ⟨M⟩ oracle, and a regression guard on the withdrawn minimum-Ω claim |
+| `tests/test_information.py` | information primitives, the cost-per-bit scalings, and a guard on the depth-1 degeneracy |
 | `docs/design.md` | full design rationale |
 
 The engine is general: it takes species, reactions, and rate constants and

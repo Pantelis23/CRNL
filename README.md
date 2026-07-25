@@ -163,6 +163,76 @@ python -m experiments.expansion --quick
 python -m experiments.cascade --quick
 ```
 
+## What restoration costs in free energy
+
+Every result above takes the project's founding thermodynamic claim on faith.
+Irreversible AM has *formally infinite* dissipation — there is no number to
+report — so pricing restoration meant rebuilding AM as a proper thermodynamic
+CRN: every reaction reversible, all reverse rates scaled by one parameter γ.
+
+    X + Y ⇌ 2B      B + X ⇌ 2X      B + Y ⇌ 2Y        (reverse rate = γ · forward)
+
+Detailed balance needs `γ³ = 1`, so **every γ < 1 is genuinely driven**, and with
+`rank(S) = 2` the cycle space is one-dimensional — the entire drive is a single
+number, the cycle affinity `A(γ) = −3 ln γ`. γ→1 is equilibrium; γ→0 recovers the
+irreversible AM used everywhere above. These three experiments are **exact**: the
+chemical master equation solved by sparse linear algebra on the conserved simplex
+(7381 states at Ω=120, 0.20 s), not sampled. Measuring one rare flip at Ω=120 by
+SSA would take hundreds of hours — here the exact solver is the *cheap*
+instrument.
+
+### A landscape has a minimum price — `experiments/reversible_landscape.py`
+
+![reversible landscape](experiments/reversible_landscape.png)
+
+The symmetric point stays at (⅓,⅓,⅓) for every γ, and its decision mode has
+`λ(γ) = (1−2γ)/3` — exactly the `+⅓` saddle eigenvalue of `docs/design.md` §2.3 at
+γ=0, vanishing at
+
+    γ_c = 1/2       A(γ_c) = 3·ln 2 = 2.0794
+
+Below γ_c there are three fixed points; above it the rails have merged into the
+symmetric point in a pitchfork (`δ* ∝ √(γ_c−γ)`), and **no population size Ω can
+restore, because there is nothing to restore toward.** Bistability is not bought
+with molecules; it is bought with affinity, and there is a hard floor on the
+price. (`3 ln 2` is 3 reactions × ln 2 — the resemblance to Landauer is
+arithmetic, not physics.)
+
+### The cost of deciding — `experiments/dissipation_decision.py`
+
+![dissipation of deciding](experiments/dissipation_decision.png)
+
+Entropy production is exact per jump, and for this network it also has a closed
+form that splits the total cleanly into a boundary term and a cycle term. At
+Ω=120, **4.3× more free energy buys 664× lower error** — but the exchange rate is
+nowhere near constant: across γ ∈ [0.15, 0.40] the cost sits flat at **430–470
+k_BT while the error varies 25×**. Raising γ makes each cycle cheaper but demands
+more of them, and the two effects partly cancel. So "restoration costs
+dissipation" is true; its naive monotone reading is not.
+
+### The cost of remembering — `experiments/dissipation_memory.py`
+
+![dissipation of remembering](experiments/dissipation_memory.png)
+
+A decided state is only metastable at finite γ — the reverse reactions regenerate
+blank and let the loser back in. Exact mean first-passage lifetimes show
+**retention is exponentially sensitive to drive**: at Ω=30, raising A by 2.3×
+buys 17,800× longer memory. But the steady dissipation *rate* σ → 0 in **both**
+limits (γ=1 by detailed balance, γ→0 because the cycle flux collapses faster than
+A grows), and σ and τ move in opposite directions across the bistable range. The
+corrected claim: restoration requires a minimum **affinity**, not a minimum
+dissipation rate. Deciding costs `O(Ω)·A` and every cascade stage pays again;
+holding a decided state costs no power in the zero-leak limit.
+
+Full tables, the γ→0 caveat, and the protocol trap that produced a convincing
+false dissipation optimum: [`FINDINGS.md`](FINDINGS.md) §9.
+
+```bash
+python -m experiments.reversible_landscape
+python -m experiments.dissipation_decision --omega 60
+python -m experiments.dissipation_memory --omegas 30 60
+```
+
 ## Setup
 
 Requires Python 3.10+.
@@ -197,6 +267,9 @@ exactly.
 | `crnl/networks/am.py` | AM as data: 3 species, 3 reactions, k=1 |
 | `crnl/networks/n_winner.py` | n-winner AM as data: n committed species + blank, pairwise disagreement + per-species autocatalysis |
 | `crnl/vectorized.py` | NumPy-vectorized SSA path validated against the reference propensities, letting the radix experiments reach n≈100 |
+| `crnl/networks/am_reversible.py` | reversible AM as data: γ-scaled reverse rates, derived reverse pairing, cycle affinity from the null space, closed-form fixed points and γ_c |
+| `crnl/thermo.py` | stochastic thermodynamics primitives: per-jump entropy production, and the boundary/cycle decomposition (the only place the A/3 per-cycle-reaction factor lives) |
+| `crnl/cme.py` | exact chemical master equation on the conserved simplex — generator, stationary distribution, dissipation rate, first-passage times and splitting probabilities by sparse solve |
 | `experiments/restoration_wall.py` | the §4 protocol |
 | `experiments/phase_portrait.py` | the §2.3 landscape, made visible |
 | `experiments/radix_wall.py` | champion-vs-field barrier c(n) and population cost Ω_required(n) as the alphabet grows |
@@ -208,17 +281,25 @@ exactly.
 | `experiments/freezeout_scaling.py` | finite-size-scaling collapse: is freeze-out a real transition? |
 | `experiments/expansion_radix.py` | freeze-out vs alphabet size — bigger alphabets freeze easier |
 | `experiments/cascade.py` | signal survival across a deep cascade, restoring vs non-restoring |
+| `experiments/reversible_landscape.py` | the pitchfork at γ_c = 1/2: bistability vs drive, and the minimum affinity a landscape costs |
+| `experiments/dissipation_decision.py` | exact free-energy cost of *deciding* vs error probability, split into boundary and cycle terms |
+| `experiments/dissipation_memory.py` | exact lifetime τ and dissipation rate σ of a decided state — the cost of *remembering* |
 | `results/` | raw JSON behind every figure and table in FINDINGS.md |
 | `FINDINGS.md` | all measured results, caveats, and open questions |
 | `tests/test_engine.py` | the verification suite |
 | `tests/test_n_winner.py` | n-winner network construction and stoichiometry checks |
 | `tests/test_radix_experiments.py` | radix_wall / radix_discovery helper and fit checks |
+| `tests/test_am_reversible.py` | reversible network construction, reverse pairing, affinity, γ_c and the fixed-point branch |
+| `tests/test_thermo.py` | per-jump entropy production against the closed form, and the decomposition identity |
+| `tests/test_cme.py` | exact-solver checks: stationarity, detailed balance at γ=1 (σ=0), first-passage residuals |
 | `docs/design.md` | full design rationale |
 
 The engine is general: it takes species, reactions, and rate constants and
 derives both dynamics from that same data. AM is the first network loaded into
 the engine — it is not the engine. n-winner AM / the radix experiment is now
 implemented (see the Radix experiment section above and
-`experiments/radix_wall.py` / `radix_discovery.py`). The remaining
-out-of-scope-for-v1 extensions — analytic saddle height and free-energy
-accounting — are sketched at the end of `docs/design.md`.
+`experiments/radix_wall.py` / `radix_discovery.py`). Both extensions sketched as
+out-of-scope-for-v1 at the end of `docs/design.md` are now built: the analytic
+saddle height (`quasipotential.py`) and free-energy accounting (`crnl/thermo.py`,
+`crnl/cme.py`). What remains open is listed at the end of
+[`FINDINGS.md`](FINDINGS.md).

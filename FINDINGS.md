@@ -224,6 +224,138 @@ those two apart would need a variant that disables early stopping.
 
 ---
 
+## 9. What restoration costs in free energy — `reversible_landscape.py`, `dissipation_decision.py`, `dissipation_memory.py`
+
+Every result above takes the project's founding thermodynamic claim on faith.
+Irreversible AM has *formally infinite* dissipation — there is no number to report —
+so measuring the cost required rebuilding AM as a proper thermodynamic CRN: every
+reaction reversible, all reverse rates scaled by one parameter γ.
+
+    X + Y ⇌ 2B        B + X ⇌ 2X        B + Y ⇌ 2Y      (reverse rate = γ · forward)
+
+Detailed balance requires the Wegscheider condition `k_f1k_f2k_f3 = k_r1k_r2k_r3`,
+i.e. `γ³ = 1`, so **every γ < 1 is genuinely driven**. `rank(S) = 2` makes the cycle
+space exactly one-dimensional, so the whole drive is a single number:
+
+    A(γ) = −3·ln γ          (dimensionless; the free energy is k_B T · ΔS)
+
+γ→1 is equilibrium; γ→0 recovers today's irreversible AM. All measurements here are
+**exact** — the chemical master equation solved by sparse linear algebra on the
+conserved simplex (7381 states at Ω=120, 0.20 s), not sampled. A direct stochastic
+measurement of one rare flip at Ω=120 would take hundreds of hours.
+
+### 9.1 A landscape has a minimum price: A > 3 ln 2
+
+The symmetric point sits at `(⅓,⅓,⅓)` for **every** γ, and the decision mode there has
+
+    λ(γ) = (1 − 2γ)/3
+
+which is `+1/3` at γ=0 — exactly the irreversible AM saddle eigenvalue of
+`design.md` §2.3, so the reversible family contains today's AM as its γ→0 limit — and
+vanishes at
+
+    **γ_c = 1/2      A(γ_c) = 3·ln 2 = 2.0794**
+
+Above γ_c the two rails have merged into the symmetric point (a pitchfork, with
+`δ* ∝ √(γ_c−γ)` approaching `4√2/3`): a single minimum, and **no population size Ω
+can restore, because there is nothing to restore toward.** The attractors also move
+inward as the drive weakens, with `b* = γ/(1+γ)` exactly — the thermal population is
+mainly *blank*, while the losing symbol stays quadratically small.
+
+Verified four independent ways: closed-form algebra, the engine's own numeric
+Jacobian (agreement **5.6e-17**), a `fsolve` enumeration from 1830 simplex starts
+(exactly 3 fixed points below γ_c, 1 above), and two adversarial reviews.
+
+> `A(γ_c) = 3 ln 2` is 3 reactions × ln 2. The resemblance to Landauer's `k_B T ln 2`
+> is arithmetic coincidence, not physics.
+
+### 9.2 The cost of deciding, and why the exchange rate is not constant
+
+Entropy production is exact per jump, `ΔS = ln[a_ρ(n)/a_{−ρ}(n′)]` with the reverse
+propensity evaluated *post*-jump. For this network it also has a closed form that
+holds at **every** state and every γ (verified to 9.3e-15 over 6648 jumps):
+
+    ΔS = ln W(n′) − ln W(n) + s_ρ·ln(1/γ),      W = multinomial coefficient
+
+so along a trajectory `⟨ΔS⟩ = ln[W(n_stop)/W(n₀)] + (A/3)·⟨M_fwd − M_rev⟩` — a
+boundary term and a cycle term, both independently meaningful, no cancellation.
+
+At Ω=120, holding the decision threshold at a constant fraction of the landscape
+(θ/δ* = 0.70) and the bias at 0.20 δ*:
+
+| γ | A | P(error) | boundary | cycle | total ⟨ΔS⟩ |
+|---|---|----------|----------|-------|------------|
+| 0.05 | 8.99 | 0.0006 | +4.5 | 562 | **567** |
+| 0.15 | 5.69 | 0.0092 | +13.2 | 417 | 430 |
+| 0.25 | 4.16 | 0.066 | +20.2 | 421 | 441 |
+| 0.35 | 3.15 | 0.167 | +28.7 | 431 | 460 |
+| 0.49 | 2.14 | 0.398 | +44.2 | 88 | **133** |
+
+**4.3× more free energy buys 664× lower error** — but the exchange rate is very far
+from constant. Across γ ∈ [0.15, 0.40] the cost sits flat at **430–470 k_BT while
+the error varies 25×** (0.009 → 0.25). The mechanism: raising γ lowers the affinity
+per cycle (each firing is cheaper) but requires more firings and more time, and the
+two partly cancel. So "restoration costs dissipation" is true, and the naive
+monotone reading of it is not.
+
+Cost is extensive in Ω and grows as `ln(1/γ)` — roughly `1.9·Ω·ln(1/γ) k_BT`, i.e.
+~2 k_BT per molecule per unit of affinity. Any "orders of magnitude above
+`k_B T ln 2`" statement is an instance at a stated (Ω, γ), not a bound; Landauer does
+not apply to this protocol.
+
+**A protocol trap, recorded because it produced a convincing false result.** Two
+distinct artifacts bite here and they need *opposite* fixes: the initial bias must
+not jitter on the integer lattice (one molecule ≈ 20 k_BT), while the threshold must
+scale with the shrinking landscape. Holding *both* fixed put θ outside the landscape
+above γ≈0.42 (θ/δ* = 1.88 at γ=0.49), which turned "deciding" into "fluctuating past
+the attractor" and produced a clean U-shaped dissipation curve with a minimum near
+γ≈0.3 — a plausible-looking dissipation optimum that was pure artifact. Holding
+θ/δ* constant instead removes it. Both figures were generated; only the corrected
+protocol is reported.
+
+### 9.3 The cost of remembering — retention is bought by drive, not by power
+
+At finite γ a decided state is only metastable: the reverse reactions regenerate
+blank and let the loser take over. Exact mean first-passage lifetimes τ and
+stationary dissipation rates σ:
+
+| Ω | γ=0.30 | γ=0.40 | γ=0.49 |
+|---|--------|--------|--------|
+| 30 | τ=4.6e3, σ=0.82 | τ=290, σ=1.90 | τ=42, σ=2.19 |
+| 60 | τ=1.9e5, σ=1.54 | τ=853, σ=4.00 | τ=65, σ=5.18 |
+| 120 | τ=5.5e5, σ=4.93 | τ=6.1e3, σ=7.67 | τ=102, σ=11.5 |
+
+**Retention is exponentially sensitive to drive**: at Ω=30, raising A by 2.3×
+(γ 0.49→0.20) buys **17,800× longer memory**.
+
+Three facts break the naive "restoration costs dissipation" reading as a statement
+about *power*:
+
+1. **σ → 0 in *both* limits** — at γ=1 by detailed balance, and as γ→0 because
+   `σ = A·J` and the cycle flux collapses faster than `A = −3lnγ` grows.
+2. **σ and τ move in opposite directions** across the bistable range: more steady
+   power, *less* retention. But σ is a rate and τ a time — that pairing is not a
+   correlation, and the dimensionless `σ·τ` (total dissipation per lifetime) is
+   monotone and reads the other way.
+3. **The zero-power memory limit is textbook, not news.** γ→0 is a *singular* limit
+   in which the memory states become absorbing (a halted dynamics dissipates
+   nothing — so does a rock), and γ→0 *is* A→∞, so infinite affinity is being
+   treated as free. This is the ideal zero-leak ratchet.
+
+**The corrected claim.** `design.md` §2.3's landscape statement — "a system at
+equilibrium sits in a single free-energy minimum: no threshold, no restoration" — is
+**confirmed and quantified** by γ_c = 1/2. What needs narrowing is only the cost
+clause: *deciding* costs `O(Ω)·A`, and each cascade stage pays again; *holding* a
+decided state costs no power in the zero-leak limit. Restoration requires a minimum
+**affinity**, not a minimum dissipation rate.
+
+**Caveats.** Single test problem, symmetric rate constants, one threshold
+convention. σ's peak location is Ω-dependent and can sit *outside* the bistable
+window (at Ω=30 it peaks at γ=0.45; at Ω=60 and 120 it is still rising at γ=0.49).
+11 of 27 (Ω,γ) points were **dropped** by the solver's validity guard at small γ and
+large Ω, where the MFPT linear solve returns a negative time (−5.9e15 at Ω=60,
+γ=0.10) — those are reported, never fitted.
+
 ## Open questions
 
 1. **Universality class of the freeze-out transition** (§5). Is a = 0.38 really 1/3
@@ -235,9 +367,16 @@ those two apart would need a variant that disables early stopping.
    penalty survives tuning (§8). Still open: whether EIR's falloff shares CRNL's
    *mechanism* (basin crowding) or is partly a search effect, which needs a variant
    with early stopping disabled.
-4. **Free-energy accounting.** Not started. AM as written is irreversible, so its
-   dissipation is formally infinite; measuring the cost of restoration requires
-   rebuilding it as a reversible CRN with finite ΔG. This is the design doc's §8
-   summit and the natural next phase.
+4. ~~Free-energy accounting.~~ **Done** (§9): reversible AM, exact CME. A landscape
+   costs `A > 3 ln 2`; deciding costs `O(Ω)·A`; holding costs no *power*. Still open:
+   whether the flat 430–470 k_BT middle range of §9.2 has a clean analytic form, and
+   whether the σ peak crossing γ_c as Ω grows (§9.3) means anything.
 5. **Structured (asymmetric) landscapes** — unequal rate constants, deformed basins;
    the honest bridge toward real chemistry rather than a flat symmetric democracy.
+   Now unblocked: §9's reversible infrastructure is what it needs. Note the closed-form
+   EP identity of §9.2 fails there, which is why `thermo.entropy_step` exists as the
+   general primitive.
+6. **The SSA half of the dissipation work** (Plan 2): instrument the Gillespie loop
+   with an integer cycle counter and cross-check §9's exact numbers by sampling, plus
+   the cost of a *restoring cascade stage* against the non-restoring baseline of §7 —
+   the one measurement that prices restoration as this project defines it.

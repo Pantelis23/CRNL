@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 import pytest
 
@@ -136,7 +138,8 @@ def test_homodimer_propensity_is_combinatorial():
         assert a == pytest.approx(c_r2 * nX * (nX - 1) / 2)
     # explicitly pin the discriminating case
     assert net.propensities(np.array([1, 0, 0]), cs)[4] == 0.0
-    assert c_r2 * 1 ** 2 > 0.0        # what a wrong implementation would give
+    # (a c*n^2 bug would give c_r2 * 1**2 = c_r2 != 0 here, unlike the correct
+    # c*n(n-1)/2 form pinned above)
 
 
 def test_cycle_affinity_from_network_k():
@@ -170,3 +173,74 @@ def test_affinity_at_gamma_c_is_three_ln_two():
     A = cycle_affinity(net, reverse_pairing(net))
     assert A == pytest.approx(3 * np.log(2))
     assert A == pytest.approx(2.0794415417, abs=1e-9)
+
+
+def test_cycle_affinity_at_gamma_zero_is_deliberately_inf():
+    # gamma = 0 makes every reverse rate 0, so the cycle is irreversible and
+    # the drive is unbounded. This must be a deliberate `inf` return, not a
+    # stumble into divide-by-zero in np.log (which would fail under
+    # filterwarnings = error).
+    from crnl.networks.am_reversible import cycle_affinity
+    net = am_reversible(0.0)
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        A = cycle_affinity(net, reverse_pairing(net))
+    assert A == float("inf")
+
+
+def test_cycle_affinity_raises_with_no_reversible_pairs():
+    from crnl.networks.am_reversible import cycle_affinity
+    from crnl.networks import approximate_majority
+    net = approximate_majority()
+    with pytest.raises(ValueError):
+        cycle_affinity(net, reverse_pairing(net))
+
+
+def test_cycle_affinity_raises_on_disjoint_cycles():
+    # two independent reversible pairs (A<->B, C<->D) sum to zero just like a
+    # real cycle does, so a naive "does the sum vanish" guard would accept
+    # this and silently return a garbage combined number. The real
+    # precondition -- a 1-D cycle space -- must reject it.
+    from crnl.networks.am_reversible import cycle_affinity
+    net = ReactionNetwork(
+        species=["A", "B", "C", "D"],
+        reactions=[
+            Reaction({"A": 1}, {"B": 1}, 1.0, name="f1:A->B"),
+            Reaction({"B": 1}, {"A": 1}, 0.5, name="r1:B->A"),
+            Reaction({"C": 1}, {"D": 1}, 2.0, name="f2:C->D"),
+            Reaction({"D": 1}, {"C": 1}, 0.7, name="r2:D->C"),
+        ],
+        name="disjoint",
+    )
+    with pytest.raises(ValueError):
+        cycle_affinity(net, reverse_pairing(net))
+
+
+def test_cycle_affinity_is_order_independent():
+    # false-rejection regression: picking "forward" by list-index convention
+    # (rather than the actual cycle-space computation) can reject a
+    # perfectly well defined network just because reactions were listed in a
+    # different order. Reorder AM's reactions to [r1, f2, f3, f1, r2, r3]
+    # (r1 listed before its forward f1) and require the same affinity as the
+    # canonical order.
+    from crnl.networks.am_reversible import cycle_affinity
+    gamma = 0.3
+    canonical = am_reversible(gamma)
+    A_canonical = cycle_affinity(canonical, reverse_pairing(canonical))
+
+    r1, f2, f3, f1, r2, r3 = (
+        canonical.reactions[3],
+        canonical.reactions[1],
+        canonical.reactions[2],
+        canonical.reactions[0],
+        canonical.reactions[4],
+        canonical.reactions[5],
+    )
+    reordered = ReactionNetwork(
+        species=canonical.species,
+        reactions=[r1, f2, f3, f1, r2, r3],
+        name="am-reordered",
+    )
+    A_reordered = cycle_affinity(reordered, reverse_pairing(reordered))
+    assert A_reordered == pytest.approx(A_canonical)
+    assert A_reordered == pytest.approx(-3.0 * np.log(gamma))

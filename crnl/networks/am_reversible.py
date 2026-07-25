@@ -29,6 +29,7 @@ from __future__ import annotations
 import math
 
 import numpy as np
+from scipy.linalg import null_space
 
 from ..reactions import Reaction, ReactionNetwork
 
@@ -90,28 +91,59 @@ def reverse_pairing(net: ReactionNetwork) -> np.ndarray:
 
 
 def cycle_affinity(net: ReactionNetwork, pairing: np.ndarray) -> float:
-    """Thermodynamic force around the network's cycle, in units of k_B T.
+    """Thermodynamic force magnitude around the network's cycle, in units of k_B T.
 
-    A = ln( prod k_forward / prod k_reverse ) over one traversal. For reversible
-    AM the cycle is f1+f2+f3 (their stoichiometric vectors sum to zero), and
-    rank(S) = 2 means the cycle space is one-dimensional -- so this single number
-    is the whole drive. Returns -3*ln(gamma) for uniform rates.
+    A reversible pair (a, b) contributes a stoichiometric vector S[:, a] (taken
+    in the `a` orientation, `a` being whichever of the pair has the smaller
+    reaction index -- an arbitrary but fixed convention, not a claim about which
+    member is chemically "forward"). The real precondition for a single well
+    defined affinity is not that some list of reactions happens to sum to zero
+    (that can hold by accident for disjoint cycles, or fail by accident because
+    of how reactions were ordered) -- it is that the *cycle space* spanned by
+    the reversible pairs is exactly one-dimensional. We compute that directly as
+    the null space of the matrix of per-pair stoichiometries: dimension 0 means
+    the pairs don't close into a cycle at all, dimension >1 means there is more
+    than one independent cycle (e.g. several disjoint reversible pairs), and
+    either way a single number cannot describe the drive.
+
+    Given a 1-D null space, its generator c (normalised so the smallest nonzero
+    magnitude entry is 1, i.e. integer traversal counts) gives the affinity as
+    A = sum_i c_i * (ln k_{a_i} - ln k_{b_i}). The sign of c is only defined up
+    to an overall flip (the null space doesn't know which way around the cycle
+    is "positive"), so the result is oriented so A >= 0: this function returns
+    the drive MAGNITUDE, not a signed circulation. For reversible AM with
+    uniform rates this is exactly -3*ln(gamma) (positive for gamma < 1) and 0.0
+    at gamma = 1.
 
     Computed from the DETERMINISTIC rate constants. Using stochastic_constants
     instead would be wrong by -3*ln(2) here, because the homodimer reverses carry
     a factor 2 in c that has nothing to do with the thermodynamics.
     """
-    S = net.stoichiometry_matrix()
-    forward = [j for j in range(net.n_reactions) if pairing[j] > j]
-    if not forward:
+    pairs = [(j, int(pairing[j])) for j in range(net.n_reactions)
+             if pairing[j] > j]
+    if not pairs:
         raise ValueError("network has no reversible pairs; affinity is undefined")
-    # the candidate cycle: one traversal of each forward reaction
-    cycle = S[:, forward].sum(axis=1)
-    if not np.allclose(cycle, 0.0):
+
+    # zero rate anywhere in the cycle -> unbounded drive, deliberately, not via
+    # divide-by-zero in np.log below.
+    if any(net.reactions[a].k == 0.0 or net.reactions[b].k == 0.0 for a, b in pairs):
+        return float("inf")
+
+    S = net.stoichiometry_matrix()
+    Sp = S[:, [a for a, _ in pairs]]
+    ns = null_space(Sp)
+    if ns.shape[1] != 1:
         raise ValueError(
-            "the forward reactions do not form a closed cycle "
-            f"(net stoichiometry {cycle}); affinity is not a single number"
+            f"the reversible pairs span a {ns.shape[1]}-dimensional cycle "
+            "space, not 1; affinity is not a single number"
         )
-    ln_fwd = sum(np.log(net.reactions[j].k) for j in forward)
-    ln_rev = sum(np.log(net.reactions[int(pairing[j])].k) for j in forward)
-    return float(ln_fwd - ln_rev)
+    c = ns[:, 0]
+    mags = np.abs(c)
+    nonzero = mags > 1e-9 * mags.max()
+    c = c / mags[nonzero].min()
+
+    A = float(sum(
+        ci * (math.log(net.reactions[a].k) - math.log(net.reactions[b].k))
+        for ci, (a, b) in zip(c, pairs)
+    ))
+    return abs(A)

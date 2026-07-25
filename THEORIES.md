@@ -177,7 +177,7 @@ the transient bias amplification §2 already flags at n=2.
   |---|---|---|---|
   | §12 collapse | slope 1 | slope **0.74** | 1.35× |
   | §12.1 depth ceiling | `exp(δ*²/2σ²)/4` | ≈3× larger | **≈3×** |
-  | §14 radix floor | `δ²/2` | 2.27× smaller | **2.27×** |
+  | ~~§14 radix floor~~ | ~~`δ²/2`~~ | — | **EJECTED, see below** |
 
   All three come from the same move: a **saddle point keeps only the exponent**
   and throws away the Gaussian fluctuations around it. In every case the *shape*
@@ -192,18 +192,24 @@ the transient bias amplification §2 already flags at n=2.
   three — and the same machinery is what **T2** (the freeze-out exponent, a≈0.38
   between 1/3 and 2/5) has been blocked on since §5. Four open items, one method.
 
-  **Two concrete candidates for §14's 2.27**, not yet separated: the **n−1
-  competing escape directions** (which multiply the escape rate without touching
-  the exponent, and would give a factor growing with n — so on its own it is the
-  wrong shape, since 2.27 is flat), and the **transient bias amplification** §2
-  already documents at n=2 (`dδ/dt = δ·b > 0`, so the effective δ₀ entering the
-  saddle exceeds the nominal one — a constant-ish inflation, which is the right
-  shape). §2 measured that effect as the reason its own prefactor drifts 1.586 →
-  1.809; that it is *also* ~the size needed here is suggestive and untested.
+  **§14 was ejected from this cluster by its own kill test** → §14.1. The offset
+  was measured at two further δ and falls ~40% (2.274 → 1.364 at n=16), so it is
+  not a prefactor at all: `c ∝ δ²` is predicted, and the measured exponent is
+  **2.27 at n=8 and 2.48 at n=16** against §2's 2.08 at n=2. The consolidation
+  above was written down two commits before the test that broke it — the table now
+  has two members, not three.
 
-  **How to kill it:** compute the §14 offset at a second δ. If 2.27 is a genuine
-  prefactor it is δ-independent; if it moves with δ, the reduction is wrong rather
-  than merely incomplete, and the whole `λ/D` picture needs revisiting.
+  **How to kill the remaining two:** the same move works. §12's slope and §12.1's
+  ceiling factor should be independent of the *channel noise* σ if they are
+  prefactors. Neither has been checked across σ, and §14 is a warning that a
+  "constant" measured along one axis need not be constant along another.
+- **Q9 (new). Why does the barrier exponent grow with alphabet size?** §14.1:
+  `c ∝ δ^p` with p = 2.08 / 2.27 / 2.48 at n = 2 / 8 / 16. The quasipotential gives
+  p = 2 by construction, so something beyond a 1-D saddle reduction is carrying the
+  n-dependence — the obvious suspect being that with n−1 rivals the escape is a
+  competition among n−1 directions rather than a passage over one saddle, which a
+  scalar reduction cannot represent. Measuring p at n = 32 and 64 would say whether
+  p keeps climbing or saturates like c(n) itself does.
 - **Q8. Does the depth ceiling survive a better code?** `D_max ~ exp(δ*²/2σ²)` is
   for a bare repetition of one bit through one restoring stage per hop — the weakest
   possible code. Whether the ceiling belongs to the *chemistry* or the *encoding* is

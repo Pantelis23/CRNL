@@ -825,16 +825,46 @@ So the prediction is `c(n) = δ²(2n−1)/(2(2n−3)) → δ²/2`:
 | ratio | **0.957** | 1.538 | 1.943 | 2.274 | 2.275 | **2.268** |
 
 **What this does and does not settle.** At n=2 it is right to 4% — it *is* §2's
-`c(ε) = (3/2)ε²`, recovered as the n=2 member. The saturation is genuinely derived.
-But the predicted floor is `δ²/2 = 0.0050` against a measured 0.0022, and the ratio
-climbs to **a constant 2.27** and stays there from n=16 to n=64. Predicted fall
-2.95×, measured 7.0×.
+`c(ε) = (3/2)ε²`, recovered as the n=2 member. **The saturation is genuinely
+derived**, and that part is robust: `λ/D₀ = (2n−1)/(2n−3)` involves no δ at all.
 
-A constant offset that itself saturates is a **prefactor**, not a wrong shape — the
-same species as §12's slope of 0.74 and §12.1's factor ≈3, and logged with them
-under THEORIES Q7. Candidates not yet separated: the n−1 competing escape
-directions, which multiply the escape rate without changing the exponent; and the
-transient bias amplification §2 already flags at n=2.
+But the predicted floor is `δ²/2 = 0.0050` against a measured 0.0022.
+
+### 14.1 The residual is not a prefactor — a correction
+
+An earlier version of this section called the 2.27 offset "a constant, and
+therefore a prefactor of the same family as §12's 0.74 and §12.1's ≈3", and
+consolidated it into THEORIES Q7 on that basis. **That was wrong**, and the test
+that killed it was the one written down with the claim: a genuine prefactor is
+δ-independent, so measure the offset at a second δ.
+
+Measured at two more δ, twice, with independent seeds and grids (R² 0.991–0.997):
+
+| n | δ=0.10 | δ=0.16 | δ=0.24 |
+|---|---|---|---|
+| offset, n=8 | 1.943 | 1.840 | **1.399** |
+| offset, n=16 | 2.274 | 2.018 | **1.364** |
+
+The offset **falls ~40% across δ**, so it is not a constant. The reason is direct:
+`c = λδ²/(2D₀)` predicts `c ∝ δ²` exactly, and the measured exponent is not 2.
+Fitting `c(δ)` over the three δ:
+
+| n | 2 | 8 | 16 |
+|---|---|---|---|
+| measured exponent p | 2.08 (§2) | **2.27** | **2.48** |
+
+**So the quadratic law is an n=2 property that degrades as the alphabet grows.**
+The reduction is incomplete in *shape*, not merely in amplitude, and §14's residual
+is a different question from §12's — it does not belong in the Q7 prefactor cluster.
+
+What survives unchanged: the two closed forms, their exact agreement with the
+engine, `D₀(2) = 1/9` recovering `design.md` §9, and the **saturation mechanism**,
+which contains no δ and so is untouched by any of this.
+
+**Caveat on the caveat.** The two independent measurements of each cell agree only
+to ±10%, giving the exponents roughly ±0.1. At n=16, 2.48 is comfortably above 2;
+at n=8, 2.27 is about 2.7σ from it. A third δ below 0.10 would tighten both, and is
+expensive because small δ needs large Ω.
 
 **Caveats.** The closed forms are for γ=0 (irreversible), which is what §3 measured;
 `breaking_diffusion` computes the general-γ case numerically but it is untested

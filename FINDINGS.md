@@ -826,7 +826,8 @@ proof.
    77× over the tested range and is still climbing at Ω=120, so **where it ends is
    unknown**; and the measure remains convention-dependent through `noise_frac`, D,
    and the 0.05-bit floor.
-8. **Is `t_stage` hiding anything?** §10.2 reports one point (t=8) on an axis. Cost
-   grows linearly in t while fidelity saturates, so "cost per stage" has no canonical
-   value; the plateau fidelity and its price are the better observables and are not
-   yet swept.
+8. ~~Is `t_stage` hiding anything?~~ **Mostly answered** (THEORIES T6): the optimal
+   `t_stage` is flat in absolute time across γ ≤ 0.30, not proportional to the
+   relaxation time, so the fixed value used in §10–§12 does not smuggle in a
+   γ-dependent effort. Still true that cost grows linearly in t while fidelity
+   saturates, so "cost per stage" must always be quoted with its t.

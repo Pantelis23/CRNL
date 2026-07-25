@@ -111,14 +111,52 @@ suspicious enough to have a reason.
 (different θ/δ* or bias fraction) where it disappears.
 
 ### T6. The optimal stage time is set by the relaxation time
-**Status: suggestive, one data point.**
+**Status: DEAD. Probed and falsified.**
 
-§11's frontier selects `t* = 16` at essentially every Ω and γ tested. The natural
-scale is the landscape's own relaxation time `1/|λ_antisym(γ)| = 3/(1−2γ)`, which
-is 3.33 at γ=0.05 — so `t* ≈ 4.8` relaxation times.
-**Prediction:** `t*` should track `1/|λ_antisym(γ)|` across γ, i.e. grow and
-diverge as γ→γ_c, rather than staying pinned at 16.
-**How to kill it:** sweep t_stage per γ and find t* flat in absolute time.
+T6 predicted `t*` would track `1/λ_antisym(γ) = 3/(1−2γ)` and so grow ~9× across
+γ = 0.05 → 0.45. Measured (Ω=30, depth 30, σ/δ*=0.35, minimising k_BT per bit):
+
+| γ | 0.05 | 0.15 | 0.30 | 0.45 |
+|---|---|---|---|---|
+| 1/λ_antisym | 3.33 | 4.29 | 7.50 | 30.0 |
+| t* | 16 | 16 | 16 | 1 |
+| t*/relax | 4.80 | 3.73 | 2.13 | 0.03 |
+
+`t*` is **flat in absolute time** over γ ≤ 0.30, not proportional to the relaxation
+time. (The collapse to t*=1 at γ=0.45 is the do-nothing degeneracy of §11 — where
+the chemistry cannot hold the bit, the cheapest stage is one that barely runs — not
+a relaxation effect.) So the fixed `t_stage` used across §10–§12 is defensible, and
+FINDINGS open question 8 is answered in the same stroke for γ ≤ 0.30.
+
+### T7. The n-winner barrier follows the symmetry-breaking eigenvalue
+**Status: DEAD in the simple form, and the failure sharpens §3.**
+
+§12 found `κ(γ) = (9/2)·λ_antisym(γ)` — the restoration barrier proportional to the
+symmetry-breaking eigenvalue. §13 computes that eigenvalue for any n, so the hope
+was that it would predict §3's measured `c(n)` and explain its unexplained
+saturation. It does not:
+
+| n | 2 | 4 | 8 | 16 | 64 |
+|---|---|---|---|---|---|
+| λ_breaking(n, 0) | 1/3 | 1/7 | 1/15 | 1/31 | 1/127 |
+| λ / λ(2) | 1.000 | 0.429 | 0.200 | 0.097 | **0.024** |
+| c(n) / c(2) | 1.000 | 0.290 | 0.190 | 0.150 | **0.143** |
+
+The ratio of the two drifts 1.0 → 6.05. **λ_breaking vanishes like 1/(2n−1) while
+c(n) saturates**, so §3's saturation is *not* a linear-stability effect.
+
+Worth keeping from the attempt: **λ_breaking(n, γ=0) = 1/(2n−1) exactly** (checked
+against ten values of n), and the symmetric state at γ=0 is
+`x = 1/(2n−1)`, `b = (n−1)/(2n−1)`.
+
+**What it points at (T7a).** The quasipotential barrier is `c ∝ λ/D`. If λ vanishes
+like `1/(2n−1)` while `c` saturates, then the finite-count diffusion `D(n)` in the
+decision coordinate must vanish at the *same* rate. That is directly checkable, and
+if it holds it derives §3's saturation — a headline that has been unexplained since
+it was measured — from §13's machinery plus §2's quasipotential.
+**How to kill it:** compute `D(n)` at the symmetric point and find it does not track
+`1/(2n−1)`; then `c ∝ λ/D` is the wrong reduction across n and something about the
+escape geometry (n−1 competing directions rather than one) carries the barrier.
 
 ---
 

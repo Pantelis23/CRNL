@@ -263,6 +263,19 @@ falls), and **reliability is bought superlinearly** — quadrupling Ω buys 21% 
 information at 3.4× the price. Depth is part of the question: at depth 1 the measure
 rewards a stage that does nothing, so the experiment refuses `--depth < 5`.
 
+**Why there is no optimum** — `experiments/channel_wall.py`
+
+![channel wall](experiments/channel_wall.png)
+
+Because the protocol above sits on the wrong side of a crossover. A saddle point
+over where a flip happens gives **one parameter-free formula** covering both
+regimes — `−ln p ≈ κΩδ*²/(1+2κΩσ²)` with `κ(γ) = (3/2)(1−2γ)` — whose limits are
+§1–2's restoration wall (`κΩδ*²`, exponential in Ω) and an Ω-independent channel
+floor (`δ*²/2σ²`). It collapses **216 cells to R² = 0.933**. On the wall side the
+per-stage flip probability falls **eleven orders of magnitude** with population; on
+the floor side molecules buy nothing. Every cascade result here used σ_ch/δ* = 0.35,
+which is on the floor side — which is *why* the frontier saturates.
+
 Extending down to Ω=4 finds **no efficiency optimum** — cost per bit falls all the
 way, because the ratio is minimized by a system that barely transmits (Ω=4 carries
 0.12 bits). So the experiment reports an **efficient frontier** instead: cheapest
@@ -320,7 +333,7 @@ exactly.
 | `crnl/thermo.py` | stochastic thermodynamics primitives: per-jump entropy production, the boundary/cycle decomposition (the only place the A/3 factor lives), and the instrumented SSA loop with its integer counter and flip trigger |
 | `crnl/cme.py` | exact chemical master equation on the conserved simplex — generator, stationary distribution, dissipation rate, first-passage times and splitting probabilities by sparse solve |
 | `crnl/cascade_exact.py` | exact per-stage cascade kernel (augmented generator, two alphabets) and the passive control whose dynamic range is an explicit axis |
-| `crnl/information.py` | mutual information of the delivered bit and the comparator-free cost-per-bit measure |
+| `crnl/information.py` | mutual information of the delivered bit, the comparator-free cost-per-bit measure, and the saddle-point wall/floor prediction |
 | `experiments/restoration_wall.py` | the §4 protocol |
 | `experiments/phase_portrait.py` | the §2.3 landscape, made visible |
 | `experiments/radix_wall.py` | champion-vs-field barrier c(n) and population cost Ω_required(n) as the alphabet grows |
@@ -337,6 +350,7 @@ exactly.
 | `experiments/dissipation_memory.py` | exact lifetime τ and dissipation rate σ of a decided state — the cost of *remembering* |
 | `experiments/dissipation_cascade.py` | the price of a restoring stage vs a passive channel, reported under two control conventions |
 | `experiments/bit_cost.py` | k_BT per bit delivered to depth D — no control, no rail convention |
+| `experiments/channel_wall.py` | the crossover from restoration wall to channel floor, against a parameter-free prediction |
 | `results/` | raw JSON behind every figure and table in FINDINGS.md |
 | `FINDINGS.md` | all measured results, with caveats |
 | `THEORIES.md` | live conjectures with falsifiable predictions, open questions, and a record of four confident wrong results |
@@ -350,6 +364,7 @@ exactly.
 | `tests/test_thermo_laws.py` | detailed balance and the second law in the forms that survive measurement (both naive statements are false) |
 | `tests/test_cascade_exact.py` | cascade kernel invariants — the parity trap, the exact ⟨M⟩ oracle, and a regression guard on the withdrawn minimum-Ω claim |
 | `tests/test_information.py` | information primitives, the cost-per-bit scalings, and a guard on the depth-1 degeneracy |
+| `tests/test_channel_wall.py` | both limits of the saddle-point formula, the measured collapse, and the regime where it fits for the wrong reason |
 | `docs/design.md` | full design rationale |
 
 The engine is general: it takes species, reactions, and rate constants and

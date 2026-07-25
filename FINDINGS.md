@@ -568,6 +568,63 @@ convention-free: `noise_frac`, the depth D, and the 0.05-bit floor on the fronti
 remain stated inputs. The frontier is a Pareto set over a discrete grid, so its
 points are the best *tested* cells, not proven optima.
 
+## 12. Two regimes, one formula — `channel_wall.py`
+
+§11.1 left a puzzle: cost per bit *rises* with population and the frontier's
+marginal cost explodes. The reason is a crossover between two things this project
+had measured separately and never connected.
+
+**The restoration wall** (§1–2): finite-count error falls like `exp(−κ·ε²·Ω)`, so
+molecules buy exponentially better reliability. **The channel floor** (§11):
+injected noise flips the sign outright with an Ω-*independent* probability, so
+molecules buy nothing. A stage sits on one side or the other.
+
+A saddle point over where the flip happens gives **one expression for both**. A flip
+needs the channel to displace the state from the rail to some δ, then finite-count
+noise to finish it; the costs add in the exponent, and minimizing over δ gives
+
+    −ln p  ≈  κ·Ω·δ*² / (1 + 2·κ·Ω·σ²)          κ(γ) = (3/2)(1 − 2γ)
+
+with **no fitted parameter**. `κ` is `design.md` §9's `3/2` corrected for the
+landscape's restoring gain — `κ = (9/2)·λ_antisym(γ)`, so it vanishes at γ_c along
+with the ability to restore. The limits are the two known results:
+`2κΩσ² ≪ 1` → `κΩδ*²`, the wall; `2κΩσ² ≫ 1` → `δ*²/(2σ²)`, the floor. The crossover
+is at **Ω× = 1/(2κσ²)**.
+
+**Measured, 216 cells** (γ × σ_ch/δ* × Ω, exact):
+
+| subset | slope | R² | n |
+|---|---|---|---|
+| pooled | 0.742 | **0.9329** | 216 |
+| γ=0.05 | 0.795 | 0.9894 | 54 |
+| γ=0.15 | 0.626 | 0.9564 | 54 |
+| γ=0.30 | 0.419 | 0.8944 | 54 |
+| γ=0.45 | 0.497 | 0.9688 | 54 |
+
+The γ-correction is what makes this work: with `κ` fixed at 3/2 the pooled fit is
+**R² = 0.69** with per-γ slopes running 0.79 → 0.08. Slope is not 1 because the
+saddle point drops the prefactor and the Gaussian-tail correction — **the claim is
+that one expression collapses both regimes, not that it is exact.**
+
+**The population-limited side is dramatic and was unexplored.** At γ=0.05,
+σ_ch/δ* = 0.10, the per-stage flip probability falls **eleven orders of magnitude**
+(2.0e-3 at Ω=4 → 1.8e-14 at Ω=96), a clean exponential with R² = 1.000. At
+σ_ch/δ* = 0.45 the same population change moves it 2.2×. Every cascade result in
+§10–§11 used 0.35, which sits on the channel-limited side — **which is precisely why
+§11.1 found no efficiency optimum in Ω.** The frontier saturates because the protocol
+was operating where molecules cannot help.
+
+**Caveat that matters more than the R².** At γ=0.45 the formula fits well (0.969)
+**for the wrong reason**: p there is nearly independent of the channel, moving only
+1.36× (0.089 → 0.121) across a 4.5× change in σ_ch at Ω=96. The channel term is not
+doing the work — the shallow landscape fails to hold the state on its own, with
+`t_stage = 16` under one relaxation time (`1/λ_antisym = 30`). A good fit in that
+block is not evidence for the mechanism, and is asserted as such in the tests.
+
+Other caveats: one γ-family, one `t_stage`, and `p` is inferred from the decay of
+`I(D)` rather than counted directly, so cells below the 1e-15 resolution of that fit
+are dropped and never fitted.
+
 ## Open questions
 
 1. **Universality class of the freeze-out transition** (§5). Is a = 0.38 really 1/3

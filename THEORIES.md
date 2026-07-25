@@ -23,33 +23,27 @@ and what we believed and were wrong about.
 ## 1. Live theories
 
 ### T1. The cascade is channel-limited, not population-limited
-**Status: partly confirmed, mechanism identified, crossover not yet mapped.**
+**Status: CONFIRMED and superseded by a formula → `FINDINGS.md` §12.**
 
-`FINDINGS.md` §11.1 found that cost per bit *rises* with Ω and that the marginal
-cost of information explodes. The proposed reason: once Ω is large enough that
-finite-count noise is subdominant to the injected channel noise `σ_ch = 0.35·δ*`,
-**more molecules buy essentially nothing**, while cost stays extensive in Ω.
+Confirmed, and then sharpened into something better than the original claim. A
+saddle point over where a flip happens gives one parameter-free expression for
+both regimes:
 
-First check (γ=0.05, t=16, per-stage flip probability from the decay of I(D)):
+    −ln p ≈ κ·Ω·δ*² / (1 + 2κΩσ²),    κ(γ) = (3/2)(1−2γ) = (9/2)·λ_antisym(γ)
 
-| σ_ch/δ* | Ω=30 | Ω=60 | Ω=120 | p(120)/p(30) |
-|---|---|---|---|---|
-| 0.20 | 5.1e-5 | 1.3e-5 | 4.3e-6 | **0.08** |
-| 0.28 | 1.12e-3 | 7.0e-4 | 5.2e-4 | 0.47 |
-| 0.35 | 4.93e-3 | 3.96e-3 | 3.48e-3 | 0.71 |
-| 0.45 | 1.78e-2 | 1.61e-2 | 1.53e-2 | **0.86** |
+Pooled collapse over 216 cells: **R² = 0.933**. The population-limited side, which
+nothing had explored, is dramatic — 11 orders of magnitude in p across Ω at
+σ_ch/δ* = 0.10. §11's protocol sat on the channel-limited side, which is *why* it
+found no efficiency optimum in Ω.
 
-Across a row (noise) p moves ~350×; down a column (population) it moves 1.2–2×,
-and the population dependence *weakens* as noise grows. So there is a **crossover
-from population-limited to channel-limited**, and the default protocol sits mostly
-on the channel-limited side — which is why §11.1's frontier saturates.
-
-**Prediction:** the crossover sits where finite-count noise `~1/√Ω` matches
-`σ_ch/δ*`, i.e. at `Ω_× ~ (δ*/σ_ch)²`. At `σ_ch/δ* = 0.35` that is `Ω_× ≈ 8`;
-at 0.20 it is `Ω_× ≈ 25`, which is consistent with the 0.20 row still showing
-strong Ω dependence at Ω=30 while the 0.45 row does not.
-**How to kill it:** map p(Ω) finely at fixed `σ_ch/δ*` and show the knee is *not*
-near `(δ*/σ_ch)²`, or that p keeps falling with Ω on the supposedly saturated side.
+**What is still open here (T1a):** the fitted slope is 0.74 pooled and drifts with
+γ (0.80 / 0.63 / 0.42 / 0.50), where an exact saddle point would give 1. The
+missing piece is the prefactor and the Gaussian-tail correction, neither of which
+was worked out. A derivation that predicts the slope — or shows why it should
+drift with γ — would turn a collapse into a law.
+**How to kill it:** find a (γ, σ, Ω) region where p departs from the formula by
+more than the prefactor could explain, i.e. where the *shape* in Ω is wrong rather
+than the scale.
 
 ### T2. The freeze-out exponent is predictable from the quasipotential
 **Status: untested. The most valuable open theoretical target.**
@@ -83,20 +77,21 @@ keeps shrinking. Under symmetric plurality it should differ again.
 same floor ≈0.0022.
 
 ### T4. The restoration barrier vanishes quadratically in the landscape width
-**Status: predicted, untested.**
+**Status: PARTLY ANSWERED by §12 — and the answer was not what T4 guessed.**
 
-§2 has `c(ε) = (3/2)ε²` where ε is the bias. §9.1 has the landscape width
-`δ*(γ) ∝ √(γ_c − γ)`. If the barrier is governed by the bias *in units of the
-landscape*, then at fixed relative bias
+§12 measures the barrier coefficient as `κ(γ)·δ*²` with `κ(γ) = (3/2)(1−2γ)`. So the
+barrier carries **two** vanishing factors as γ→γ_c, not one: `δ*² ∝ (γ_c−γ)` as T4
+guessed, *times* `κ ∝ (1−2γ) ∝ (γ_c−γ)`. The barrier therefore falls like
+**(γ_c−γ)²**, and the population needed for fixed reliability diverges like
+`1/(γ_c−γ)²` — faster than T4 predicted, and enough to explain §10.2's γ=0.45 result
+(Ω=240 buying 0.0045 of fidelity) with no threshold anywhere. Still untested
+directly: the quadratic form has been inferred from the collapse, not measured by
+sweeping γ finely near γ_c.
 
-    c(γ) ∝ δ*(γ)² ∝ (γ_c − γ)
-
-**Prediction:** the effective restoration barrier falls **linearly** in `(γ_c − γ)`,
-so the population needed for a given reliability diverges as `1/(γ_c − γ)`. This
-would explain §10.2's γ=0.45 result (Ω=240 buys 0.0045 of fidelity) without any
-"minimum Ω" — there is no threshold, just a diverging requirement.
-**How to kill it:** measure c(γ) at several γ near γ_c and find a different power,
-or a genuine threshold in Ω.
+**How to kill it:** sweep γ finely in [0.40, 0.499] and fit the barrier's exponent
+in `(γ_c − γ)`. A measured exponent of 1 would restore T4's original guess and
+falsify the κ correction; anything other than 2 means `κ ∝ λ_antisym` is wrong even
+though it improves the §12 collapse.
 
 ### T5. The flat 430–470 k_BT middle range has an analytic form
 **Status: open, no candidate expression.**
@@ -142,10 +137,12 @@ diverge as γ→γ_c, rather than staying pinned at 16.
   penalty survives per-n hyperparameter tuning, so it is structural. Whether it is
   *basin crowding* (CRNL's mechanism) or partly a search effect needs a variant
   with early stopping disabled.
-- **Q6. Is the 0.35 noise fraction hiding a regime?** Every cascade result uses
-  `σ_ch = 0.35·δ*`. T1 says this sits on the channel-limited side. The
-  population-limited side (σ_ch/δ* ≲ 0.2) is essentially unexplored and is where
-  the restoration wall of §1 should actually govern.
+- ~~**Q6. Is the 0.35 noise fraction hiding a regime?**~~ **Yes** → §12. It sits on
+  the channel-limited side, and the population-limited side is where the wall of §1
+  governs: 11 orders of magnitude in p across Ω at σ_ch/δ* = 0.10. **New question
+  (Q6a): should §10–§11 be re-run there?** The efficiency frontier of §11.1 was
+  measured entirely in the regime where molecules cannot help; on the other side it
+  may well have the optimum that §11.1 reported as absent.
 
 ---
 
@@ -155,6 +152,8 @@ diverge as γ→γ_c, rather than staying pinned at 16.
 - ~~What does a decision cost?~~ → §9.2.
 - ~~What drive does remembering require?~~ → §9.3.
 - ~~Can restoration be priced per bit without a comparator?~~ → §11.
+- ~~Is the cascade channel-limited?~~ → §12, and with a parameter-free formula
+  covering both regimes.
 
 ---
 

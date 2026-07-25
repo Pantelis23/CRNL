@@ -137,3 +137,79 @@ def cost_per_bit(gamma: float, omega: int, t_stage: float, depth: int,
             "start_shift_frac": (realised_start - d_star) / d_star,
         })
     return rows
+
+
+def flip_probability(gamma: float, omega: int, t_stage: float,
+                     noise_frac: float = 0.35, depth: int = 40,
+                     chunk: int = 64) -> float:
+    """Per-stage probability that the cascade loses the bit.
+
+    Extracted from the exponential decay of I(b;X_D) rather than measured
+    directly: for a binary symmetric chain with per-stage flip probability p,
+    `I ~ (1-2p)^{2D}`, so the slope of ln I against depth gives p without ever
+    needing a threshold or a control. Returns NaN if the information falls below
+    numerical resolution too quickly to fit.
+    """
+    prof = cost_per_bit(gamma, omega, t_stage, depth, noise_frac, chunk)
+    info = np.array([r["I_bits"] for r in prof])
+    d = np.arange(1, len(info) + 1)
+    usable = info > 1e-9
+    if usable.sum() < 4:
+        return float("nan")
+    slope = np.polyfit(d[usable], np.log(info[usable]), 1)[0]
+    return float(0.5 * (1.0 - np.exp(slope / 2.0)))
+
+
+def wall_coefficient(gamma: float) -> float:
+    """kappa(gamma): the restoration-wall coefficient, P(err) ~ exp(-kappa*e^2*Omega).
+
+    design.md 9 derives kappa = 3/2 for IRREVERSIBLE AM, from the saddle's
+    restoring gain lambda = 1/3 against finite-count diffusion D = 1/(9 Omega).
+    At finite gamma the gain is lambda_antisym(gamma) = (1-2gamma)/3, so the
+    barrier scales with it:
+
+        kappa(gamma) = (3/2) * (1 - 2 gamma) = (9/2) * lambda_antisym(gamma)
+
+    Using the gamma=0 value everywhere fails badly as gamma -> gamma_c: the
+    collapse of `predicted_exponent` degrades from R^2 = 0.99 at gamma=0.05 to
+    0.60 at gamma=0.45, and pooling all gamma gives 0.69. With this correction
+    the pooled collapse is 0.93.
+    """
+    return 1.5 * (1.0 - 2.0 * gamma)
+
+
+def predicted_exponent(gamma: float, omega: int,
+                       noise_frac: float = 0.35) -> float:
+    """Saddle-point prediction for -ln p, with NO fitted parameter.
+
+    A flip needs the channel to displace the state from the rail +delta* to some
+    delta, and then finite-count noise to carry it the rest of the way. The two
+    costs add in the exponent:
+
+        f(delta) = (delta* - delta)^2 / (2 sigma^2)  +  kappa * Omega * delta^2
+                    channel (Gaussian)                  restoration wall
+
+    Minimising over delta gives delta = delta*/(1 + 2 kappa Omega sigma^2) and
+
+        -ln p  ~  kappa Omega delta*^2 / (1 + 2 kappa Omega sigma^2)
+
+    which interpolates BOTH regimes with one expression:
+
+      * 2 kappa Omega sigma^2 << 1 -> kappa Omega delta*^2, the restoration wall
+        of FINDINGS 1-2: exponential in Omega, the population-limited side;
+      * 2 kappa Omega sigma^2 >> 1 -> delta*^2 / (2 sigma^2), independent of
+        Omega: the channel-limited floor, where more molecules buy nothing.
+
+    The crossover sits at Omega_x = 1 / (2 kappa sigma^2).
+    """
+    d_star = delta_star(gamma)
+    sigma = noise_frac * d_star
+    kappa = wall_coefficient(gamma)
+    return float(kappa * omega * d_star ** 2
+                 / (1.0 + 2.0 * kappa * omega * sigma ** 2))
+
+
+def crossover_omega(gamma: float, noise_frac: float = 0.35) -> float:
+    """Population at which the restoration wall gives way to the channel floor."""
+    sigma = noise_frac * delta_star(gamma)
+    return float(1.0 / (2.0 * wall_coefficient(gamma) * sigma ** 2))

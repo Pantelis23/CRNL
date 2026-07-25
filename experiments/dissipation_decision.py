@@ -11,12 +11,20 @@ Two independently interpretable Hill/Schnakenberg terms. The boundary term is
 small and nearly gamma-independent; the cycle term carries the physics, and is
 the x-axis of the headline plot.
 
-TWO PROTOCOL POINTS THAT ARE NOT OPTIONAL, both learned the hard way:
+TWO PROTOCOL POINTS THAT ARE NOT OPTIONAL, both learned the hard way, and both
+with DIFFERENT fixes:
 
-  * Thresholds scale with the landscape. A FIXED theta = 0.5 is unreachable above
-    gamma ~ 0.417 (delta*(0.49) = 0.187), which turns "deciding" into
-    "fluctuating past the attractor" and inflates the measured dissipation by an
-    order of magnitude -- a protocol artifact that looks exactly like physics.
+  * The decision THRESHOLD must scale with the landscape. A FIXED theta = 0.5
+    is unreachable above gamma ~ 0.417 (delta*(0.49) = 0.187), which turns
+    "deciding" into "fluctuating past the attractor" and inflates the measured
+    dissipation by an order of magnitude -- a protocol artifact that looks
+    exactly like physics. So theta is `theta_frac * delta_star(gamma)`.
+  * The initial BIAS must not jitter freely on the integer lattice -- one
+    molecule of bias is worth ~20 k_B of dissipation. So the bias is *also*
+    expressed as a fraction of delta_star(gamma) (keeping the protocol
+    difficulty comparable across gamma), but rounded to an exact integer
+    count and the REALISED fraction is reported alongside the requested one,
+    so any residual lattice jitter is visible rather than hidden.
   * The start is B(0) = 0 with the bias carried by the committed species, per
     design.md 4 and restoration_wall.py. The alternative ((1/3,1/3,1/3) + bias)
     differs by 36% in P(error).
@@ -50,20 +58,35 @@ from crnl.networks.am_reversible import (
 from crnl.thermo import decompose, ln_multinomial
 
 
-def run_gamma(gamma: float, omega: int, count_diff: int, theta_counts: int) -> dict:
+def run_gamma(gamma: float, omega: int, bias_frac: float, theta_frac: float) -> dict | None:
     """One exact solve at fixed gamma.
 
-    The bias is a fixed INTEGER count difference and the threshold a fixed
-    integer count, both held constant across the gamma sweep. Driving either off
-    a fraction of delta_star(gamma) makes the realised value jitter on the
-    integer lattice, and one molecule of bias is worth ~20 k_B of dissipation --
-    enough to manufacture a fold-back in the headline curve that looks like
-    physics. `theta_frac` remains available for single-gamma work.
+    Both the bias and the threshold are expressed as fractions of
+    delta_star(gamma) and then quantised to integer molecule counts -- the
+    landscape shrinks as gamma rises, so a fixed count for either one either
+    sits outside the landscape (threshold) or jitters uncontrollably on the
+    integer lattice relative to it (bias). Returns None (skip) rather than a
+    row when the quantised protocol is degenerate at this gamma: threshold
+    outside the landscape, or bias/threshold collision (already-absorbed
+    start).
     """
+    d_star = delta_star(gamma)
+    theta_counts = max(2, int(round(theta_frac * d_star * omega)))
+    bias_counts = max(1, int(round(bias_frac * d_star * omega)))
+
+    if not (bias_counts < theta_counts):
+        print(f"SKIPPED gamma={gamma:.3f}: bias_counts={bias_counts} >= "
+              f"theta_counts={theta_counts} (start already absorbed)")
+        return None
+    if not (theta_counts / omega < d_star):
+        print(f"SKIPPED gamma={gamma:.3f}: theta={theta_counts / omega:.4f} "
+              f">= delta_star={d_star:.4f} (threshold outside the landscape)")
+        return None
+
     net = am_reversible(gamma)
     pairing = reverse_pairing(net)
     A = cycle_affinity(net, pairing)
-    n0 = initial_counts(omega, gamma, count_diff=count_diff)
+    n0 = initial_counts(omega, gamma, count_diff=bias_counts)
 
     def absorbing(n):
         return abs(int(n[0]) - int(n[1])) >= theta_counts
@@ -81,10 +104,11 @@ def run_gamma(gamma: float, omega: int, count_diff: int, theta_counts: int) -> d
         "affinity": A,
         "theta_counts": theta_counts,
         "theta": theta_counts / omega,
-        "delta_star": delta_star(gamma),
-        "theta_over_delta_star": (theta_counts / omega) / delta_star(gamma),
-        "count_diff": count_diff,
+        "delta_star": d_star,
+        "theta_over_delta_star": (theta_counts / omega) / d_star,
+        "bias_counts": bias_counts,
         "realised_bias": float((n0[0] - n0[1]) / omega),
+        "bias_over_delta_star": float((n0[0] - n0[1]) / omega) / d_star,
         "p_error": 1.0 - fp["split"],
         "mean_time": fp["mean_time"],
         "sigma": sigma,
@@ -139,38 +163,36 @@ def main():
     p.add_argument("--omega", type=int, default=120)
     p.add_argument("--gammas", type=float, nargs="+",
                    default=[0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.49])
-    p.add_argument("--count-diff", type=int, default=16,
-                   help="initial n_X - n_Y, an exact integer held across the sweep")
-    p.add_argument("--theta-counts", type=int, default=None,
-                   help="decision threshold in molecules; default 0.35*omega. "
-                        "Held constant across gamma so the protocol does not "
-                        "jitter on the integer lattice.")
+    p.add_argument("--bias-frac", type=float, default=0.2,
+                   help="initial |n_X - n_Y| as a fraction of delta_star(gamma), "
+                        "quantised to an integer molecule count per gamma")
+    p.add_argument("--theta-frac", type=float, default=0.7,
+                   help="decision threshold as a fraction of delta_star(gamma), "
+                        "quantised to an integer molecule count per gamma")
     p.add_argument("--out", default=os.path.join(here, "dissipation_decision.png"))
     p.add_argument("--data", default=os.path.join(
         here, os.pardir, "results", "dissipation_decision.json"))
     args = p.parse_args()
 
-    theta_counts = args.theta_counts or int(round(0.35 * args.omega))
-
     print(f"Part A: exact cost of a decision  (Omega={args.omega}, "
-          f"count_diff={args.count_diff}, theta={theta_counts} molecules)")
-    rows = [run_gamma(g, args.omega, args.count_diff, theta_counts)
-            for g in args.gammas if g < GAMMA_C]
+          f"bias_frac={args.bias_frac}, theta_frac={args.theta_frac}, "
+          "both scaled per-gamma by delta_star(gamma))")
+    results = [(g, run_gamma(g, args.omega, args.bias_frac, args.theta_frac))
+               for g in args.gammas if g < GAMMA_C]
+    skipped = [g for g, r in results if r is None]
+    rows = [r for _, r in results if r is not None]
 
-    print(f"{'gamma':>6} {'A':>7} {'th/d*':>7} {'bias':>7} {'P(err)':>9} "
+    print(f"{'gamma':>6} {'A':>7} {'th/d*':>7} {'bias/d*':>8} {'P(err)':>9} "
           f"{'<T>':>9} {'cycle':>10} {'bound':>8} {'total':>10} valid")
     for r in rows:
         print(f"{r['gamma']:>6.3f} {r['affinity']:>7.3f} "
               f"{r['theta_over_delta_star']:>7.3f} "
-              f"{r['realised_bias']:>7.4f} {r['p_error']:>9.4g} "
+              f"{r['bias_over_delta_star']:>8.4f} {r['p_error']:>9.4g} "
               f"{r['mean_time']:>9.3g} {r['cycle']:>10.2f} {r['boundary']:>8.2f} "
               f"{r['total']:>10.2f} {r['valid']}")
 
-    unreachable = [r["gamma"] for r in rows if r["theta_over_delta_star"] >= 1.0]
-    if unreachable:
-        print(f"\nWARNING: theta exceeds delta* at gamma = {unreachable}; there "
-              "the 'decision' is a fluctuation PAST the attractor and the "
-              "dissipation is a protocol artifact. Lower --theta-counts.")
+    if skipped:
+        print(f"\nSKIPPED (degenerate quantised protocol): gamma = {skipped}")
 
     dropped = [r["gamma"] for r in rows if not r["valid"]]
     if dropped:
@@ -178,8 +200,9 @@ def main():
 
     os.makedirs(os.path.dirname(os.path.abspath(args.data)), exist_ok=True)
     with open(args.data, "w") as fh:
-        json.dump({"omega": args.omega, "count_diff": args.count_diff,
-                   "theta_counts": theta_counts, "rows": rows}, fh, indent=2)
+        json.dump({"omega": args.omega, "bias_frac": args.bias_frac,
+                   "theta_frac": args.theta_frac, "skipped_gammas": skipped,
+                   "rows": rows}, fh, indent=2)
     print(f"wrote data -> {args.data}")
     make_figure(rows, args.omega, args.out)
 

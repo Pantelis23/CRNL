@@ -304,7 +304,7 @@ python -m experiments.bit_cost --quick
 
 ## License
 
-Apache License 2.0 — see [](LICENSE) and [](NOTICE).
+Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
 Apache 2.0 rather than MIT for two reasons specific to this work. It carries an
 **explicit patent grant** with defensive termination (§3), which matters in
@@ -314,7 +314,10 @@ ambiguity for anyone building a physical implementation from these results. And
 matters here because much of the repo is a *measurement record* with corrections
 and withdrawn claims in it, and a fork's numbers should not be mistaken for these.
 
-Citing it: [](CITATION.cff).
+Consistent with the author's other public work: KernRift and EIR carry the same
+licence and a NOTICE.
+
+Citing it: [CITATION.cff](CITATION.cff).
 
 ## Setup
 

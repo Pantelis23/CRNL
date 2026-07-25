@@ -1,0 +1,160 @@
+{
+  "omega": 120,
+  "delta": 0.1,
+  "share": 0.55,
+  "trials": 3000,
+  "rows": [
+    {
+      "n": 2,
+      "margin": {
+        "p_win": 0.971,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.1,
+        "champ_share": 0.55
+      },
+      "share": {
+        "p_win": 0.971,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.1,
+        "champ_share": 0.55
+      }
+    },
+    {
+      "n": 3,
+      "margin": {
+        "p_win": 0.8016666666666666,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.1,
+        "champ_share": 0.4
+      },
+      "share": {
+        "p_win": 1.0,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.325,
+        "champ_share": 0.55
+      }
+    },
+    {
+      "n": 4,
+      "margin": {
+        "p_win": 0.6846666666666666,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.1,
+        "champ_share": 0.325
+      },
+      "share": {
+        "p_win": 1.0,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.4,
+        "champ_share": 0.55
+      }
+    },
+    {
+      "n": 6,
+      "margin": {
+        "p_win": 0.564,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.1,
+        "champ_share": 0.25
+      },
+      "share": {
+        "p_win": 1.0,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.4583333333333333,
+        "champ_share": 0.55
+      }
+    },
+    {
+      "n": 8,
+      "margin": {
+        "p_win": 0.5216666666666666,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.1,
+        "champ_share": 0.21666666666666667
+      },
+      "share": {
+        "p_win": 1.0,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.48333333333333334,
+        "champ_share": 0.55
+      }
+    },
+    {
+      "n": 12,
+      "margin": {
+        "p_win": 0.42933333333333334,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.1,
+        "champ_share": 0.175
+      },
+      "share": {
+        "p_win": 1.0,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.5083333333333333,
+        "champ_share": 0.55
+      }
+    },
+    {
+      "n": 16,
+      "margin": {
+        "p_win": 0.4,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.1,
+        "champ_share": 0.15833333333333333
+      },
+      "share": {
+        "p_win": 1.0,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.5166666666666667,
+        "champ_share": 0.55
+      }
+    },
+    {
+      "n": 24,
+      "margin": {
+        "p_win": 0.37033333333333335,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.1,
+        "champ_share": 0.14166666666666666
+      },
+      "share": {
+        "p_win": 1.0,
+        "decided_frac": 1.0,
+        "blank": 0,
+        "trials": 3000,
+        "lead": 0.525,
+        "champ_share": 0.55
+      }
+    }
+  ]
+}

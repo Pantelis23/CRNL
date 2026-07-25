@@ -63,18 +63,24 @@ frozen composition, which has not been worked out.
 bars. First step is error bars on the collapse fit, which §5 flags as missing.
 
 ### T3. Radix saturation is an artifact of the fixed-margin convention
-**Status: predicted, untested. Cheap to run.**
+**Status: TESTED → `FINDINGS.md` §3.1. The prediction was wrong; the conclusion is
+the opposite of what T3 expected.**
 
-§3 found `c(n)` saturates at ≈0.0022 past n≈16 under a **fixed pairwise margin**
-δ. The stated reason: the champion's share converges to δ as n grows, so the
-contest stops changing.
+T3 predicted that a fixed champion *share* would give an **unbounded** penalty,
+"because the champion's per-rival lead keeps shrinking." **The lead is
+`s − (1−s)/(n−1)`, which grows toward `s`** — 0.100 → 0.525 over n=2..24, a 5.2×
+increase. The reasoning was wrong on paper, before any code ran.
 
-**Prediction:** under a **fixed champion share** (champion holds a constant
-fraction of the whole population, rivals split the rest) the penalty should be
-**unbounded** — `c(n) → 0` with no floor, because the champion's per-rival lead
-keeps shrinking. Under symmetric plurality it should differ again.
-**How to kill it:** run `radix_wall.py` with a share-based convention and find the
-same floor ≈0.0022.
+Measured, the penalty under fixed share does not become unbounded; it **vanishes**
+(P(win) = 1.0000 at every n ≥ 3). But that is because fixed share is asking an
+easier question at every n, not a different reading of the same one. **So §3's fixed
+pairwise margin is the convention that isolates alphabet size, and §3 stands.**
+
+Nor is share the governing variable: at a fixed share of 0.50, P(win) is 0.606 at
+n=2 and 0.997 at n=3.
+
+**Still open:** symmetric plurality, untested; and whether the saturation *floor* of
+§3 moves under any other convention that genuinely holds the pairwise lead fixed.
 
 ### T4. The restoration barrier vanishes quadratically in the landscape width
 **Status: PARTLY ANSWERED by §12 — and the answer was not what T4 guessed.**

@@ -105,6 +105,45 @@ both fixed-total-Ω and fixed-density conventions. The hypothesised high-n
 overturned. The cost of radix appears instead as rising consensus *time*
 (fixed-total Ω=120: 16.1 → 26; fixed-density: 13.2 → ~35 out to n=48).
 
+### 3.1 The penalty is convention-dependent — and fixed margin is the right one
+
+§3 flagged its own scope: "A different convention (fixed champion *share*, or
+symmetric plurality) could well be unbounded; that is untested." Now tested
+(`radix_convention.py`), with both conventions anchored to the same 0.55/0.45 start
+at n=2, Ω=120, 3000 trials:
+
+| n | 2 | 3 | 4 | 8 | 16 | 24 |
+|---|---|---|---|---|---|---|
+| P(win), fixed margin | 0.971 | 0.802 | 0.685 | 0.522 | 0.400 | **0.370** |
+| P(win), fixed share | 0.971 | 1.000 | 1.000 | 1.000 | 1.000 | **1.000** |
+
+Under fixed share the penalty does not weaken — it **vanishes entirely**. But the two
+conventions are not two readings of one experiment, because only one holds the
+contest fixed:
+
+| n | 2 | 3 | 8 | 24 |
+|---|---|---|---|---|
+| pairwise lead, fixed margin | 0.100 | 0.100 | 0.100 | 0.100 |
+| pairwise lead, fixed share | 0.100 | 0.325 | 0.483 | **0.525** |
+
+Fixed share hands the champion a **5.2× larger lead** by n=24. It is asking an easier
+question at every n, not measuring the same one differently. **So §3's choice of a
+fixed pairwise margin is the convention that isolates alphabet size, and its finding
+stands.**
+
+Nor is *share* the governing variable: at a fixed share of 0.50, P(win) is 0.606 at
+n=2 and 0.997 at n=3, because the same share is a pairwise lead of ~0 at n=2 and 0.25
+at n=3. Neither share nor symbol count alone sets the difficulty.
+
+**A prediction that failed, recorded.** `THEORIES.md` T3 predicted fixed share would
+give an *unbounded* penalty, "because the champion's per-rival lead keeps shrinking."
+The lead is `s − (1−s)/(n−1)`, which **grows** toward `s`. The reasoning was wrong
+before any code ran — caught by writing the prediction down before the sweep instead
+of after.
+
+**Untested:** symmetric plurality, and whether §3's saturation floor itself moves
+under any convention that keeps the pairwise lead fixed by other means.
+
 ---
 
 ## 4. Chemical freeze-out in an expanding volume — `expansion.py`
@@ -705,8 +744,9 @@ threshold shifts the prefactor, not the scaling. One γ-family, one `t_stage`. T
 1. **Universality class of the freeze-out transition** (§5). Is a = 0.38 really 1/3
    or 2/5, and can the quasipotential of §2 predict it? Needs error bars on the
    collapse fit.
-2. **Is the radix saturation convention-dependent?** (§3) Predicted yes — fixed
-   champion-share or symmetric-plurality framings should behave differently.
+2. ~~Is the radix saturation convention-dependent?~~ **Answered** (§3.1). Yes, the
+   penalty's *existence* is — but for a mundane reason that vindicates §3's choice
+   rather than undermining it. Still open: symmetric plurality, which was not tested.
 3. ~~A controlled EIR radix test with per-n hyperparameter tuning.~~ **Done** — the
    penalty survives tuning (§8). Still open: whether EIR's falloff shares CRNL's
    *mechanism* (basin crowding) or is partly a search effect, which needs a variant

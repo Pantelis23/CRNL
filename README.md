@@ -110,6 +110,13 @@ python -m experiments.radix_wall --quick
 python -m experiments.radix_discovery --quick
 ```
 
+**Is the penalty just a convention?** Partly — and testing it vindicated the
+original choice. Under a fixed champion *share* the penalty vanishes outright
+(P(win) = 1.000 at every n≥3), but that convention hands the champion a pairwise
+lead growing 0.10 → 0.53, so it asks an easier question at every n. Fixed pairwise
+margin is the convention that isolates alphabet size
+(`experiments/radix_convention.py`, [`FINDINGS.md`](FINDINGS.md) §3.1).
+
 The engine reaches n≈100 via a NumPy-vectorized SSA path (`crnl/vectorized.py`)
 validated to match the readable reference propensities to 1e-12 (rtol), including
 the boundary states where naive fast paths diverge.
@@ -338,6 +345,7 @@ exactly.
 | `experiments/phase_portrait.py` | the §2.3 landscape, made visible |
 | `experiments/radix_wall.py` | champion-vs-field barrier c(n) and population cost Ω_required(n) as the alphabet grows |
 | `experiments/radix_discovery.py` | symmetric-start outcome distribution and consensus time vs alphabet size |
+| `experiments/radix_convention.py` | fixed pairwise margin vs fixed champion share — which convention actually isolates alphabet size |
 | `crnl/expanding.py` | exact SSA in an exponentially expanding volume; freeze-out |
 | `experiments/radix_scaling.py` | adaptive per-n sweep giving the c(n) scaling law and Ω_required(n) |
 | `experiments/quasipotential.py` | derives c(ε)=(3/2)ε² from the saddle and tests it against data |
@@ -357,6 +365,7 @@ exactly.
 | `tests/test_engine.py` | the verification suite |
 | `tests/test_n_winner.py` | n-winner network construction and stoichiometry checks |
 | `tests/test_radix_experiments.py` | radix_wall / radix_discovery helper and fit checks |
+| `tests/test_radix_convention.py` | what each radix convention holds fixed, and the strict-lead guard |
 | `tests/test_am_reversible.py` | reversible network construction, reverse pairing, affinity, γ_c and the fixed-point branch |
 | `tests/test_thermo.py` | per-jump entropy production against the closed form, and the decomposition identity |
 | `tests/test_cme.py` | exact-solver checks: stationarity, detailed balance at γ=1 (σ=0), first-passage residuals |

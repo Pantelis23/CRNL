@@ -16,7 +16,9 @@ for it. CRNL runs one such motif (Approximate Majority) two ways —
 measures the gap. Everything it teaches lives in that difference.
 
 > Full rationale and derivations: [`docs/design.md`](docs/design.md).
-> **All measured results, with caveats and open questions: [`FINDINGS.md`](FINDINGS.md).**
+> **All measured results, with caveats: [`FINDINGS.md`](FINDINGS.md).**
+> Conjectures, open questions, and the disproven ones kept on purpose:
+> [`THEORIES.md`](THEORIES.md).
 
 ## The one-paragraph physics
 
@@ -336,7 +338,8 @@ exactly.
 | `experiments/dissipation_cascade.py` | the price of a restoring stage vs a passive channel, reported under two control conventions |
 | `experiments/bit_cost.py` | k_BT per bit delivered to depth D — no control, no rail convention |
 | `results/` | raw JSON behind every figure and table in FINDINGS.md |
-| `FINDINGS.md` | all measured results, caveats, and open questions |
+| `FINDINGS.md` | all measured results, with caveats |
+| `THEORIES.md` | live conjectures with falsifiable predictions, open questions, and a record of four confident wrong results |
 | `tests/test_engine.py` | the verification suite |
 | `tests/test_n_winner.py` | n-winner network construction and stoichiometry checks |
 | `tests/test_radix_experiments.py` | radix_wall / radix_discovery helper and fit checks |

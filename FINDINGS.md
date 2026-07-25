@@ -4,6 +4,10 @@ Measured results, with the numbers, the caveats, and what is still open. Raw dat
 for every table is committed under `results/`; each figure is regenerable by the
 named experiment.
 
+Speculation lives next door in [`THEORIES.md`](THEORIES.md) — conjectures that make
+falsifiable predictions, questions with no theory yet, and the four confident wrong
+results this project has produced, kept with what killed them.
+
 Everything here is Approximate Majority (AM) or its n-winner generalization, all
 rate constants k = 1, simulated with the exact Gillespie SSA against the
 mass-action ODE. Ω is the molecule count at concentration 1.

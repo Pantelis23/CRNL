@@ -169,10 +169,41 @@ the transient bias amplification §2 already flags at n=2.
   and is *still climbing* at Ω=120. §12.1 partly answers it — the frontier is
   bounded above by the depth ceiling, since past `D_max` no Ω delivers the bit at
   all — but the shape of the approach is unmeasured.
-- **Q7 (new). What sets the ≈3 prefactor?** §12's collapse has slope 0.74 rather
-  than 1, and §12.1's ceiling is ≈3× its prediction. Both are the same missing
-  piece: the saddle point keeps only the exponent. A Gaussian-tail (Laplace)
-  correction should supply it, and would turn two collapses into two laws.
+- **Q7. THE PREFACTOR. Three measured-but-underived numbers are one question.**
+  This is now the hub of the whole open list, and it consolidated by accident —
+  each number was found separately and only afterwards seen to be the same gap.
+
+  | where | prediction | measured | shortfall |
+  |---|---|---|---|
+  | §12 collapse | slope 1 | slope **0.74** | 1.35× |
+  | §12.1 depth ceiling | `exp(δ*²/2σ²)/4` | ≈3× larger | **≈3×** |
+  | §14 radix floor | `δ²/2` | 2.27× smaller | **2.27×** |
+
+  All three come from the same move: a **saddle point keeps only the exponent**
+  and throws away the Gaussian fluctuations around it. In every case the *shape*
+  is right — the collapse holds at R²=0.93, the ceiling scales correctly over 50×,
+  the saturation is derived — and only the amplitude is missing. §14's is the
+  cleanest target because its offset is *constant* (2.274 / 2.271 / 2.275 / 2.268
+  at n=16/24/32/64), so it is a pure number waiting to be named rather than a
+  drifting discrepancy.
+
+  **Why it is worth doing before anything else in the list:** a Laplace correction
+  is one technique, and if it supplies any of the three it plausibly supplies all
+  three — and the same machinery is what **T2** (the freeze-out exponent, a≈0.38
+  between 1/3 and 2/5) has been blocked on since §5. Four open items, one method.
+
+  **Two concrete candidates for §14's 2.27**, not yet separated: the **n−1
+  competing escape directions** (which multiply the escape rate without touching
+  the exponent, and would give a factor growing with n — so on its own it is the
+  wrong shape, since 2.27 is flat), and the **transient bias amplification** §2
+  already documents at n=2 (`dδ/dt = δ·b > 0`, so the effective δ₀ entering the
+  saddle exceeds the nominal one — a constant-ish inflation, which is the right
+  shape). §2 measured that effect as the reason its own prefactor drifts 1.586 →
+  1.809; that it is *also* ~the size needed here is suggestive and untested.
+
+  **How to kill it:** compute the §14 offset at a second δ. If 2.27 is a genuine
+  prefactor it is δ-independent; if it moves with δ, the reduction is wrong rather
+  than merely incomplete, and the whole `λ/D` picture needs revisiting.
 - **Q8. Does the depth ceiling survive a better code?** `D_max ~ exp(δ*²/2σ²)` is
   for a bare repetition of one bit through one restoring stage per hop — the weakest
   possible code. Whether the ceiling belongs to the *chemistry* or the *encoding* is

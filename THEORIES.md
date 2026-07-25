@@ -178,9 +178,13 @@ diverge as γ→γ_c, rather than staying pinned at 16.
   dissipation rate peaks at γ=0.45; at Ω=60 and 120 it is still rising at γ=0.49.
   An Ω-dependent peak location that crosses the bifurcation point is either a real
   finite-size effect or a coincidence, and we cannot currently tell.
-- **Q3. n-winner reversible thermodynamics.** The engine supports it for free and
-  no experiment uses it. Does the affinity floor `A > 3 ln 2` become `A > n ln 2`,
-  or something else? This is the cheapest genuinely new territory available.
+- ~~**Q3. n-winner reversible thermodynamics.**~~ **Answered** → §13. Not `n ln 2`
+  and not the `3 ln n` I predicted before running: **γ_c(n) → n⁻³, so
+  A_c(n) → 9 ln n**, i.e. 9 ln 2 ≈ 6.24 k_BT per bit of alphabet, exactly 9×
+  Landauer. n=2 sits off that asymptote (ratio 3, not 9), so §9.1's famous case is
+  the special one. **New (Q3a): why the cube?** The 9 factors as 3×3 — three
+  reactions per cycle, and a γ_c suppressed by n³ — but nothing derives the cube.
+  A derivation would turn a measured exponent (−3.02, still drifting) into a law.
 - **Q4. Structured (asymmetric) landscapes.** Unequal rate constants, deformed
   basins — the honest bridge toward real chemistry. Note §9.2's closed-form EP
   identity **fails** there, which is exactly why `thermo.entropy_step` exists as

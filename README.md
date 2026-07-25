@@ -351,6 +351,7 @@ exactly.
 | `crnl/stochastic.py` | hand-written Gillespie SSA — the lesson |
 | `crnl/classify.py` | absorption test + dwelling test + fixed-point classifier (stoichiometric-subspace aware) |
 | `crnl/networks/am.py` | AM as data: 3 species, 3 reactions, k=1 |
+| `crnl/networks/n_winner_reversible.py` | reversible n-winner AM: symmetric state, symmetry-breaking eigenvalue, and the critical drive gamma_c(n) |
 | `crnl/networks/n_winner.py` | n-winner AM as data: n committed species + blank, pairwise disagreement + per-species autocatalysis |
 | `crnl/vectorized.py` | NumPy-vectorized SSA path validated against the reference propensities, letting the radix experiments reach n≈100 |
 | `crnl/networks/am_reversible.py` | reversible AM as data: γ-scaled reverse rates, derived reverse pairing, cycle affinity from the null space, closed-form fixed points and γ_c |
@@ -362,6 +363,7 @@ exactly.
 | `experiments/phase_portrait.py` | the §2.3 landscape, made visible |
 | `experiments/radix_wall.py` | champion-vs-field barrier c(n) and population cost Ω_required(n) as the alphabet grows |
 | `experiments/radix_discovery.py` | symmetric-start outcome distribution and consensus time vs alphabet size |
+| `experiments/n_winner_affinity.py` | minimum affinity for an n-symbol landscape: gamma_c(n) and A_c(n) |
 | `experiments/radix_convention.py` | fixed pairwise margin vs fixed champion share — which convention actually isolates alphabet size |
 | `crnl/expanding.py` | exact SSA in an exponentially expanding volume; freeze-out |
 | `experiments/radix_scaling.py` | adaptive per-n sweep giving the c(n) scaling law and Ω_required(n) |
@@ -382,6 +384,7 @@ exactly.
 | `tests/test_engine.py` | the verification suite |
 | `tests/test_n_winner.py` | n-winner network construction and stoichiometry checks |
 | `tests/test_radix_experiments.py` | radix_wall / radix_discovery helper and fit checks |
+| `tests/test_n_winner_reversible.py` | n=2 reduction to the known closed form, cycle dimension C(n,2), and the bifurcation |
 | `tests/test_radix_convention.py` | what each radix convention holds fixed, and the strict-lead guard |
 | `tests/test_am_reversible.py` | reversible network construction, reverse pairing, affinity, γ_c and the fixed-point branch |
 | `tests/test_thermo.py` | per-jump entropy production against the closed form, and the decomposition identity |

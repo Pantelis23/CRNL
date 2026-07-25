@@ -739,6 +739,60 @@ landscape; it was about the ratio of channel noise to landscape width.
 threshold shifts the prefactor, not the scaling. One γ-family, one `t_stage`. The
 σ/δ*=0.22 row is a lower bound only — the ceiling there exceeds the tested depth.
 
+## 13. What an n-symbol landscape costs in drive — `n_winner_affinity.py`
+
+§9.1 priced the two-symbol landscape: it dies at γ_c = 1/2, so it costs a minimum
+cycle affinity **A_c = 3 ln 2**. This sweeps n.
+
+The elementary cycle is **three reactions for every n** — fire `X_i+X_j→2B`, then
+`B+X_i→2X_i`, then `B+X_j→2X_j`, and every count returns to its start — so the
+affinity per cycle stays `A = −3 ln γ` and the whole question is where γ_c(n) sits.
+Measured exactly, from the analytic Jacobian at the symmetric point:
+
+| n | 2 | 4 | 8 | 32 | 128 | 256 |
+|---|---|---|---|---|---|---|
+| γ_c | 0.5 | 6.81e-2 | 3.94e-3 | 3.58e-5 | 4.96e-7 | **6.08e-8** |
+| A_c | 2.079 | 8.061 | 16.61 | 30.71 | 43.55 | **49.85** |
+| A_c / ln n | 3.000 | 5.815 | 7.987 | 8.861 | 8.976 | **8.989** |
+| local exponent | — | −3.79 | −3.93 | −3.19 | −3.05 | **−3.02** |
+
+**γ_c(n) → n⁻³, hence A_c(n) → 9 ln n.** The local exponent peaks near −4.2 around
+n=6 and converges monotonically to −3.02 by n=256; the fit over n ≥ 64 gives
+`γ_c ~ n^−3.042`, i.e. `A_c ≈ 9.13 ln n`.
+
+Since a symbol carries `log₂ n` bits, that is **9 ln 2 ≈ 6.24 k_BT of drive per bit
+of alphabet** — exactly 9× Landauer's `k_B T ln 2` per bit. The 9 is `3 × 3`: three
+reactions in the cycle, and a critical γ suppressed by the cube.
+
+**n = 2 is not on the asymptote**, and that matters for reading §9.1. A_c(2) = 3 ln 2
+= 2.079 where 9 ln 2 = 6.238 — the ratio is 3, not 9. The famous case is the special
+one, and the law is approached from below over decades in n.
+
+**Two predictions this killed.** THEORIES Q3 guessed `A_c = n ln 2`; before running,
+I predicted `γ_c = 1/n` giving `A_c = 3 ln n`, because it reproduces the exact n=2
+value. Measured γ_c falls ~870× below 1/n by n=32.
+
+**Three ways n ≥ 3 is structurally unlike n = 2**, all verified:
+- The **cycle space is no longer one-dimensional**: counting each reversible pair as
+  one edge (the counting under which §9.1 called AM's cycle space 1-D), the dimension
+  is exactly **C(n,2)** — 1, 3, 6, 15 at n = 2, 3, 4, 6.
+- The **symmetric point moves.** At n=2 it is pinned at (⅓,⅓,⅓) for every γ; for n≥3
+  it is not at 1/(n+1) and it depends on γ (n=3: x = 0.2050 → 0.2431 over
+  γ = 0.02 → 0.6).
+- λ_breaking still reduces to §9.1's `(1−2γ)/3` at n=2, exactly.
+
+**Verification.** The symmetric state is an exact fixed point (|rhs| < 1e-12); the
+breaking vector is a true eigenvector, not merely a Rayleigh bound (relative residual
+1e-16); and the eigenvalue crossing is a **real bifurcation** — integrating the ODE
+from a 1e-6 perturbation gives a surviving broken state below γ_c (winner share 0.858
+/ 0.953 / 0.997 at n = 3 / 4 / 8) and decay to 1e-16 above it.
+
+**Caveats.** Deterministic and exact, so this is the Ω→∞ landscape question only —
+it says nothing about the population needed to *resolve* the landscape at finite Ω,
+which §1 and §12 govern. Uniform γ throughout; asymmetric rates are untested (Q4).
+The n⁻³ exponent is measured to −3.02 and still drifting, so it is an approach, not a
+proof.
+
 ## Open questions
 
 1. **Universality class of the freeze-out transition** (§5). Is a = 0.38 really 1/3

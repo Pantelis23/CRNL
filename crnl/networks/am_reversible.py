@@ -87,3 +87,31 @@ def reverse_pairing(net: ReactionNetwork) -> np.ndarray:
         if matches:
             pairing[i] = matches[0]
     return pairing
+
+
+def cycle_affinity(net: ReactionNetwork, pairing: np.ndarray) -> float:
+    """Thermodynamic force around the network's cycle, in units of k_B T.
+
+    A = ln( prod k_forward / prod k_reverse ) over one traversal. For reversible
+    AM the cycle is f1+f2+f3 (their stoichiometric vectors sum to zero), and
+    rank(S) = 2 means the cycle space is one-dimensional -- so this single number
+    is the whole drive. Returns -3*ln(gamma) for uniform rates.
+
+    Computed from the DETERMINISTIC rate constants. Using stochastic_constants
+    instead would be wrong by -3*ln(2) here, because the homodimer reverses carry
+    a factor 2 in c that has nothing to do with the thermodynamics.
+    """
+    S = net.stoichiometry_matrix()
+    forward = [j for j in range(net.n_reactions) if pairing[j] > j]
+    if not forward:
+        raise ValueError("network has no reversible pairs; affinity is undefined")
+    # the candidate cycle: one traversal of each forward reaction
+    cycle = S[:, forward].sum(axis=1)
+    if not np.allclose(cycle, 0.0):
+        raise ValueError(
+            "the forward reactions do not form a closed cycle "
+            f"(net stoichiometry {cycle}); affinity is not a single number"
+        )
+    ln_fwd = sum(np.log(net.reactions[j].k) for j in forward)
+    ln_rev = sum(np.log(net.reactions[int(pairing[j])].k) for j in forward)
+    return float(ln_fwd - ln_rev)

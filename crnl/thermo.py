@@ -31,6 +31,7 @@ COMPLETE reverse pairing and raises rather than dividing by zero.
 from __future__ import annotations
 
 import math
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -77,9 +78,19 @@ def entropy_step(
 
 def decompose(n0, n_stop, net_reaction_firings: float, affinity: float,
               boundary: float | None = None) -> dict:
-    """Split total entropy production into boundary and cycle contributions.
+    """Split the trajectory's MEDIUM entropy production into two contributions.
 
         dS_total = boundary + (affinity/3) * net_reaction_firings
+
+    NAMING, because a second-law statement will eventually be written against
+    this function: "total" means total over the TRAJECTORY, not total over the
+    universe. Every quantity here is MEDIUM (heat) entropy production -- the
+    sum of ln[a_rho(n)/a_{-rho}(n')] over jumps. The system term is not computed
+    anywhere in this repo. So `total` is NOT the quantity the second law bounds,
+    and it can legitimately be negative at a conditioned stopping time (measured:
+    -12.0 k_B at Omega=60, gamma=1, from a (1/3,1/3,1/3) start stopped at
+    |delta| >= 0.5). Do not "fix" such a result; it is the heat-only statement
+    failing, exactly as it should.
 
     `net_reaction_firings` is the NET per-reaction count (forward - reverse)
     summed over all three pairs, exactly as an integer counter in a simulation
@@ -104,3 +115,158 @@ def decompose(n0, n_stop, net_reaction_firings: float, affinity: float,
     cycle = (affinity / 3.0) * float(net_reaction_firings)
     return {"boundary": float(boundary), "cycle": cycle,
             "total": float(boundary) + cycle}
+
+
+class FlipCounter:
+    """Schmitt-trigger flip detection on the decision coordinate.
+
+    A "flip" is the signal committing to the OPPOSITE side, not a zero
+    crossing: an unhysteretic counter on sign(delta) counts every thermal
+    wobble near delta=0 and overestimates the rate by orders of magnitude.
+
+    CONVENTION, and it matters by a factor of 2: this counts ONE-WAY crossings,
+    so in a symmetric bistable system `flips / T -> 1/tau`, where tau is the
+    one-sided mean first-passage time that cme.first_passage computes. A round
+    trip counts as TWO. (1/(2 tau) is the ROUND-TRIP rate; using it makes a
+    measured tau exactly half the exact one, which was verified to sit far
+    outside sampling noise -- 0.37..0.58 with 52..82 flips per point.)
+
+    The arm MUST scale with the landscape. A fixed arm of 0.3 never arms above
+    gamma = 0.473 (delta_star(0.49) = 0.187), so the counter would read zero
+    forever in exactly the range where SSA is affordable -- and read it as a
+    physical result rather than a protocol failure. Callers pass
+    0.7 * delta_star(gamma).
+
+    `side` starts at 0 (unarmed): the first arrival at either arm arms the
+    trigger WITHOUT counting a flip, so a run starting mid-landscape does not
+    manufacture one.
+    """
+
+    def __init__(self, arm: float, side: int = 0) -> None:
+        if not arm > 0.0:
+            raise ValueError(f"flip arm must be positive, got {arm}")
+        self.arm = float(arm)
+        self.side = int(side)
+        self.flips = 0
+
+    def update(self, delta: float) -> None:
+        if delta >= self.arm:
+            if self.side == -1:
+                self.flips += 1
+            self.side = +1
+        elif delta <= -self.arm:
+            if self.side == +1:
+                self.flips += 1
+            self.side = -1
+
+
+@dataclass
+class InstrumentedResult:
+    """One instrumented trajectory.
+
+    `net_firings` is the NET PER-REACTION count (forward - reverse) summed over
+    all pairs -- the same units as cme.first_passage's `net_reaction_firings`,
+    and what thermo.decompose expects. NOT divided by 3 here.
+    """
+
+    t_final: float
+    n_final: np.ndarray
+    steps: int
+    absorbed: bool
+    stopped: bool
+    species: list[str]
+    net_firings: int
+    flips: int
+
+
+def gillespie_instrumented(
+    compiled,
+    n0,
+    rng: np.random.Generator,
+    pairing: np.ndarray,
+    *,
+    stop=None,
+    flip_arm: float | None = None,
+    flip_index: tuple[int, int] = (0, 1),
+    omega: float | None = None,
+    max_steps: int = 10_000_000,
+    t_max: float = np.inf,
+    species=None,
+) -> InstrumentedResult:
+    """Exact SSA with an entropy-production counter, a stop predicate, and flips.
+
+    Deliberately a COPY of vectorized.gillespie_fast, not a refactor of it. The
+    fast loop is the verified hot path used by every other experiment here;
+    adding branches for three new callers was measured at 3x the stated scope,
+    and the tempting shortcut -- reusing the next iteration's propensity vector
+    to price the current jump -- silently drops the FINAL jump's contribution, a
+    systematic -A/3 bias that breaks the exact identity. The cost of copying is
+    drift, and tests/test_thermo_ssa.py::test_instrumented_matches_fast_bit_for_bit
+    pins it.
+
+    No logarithms are evaluated in this loop: entropy production comes from an
+    integer counter plus the closed form in the module docstring.
+
+    `stop(n) -> bool` halts at the first satisfying state (checked on the
+    initial state too). `flip_arm` enables flip counting on
+    delta = (n[i] - n[j])/omega for flip_index = (i, j), and requires `omega`.
+    """
+    from .vectorized import propensities_fast
+
+    pairing = np.asarray(pairing)
+    if (pairing < 0).any():
+        raise ValueError(
+            "incomplete reverse pairing: entropy production is undefined. "
+            "An unpaired reaction would be silently counted as a REVERSE "
+            "firing (pairing[j] > j is False for -1), corrupting net_firings."
+        )
+    if flip_arm is not None and omega is None:
+        raise ValueError("flip counting needs omega to form delta = (n_i - n_j)/omega")
+
+    S = compiled.S
+    n = np.array(n0, dtype=np.int64)
+    t = 0.0
+    steps = 0
+    absorbed = False
+    stopped = False
+    n_rx = compiled.n_reactions
+
+    # Forward half of each reversible pair, by the same convention as
+    # cme.first_passage: j is forward iff its partner has a higher index.
+    forward = np.array([pairing[j] > j for j in range(n_rx)], dtype=bool)
+    net_firings = 0
+
+    fi, fj = flip_index
+    fc = FlipCounter(flip_arm) if flip_arm is not None else None
+    if fc is not None:
+        fc.update(float(int(n[fi]) - int(n[fj])) / float(omega))
+
+    if stop is not None and stop(n):
+        stopped = True
+
+    while not stopped and steps < max_steps and t < t_max:
+        a = propensities_fast(compiled, n)
+        a0 = a.sum()
+        if a0 <= 0.0:
+            absorbed = True
+            break
+        tau = -np.log(rng.random()) / a0
+        j = int(np.searchsorted(np.cumsum(a), rng.random() * a0))
+        if j >= n_rx:
+            j = n_rx - 1
+        n = n + S[:, j]
+        t += tau
+        steps += 1
+        net_firings += 1 if forward[j] else -1
+        if fc is not None:
+            fc.update(float(int(n[fi]) - int(n[fj])) / float(omega))
+        if stop is not None and stop(n):
+            stopped = True
+
+    labels = list(species) if species is not None else [
+        f"s{i}" for i in range(compiled.n_species)]
+    return InstrumentedResult(
+        t_final=t, n_final=n, steps=steps, absorbed=absorbed, stopped=stopped,
+        species=labels, net_firings=int(net_firings),
+        flips=(fc.flips if fc is not None else 0),
+    )

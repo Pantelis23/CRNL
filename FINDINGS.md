@@ -793,11 +793,61 @@ which §1 and §12 govern. Uniform γ throughout; asymmetric rates are untested 
 The n⁻³ exponent is measured to −3.02 and still drifting, so it is an approach, not a
 proof.
 
+## 14. Why the radix barrier saturates — `n_winner_reversible.py`
+
+§3 measured that the n-winner barrier `c(n)` falls ~7× and then **saturates** at
+≈0.0022, and could not say why. §13's machinery plus §2's quasipotential now
+explain the saturation, though not its size.
+
+Two exact closed forms, both verified against the engine to 7 decimals over
+n = 2..64:
+
+    λ(n)  = 1/(2n−1)                  symmetry-breaking eigenvalue at γ=0
+    D₀(n) = (2n−3)/(2n−1)²            van Kampen diffusion in the same direction
+
+`D₀(2) = 1/9` is exactly `design.md` §9's `D = 1/(9Ω)` for irreversible AM, so this
+is the same reduction, generalised.
+
+**The mechanism.** A quasipotential barrier goes like `c ∝ λ/D₀`, and here
+
+    λ/D₀ = (2n−1)/(2n−3) → 1
+
+**λ and D₀ vanish at the same rate**, so their ratio saturates instead of
+diverging. That is why `c(n)` has a floor. The instability rate does die like
+1/(2n) — but so does the noise that would exploit it.
+
+So the prediction is `c(n) = δ²(2n−1)/(2(2n−3)) → δ²/2`:
+
+| n | 2 | 4 | 8 | 16 | 32 | 64 |
+|---|---|---|---|---|---|---|
+| predicted c | 0.01500 | 0.00700 | 0.00577 | 0.00534 | 0.00516 | 0.00508 |
+| measured c (§3) | 0.01567 | 0.00455 | 0.00297 | 0.00235 | 0.00227 | 0.00224 |
+| ratio | **0.957** | 1.538 | 1.943 | 2.274 | 2.275 | **2.268** |
+
+**What this does and does not settle.** At n=2 it is right to 4% — it *is* §2's
+`c(ε) = (3/2)ε²`, recovered as the n=2 member. The saturation is genuinely derived.
+But the predicted floor is `δ²/2 = 0.0050` against a measured 0.0022, and the ratio
+climbs to **a constant 2.27** and stays there from n=16 to n=64. Predicted fall
+2.95×, measured 7.0×.
+
+A constant offset that itself saturates is a **prefactor**, not a wrong shape — the
+same species as §12's slope of 0.74 and §12.1's factor ≈3, and logged with them
+under THEORIES Q7. Candidates not yet separated: the n−1 competing escape
+directions, which multiply the escape rate without changing the exponent; and the
+transient bias amplification §2 already flags at n=2.
+
+**Caveats.** The closed forms are for γ=0 (irreversible), which is what §3 measured;
+`breaking_diffusion` computes the general-γ case numerically but it is untested
+against a barrier measurement. The comparison inherits §3's fixed-margin convention
+(§3.1) and its δ=0.10. The barrier is read from a 1-D reduction along one mode,
+which is exact for the *rate* by symmetry but is an approximation for the escape.
+
 ## Open questions
 
 1. **Universality class of the freeze-out transition** (§5). Is a = 0.38 really 1/3
    or 2/5, and can the quasipotential of §2 predict it? Needs error bars on the
-   collapse fit.
+   collapse fit. Now better motivated: §14 shows the same λ/D reduction predicts a
+   saturation correctly in shape, so the technique is worth pointing at §5.
 2. ~~Is the radix saturation convention-dependent?~~ **Answered** (§3.1). Yes, the
    penalty's *existence* is — but for a mundane reason that vindicates §3's choice
    rather than undermining it. Still open: symmetric plurality, which was not tested.

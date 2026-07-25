@@ -150,3 +150,75 @@ def affinity_critical(n: int) -> float:
     docstring), so this is directly comparable to 9.1's A_c(2) = 3 ln 2.
     """
     return float(-3.0 * np.log(gamma_critical(n)))
+
+
+def breaking_diffusion(n: int, gamma: float = 0.0) -> float:
+    """Finite-count diffusion D_0 in the symmetry-breaking direction.
+
+    The van Kampen / chemical-Langevin diffusion is D = D_0 / Omega with
+
+        D_0 = sum_r (v . S_r)^2 v_r(x)
+
+    evaluated at the symmetric state, with v the unit breaking mode. At
+    gamma = 0 the sum has the closed form
+
+        D_0(n) = (2n - 3) / (2n - 1)^2
+
+    which is 1/9 at n = 2 -- exactly design.md section 9's D = 1/(9 Omega) for
+    irreversible AM. Verified against this numeric sum to 7 decimals for
+    n = 2..64.
+
+    Why it matters: paired with lambda_breaking(n, 0) = 1/(2n-1), the
+    quasipotential barrier c ~ lambda/(2 D_0) becomes
+
+        lambda / D_0 = (2n - 1) / (2n - 3)   ->   1
+
+    so lambda and D_0 vanish at the SAME rate and their ratio saturates. That is
+    the mechanism behind FINDINGS 3's measured saturation of c(n), which had no
+    explanation when it was measured. See FINDINGS 14 for how far it goes
+    quantitatively (it does not go all the way -- a constant factor ~2.3 remains).
+    """
+    from .n_winner import n_winner
+
+    if gamma == 0.0:
+        net = n_winner(n)
+        x = 1.0 / (2 * n - 1)
+        blank = (n - 1) / (2 * n - 1)
+    else:
+        net = n_winner_reversible(n, gamma)
+        x, blank = symmetric_state(n, gamma)
+    state = np.concatenate([np.full(n, x), [blank]])
+    S = net.stoichiometry_matrix()
+    flux = net.fluxes(state)
+    v = breaking_mode(n)
+    return float(sum((v @ S[:, r]) ** 2 * flux[r] for r in range(net.n_reactions)))
+
+
+def predicted_barrier(n: int, delta: float = 0.10) -> float:
+    """Quasipotential prediction for the n-winner restoration barrier c(n).
+
+        c = lambda * delta^2 / (2 D_0) = delta^2 (2n-1) / (2 (2n-3))
+
+    -> delta^2 / 2 as n grows. At n = 2 this is 1.5 delta^2, reproducing
+    design.md section 9's c(eps) = (3/2) eps^2 exactly.
+    """
+    return float(lambda_closed(n) * delta ** 2 / (2.0 * diffusion_closed(n)))
+
+
+def lambda_closed(n: int) -> float:
+    """lambda_breaking(n, gamma=0) = 1/(2n-1), in closed form.
+
+    Exists because the numeric route builds the network, and n-winner has
+    C(n,2)+n reactions -- at n=4096 that is 8.4 million, which is not a
+    calculation, it is an out-of-memory error. Pinned against the numeric route
+    for n = 2..64 by tests/test_n_winner_reversible.py.
+    """
+    return 1.0 / (2 * n - 1)
+
+
+def diffusion_closed(n: int) -> float:
+    """breaking_diffusion(n, gamma=0) = (2n-3)/(2n-1)^2, in closed form.
+
+    Same reason as lambda_closed, and pinned the same way. Equals 1/9 at n=2.
+    """
+    return (2 * n - 3) / (2 * n - 1) ** 2

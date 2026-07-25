@@ -138,3 +138,48 @@ def test_rejects_degenerate_inputs():
         n_winner_reversible(1, 0.3)
     with pytest.raises(ValueError, match="gamma"):
         n_winner_reversible(3, -0.1)
+
+
+# -- the quasipotential ingredients (FINDINGS 14) --------------------------
+
+@pytest.mark.parametrize("n", [2, 3, 4, 6, 8, 16, 32, 64])
+def test_closed_forms_match_the_numeric_route(n):
+    """The closed forms exist only for speed -- n=4096 would need 8.4M
+    reactions -- so they must be pinned against the network computation."""
+    from crnl.networks.n_winner_reversible import (
+        breaking_diffusion, diffusion_closed, lambda_closed,
+    )
+    assert lambda_closed(n) == pytest.approx(lambda_breaking(n, 0.0), rel=1e-9)
+    assert diffusion_closed(n) == pytest.approx(breaking_diffusion(n, 0.0), rel=1e-9)
+
+
+def test_diffusion_at_n2_is_the_design_doc_value():
+    """design.md section 9 derives D = 1/(9 Omega) for irreversible AM."""
+    from crnl.networks.n_winner_reversible import breaking_diffusion
+    assert breaking_diffusion(2, 0.0) == pytest.approx(1 / 9, rel=1e-12)
+
+
+def test_predicted_barrier_reproduces_the_design_doc_at_n2():
+    """c(eps) = (3/2) eps^2, the one first-principles prediction in the project."""
+    from crnl.networks.n_winner_reversible import predicted_barrier
+    for delta in (0.04, 0.10, 0.20):
+        assert predicted_barrier(2, delta) == pytest.approx(1.5 * delta**2, rel=1e-12)
+
+
+def test_lambda_and_diffusion_vanish_at_the_same_rate():
+    """THE mechanism behind FINDINGS 3's saturation: both go like 1/(2n-1), so
+    their ratio (2n-1)/(2n-3) tends to 1 instead of diverging."""
+    from crnl.networks.n_winner_reversible import diffusion_closed, lambda_closed
+    ratios = [lambda_closed(n) / diffusion_closed(n) for n in (2, 8, 64, 1024)]
+    assert ratios == sorted(ratios, reverse=True)
+    assert ratios[0] == pytest.approx(3.0)         # n=2
+    assert ratios[-1] == pytest.approx(1.0, abs=0.002)
+
+
+def test_predicted_barrier_saturates_like_the_measurement():
+    """Predicted floor delta^2/2. The measured floor is 2.3x lower -- a constant
+    offset, not a different shape (FINDINGS 14)."""
+    from crnl.networks.n_winner_reversible import predicted_barrier
+    d = 0.10
+    assert predicted_barrier(1024, d) == pytest.approx(d * d / 2, rel=0.002)
+    assert predicted_barrier(64, d) / predicted_barrier(1024, d) < 1.02

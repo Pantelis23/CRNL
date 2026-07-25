@@ -149,14 +149,17 @@ Worth keeping from the attempt: **λ_breaking(n, γ=0) = 1/(2n−1) exactly** (c
 against ten values of n), and the symmetric state at γ=0 is
 `x = 1/(2n−1)`, `b = (n−1)/(2n−1)`.
 
-**What it points at (T7a).** The quasipotential barrier is `c ∝ λ/D`. If λ vanishes
-like `1/(2n−1)` while `c` saturates, then the finite-count diffusion `D(n)` in the
-decision coordinate must vanish at the *same* rate. That is directly checkable, and
-if it holds it derives §3's saturation — a headline that has been unexplained since
-it was measured — from §13's machinery plus §2's quasipotential.
-**How to kill it:** compute `D(n)` at the symmetric point and find it does not track
-`1/(2n−1)`; then `c ∝ λ/D` is the wrong reduction across n and something about the
-escape geometry (n−1 competing directions rather than one) carries the barrier.
+**T7a: CONFIRMED for the shape → `FINDINGS.md` §14.** `D₀(n) = (2n−3)/(2n−1)²`
+exactly, so `λ/D₀ = (2n−1)/(2n−3) → 1` — λ and the diffusion vanish at the same
+rate and their ratio saturates. **That derives §3's saturation**, unexplained since
+it was measured. `D₀(2) = 1/9` recovers `design.md` §9, and the n=2 barrier comes
+out at `1.5 δ²`, i.e. §2's result, to 4%.
+
+**Not settled: the size.** Predicted floor `δ²/2 = 0.0050` against a measured
+0.0022; the ratio climbs to a *constant* 2.27 and holds from n=16 to n=64. A
+constant offset is a prefactor, so this folds into **Q7** rather than standing
+alone. Two candidates not yet separated: the n−1 competing escape directions, and
+the transient bias amplification §2 already flags at n=2.
 
 ---
 

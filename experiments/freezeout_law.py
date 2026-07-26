@@ -299,6 +299,32 @@ def fixed_H_table(rows, taus, hs=(0.1219, 0.0879, 0.055, 0.04)) -> dict:
     return out
 
 
+def width_and_exponent(rows, pow_old) -> dict:
+    """Two more discriminators that need no functional form to be fitted.
+
+    WIDTH. The log law translates the whole curve along 1/H without reshaping it,
+    so the transition width measured in `1/H` is constant. FSS with `Hc > 0` cannot
+    do that: its width in H goes like `Omega^-a` while `H*` saturates at `Hc`, so
+    the width in `1/H` must collapse. Over Sec.5's own x32 range the two agree to
+    ~1% -- which is why width was no discriminator there and is one now.
+
+    EFFECTIVE EXPONENT. `-dlnH*/dlnOmega` is *constant* for any pure power law. The
+    log law says it equals `A*H*` and therefore drifts to zero. No free parameter.
+    """
+    W = np.array([r["omega"] for r in rows], dtype=float)
+    i25, i75 = LEVELS.index(0.25), LEVELS.index(0.75)
+    tau = np.array([r["tau_star"][LEVELS.index(0.5)] for r in rows])
+    width = np.array([r["tau_star"][i75] - r["tau_star"][i25] for r in rows])
+    # what FSS with Sec.5's own parameters demands of that width
+    H_fss = pow_old["Hc"] + pow_old["C"] * W ** (-pow_old["a"])
+    w_fss = W ** (-pow_old["a"]) / H_fss ** 2
+    a_eff = -np.diff(np.log(1.0 / tau)) / np.diff(np.log(W))
+    a_log = 2.0 * 1.5 / (tau[:-1] + tau[1:])          # A*H* at the pair midpoint
+    return {"omegas": W.tolist(), "width_tau": width.tolist(),
+            "width_fss_shape": (w_fss / w_fss[0]).tolist(),
+            "a_eff": a_eff.tolist(), "a_eff_log_law": a_log.tolist()}
+
+
 def collapse_residual(coords, values):
     """Bhattacharjee-Seno residual, same estimator as freezeout_scaling.py."""
     u = np.concatenate(coords)
@@ -567,6 +593,17 @@ def main():
     print(f"-- curvature of τ* in lnΩ: {c['quad']:+.4f} ± {c['quad_sd']:.4f} "
           f"({c['sigma']:+.1f}σ); a positive Hc requires it to be negative")
 
+    we = width_and_exponent(rows, fits["pow_old_range"])
+    print("\n-- transition WIDTH in 1/H (log law: constant; Hc>0: must shrink) --")
+    print("        Ω   τ*(.75)−τ*(.25)   what FSS with §5's own params demands")
+    for w, m, f in zip(we["omegas"], we["width_tau"], we["width_fss_shape"]):
+        print(f"  {int(w):7d}   {m:11.2f}       {f * we['width_tau'][0]:11.2f}")
+    print("\n-- effective exponent −dlnH*/dlnΩ (a pure power law: CONSTANT) --")
+    print("     Ω pair          measured    log law A·H* (no free parameter)")
+    for i, (a, b) in enumerate(zip(we["a_eff"], we["a_eff_log_law"])):
+        print(f"  {int(we['omegas'][i]):7d}→{int(we['omegas'][i + 1]):<8d}  "
+              f"{a:8.3f}    {b:8.3f}")
+
     fixed = fixed_H_table(rows, taus)
     print("\n-- D at FIXED H as Ω grows (no fit; §5 claims Hc ≈ 0.055) --")
     print("      Ω   " + "  ".join(f"H={h:<7}" for h in fixed))
@@ -627,7 +664,7 @@ def main():
         json.dump({"taus": taus.tolist(), "levels": list(LEVELS),
                    "rows": rows, "fits": fits, "collapse": collapse,
                    "exact": exact, "fixed_H": fixed, "bias": args.bias,
-                   "sec6": sec6, "extinction": extinct,
+                   "sec6": sec6, "extinction": extinct, "width_exponent": we,
                    "trials": args.trials, "reps": args.reps}, fh)
     print(f"\nwrote data -> {args.data}   (total {time.time()-t0:.0f}s)")
     make_figure(rows, taus, fits, collapse, args.out)

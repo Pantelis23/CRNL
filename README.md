@@ -144,16 +144,28 @@ c(n) falls ~7× from n=2 to n=32 and then **saturates** at ≈0.0022 (confirmed 
 n=64), while the population cost Ω_required rises ~13×. Under a fixed pairwise
 margin the radix penalty on the *margin* is bounded; the price is paid in Ω.
 
-### Freeze-out in an expanding volume — `experiments/expansion.py`, `experiments/freezeout_scaling.py`
+### Freeze-out in an expanding volume — `experiments/expansion.py`, `experiments/freezeout_law.py`
 
-![freeze-out scaling](experiments/freezeout_scaling.png)
+![freeze-out law](experiments/freezeout_law.png)
 
 Let the volume expand as Ω(t)=Ω₀e^{Ht} and restoration must beat the dilution. Above
 a critical rate the decision **freezes half-made**, locking in a relic — the chemical
-analogue of cosmological freeze-out. Six system sizes spanning ×32 collapse onto one
-master curve (**Hc≈0.055, a≈0.38**), so it is a genuine finite-size-scaling
-transition, not a crossover. Bigger alphabets freeze *more* easily
-(`expansion_radix.py`: H* falls 0.121→0.071 across n=2→16).
+analogue of cosmological freeze-out.
+
+**But the critical rate is zero, and an earlier claim here was wrong.** This section
+used to report a finite-size-scaling collapse with **Hc≈0.055, a≈0.38** and call it "a
+genuine transition". The expanding SSA turns out to be *exactly* ordinary AM stopped at
+internal time τ = 1/H — an exact time change, verified bit-for-bit — so H* is one over
+the consensus time, which from a symmetric start diverges like **(3/2)·lnΩ**. Measured
+over ×16384 in Ω, `dτ*/dlnΩ = 1.5005 ± 0.0023` against a parameter-free 3/2, H* passes
+straight through 0.055, and a **zero-parameter** collapse beats the two-parameter one
+by 28×. Start the same system with a fixed bias instead and a real Ω-independent
+critical rate appears (H* = 0.2102, slope −0.0022 ± 0.0003) — so the drift read as
+criticality was the shrinking shot-noise seed. FINDINGS §5.1.
+
+Bigger alphabets still freeze *more* easily (`expansion_radix.py`: H* falls
+0.121→0.071 across n=2→16) — and that table is reproduced to 1–3% by a *non*-expanding
+SSA measuring nothing but consensus time.
 
 ### Deep cascades — `experiments/cascade.py`
 
@@ -168,6 +180,7 @@ Restoration does not zero the per-stage error — it makes it exponentially smal
 python -m experiments.quasipotential --quick
 python -m experiments.radix_scaling --quick
 python -m experiments.freezeout_scaling --quick
+python -m experiments.freezeout_law --quick
 python -m experiments.expansion --quick
 python -m experiments.cascade --quick
 ```
@@ -366,6 +379,8 @@ exactly.
 | `experiments/n_winner_affinity.py` | minimum affinity for an n-symbol landscape: gamma_c(n) and A_c(n) |
 | `experiments/radix_convention.py` | fixed pairwise margin vs fixed champion share — which convention actually isolates alphabet size |
 | `crnl/expanding.py` | exact SSA in an exponentially expanding volume; freeze-out |
+| `crnl/freezeout.py` | the time change that makes expansion a finite internal-time budget: cross-trial SSA sampled on an internal clock, exact AM CME generator, and the deterministic route |
+| `experiments/freezeout_law.py` | is there a critical expansion rate? Ω to 655 360, log law vs power law, and the biased-start control |
 | `experiments/radix_scaling.py` | adaptive per-n sweep giving the c(n) scaling law and Ω_required(n) |
 | `experiments/quasipotential.py` | derives c(ε)=(3/2)ε² from the saddle and tests it against data |
 | `experiments/expansion.py` | freeze-out transition, relic abundance, frozen compositions |
@@ -394,6 +409,7 @@ exactly.
 | `tests/test_cascade_exact.py` | cascade kernel invariants — the parity trap, the exact ⟨M⟩ oracle, and a regression guard on the withdrawn minimum-Ω claim |
 | `tests/test_information.py` | information primitives, the cost-per-bit scalings, and a guard on the depth-1 degeneracy |
 | `tests/test_channel_wall.py` | both limits of the saddle-point formula, the measured collapse, and the regime where it fits for the wrong reason |
+| `tests/test_freezeout.py` | the expanding-SSA-is-a-clock reduction, bit-for-bit; the fast instrument against the reference engine and against the exact CME; and both logarithms of the (3/2)lnΩ law |
 | `docs/design.md` | full design rationale |
 
 The engine is general: it takes species, reactions, and rate constants and

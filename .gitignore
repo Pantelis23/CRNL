@@ -8,3 +8,6 @@ __pycache__/
 # local planning artifacts (specs/plans) and SDD scratch — kept on disk, out of the repo
 docs/superpowers/
 .superpowers/
+
+# agent worktrees and local Claude Code state
+.claude/

@@ -532,6 +532,50 @@ extinction table is one replicate of 2000 trials per Ω, single seed.
 
 ---
 
+### 6.2 Independent verification of §6.1
+
+§6.1 overturns §6, so it was checked with a separate instrument written from the
+mechanism rather than by re-running `freezeout_law.py` — ordinary `gillespie_fast`
+on `n_winner`, absorption (exactly one committed species left) as the consensus
+criterion, symmetric start, 400–500 trials per point.
+
+**The saturation claim is confirmed.** Two arms, identical instrument, differing
+only in what is held fixed. Ratio of successive `H*` — approaching 1.0 means
+flattening:
+
+| n step | 2→3 | 4→6 | 8→12 | 12→16 |
+|---|---|---|---|---|
+| fixed Ω = 160 (as §6 did) | 0.886 | 0.913 | **0.969** | **0.955** |
+| fixed 40 molecules/species | 0.855 | 0.842 | 0.822 | 0.886 |
+
+At fixed Ω the decline stalls, reproducing §6's floor. At fixed molecules per
+species it does not stall anywhere. **§6's saturation was an artifact of holding Ω
+fixed while the alphabet grew**, and §6.1 stands.
+
+**The `(2n−1)/2` slope structure is confirmed at small n and unresolved above it.**
+Absorption runs one clearing term steeper than the decision, so the testable
+structure is `absorption slope − (2n−1)/2 ≈ const ≈ 1`:
+
+| n | 2 | 3 | 4 | 6 |
+|---|---|---|---|---|
+| absorption slope | 2.523 | 3.600 | 4.146 | 5.868 |
+| minus (2n−1)/2 | **1.023** | **1.100** | 0.646 | 0.368 |
+
+At n = 2, 3 that difference matches §5.1's independently measured clearing term of
+1.0895 to 1–6%, which is real support for the structure. At n = 4, 6 it falls away
+— but those sweeps are 3–4 points over a factor 4–8 in Ω, giving slope errors of
+±0.2–0.3, so the deficits are only ~2σ. §6.1 sees the same "approached from below"
+pattern with 15 sizes over ×16384 and attributes it to extinction; **this check can
+neither confirm nor refute that, and should not be cited as doing either.**
+
+**One error in the checking, recorded because it produced a convincing false
+alarm.** The first version compared a sweep in which n and Ω moved *together*
+against a law about the Ω-derivative at *fixed* n, ignoring the intercept `B(n)`.
+That showed τ* at n=16 as 38.1 against a "predicted" 100.2 — a 2.6× discrepancy
+that was entirely an artifact of the comparison, with `B(n)` absorbing all of it.
+A law stated as a partial derivative cannot be tested by a sweep that moves both
+variables.
+
 ## 7. Why restoration matters at all — `cascade.py`
 
 The founding claim, finally built. A one-bit signal passes through D stages, each

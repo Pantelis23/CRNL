@@ -238,9 +238,23 @@ the transient bias amplification §2 already flags at n=2.
   10 molecules per rival at δ=0.24, n=64 needs Ω≈800, an error rate ~1e-6, and ~1e7
   trials per point.
 
-  **How to make progress cheaply:** hold molecules-per-rival *fixed* while varying
-  δ, by choosing Ω ∝ (n−1)/(1−δ) for each δ. That decouples the two and is the one
-  design that could separate physics from band placement without 1e7 trials.
+  **The cheap design I proposed here does not exist — retracted.** It was to hold
+  molecules-per-rival fixed while varying δ, via Ω ∝ (n−1)/(1−δ). But `c` is
+  *defined* as `−∂ln P/∂Ω` at fixed (n, δ), and `m` is proportional to Ω, so m
+  varies along that derivative by construction. **You cannot differentiate in Ω
+  while holding something proportional to Ω fixed.** The design is incoherent, not
+  merely expensive.
+
+  **And the claim is weaker than §14.1 states.** Refitting p from only the two δ
+  whose bands sit in the verified-safe range gives **2.40 ± 0.32 — 1.2σ above
+  quadratic, not significant.** The 3.9σ comes from the lever arm in ln δ, and the
+  lever arm is the δ=0.24 point, i.e. the suspect one. **p > 2 is unproven.**
+
+  **Parked deliberately.** Settling it needs a different observable than an
+  Ω-slope, or ~1e7 trials per point. That is a lot of effort for a second-order
+  correction to a barrier coefficient, when Q4 (asymmetric landscapes) is
+  completely untouched and asks a first-order question. Anyone resuming this
+  should start by finding an observable that is not a derivative in Ω.
 - **Q8. Does the depth ceiling survive a better code?** `D_max ~ exp(δ*²/2σ²)` is
   for a bare repetition of one bit through one restoring stage per hop — the weakest
   possible code. Whether the ceiling belongs to the *chemistry* or the *encoding* is

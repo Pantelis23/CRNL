@@ -925,11 +925,32 @@ that δ the error rate falls like `exp(−0.0181·Ω)`, so reaching 10 molecules
 rival means Ω ≈ 800, an error rate ~10⁻⁶, and ~10⁷ trials per point. The band
 placement was forced by the same constraint that created the confound.
 
-So: **p > 2 survives its first serious challenge, and is not yet clear of it.**
-The honest status is that linearity holds where it could be tested, and the
-largest-δ points sit at ~1 molecule per rival where the approximation underlying
-`p = 2` is least justified — which is either the physics or the artifact, and this
-measurement cannot separate them.
+**And the significance is carried entirely by the suspect point.** Refitting with
+only the two δ whose bands sit in the verified-safe range:
+
+| fit | exponent | above quadratic |
+|---|---|---|
+| δ = 0.14, 0.18 only | 2.40 ± 0.32 | **1.2σ — not significant** |
+| including δ = 0.24 | 2.47 ± 0.21 | 3.9σ |
+
+The precision comes from the lever arm in `ln δ`, and the lever arm *is* the
+δ=0.24 point. Drop it and p is consistent with 2; keep it and p > 2 at 3.9σ. So
+the claim does not merely have an untested caveat attached — **its entire
+statistical weight sits on the measurement most likely to be biased.**
+
+**Status, stated plainly: p > 2 is unproven.** What is solid is that `c` is a
+well-defined constant over 4–14 molecules per rival, that the two protocols
+cross-check to 3–12%, and that the *saturation* results (both `c(n)`'s and `p`'s
+apparent one) are untouched by any of this, since they involve no δ comparison.
+
+**Why this is parked rather than pushed.** The natural fix — hold molecules per
+rival fixed while varying δ — **is not possible**. `c` is *defined* as
+`−∂ln P/∂Ω` at fixed (n, δ), and `m = (1−δ)Ω/(n−1)` varies along that derivative
+by construction. One cannot differentiate in Ω while holding a quantity
+proportional to Ω fixed. Settling this needs either a different observable than
+an Ω-slope, or ~10⁷ trials per point to lift the large-δ band into the safe range.
+Neither is a good use of effort against a second-order correction to a barrier
+coefficient.
 
 **Caveats.** The closed forms are for γ=0 (irreversible), which is what §3 measured;
 `breaking_diffusion` computes the general-γ case numerically but it is untested

@@ -148,11 +148,12 @@ margin the radix penalty on the *margin* is bounded; the price is paid in Ω.
 
 ![freeze-out law](experiments/freezeout_law.png)
 
-Let the volume expand as Ω(t)=Ω₀e^{Ht} and restoration must beat the dilution. Above
-a critical rate the decision **freezes half-made**, locking in a relic — the chemical
+Let the volume expand as Ω(t)=Ω₀e^{Ht} and restoration must beat the dilution. Expand
+fast enough and the decision **freezes half-made**, locking in a relic — the chemical
 analogue of cosmological freeze-out.
 
-**But the critical rate is zero, and an earlier claim here was wrong.** This section
+**But "fast enough" is not a critical rate; it is a deadline, and an earlier claim
+here was wrong.** This section
 used to report a finite-size-scaling collapse with **Hc≈0.055, a≈0.38** and call it "a
 genuine transition". The expanding SSA turns out to be *exactly* ordinary AM stopped at
 internal time τ = 1/H — an exact time change, verified bit-for-bit — so H* is one over

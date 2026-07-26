@@ -209,10 +209,16 @@ the transient bias amplification §2 already flags at n=2.
   at n=16/24/32/64), so it is a pure number waiting to be named rather than a
   drifting discrepancy.
 
-  **Why it is worth doing before anything else in the list:** a Laplace correction
-  is one technique, and if it supplies any of the three it plausibly supplies all
-  three — and the same machinery is what **T2** (the freeze-out exponent, a≈0.38
-  between 1/3 and 2/5) has been blocked on since §5. Four open items, one method.
+  **Why it is worth doing:** a Laplace correction is one technique, and if it
+  supplies either of the two it plausibly supplies both.
+
+  > **This entry used to claim a third beneficiary and it is gone.** It read
+  > "the same machinery is what **T2** (the freeze-out exponent, a≈0.38 between
+  > 1/3 and 2/5) has been blocked on since §5. Four open items, one method."
+  > T2 is now answered (§5.1) and there is no exponent to supply a prefactor
+  > for — `a` was a parameter of the wrong functional form. So the cluster is
+  > down to **two** members and one of them (§12.1's ceiling factor) still has
+  > not been checked across σ, which is the test §14 failed.
 
   **§14 was ejected from this cluster by its own kill test** → §14.1. The offset
   was measured at two further δ and falls ~40% (2.274 → 1.364 at n=16), so it is

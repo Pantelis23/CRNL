@@ -24,6 +24,15 @@ The algorithm is exact for exponential expansion (no constant-rate-between-event
 approximation, which would fail exactly at freeze-out). Restricted to networks
 whose reactions all share one order so a0(t) is a single exponential; AM and
 n-winner qualify.
+
+**It also has an exact reduction, which changes what freeze-out means.** Under the
+internal clock tau(t) = (1 - e^{-lambda t})/lambda the waiting-time condition above
+becomes the plain Gillespie increment -ln(u)/a0_state, and tau(inf) = 1/lambda. So
+this process IS the ordinary chain stopped at internal time 1/lambda: the "finite
+integrated propensity" noted above is exactly a finite time budget. See
+`crnl/freezeout.py` and FINDINGS.md Sec.5.1 -- the consequence is that the critical
+expansion rate of Sec.4/Sec.5 is one over the consensus time, and therefore 0 in
+the Omega -> infinity limit.
 """
 
 from __future__ import annotations

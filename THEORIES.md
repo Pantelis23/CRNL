@@ -177,11 +177,16 @@ rate and their ratio saturates. **That derives §3's saturation**, unexplained s
 it was measured. `D₀(2) = 1/9` recovers `design.md` §9, and the n=2 barrier comes
 out at `1.5 δ²`, i.e. §2's result, to 4%.
 
-**Not settled: the size.** Predicted floor `δ²/2 = 0.0050` against a measured
-0.0022; the ratio climbs to a *constant* 2.27 and holds from n=16 to n=64. A
-constant offset is a prefactor, so this folds into **Q7** rather than standing
-alone. Two candidates not yet separated: the n−1 competing escape directions, and
-the transient bias amplification §2 already flags at n=2.
+**Not settled: the size — and it is a shape problem, not a size problem.**
+Predicted floor `δ²/2 = 0.0050` against a measured 0.0022. This paragraph used to
+read: *"the ratio climbs to a constant 2.27 and holds from n=16 to n=64. A constant
+offset is a prefactor, so this folds into Q7."* **Both halves were wrong.** The
+ratio is constant only along n; measured at two further δ it falls ~40%
+(2.274 → 1.364 at n=16), because the measured exponent is `c ∝ δ^~2.5` rather than
+`δ²` (§14.1). So there is no prefactor to name, Q7 is dissolved, and the open
+question is why the exponent in δ exceeds 2 — that is **Q9a**. Two candidates for
+the *shape* remain unseparated: the n−1 competing escape directions, and the
+transient bias amplification §2 already flags at n=2.
 
 ---
 
@@ -191,26 +196,51 @@ the transient bias amplification §2 already flags at n=2.
   and is *still climbing* at Ω=120. §12.1 partly answers it — the frontier is
   bounded above by the depth ceiling, since past `D_max` no Ω delivers the bit at
   all — but the shape of the approach is unmeasured.
-- **Q7. THE PREFACTOR. Three measured-but-underived numbers are one question.**
-  This is now the hub of the whole open list, and it consolidated by accident —
-  each number was found separately and only afterwards seen to be the same gap.
+- ~~**Q7. THE PREFACTOR. Three measured-but-underived numbers are one question.**~~
+  **DISSOLVED. Every member has now been checked along a second axis and none of
+  them is a prefactor.** This entry was once "the hub of the whole open list"; it
+  consolidated by accident, and it was wrong about all three members.
 
-  | where | prediction | measured | shortfall |
+  | where | saddle prediction | measured | what the residual actually is |
   |---|---|---|---|
-  | §12 collapse | slope 1 | slope **0.74** | 1.35× |
-  | §12.1 depth ceiling | `exp(δ*²/2σ²)/4` | ≈3× larger | **≈3×** |
-  | ~~§14 radix floor~~ | ~~`δ²/2`~~ | — | **EJECTED, see below** |
+  | §12 collapse | exponent × 1 | exponent × **0.74** | exponent scale, −26% |
+  | §12.1 depth ceiling | `exp(1·δ*²/2σ²)/4` | `exp(`**`1.0695`**`·δ*²/2σ²)·0.663` | exponent scale, +7% |
+  | §14 radix floor | `c ∝ δ²` | `c ∝ δ^~2.5` | exponent in δ (Q9a) |
 
-  All three come from the same move: a **saddle point keeps only the exponent**
-  and throws away the Gaussian fluctuations around it. In every case the *shape*
-  is right — the collapse holds at R²=0.93, the ceiling scales correctly over 50×,
-  the saturation is derived — and only the amplitude is missing. §14's is the
-  cleanest target because its offset is *constant* (2.274 / 2.271 / 2.275 / 2.268
-  at n=16/24/32/64), so it is a pure number waiting to be named rather than a
-  drifting discrepancy.
+  **None of the three is an amplitude.** All three are multiplicative errors inside
+  an *exponent*, which is exactly why each looked constant along whichever axis was
+  swept first and then drifted along a second one: forcing `k = 1` turns an
+  exponent error into an apparent prefactor `exp((k−1)·x)`, which is flat only over
+  a short range in `x`. §14's "constant" 2.27 ran to 1.36 across δ; §12.1's "≈3"
+  runs 3.07 → 4.05 across σ, and freeing its exponent fits at R² = 0.9998 with 2.6%
+  residuals. A Laplace correction — the one technique this entry was built around —
+  supplies an amplitude and would not have fixed any of them.
 
-  **Why it is worth doing:** a Laplace correction is one technique, and if it
-  supplies either of the two it plausibly supplies both.
+  **The obvious next move, and why it is not being made.** It is tempting to say
+  "then they are still one question: the saddle-point *exponent* is inexact." That
+  may be true. But the three differ in sign and in size (−26%, +7%, and a shift in
+  a different variable's exponent), and merging them on that basis would be the
+  **third** consolidation in this file resting on the same thin evidence — after
+  §14's ejection and now §12.1's. It is logged as a conjecture with three points,
+  not a finding, and it needs a derivation rather than another table.
+
+  **The original reasoning, kept because the error is instructive:**
+
+  > All three come from the same move: a **saddle point keeps only the exponent**
+  > and throws away the Gaussian fluctuations around it. In every case the *shape*
+  > is right — the collapse holds at R²=0.93, the ceiling scales correctly over 50×,
+  > the saturation is derived — and only the amplitude is missing. §14's is the
+  > cleanest target because its offset is *constant* (2.274 / 2.271 / 2.275 / 2.268
+  > at n=16/24/32/64), so it is a pure number waiting to be named rather than a
+  > drifting discrepancy.
+  >
+  > **Why it is worth doing:** a Laplace correction is one technique, and if it
+  > supplies either of the two it plausibly supplies both.
+
+  The premise "the shape is right and only the amplitude is missing" was the whole
+  argument, and it was never tested — it was *inferred* from the numbers looking
+  constant. Note also that the entry nominated as its "cleanest target" the member
+  that turned out to be wrongest.
 
   > **This entry used to claim a third beneficiary and it is gone.** It read
   > "the same machinery is what **T2** (the freeze-out exponent, a≈0.38 between
@@ -224,13 +254,23 @@ the transient bias amplification §2 already flags at n=2.
   was measured at two further δ and falls ~40% (2.274 → 1.364 at n=16), so it is
   not a prefactor at all: `c ∝ δ²` is predicted, and the measured exponent is
   **2.27 at n=8 and 2.48 at n=16** against §2's 2.08 at n=2. The consolidation
-  above was written down two commits before the test that broke it — the table now
-  has two members, not three.
+  above was written down two commits before the test that broke it. (That left the
+  table with two members; §12.1 then failed the same test, and the table has none.)
 
-  **How to kill the remaining two:** the same move works. §12's slope and §12.1's
-  ceiling factor should be independent of the *channel noise* σ if they are
-  prefactors. Neither has been checked across σ, and §14 is a warning that a
-  "constant" measured along one axis need not be constant along another.
+  **This is how the entry died, and it called its own shot.** The paragraph above
+  used to end: *"§12's slope and §12.1's ceiling factor should be independent of the
+  channel noise σ if they are prefactors. Neither has been checked across σ, and
+  §14 is a warning that a 'constant' measured along one axis need not be constant
+  along another."* §12.1's factor was then checked across σ and drifted 1.32×. The
+  test was named correctly and the answer was still assumed for two commits before
+  anyone ran it.
+
+  **What survives.** §12's slope 0.74 is unexplained and is the only member never
+  tested across σ — but it is now known to be the same *species* of defect (an
+  exponent scale), so testing it as a prefactor would be testing the wrong thing.
+  The live question is no longer "what amplitude is missing" but **"why is the
+  saddle-point exponent off by 26% here and 7% there"** — see Q9a, which asks the
+  same thing in δ.
 - ~~**Q9. Why does the barrier exponent grow with alphabet size?**~~ **Measured at
   n = 32 and 64 → §14.1. It does not keep growing.** p = 2.08 / 2.27 / 2.48 / 2.53 /
   2.40 at n = 2 / 8 / 16 / 32 / 64; n=32 and n=64 differ by 0.45σ. Two things came
@@ -403,6 +443,18 @@ check at all. Three lessons, all of which cost this project a headline result:
   *against* the extra parameter**, not for the model. §5 never compared.
 - **The way out was deriving the form, not fitting harder.** Every ingredient
   needed (λ = ⅓, `D_δ = 1/(9Ω)`) had been sitting in `design.md` §9 since §2.
+
+**A fourth pattern: the consolidation reflex.** Twice now, separate anomalies were
+merged into "one underlying question" on the strength of a number looking constant —
+and both times the constancy was an artifact of the axis that happened to be swept.
+§14's 2.27 was constant in n and drifts in δ; §12.1's ≈3 looked flat at Ω=128 and
+drifts in σ once the death depth is converged. Both times the real defect was a
+multiplicative error in an *exponent* being forced into a prefactor, which is flat
+over a short range in the exponent's argument and only then bends. **Constancy along
+the axis you happened to sweep is not constancy.** Before merging two anomalies into
+one cause, measure each along an axis you did not choose for it — and note that the
+merge itself is what suppresses that test, because a shared explanation makes the
+individual checks feel redundant.
 
 **The pattern worth remembering.** In every case the error was invisible to the
 guard that was supposed to catch it, because the guard watched the wrong quantity:

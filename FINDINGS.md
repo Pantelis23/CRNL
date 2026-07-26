@@ -1099,6 +1099,43 @@ against 1.4× (for 16×) at 0.45. Molecules do buy depth — with sharply dimini
 returns that set in earlier the noisier the channel, because `Ω× = 1/(2κσ²)` falls as
 σ rises.
 
+**The ceiling's "factor ≈3" is not a prefactor — it is a 7% error in the
+exponent.** §12.1 predicted `D_max ≈ exp(δ*²/2σ²)/4` and measured about three times
+that, which was filed as a missing Laplace prefactor. Read at a *fixed* Ω the factor
+gives two different answers (drifting 3.00 → 2.41 at Ω=64, flat 3.00 → 3.33 at
+Ω=128) because the death depth is still converging in Ω, and converging more slowly
+the smaller σ is. Extrapolating each σ to Ω→∞ the way this section already did at
+σ/δ* = 0.45 (increments shrink geometrically, ratio r):
+
+| σ_ch/δ* | Ω=16 | Ω=32 | Ω=64 | Ω=128 | Ω=192 | D∞ | r | predicted | factor |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.45 | 6.53 | 7.44 | 8.27 | 8.86 | 9.01 | 9.06 | 0.25 | 2.95 | 3.07 |
+| 0.38 | 14.48 | 19.28 | 23.33 | 26.07 | 27.01 | 27.50 | 0.34 | 7.97 | 3.45 |
+| 0.32 | 38.32 | 65.19 | 92.18 | 112.48 | 120.56 | 125.91 | 0.40 | 33.00 | 3.82 |
+| 0.28 | 90.86 | 205.28 | 354.61 | 488.58 | 547.98 | 595.31 | 0.44 | 147.12 | **4.05** |
+
+The factor drifts monotonically 3.07 → 4.05 across σ, so it is not a σ-independent
+prefactor — the same second-axis test that ejected §14 (§14.1). But letting the
+coefficient in the exponent float instead fits almost perfectly:
+
+    D_max = 0.663 · exp( 1.0695 · δ*²/2σ² )       R² = 0.999782,  residuals ±2.6%
+
+against the saddle point's `k = 1` and prefactor `1/4`. **The whole residual is a 7%
+error in `k`.** Forcing `k = 1` compounds that error across the argument's 2.6×
+range (`x = δ*²/2σ²` runs 2.47 → 6.38, a 50× range in the prediction itself) and
+re-expresses it as a prefactor that then appears to drift. The apparent factor is
+just `4·0.663·exp(0.0695·x)`, which reproduces the measured 3.07 / 3.45 / 3.82 /
+4.05 as 3.15 / 3.37 / 3.72 / 4.13 — the "drift" is the exponent error in disguise. The exponential *form* is right, the
+ceiling is real and the σ-scaling is right; the coefficient is not exactly 1.
+
+Two honest caveats. The residuals alternate in sign (−, +, +, −), which is a
+curvature signature — with four points and two parameters that is suggestive of a
+remaining shape error rather than proof of one. And `D∞` is itself an extrapolation
+(the geometric ratio `r` grows 0.25 → 0.44 as σ falls, so the σ=0.28 row leans on it
+hardest). The drift survives without any extrapolation — the raw Ω=192 factors are
+3.05 / 3.39 / 3.65 / 3.72, still 1.22× — so the conclusion does not rest on `D∞`,
+though the precise value of `k` does.
+
 **This retroactively explains §10–§11.** Those experiments ran depth 30 at
 σ_ch/δ* = 0.35, where the ceiling is ≈44–50 stages. They were operating near a limit
 that no amount of population could move, which is why fidelity plateaued at 0.63 and

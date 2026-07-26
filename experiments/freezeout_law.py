@@ -382,7 +382,7 @@ def score_collapses(rows, taus, h_grid):
 # --------------------------------------------------------------------------- #
 
 
-def make_figure(rows, taus, fits, collapse, out_path):
+def make_figure(rows, taus, fits, collapse, out_path, a_pred=1.5):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -411,8 +411,8 @@ def make_figure(rows, taus, fits, collapse, out_path):
     xx = np.linspace(x.min(), x.max(), 100)
     ax.plot(xx, fits["log"]["A"] * xx + fits["log"]["B"], "-", color="C0",
             label=f"(A={fits['log']['A']:.3f}±{fits['log']['A_sd']:.3f}) lnΩ + B")
-    ax.plot(xx, 1.5 * xx + fits["log"]["B"], "--", color="C2",
-            label="predicted slope 3/2")
+    ax.plot(xx, a_pred * xx + fits["log"]["B"], "--", color="C2",
+            label=f"predicted slope {a_pred:g} = 1/(2λ)")
     p = fits["pow"]
     ax.plot(xx, 1.0 / (p["Hc"] + p["C"] * np.exp(-p["a"] * xx)), ":", color="C3",
             lw=2, label=f"Hc+CΩ⁻ᵃ (Hc={p['Hc']:.4f})")
@@ -428,9 +428,12 @@ def make_figure(rows, taus, fits, collapse, out_path):
 
     ax = axes[2]
     for c, r in zip(colors, rows):
-        ax.plot(taus - 1.5 * np.log(r["omega"]), r["order"], color=c, lw=1.2)
-    ax.set_xlim(-8, 12)
-    ax.set_xlabel("τ − (3/2) lnΩ")
+        ax.plot(taus - a_pred * np.log(r["omega"]), r["order"], color=c, lw=1.2)
+    # centre on the shifted crossings; a fixed window misses them entirely once
+    # a_pred != 3/2, which is most of the n-winner family
+    mid = float(np.mean(ts - a_pred * np.log(omegas)))
+    ax.set_xlim(mid - 10, mid + 12)
+    ax.set_xlabel(f"τ − {a_pred:g}·lnΩ")
     ax.set_ylabel("D")
     ax.set_title("Zero-parameter collapse\n"
                  f"residual {collapse['shift_fixed_1.5']:.2e} "
@@ -483,11 +486,16 @@ def main():
         args.omegas, args.trials, args.reps = [40, 160, 640, 2560], 800, 4
 
     t0 = time.time()
+    # Side analyses (exact CME, §6 reproduction, extinction) are expensive and
+    # opt-in, so a plain --from-data re-run must CARRY THEM FORWARD rather than
+    # overwrite them with null -- one such rewrite already destroyed a run.
+    carried = {}
     if args.from_data:
         with open(args.data) as fh:
             saved = json.load(fh)
         taus = np.array(saved["taus"])
         rows = saved["rows"]
+        carried = {k: saved.get(k) for k in ("exact", "sec6", "extinction")}
         args.trials, args.reps = saved["trials"], saved["reps"]
         args.n_sym = rows[0].get("n_sym", args.n_sym)
         print(f"re-analysing {args.data}: {len(rows)} Ω x {args.reps} reps x "
@@ -621,7 +629,7 @@ def main():
           f"{collapse['fss_best']['residual']:.4e}  "
           f"(Hc={collapse['fss_best']['Hc']:.4f}, a={collapse['fss_best']['a']:.3f})")
 
-    extinct = None
+    extinct = carried.get("extinction")
     if args.extinction_check:
         if args.n_sym < 3:
             raise SystemExit("--extinction-check needs --n-sym >= 3")
@@ -634,7 +642,7 @@ def main():
                   f"{r['alive_at_crossing']/args.n_sym:6.3f}"
                   f"   ({r['alive_at_crossing']:.2f} of {args.n_sym})")
 
-    sec6 = None
+    sec6 = carried.get("sec6")
     if args.sec6_check:
         print("\n-- §6's H*(n) from an ORDINARY (non-expanding) SSA at Ω=160 --")
         sec6 = sec6_check()
@@ -644,7 +652,7 @@ def main():
                   f"{r['tau_star']:6.3f} ± {r['tau_star_sem']:.3f}     "
                   f"{r['ratio']:.3f}")
 
-    exact = None
+    exact = carried.get("exact")
     if args.exact_omegas:
         print("\n-- exact CME route (no sampling error) --")
         exact = exact_route(args.exact_omegas, args.tau_max)
@@ -667,7 +675,8 @@ def main():
                    "sec6": sec6, "extinction": extinct, "width_exponent": we,
                    "trials": args.trials, "reps": args.reps}, fh)
     print(f"\nwrote data -> {args.data}   (total {time.time()-t0:.0f}s)")
-    make_figure(rows, taus, fits, collapse, args.out)
+    make_figure(rows, taus, fits, collapse, args.out,
+                a_pred=(2 * args.n_sym - 1) / 2)
 
 
 if __name__ == "__main__":

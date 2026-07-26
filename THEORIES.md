@@ -46,21 +46,32 @@ more than the prefactor could explain, i.e. where the *shape* in Ω is wrong rat
 than the scale.
 
 ### T2. The freeze-out exponent is predictable from the quasipotential
-**Status: untested. The most valuable open theoretical target.**
+**Status: ANSWERED — and the answer dissolves the question → `FINDINGS.md` §5.1.**
 
-§5 measured `a ≈ 0.38` for the collapse `D(H,Ω) = F((H−H_c)·Ω^a)`, sitting
-awkwardly between 1/3 and 2/5 with no error bars and no identified universality
-class. §2 derived `c(ε) = (3/2)ε²` from the saddle geometry — λ=⅓ and diffusion
-`D = 1/(9Ω)`.
+T2 conjectured that §2's saddle ingredients (λ = ⅓, `D_δ = 1/(9Ω)`) should fix
+§5's collapse exponent `a ≈ 0.38`, and called this "the most valuable open
+theoretical target". The conjecture's *premise* was right — freeze-out is exactly
+the competition between the saddle escape and the dilution — and its *form* was
+wrong. Worked out, those two ingredients say there is no exponent:
 
-**Conjecture:** freeze-out is the competition between the decision rate near the
-saddle and the dilution rate H, so the same two ingredients should fix `a`.
-Dimensionally, if the escape time from the saddle goes like `Ω^{1/2}` in the
-critical region and the dilution acts on `1/H`, an exponent of 1/3 or 2/5 falls
-out of matching them — but *which* depends on how the barrier scales with the
-frozen composition, which has not been worked out.
-**How to kill it:** derive a specific exponent and measure a ≠ that, with error
-bars. First step is error bars on the collapse fit, which §5 flags as missing.
+- The expanding SSA is **exactly** ordinary SSA stopped at internal time `τ = 1/H`
+  (`crnl/freezeout.py`, verified bit-for-bit). Freeze-out is not its own
+  dynamics; `H*(Ω) = 1/τ*(Ω)` with `τ*` the AM consensus time.
+- `design.md` §9 already gives the effective seed at the saddle,
+  `σ² = D_δ/λ = 1/(3Ω)`. From an **exactly symmetric** start that shot noise is
+  the only seed, so `τ* = (1/λ)·ln(1/σ) + O(1) = (3/2)·ln Ω + O(1)`.
+- Hence `Hc = 0`. No critical point, no universality class, and `a` is a
+  parameter of the wrong functional form.
+
+T2 asked whether `a` is 1/3 or 2/5. It is neither. FINDINGS open question 1 is
+**void**, not answered — there was nothing there to have a universality class.
+
+**T2a, what is actually left:** the intercept `B` in `1/H* = (3/2)lnΩ + B`. The
+slope is parameter-free and measured; `B` is not derived. Estimating it from §9's
+`σ` plus "decide when δ = ⅓" lands ~1 unit of τ away, because the decision level
+is reached in the *nonlinear* phase where the threshold picture fails. Small, and
+it needs the shape of the deterministic sigmoid rather than a threshold.
+**How to kill T2a:** derive `B` and measure a different one.
 
 ### T3. Radix saturation is an artifact of the fixed-margin convention
 **Status: TESTED → `FINDINGS.md` §3.1. The prediction was wrong; the conclusion is
@@ -149,6 +160,17 @@ Worth keeping from the attempt: **λ_breaking(n, γ=0) = 1/(2n−1) exactly** (c
 against ten values of n), and the symmetric state at γ=0 is
 `x = 1/(2n−1)`, `b = (n−1)/(2n−1)`.
 
+**T7b: λ_breaking DOES set a barrier — just not this one → `FINDINGS.md` §6.1.**
+T7 failed because §3's `c(n)` comes from a *biased* start with a fixed pairwise
+margin, where the seed does not shrink and λ is not the bottleneck. From a
+**symmetric** start it is: the freeze-out decision time obeys
+`dτ*/dlnΩ = 1/(2λ(n)) = (2n−1)/2`, measured 1.492 ± 0.034 / 2.471 ± 0.040 /
+3.373 ± 0.041 / 4.921 ± 0.118 at n = 2 / 3 / 4 / 6. So the same `λ(n) = 1/(2n−1)`
+that fails to explain `c(n)` exactly governs the freeze-out penalty, and that
+penalty is therefore **unbounded in n** where `c(n)` saturates. Two different
+questions, and which one λ answers depends entirely on whether the initial
+asymmetry shrinks with Ω.
+
 **T7a: CONFIRMED for the shape → `FINDINGS.md` §14.** `D₀(n) = (2n−3)/(2n−1)²`
 exactly, so `λ/D₀ = (2n−1)/(2n−3) → 1` — λ and the diffusion vanish at the same
 rate and their ratio saturates. **That derives §3's saturation**, unexplained since
@@ -187,10 +209,16 @@ the transient bias amplification §2 already flags at n=2.
   at n=16/24/32/64), so it is a pure number waiting to be named rather than a
   drifting discrepancy.
 
-  **Why it is worth doing before anything else in the list:** a Laplace correction
-  is one technique, and if it supplies any of the three it plausibly supplies all
-  three — and the same machinery is what **T2** (the freeze-out exponent, a≈0.38
-  between 1/3 and 2/5) has been blocked on since §5. Four open items, one method.
+  **Why it is worth doing:** a Laplace correction is one technique, and if it
+  supplies either of the two it plausibly supplies both.
+
+  > **This entry used to claim a third beneficiary and it is gone.** It read
+  > "the same machinery is what **T2** (the freeze-out exponent, a≈0.38 between
+  > 1/3 and 2/5) has been blocked on since §5. Four open items, one method."
+  > T2 is now answered (§5.1) and there is no exponent to supply a prefactor
+  > for — `a` was a parameter of the wrong functional form. So the cluster is
+  > down to **two** members and one of them (§12.1's ceiling factor) still has
+  > not been checked across σ, which is the test §14 failed.
 
   **§14 was ejected from this cluster by its own kill test** → §14.1. The offset
   was measured at two further δ and falls ~40% (2.274 → 1.364 at n=16), so it is
@@ -340,9 +368,10 @@ the transient bias amplification §2 already flags at n=2.
 
 ## 4. Disproven — kept deliberately
 
-Four confident, plausible, **wrong** results. Every one of them looked like
-physics, and every one was a protocol artifact of the same family: *something that
-scales with the landscape was held fixed while the landscape shrank.*
+Confident, plausible, **wrong** results, kept with what killed them. Most were a
+protocol artifact of one family — *something that scales with the landscape was held
+fixed while the landscape shrank* — and the newest is a different family: a fitted
+functional form that was never derived and never compared against a rival.
 
 | Claim | What killed it |
 |---|---|
@@ -353,12 +382,27 @@ scales with the landscape was held fixed while the landscape shrank.*
 | **"At σ/δ*=0.45 two populations die at *exactly* the same depth."** | True at Ω=64 and 128, and it is integer rounding across two adjacent points. At Ω=256 the integer crossing reads 10. Interpolated, the depth creeps 6.53→9.14 over Ω=16→256 with increments halving — convergent to ≈9.4, which is the real (and still strong) claim. Caught by a reader asking to run Ω=256. §12.1. |
 | **"τ_SSA/τ_CME ≈ 0.8 from an arm-vs-attractor offset."** | Seed-averaged measurement gives 0.97 with no offset visible. The prediction conflated an MFPT-from-the-arm with the mean time between crossings of a long stationary trajectory, which is dominated by the dwell near the attractor. §10.1. |
 | **"The cascade's decay length ξ grows like the restoration wall e^{cΩ}."** | Fit directly: ln ξ vs Ω has R²=0.69 and ξ saturates (24→76 for 15× Ω). Superseded by **T1**, which explains why — the cascade is channel-limited, so ξ cannot inherit the finite-count scaling. |
+| **"Freeze-out is a genuine transition, `Hc ≈ 0.055`, `a ≈ 0.38`; in the Ω→∞ limit expand slower than Hc and you always decide."** | The expanding SSA is *exactly* ordinary SSA stopped at internal time `1/H` (bit-for-bit, 0/300 mismatches), so `H*` is one over the consensus time — which from a symmetric start diverges like `(3/2)lnΩ`. `Hc = 0`, and Kurtz's theorem makes `Hc > 0` **impossible**, not merely unsupported. Extended ×16384 in Ω: `dτ*/dlnΩ = 1.5005 ± 0.0023` where a positive Hc needs it heading to 0; `D` at H = 0.055 falls 0.988 → 0.268 where FSS demands a constant; §5's own fit extrapolates 26% wrong; the curvature is 21× too small; and a **zero-parameter** collapse beats the two-parameter FSS by 28×. A biased-start control makes `τ*` flat (slope −0.0022 ± 0.0003) with a real `Hc = 0.2102`, so the drift §5 read as criticality was the shrinking shot-noise seed. §5.1. |
 
 **A second pattern, from the depth-ceiling correction.** A threshold observable
 (the first *integer* depth below I=0.5) reported two different states as identical,
 because 0.474796 and 0.495227 both round the same way — and the second was 0.005
 from rounding the other way. Quantised observables hide trends and then present the
 gap as an invariance. Quote the continuous quantity; round only at display.
+
+**A third pattern: one spare parameter can eat a logarithm.** `Hc + C·Ω^{−a}` and
+`1/((3/2)lnΩ + B)` are indistinguishable over ×32 in Ω — SSR 4.8e-7 versus 5.0e-7
+on §5's own six crossings, with the *log* law using one fewer parameter — and they
+even predict nearly the same transition width, so the obvious sanity check was no
+check at all. Three lessons, all of which cost this project a headline result:
+
+- **A data collapse tests interleaving, not functional form.** §5 read a good
+  collapse as proof of a critical point. A collapse only says "some monotone
+  reparametrisation lines these up", which a wrong form with a free offset can do.
+- **A three-parameter fit that beats a two-parameter one by 3% is evidence
+  *against* the extra parameter**, not for the model. §5 never compared.
+- **The way out was deriving the form, not fitting harder.** Every ingredient
+  needed (λ = ⅓, `D_δ = 1/(9Ω)`) had been sitting in `design.md` §9 since §2.
 
 **The pattern worth remembering.** In every case the error was invisible to the
 guard that was supposed to catch it, because the guard watched the wrong quantity:

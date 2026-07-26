@@ -153,7 +153,14 @@ restoring reactions slow while the decision is still being made. The SSA is exac
 for this case (closed-form waiting time; freeze-out is the event that the remaining
 integrated propensity a₀/λ is finite and never reaches the target — see `expanding.py`).
 
-**There is a critical expansion rate.** Below it consensus completes and the system
+> **Read with §5.1.** The construction has an exact reduction the module notices
+> and does not use: under the internal clock `dτ = e^{−Ht}dt` this is *ordinary*
+> AM stopped at internal time `τ = 1/H`. The "finite integrated propensity" is a
+> finite time budget. Everything below is true at each finite Ω, but the critical
+> rate is `1/(consensus time)` and therefore drifts to **0** as Ω grows.
+
+**There is a critical expansion rate at any given Ω.** Below it consensus completes
+and the system
 reaches a clean rail; above it the reaction freezes mid-decision, locking in a relic
 minority abundance that grows toward 0.5. This is the chemical analogue of
 cosmological freeze-out (the Γ-vs-H competition that set the relic dark-matter
@@ -165,7 +172,12 @@ at the initial 50/50.
 
 ---
 
-## 5. Freeze-out is a genuine transition — `freezeout_scaling.py`
+## 5. Freeze-out sharpens with Ω — `freezeout_scaling.py`
+
+> **CORRECTED by §5.1, and the heading used to read "is a genuine transition".**
+> The collapse below is a real fit; its reading is wrong. `Hc = 0`, there is no
+> critical point, and `a ≈ 0.38` is a parameter of the wrong functional form.
+> Read §5 as the measurement and §5.1 as what it means.
 
 Six system sizes spanning ×32 collapse onto a single master curve under
 
@@ -178,14 +190,239 @@ crossings drift toward Hc as predicted:
 |---|----|----|-----|-----|-----|------|
 | H*(D=0.5) | 0.1658 | 0.1409 | 0.1219 | 0.1078 | 0.0972 | 0.0879 |
 
-A crossover would not collapse; this does. So the sharpening seen in §4 is genuine
-finite-size scaling about a critical point, and in the Ω→∞ limit the transition is
-sharp: expand slower than Hc and you always decide, faster and you never do.
+A crossover would not collapse; this does. **The conclusion drawn from that here —
+"finite-size scaling about a critical point, and in the Ω→∞ limit expand slower than
+Hc and you always decide" — is wrong, and §5.1 replaces it.** A collapse tests
+whether one coordinate makes the curves interleave; it does not test whether the
+coordinate has the right functional form, and here it does not.
 
-**Open — do not over-read the exponent.** a ≈ 0.38 comes from a two-parameter grid
-search with no error bars, and sits between 1/3 (0.333) and 2/5 (0.400). The
-universality class is **not** identified. Connecting it to the quasipotential of §2
-is the obvious next theoretical step.
+**The exponent was flagged as not-to-be-over-read, and that was the right instinct
+for the wrong reason.** a ≈ 0.38 comes from a two-parameter grid search with no error
+bars, and sits between 1/3 and 2/5. The universality class is not identified because
+there is no universality class. "Connecting it to the quasipotential of §2" was
+indeed the next step — done in §5.1, and what the quasipotential says is that the
+whole power law is spurious.
+
+### 5.1 There is no critical rate: Hc = 0 — `freezeout_law.py`
+
+**`Hc = 0`.** From a symmetric start there is no critical expansion rate; in the
+Ω→∞ limit *every* positive H freezes the decision, which is the opposite of what §5
+concluded. Four routes agree and the first is exact rather than fitted.
+
+**Route 1 — the expanding SSA is ordinary SSA with a finite clock.** `expanding.py`
+notices that a purely bimolecular network's total propensity decays as
+`a₀(t) = a₀(n)·e^{−Ht}`, and stops there. Put in the internal clock
+`τ(t) = (1−e^{−Ht})/H`, so `dτ = e^{−Ht}dt`. The next-event condition becomes
+
+    −ln u = ∫₀^Δt a₀(n)·e^{−H(t+s)}ds = a₀(n)·[e^{−Ht} − e^{−H(t+Δt)}]/H = a₀(n)·Δτ
+
+which is *exactly* the ordinary Gillespie increment `Δτ = −ln(u)/a₀(n)`; reaction
+choice is untouched by the overall 1/Ω scaling. And `τ(∞) = 1/H`. So
+
+> **The expanding SSA at rate H is ordinary AM stopped at internal time τ = 1/H.**
+
+Freeze-out is not a separate dynamics — it is the ordinary chain failing to finish
+inside a finite budget, and "the remaining integrated propensity never reaches the
+target" is that budget running out. Verified **bit-for-bit**: identical seeds give
+identical state sequences and identical frozen/absorbed verdicts, 0 mismatches over
+5 × 60 seeds at H ∈ {0.05, 0.12, 0.3, 1, 3}, and it holds for n-winner too (the
+argument needs only uniform reaction order). Two consequences: `H*(Ω) = 1/τ*(Ω)`
+with `τ*` the plain consensus time, and **one SSA pass measures every H at once** —
+which is what makes the range below affordable.
+
+**Route 2 — the consensus time diverges logarithmically.** `design.md` §9 already
+holds every ingredient. `dδ/dt = δ·b` holds **exactly**, not to linear order, so
+with `b → 1/3` the decision axis grows at `λ = 1/3`; and the effective spread at
+the saddle is `σ² = D_δ/λ = 1/(3Ω)`. From an *exactly* symmetric start that
+`Ω^{−1/2}` shot noise is the only seed, so
+
+    τ*(Ω) = (1/λ)·ln(1/σ) + O(1) = (3/2)·ln Ω + O(1)
+
+— slope **3/2, no fitted parameter** — and `H*(Ω) = 1/((3/2)lnΩ + B) → 0`.
+
+The Ω→∞ statement is stronger than a fit. At any *fixed* internal time the density
+process converges (Kurtz) to the mass-action ODE, which from an exactly symmetric
+start stays exactly symmetric forever, so `D(H,Ω) → 0` for **every** H > 0. A
+positive Hc is not unsupported; it is impossible.
+
+**Measured, 15 sizes over ×16384 in Ω** (16 replicates × 1250 trials each;
+`results/freezeout_law.json`):
+
+| Ω | 40 | 160 | 640 | 2560 | 10240 | 40960 | 163840 | 655360 |
+|---|---|---|---|---|---|---|---|---|
+| τ* = 1/H* | 5.999 | 8.208 | 10.363 | 12.469 | 14.532 | 16.635 | 18.717 | **20.772** |
+| H* | 0.1667 | 0.1218 | 0.0965 | 0.0802 | 0.0688 | 0.0601 | 0.0534 | **0.0481** |
+
+`H*` passes straight through §5's `Hc ≈ 0.055` and keeps going. Fits of
+`τ* = A·lnΩ + B`:
+
+| range | A (D = 0.5) | vs 3/2 | χ²/dof |
+|---|---|---|---|
+| all 15, Ω ≥ 40 | 1.5110 ± 0.0016 | +6.7σ | 5.44 |
+| Ω ≥ 640 (11 pts) | **1.5005 ± 0.0023** | **+0.2σ** | **1.10** |
+| Ω ≥ 2560 (9 pts) | 1.4999 ± 0.0035 | −0.0σ | 1.34 |
+
+The full-range fit is 0.7% high because the local slope drifts *down* to 3/2 from
+above; drop the small-Ω transient and the parameter-free prediction is confirmed to
+**0.03%**. The 14 local slopes `dτ*/dlnΩ` run 1.621, 1.566, 1.551, 1.558, 1.522,
+1.517, then scatter about 3/2 with no trend — mean of the top 8 = **1.497 ± 0.020**,
+where a positive Hc requires them to be heading for **0**. All four crossing levels
+agree (A = 1.497 / 1.511 / 1.515 / 1.519 at D = 0.25 / 0.5 / 0.75 / 0.9), as they
+must if the whole distribution is translating.
+
+**Route 3 — the exact CME, no sampling at all.** Integrating `dp/dτ = Qᵀp` on the
+conserved simplex gives τ* with zero sampling error. Against the SSA:
+
+| Ω | 40 | 80 | 160 | 320 | 640 | 1280 |
+|---|---|---|---|---|---|---|
+| exact τ* | 5.9934 | 7.1185 | 8.2144 | 9.2887 | 10.3488 | 11.4002 |
+| SSA τ* | 5.999 | 7.123 | 8.208 | 9.283 | 10.363 | 11.417 |
+| diff | −0.006 | −0.004 | +0.007 | +0.006 | −0.014 | −0.017 |
+
+Agreement to **0.15%** between sparse linear algebra and an SSA vectorised across
+trials, sharing no propensity or selection code. (Ω ≤ 1280: the exact route costs
+~Ω³ and takes 235 s at 1280 against 0.15 s at 40.)
+
+**Route 4 — the ODE, no stochastics at all.** Displace the mass-action ODE from
+`(1/2, 1/2, 0)` by `δ₀ = Ω^{−1/2}` and read off when it decides. Local slopes per
+factor 4 in Ω converge to **1.5000**, and the loser-clearing time to **2.5001**
+(see below). This route cannot predict the seed *amplitude* — only its `Ω^{−1/2}`
+scaling — so it pins the limits, not the size of the finite-Ω excess.
+
+**Five things that kill Hc > 0 without fitting a functional form.**
+
+1. **D at a fixed H, as Ω grows.** Under FSS, `D(Hc, Ω) = F(0)` must be
+   Ω-*independent*. At H = 0.055 it is not:
+
+   | Ω | 40 | 640 | 2560 | 10240 | 40960 | 163840 | 655360 |
+   |---|---|---|---|---|---|---|---|
+   | D at H = 0.055 | 0.988 | 0.946 | 0.893 | 0.801 | 0.644 | 0.449 | **0.268** |
+   | D at H = 0.04 | 0.999 | 0.995 | 0.989 | 0.978 | 0.955 | 0.908 | 0.832 |
+
+   A 3.7× fall where a critical point demands a constant, and still accelerating.
+   (H = 0.04 is falling too but has not crossed, so it is not by itself a
+   refutation — the log law only forces D → 0 once `(3/2)lnΩ > 1/H`, which at
+   H = 0.04 needs Ω ~ 10⁷. Stated because quoting the H = 0.04 column as
+   evidence would be overreach.)
+
+2. **§5's own fit, extrapolated.** Refitting `Hc + C·Ω^{−a}` on Ω ≤ 1280 reproduces
+   §5 (`Hc = 0.0580, a = 0.371`) and then predicts `τ*(655360) = 16.42`. Measured
+   **20.77** — 26% out. On the full range the same form drifts to `Hc = 0.0364`,
+   `a = 0.233` with χ²/dof = **85.7** against the log law's **5.4**, using one more
+   parameter. Pin `Hc = 0.055` and χ²/dof = **4535**.
+
+3. **The curvature is 21× too small.** A positive Hc forces τ* to bend over toward
+   the ceiling `1/Hc`. The measured quadratic term in lnΩ is
+   **−0.00405 ± 0.00065** — a bend of 0.09 against a rise of 14.8. §5's own
+   power-law form requires **−0.0845**, i.e. 20.9× more.
+
+4. **The transition width in `1/H` is constant.** The log law translates the curve
+   without reshaping it, so the width is fixed; FSS with `Hc > 0` cannot manage
+   that, because its width in H falls like `Ω^{−a}` while `H*` saturates at `Hc`:
+
+   | Ω | 40 | 320 | 1280 | 5120 | 20480 | 81920 | 655360 |
+   |---|---|---|---|---|---|---|---|
+   | measured τ*(.75) − τ*(.25) | 5.28 | 5.66 | 5.73 | 5.70 | 5.69 | 5.69 | **5.70** |
+   | required by §5's own params | 5.28 | 5.77 | 5.20 | 4.16 | 3.03 | 2.06 | **1.06** |
+
+   Flat to 0.7% from Ω = 320 onward, where FSS demands a **5.4× collapse**.
+   **This is the check that was worthless over §5's range** — there the two forms
+   agree to ~1% (see below) — and it is decisive here only because the range is 64×
+   longer.
+
+5. **The "exponent" is not constant, and the log law predicts its drift with no
+   free parameter.** For *any* pure power law `−dlnH*/dlnΩ` is a constant; the log
+   law says it equals `A·H*`, hence drifts to 0:
+
+   | Ω pair | 40→80 | 320→640 | 2560→5120 | 20480→40960 | 327680→655360 |
+   |---|---|---|---|---|---|
+   | measured −dlnH*/dlnΩ | 0.248 | 0.159 | 0.113 | 0.098 | **0.074** |
+   | log law, `(3/2)·H*` | 0.229 | 0.153 | 0.116 | 0.093 | **0.074** |
+
+   A 3.4× drift, tracked to a few percent at all 14 pairs by a parameter-free
+   expression. Since the exponent is not constant, there is no exponent.
+
+**A zero-parameter collapse beats the two-parameter one.** Same
+Bhattacharjee–Seno residual, same points, `D` sampled at `τ = 1/H` on a common grid:
+
+| collapse coordinate | free params | residual |
+|---|---|---|
+| `τ − (3/2)·lnΩ` | **0** | **2.09e-05** |
+| `τ − A·lnΩ`, A fitted | 1 | 1.21e-05 (A = 1.517) |
+| `(H − Hc)·Ω^a` (§5's) | 2 | 5.94e-04 |
+
+28× worse with two more parameters — and, refit on the wider range, §5's own form
+**chooses `Hc = 0`** (it returns Hc = −0.0000, a = 0.141).
+
+### The control that settles it: give the system a bias
+
+Same instrument, same network, same observable — start with an Ω-*independent*
+pairwise margin `δ₀ = 0.10` instead of an exactly symmetric one. Then the seed does
+not shrink, so `τ*` should be Ω-independent and `H*` should tend to a positive
+constant: a real critical rate, with no finite-size scaling at all.
+
+| Ω | 320 | 1280 | 5120 | 20480 | 81920 | slope dτ*/dlnΩ |
+|---|---|---|---|---|---|---|
+| symmetric start, τ* | 9.283 | 11.417 | 13.485 | 15.545 | 17.621 | **+1.5005 ± 0.0023** |
+| δ₀ = 0.10, τ* | 4.829 | 4.767 | 4.762 | 4.758 | **4.758** | **−0.0022 ± 0.0003** |
+
+Flat to 0.15% over ×256 in Ω, giving `H* = 0.2102` — and the power-law fit, handed
+this data, returns `Hc = 0.2101` with no drift. `D` at H = 0.055 reads **1.0000 at
+every Ω**, which is precisely the Ω-independence FSS predicts and the symmetric
+start refuses. The collapse ranking inverts too, as a real discriminator should.
+
+**So the object §5 mistook for a critical point is the shrinking initial
+condition.** `H*(Ω)` drifts because the shot-noise seed does.
+
+### A second, independent number: absorption costs (5/2)·lnΩ, and where it misses
+
+Full absorption needs the symmetry to break *and* the last molecules to be cleared
+off the rail. Near the rail `dY/dt = (Y/Ω)(B − X) ≈ −Y`: unit rate, so clearing
+from `O(Ω)` to one molecule costs its own `lnΩ`. Prediction: **5/2 = 3/2 + 1**.
+
+Measured (median absorption time, symmetric start): global fit 2.636 ± 0.002,
+falling to **2.589 ± 0.005** over Ω ≥ 2560 and 2.550 at the top pair. The ODE route
+gives exactly 2.5001. So 5/2 is approached but **not** reached — 3.5% high and
+13σ from 5/2 on the restricted fit.
+
+The biased control locates the discrepancy exactly. With the symmetry-breaking term
+removed by a fixed δ₀, the absorption slope measures the *clearing* term alone:
+
+    clearing coefficient  = 1.0895 ± 0.0176        (prediction 1)
+    breaking coefficient  = 1.5005 ± 0.0023        (prediction 3/2)
+    sum                   = 2.590                  measured together: 2.589 ± 0.033
+
+**The decomposition closes to 0.05%.** The 3/2 is right to 0.03%; the entire
+residual sits in the clearing term, which is **9% above 1** at 5σ. That is a
+last-molecule stochastic effect the deterministic `y → 1/Ω` proxy cannot see, and
+it is not derived. Small, specific, and open.
+
+### Why the original collapse looked so good
+
+`Ω^{−a}` and `1/lnΩ` are hard to separate over ×32, and the obvious cross-check
+does not separate them either. The width in `1/H` is `ΔH/H*²` with `ΔH ∝ Ω^{−a}`
+and `H*` crossing over from `∝ Ω^{−a}` to `Hc` — so under FSS it rises, peaks and
+then falls, and it happens to be **flat to ~1% right across §5's range** (its own
+fitted parameters give 5.28 → 5.79 → 5.20 over Ω = 40…1280). Measured there:
+5.28 → 5.73. Consistent with both. It only becomes a discriminator ×512 further
+out, where FSS demands 0.20× and the measurement gives 1.08×. Recorded because I
+nearly
+quoted the flat width as evidence *for* the log law when it was evidence for
+nothing. What separated the two was deriving the functional form instead of
+choosing it, plus a ×16384 range.
+
+**What survives §5.** The sharpening is real, the collapse quality is real, and
+"expand fast and the decision freezes half-made" is real at every finite Ω. What
+does not survive is `Hc > 0`, the power law, and therefore the hunt for a
+universality class: **open question 1 and THEORIES T2 are void, not open.**
+
+**Caveats.** All of this is the *symmetric* start, which is what §4–§6 use; with a
+bias there is a genuine positive critical rate (the control). Ω ≤ 655360 by cost,
+so `Hc = 0` rests on the Kurtz argument plus a slope that has not budged over
+×16384 — not on reaching the limit. One order-parameter convention (§5's, in which
+all-blank counts as decided), and the headline fit is one level (D = 0.5), though
+all four are reported and agree. The clearing coefficient's 9% excess is measured,
+not explained.
 
 ---
 
@@ -198,11 +435,100 @@ monotonically with alphabet size (Ω=160, D=0.5 crossing):
 |---|---|---|---|---|---|----|----|
 | H*(n) | 0.121 | 0.110 | 0.101 | 0.089 | 0.079 | 0.074 | 0.071 |
 
-H*(n) also saturates toward a floor, mirroring c(n). The frozen relic is richer:
-fast expansion leaves ≈n coexisting species, versus 2 for AM.
+H*(n) appears to saturate toward a floor, mirroring c(n) — **but that is a
+small-Ω artifact; see §6.1.** The frozen relic is richer: fast expansion leaves
+≈n coexisting species, versus 2 for AM.
 
 **So a larger alphabet is penalised twice** — a lower restoration margin *and* a
-lower tolerance for expansion — and both penalties bottom out rather than diverging.
+lower tolerance for expansion. The restoration-margin penalty does bottom out
+(§3, §14); the expansion penalty does **not** (§6.1).
+
+### 6.1 The radix freeze-out penalty is unbounded, and 1/λ(n) sets it
+
+§5.1's reduction applies unchanged (the argument needs only uniform reaction order,
+which n-winner has), so `H*(n, Ω) = 1/τ*(n, Ω)`. **Check: the table above is
+reproduced to 1–3% by an *ordinary, non-expanding* SSA measuring nothing but
+consensus time** (`--sec6-check`, Ω=160, same D=0.5 level, 4×2000 trials):
+
+| n | 2 | 3 | 4 | 6 | 8 | 12 | 16 |
+|---|---|---|---|---|---|----|----|
+| §6's H*(n) | 0.121 | 0.110 | 0.101 | 0.089 | 0.079 | 0.074 | 0.071 |
+| 1/τ*, no expansion | 0.1221 | 0.1097 | 0.0993 | 0.0863 | 0.0801 | 0.0729 | 0.0692 |
+| ratio τ*·H*_§6 | 0.991 | 1.003 | 1.017 | 1.031 | 0.986 | 1.015 | 1.025 |
+
+So §4–§6 are all one measurement: the consensus-time distribution.
+
+**Prediction, before running.** At γ=0 the n-winner symmetric point has
+`x_i* = 1/(2n−1)` and symmetry-breaking eigenvalue `λ(n) = 1/(2n−1)`
+(THEORIES T7, §14). Shot noise starts the *relative* asymmetry at
+`√((2n−1)/Ω)`, which must grow to O(1) at rate λ, so
+
+    dτ*/dlnΩ = 1/(2λ(n)) = (2n−1)/2      → 1.5, 2.5, 3.5, 5.5 at n = 2, 3, 4, 6
+
+— unbounded in n, because λ(n) → 0 like 1/(2n). Measured (Ω = 360…46080, 8
+replicates × 1250 trials, `results/freezeout_law_n*.json`):
+
+| n | 2 | 3 | 4 | 6 |
+|---|---|---|---|---|
+| predicted (2n−1)/2 | 1.5 | 2.5 | 3.5 | 5.5 |
+| measured, top-4 pairs | 1.492 ± 0.034 | 2.471 ± 0.040 | 3.373 ± 0.041 | 4.921 ± 0.118 |
+| ratio | 0.995 | 0.988 | 0.964 | 0.895 |
+
+and the local slopes **rise toward the prediction from below**, more slowly the
+larger n: n=4 runs 2.97 → 3.45 across the sweep, n=6 runs 4.21 → 5.01. So the law
+holds, approached from below, and the approach is not finished at n=6.
+
+**Why from below, measured directly.** The collective route needs all n species
+alive while the slow mode grows, and a species that fluctuates to zero is gone for
+good (`B + X_i → 2X_i` needs `X_i > 0`). Counting survivors at the crossing, n=6:
+
+| Ω | 60 | 120 | 240 | 480 | 960 | 3840 | 46080 |
+|---|---|---|---|---|---|---|---|
+| Ω/(2n−1) per species | 5.5 | 10.9 | 21.8 | 43.6 | 87.3 | 349 | 4189 |
+| species alive at D=0.5 | 4.15 | 4.75 | 5.34 | 5.73 | 5.90 | 5.98 | **6.00** |
+
+At a handful of molecules per species a third of the alphabet is already extinct
+when the contest is decided — a **faster** route than the collective mode, which is
+why the slope falls short. By ~90 molecules per species it is gone.
+
+**That is exactly the regime §6 measured in.** At Ω=160, n=16 there are
+`160/31 = 5.2` molecules per species. So §6's apparent saturation of `H*(n)` is the
+extinction route taking over as n grows at fixed Ω, not a floor. At large Ω the
+penalty is much stronger and still growing:
+
+| n | 2 | 3 | 4 | 6 |
+|---|---|---|---|---|
+| H*(2)/H*(n) at Ω = 160 (§6) | 1.000 | 1.100 | 1.198 | 1.360 |
+| H*(2)/H*(n) at Ω ≈ 46080 | 1.000 | **1.361** | **1.689** | **2.231** |
+
+**And Hc = 0 at every n**: D at H = 0.055 falls monotonically to 0.207 (n=3), 0.094
+(n=4), 0.045 (n=6) across the sweep, and refitting `Hc + CΩ^{−a}` on Ω ≤ 1280
+extrapolates 18% low at n=3 exactly as it did for AM.
+
+**The absorption decomposition holds at every n, with one shared constant.** §5.1
+found absorption = breaking + clearing, clearing measured at 1.0895 ± 0.0176:
+
+| n | 2 | 3 | 4 | 6 |
+|---|---|---|---|---|
+| measured absorption slope | 2.565 ± 0.029 | 3.573 ± 0.075 | 4.495 ± 0.021 | 6.050 ± 0.157 |
+| breaking + 1.09 | 2.582 | 3.561 | 4.463 | 6.011 |
+
+Four independent instances, agreeing within errors, with the clearing coefficient
+fitted once on the AM biased control and never refitted.
+
+**Half of the written prediction was wrong, recorded.** Before running I wrote this
+down as a "**two-regime** claim": an extinction regime at small Ω and a collective
+regime at large Ω, with the slope rising toward `(2n−1)/2` past a crossover at a
+few times `(2n−1)`. The rise is real and the mechanism is right, but there is **no
+crossover** — the slope rises smoothly from the very first pair, and the survivor
+count decays smoothly too (4.15 → 6.00 with no knee). It is one continuous
+approach, not two regimes. "Regime" was doing rhetorical work that the data does
+not support.
+
+**Caveats.** n ≤ 6, and the deviation from `(2n−1)/2` is 10% at n=6 and shrinking
+with Ω, so "unbounded in n" is an extrapolation from four points plus the exact
+`λ(n) = 1/(2n−1)`. §6's dominance order-parameter convention throughout. The
+extinction table is one replicate of 2000 trials per Ω, single seed.
 
 ---
 
@@ -960,10 +1286,12 @@ which is exact for the *rate* by symmetry but is an approximation for the escape
 
 ## Open questions
 
-1. **Universality class of the freeze-out transition** (§5). Is a = 0.38 really 1/3
-   or 2/5, and can the quasipotential of §2 predict it? Needs error bars on the
-   collapse fit. Now better motivated: §14 shows the same λ/D reduction predicts a
-   saturation correctly in shape, so the technique is worth pointing at §5.
+1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really
+   1/3 or 2/5, and can the quasipotential of §2 predict it?~~ **VOID** → §5.1. The
+   quasipotential does predict it, and what it predicts is that there is no
+   transition: `Hc = 0`, `1/H* = (3/2)lnΩ`, and `a` is a parameter of the wrong
+   functional form. Still open (small): the intercept `B`, and the 9% excess in the
+   loser-clearing coefficient (measured 1.0895 ± 0.0176 against a predicted 1).
 2. ~~Is the radix saturation convention-dependent?~~ **Answered** (§3.1). Yes, the
    penalty's *existence* is — but for a mundane reason that vindicates §3's choice
    rather than undermining it. Still open: symmetric plurality, which was not tested.

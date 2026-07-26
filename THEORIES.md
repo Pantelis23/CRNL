@@ -223,6 +223,24 @@ the transient bias amplification §2 already flags at n=2.
   about the escape keeps evolving. That is a plausible unification, not a measured
   one. It predicts the *plateau value* ≈2.47 should be derivable from the same
   fragmented-field limit; nothing derives it yet.
+
+  **Still open (Q9b), and it is the load-bearing one → §14.2.** Both the physical
+  explanation for p > 2 and the suspicion that p is an artifact point at the *same*
+  quantity: **molecules per rival**, which is `(1−δ)Ω/(n−1)` and falls to ~1 at the
+  largest δ. Physics reading: van Kampen fails for few-molecule species, so p > 2
+  is real. Artifact reading: `c` is an Ω-slope, each δ was measured in a different
+  Ω band, and at n=64 those bands span 1–2 versus 4–9 molecules per rival, so the
+  ratio between them is not an exponent.
+
+  A linearity test (n=32, δ=0.18, Ω=150…540) found **no curvature** — F = 0.01 on
+  1,5 dof — so `c` is well defined over **4.0–14.3** molecules per rival. The
+  suspect band (1.0–2.3) is below that and untested, and is hard to test: reaching
+  10 molecules per rival at δ=0.24, n=64 needs Ω≈800, an error rate ~1e-6, and ~1e7
+  trials per point.
+
+  **How to make progress cheaply:** hold molecules-per-rival *fixed* while varying
+  δ, by choosing Ω ∝ (n−1)/(1−δ) for each δ. That decouples the two and is the one
+  design that could separate physics from band placement without 1e7 trials.
 - **Q8. Does the depth ceiling survive a better code?** `D_max ~ exp(δ*²/2σ²)` is
   for a bare repetition of one bit through one restoring stage per hop — the weakest
   possible code. Whether the ceiling belongs to the *chemistry* or the *encoding* is

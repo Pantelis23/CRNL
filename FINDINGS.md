@@ -887,6 +887,50 @@ so the contest stops changing — predicts that *nothing* about the escape keeps
 evolving, the exponent included. Q9 therefore folds into §14's saturation rather
 than standing as a separate mystery.
 
+### 14.2 Is p ≈ 2.5 physics, or band placement? Partly checked
+
+There is a reason to expect the Gaussian picture to fail at large n, and a reason
+to suspect the measurement instead. **Both point at the same quantity: molecules
+per rival.**
+
+Under a fixed pairwise margin the champion's share tends to δ while each rival's
+tends to `(1−δ)/(n−1) → 0`, so at large n the rivals are few-molecule species and
+van Kampen's expansion — which is what supplies `p = 2` — is exactly what breaks.
+That would make p > 2 real physics.
+
+But `c` is *defined* as the slope of `ln P(error)` in Ω, and each δ had to be
+measured in a different Ω band, because a larger δ drives the error down and the
+band must keep it fittable. At n=64 that means the δ points sampled different
+regimes outright:
+
+| δ | Ω band | molecules per rival |
+|---|---|---|
+| 0.14 | 300–680 | 4.1 – 9.3 |
+| 0.18 | 180–420 | 2.3 – 5.5 |
+| 0.24 | 80–190 | **1.0 – 2.3** |
+
+If `c` drifts with Ω, then "c at δ=0.24" and "c at δ=0.14" are different quantities
+measured in different regimes and their ratio is not an exponent at all.
+
+**Tested directly** (n=32, δ=0.18, 4000 trials, Ω = 150…540, Poisson-weighted):
+`ln P` is **linear**, with the quadratic term giving F = 0.01 on 1,5 dof — not
+close to significant. Local slopes bounce (0.0065–0.0133) without drifting, at
+about 2× Poisson scatter. So over that sweep `c` is a well-defined constant and
+the confound does not bite.
+
+**What that does and does not license.** The sweep covered **4.0 – 14.3 molecules
+per rival**. The band that actually worried me — δ=0.24 at n=64, at **1.0 – 2.3** —
+is *below* the tested range and remains unchecked. Nor is it easily checked: at
+that δ the error rate falls like `exp(−0.0181·Ω)`, so reaching 10 molecules per
+rival means Ω ≈ 800, an error rate ~10⁻⁶, and ~10⁷ trials per point. The band
+placement was forced by the same constraint that created the confound.
+
+So: **p > 2 survives its first serious challenge, and is not yet clear of it.**
+The honest status is that linearity holds where it could be tested, and the
+largest-δ points sit at ~1 molecule per rival where the approximation underlying
+`p = 2` is least justified — which is either the physics or the artifact, and this
+measurement cannot separate them.
+
 **Caveats.** The closed forms are for γ=0 (irreversible), which is what §3 measured;
 `breaking_diffusion` computes the general-γ case numerically but it is untested
 against a barrier measurement. The comparison inherits §3's fixed-margin convention

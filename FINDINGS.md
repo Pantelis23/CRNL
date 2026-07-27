@@ -1811,6 +1811,104 @@ trials out of 900 and are quoted nowhere for that reason; the `H = 0.2` column
 above is reported only as "nothing survives", not as a ratio.
 
 
+---
+
+## 19. Giving the model a temperature — `crnl/cooling.py`, `cooling_relic.py`
+
+**What was missing.** Every AM reaction is 2→2, so under expansion every propensity
+scales by the *identical* factor and the ratios never move: `γ`, `δ*(γ)`, `κ(γ)`,
+`β` and `γ_c` are all invariant. **The landscape is frozen under expansion; only
+the clock slows.** That is why §5.1's reduction to "ordinary SSA stopped at
+internal time `1/H`" came out exact — it could not have come out otherwise, and
+`expanding.common_order` enforces the uniform-order property that makes it true.
+
+So in this rig, *expanding the volume* and *slowing down time* were literally the
+same operation. Real freeze-out is not a clock running out; it is the
+**equilibrium moving**. The model had no temperature, and the concrete
+consequence is that §18 could measure a relic *sign* but there was no relic
+**abundance** to measure — the equilibrium never went anywhere.
+
+**The minimal fix.** Adiabatic expansion gives `T ∝ Ω(t)^{−w}`; the reverses carry
+an activation energy, so `γ = exp(−ΔE/T)` and `γ(t) = γ₀^{exp(wHt)}`. Forward
+rates are untouched — only the balance moves. On §5.1's internal clock, with
+`s = Hτ ∈ [0,1)`:
+
+    γ(s) = γ₀^((1−s)^(−w))
+
+**which does not contain H.** The cooling schedule is universal in `s`; H enters
+only as an overall rate. So the same sweep of γ from γ₀ down through γ_c to 0
+always happens, and **H decides how many reactions fit inside it** — the
+competition (cooling deepens the landscape, dilution starves it) that a fixed-γ
+model cannot have. This is genuinely not a time change.
+
+**Anchored on the known result.** At `w = 0` the new integrator reproduces
+`gillespie_expanding` **0/300 mismatches**, state-for-state and step-for-step —
+the same bit-for-bit check §5.1 used on the time change itself.
+
+### 19.1 A relic abundance, and it is set by the expansion
+
+Two arms differing only in whether the medium cools. Cooling: `γ₀ = 0.55` (just
+above `γ_c = ½`, so **there is no landscape at the start** and the pitchfork is
+crossed at `s = 0.358` for every H — the symmetry breaking is *driven by the
+expansion*). Fixed: `γ = 0.05` held constant, §5.1's model. Ω = 300, 400 trials.
+Relic = minority share of the committed population, **conditioned on having
+decided**.
+
+| H | 0.005 | 0.010 | 0.020 | 0.050 | 0.100 |
+|---|---|---|---|---|---|
+| **cooling** relic | 0.00029 | 0.00573 | **0.08373** | 0.26779 | 0.33915 |
+| relic / equilibrium(γ_freeze) | 1.9e5 | 3.2e6 | 9.9e7 | 1.5e8 | 4.4e6 |
+| undecided | 0.000 | 0.000 | 0.068 | 0.285 | 0.623 |
+| **fixed** relic | 0.00013 | 0.00020 | 0.00013 | 0.00950 | 0.17265 |
+| relic / equilibrium | 1.0 | 1.5 | 1.0 | 72 | 1312 |
+| undecided | 0.000 | 0.000 | 0.000 | 0.013 | 0.158 |
+
+Read only the clean cells (H ≤ 0.02, undecided ≤ 7%), which is a 4× range in H:
+
+* **P1 confirmed.** The cooling relic rises **290×**, 0.00029 → 0.08373. Faster
+  expansion freezes the annihilation earlier and leaves more of the minority
+  species — the standard cosmological direction.
+* **P2 confirmed.** The relic sits `10⁵–10⁸` **above** the equilibrium abundance at
+  the γ where it froze. Adiabatic following would give a ratio of 1; this is
+  freeze-out.
+* **P3 confirmed.** The fixed arm is **flat** — 1.3e-4 / 2.0e-4 / 1.3e-4 across the
+  same range — and equal to its equilibrium value (ratio 1.0). Its abundance is
+  set by the chemistry and does not know the expansion rate exists.
+
+**Abundance set by expansion versus abundance set by chemistry** is the whole
+contrast, and it is the observable the fixed-drive model structurally could not
+produce.
+
+**A summary line that argued the opposite, and why it was wrong.** Quoting the
+full H range gives "cooling 1163×, fixed 1318×" — no difference between the arms,
+i.e. the exact opposite conclusion. At large H *both* arms are dominated by
+marginal decisions, and conditioning on "decided" does not rescue a cell that was
+62% undecided; the fixed arm's apparent 1318× is entirely its H = 0.10 cell.
+`cooling_relic.py` now refuses to summarise cells above 10% undecided. **A
+conditional mean is only as good as the thing conditioned on being rare.**
+
+### 19.2 What this does and does not overturn
+
+**It does not overturn `Hc = 0` (§5.1).** The impossibility argument there is that
+from an exactly symmetric start the deterministic ODE stays exactly symmetric
+forever, so `D(H,Ω) → 0` for every `H > 0`. Cooling does not touch that: the x↔y
+symmetry is preserved by *any* `γ(t)` as long as `β = 0`, so the symmetric ODE
+still never decides. §5.1 stands as written.
+
+**What it does change** is the scope of §5.1's reduction. "The expanding SSA is
+exactly ordinary SSA stopped at internal time 1/H" is a theorem about
+**uniform-order kinetics with state-independent rate constants**, not about
+restoration under expansion in general. Give the medium a temperature and the
+reduction fails immediately — the drive profile `γ(s)` is universal but the
+*number of reactions inside it* is not, which is precisely the content of §19.1.
+
+**Still not modelled.** Forward rates have no temperature dependence, so this is
+the minimal change that lets the *balance* move rather than a thermochemistry;
+the medium is still well mixed; and the drive is still an infinite reservoir that
+never depletes — a cascade dissipates but nothing ever runs down, so §12.1's depth
+ceiling remains purely noise-limited with no thermodynamic competitor.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

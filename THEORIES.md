@@ -256,6 +256,45 @@ survives with no restoring landscape, the landscape was never doing the work and
 
 ---
 
+
+**T10: the model had no temperature, and that is why expansion was only a clock.**
+**CONFIRMED -> §19.** Every AM reaction is 2 -> 2, so dilution scales every
+propensity identically and the landscape is invariant under expansion. §5.1's
+exact reduction to "ordinary SSA stopped at internal time 1/H" is therefore a
+theorem about **uniform-order kinetics with state-independent rate constants**,
+not about restoration under expansion in general. Let the medium cool
+(`gamma(s) = gamma0**((1-s)^-w)`, forward rates untouched) and the reduction fails
+at once, because the drive profile is universal in `s = H*tau` while the number of
+reactions inside it is not.
+
+The payoff is an observable the fixed-drive model could not have: a relic
+**abundance**. Conditioned on deciding, it rises 290x over a 4x range in H and
+sits 10^5-10^8 above the equilibrium value at the drive it froze at, while the
+fixed-drive arm is flat over the same range and simply equals its equilibrium.
+**Abundance set by expansion versus abundance set by chemistry.**
+
+**This does NOT overturn `Hc = 0`.** From an exactly symmetric start the
+deterministic ODE stays symmetric under *any* `gamma(t)` while `beta = 0`, so
+`D -> 0` for every H and §5.1's impossibility argument survives untouched. What
+changed is the scope of its reduction, not its conclusion.
+
+**T10a, open: does the cooling rate have an optimum?** The competition is real --
+cooling deepens the landscape while dilution starves it -- but only H has been
+swept, at one `w`. Sweeping `w` at fixed H asks whether there is a best cooling
+schedule for getting a decision made, which is a different question from the
+relic abundance and is unmeasured. **How to kill T10:** show the relic collapses
+onto a function of `s_c` (the pitchfork crossing) alone, which would make the
+cooling schedule a reparametrised deadline after all.
+
+**T10b, still missing: the drive never depletes.** `gamma` is an infinite
+reservoir -- set it and it holds forever, at no cost. So §9 measures what
+restoration dissipates but nothing ever runs down, and §12.1's depth ceiling is
+purely noise-limited with no thermodynamic competitor. A depth-D cascade costs
+D x dS; with finite fuel the landscape would flatten as the fuel is spent, giving
+a second ceiling. Unbuilt.
+
+---
+
 ## 2. Open questions with no theory yet
 
 - **Q1. Where does the efficiency frontier end?** §11.1's marginal cost rises 77×

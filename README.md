@@ -370,6 +370,36 @@ gain scaled and its noise left behind, two predictions of mine that were wrong,
 and a harness bug that made a symmetric channel look asymmetric.
 [`FINDINGS.md`](FINDINGS.md) §15–§18.
 
+## What the model was missing: a temperature
+
+Every AM reaction is 2→2, so dilution scales every propensity identically and the
+ratios never move — `γ`, `δ*`, `κ`, `β`, `γ_c` are all invariant under expansion.
+**The landscape was frozen and only the clock slowed**, which is *why* §5.1's
+expanding SSA reduced exactly to ordinary SSA stopped at internal time `1/H`. In
+this rig, expanding the volume and slowing down time were literally the same
+operation — so there was no relic *abundance* to measure, only a relic sign.
+
+Letting the medium cool (`γ(s) = γ₀^((1−s)^(−w))`, forward rates untouched) breaks
+that. The drive profile is universal in `s = Hτ`, so H decides only how many
+reactions fit inside the sweep from `γ₀` down through `γ_c` to zero — cooling
+deepens the landscape while dilution starves it. At `w = 0` the new integrator
+reproduces the old one **0/300**, state-for-state.
+
+The payoff is the observable the fixed-drive model structurally could not have.
+Starting *above* `γ_c` so there is no landscape at all, cooling drives the
+pitchfork and the system must choose; conditioned on deciding, the relic minority
+abundance rises **290× over a 4× range in H** and sits **10⁵–10⁸ above** the
+equilibrium value at the drive it froze at — while the fixed-drive arm is flat
+over the same range and simply *equals* equilibrium. **Abundance set by expansion
+versus abundance set by chemistry.**
+
+This does not overturn §5.1's `Hc = 0` — that argument survives any `γ(t)` — but it
+scopes its reduction to uniform-order kinetics. [`FINDINGS.md`](FINDINGS.md) §19.
+
+```bash
+python -m experiments.cooling_relic --hubbles 0.005 0.01 0.02
+```
+
 ```bash
 python -m experiments.wall_coefficient_exact
 python -m experiments.asymmetric_landscape --part fold

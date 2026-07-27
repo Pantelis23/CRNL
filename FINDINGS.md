@@ -996,7 +996,16 @@ noise to finish it; the costs add in the exponent, and minimizing over δ gives
 
 with **no fitted parameter**. `κ` is `design.md` §9's `3/2` corrected for the
 landscape's restoring gain — `κ = (9/2)·λ_antisym(γ)`, so it vanishes at γ_c along
-with the ability to restore. The limits are the two known results:
+with the ability to restore.
+
+> **This κ is wrong and §15 corrects it.** It scales the restoring gain with γ
+> and leaves the finite-count *diffusion* at its γ=0 value, when the reverse
+> reactions add noise along the decision mode: `D₀(γ) = (1+γ)/9`, so
+> `κ(γ) = (3/2)(1−2γ)/(1+γ)`. Refitting the 216 cells below with the corrected
+> value lifts the pooled collapse from **R² = 0.933 to 0.960** and every per-γ
+> slope toward 1. Everything else in this section stands; the numbers quoted
+> below are the ones produced with the uncorrected κ and are left as published,
+> with the refit tabulated in §15.2. The limits are the two known results:
 `2κΩσ² ≪ 1` → `κΩδ*²`, the wall; `2κΩσ² ≫ 1` → `δ*²/(2σ²)`, the floor. The crossover
 is at **Ω× = 1/(2κσ²)**.
 
@@ -1364,6 +1373,213 @@ coefficient.
 against a barrier measurement. The comparison inherits §3's fixed-margin convention
 (§3.1) and its δ=0.10. The barrier is read from a 1-D reduction along one mode,
 which is exact for the *rate* by symmetry but is an approximation for the escape.
+
+---
+
+## 15. The wall coefficient, measured instead of expanded — `quasipotential.py`, `wall_coefficient_exact.py`
+
+§2 derives the restoration wall's coefficient for irreversible AM as the saddle's
+restoring gain against the finite-count diffusion, `κ = λ/(2D₀)` with `λ = 1/3`
+and `D₀ = 1/9`, giving `κ = 3/2`. §12 carried it to `γ > 0` by scaling the gain:
+`κ₁₂(γ) = (9/2)·λ(γ) = (3/2)(1−2γ)`.
+
+**That scales the gain and leaves the noise alone, and the noise depends on γ
+too.** The reverses `2X → B+X` and `2Y → B+Y` are extra jumps along the decision
+mode `v = (1,−1,0)`, each contributing `γ/9` to `D₀ = Σ_r (v·S_r)²·a_r` at the
+symmetric point — the disagreement reaction and its reverse are orthogonal to `v`
+and contribute nothing. So
+
+    λ(γ)  = (1−2γ)/3      the gain shrinks
+    D₀(γ) = (1+γ)/9       the noise GROWS
+    κ(γ)  = λ/(2D₀) = (3/2)·(1−2γ)/(1+γ)
+
+Unchanged at γ = 0, so **§1–2 stand untouched**. The ratio is exactly
+`κ/κ₁₂ = 1/(1+γ)`: κ₁₂ is **45% high at γ = 0.45**, or equivalently κ is 31%
+below it.
+
+**The correct ingredient was already in the repo.**
+`networks/n_winner_reversible.breaking_diffusion(2, γ)` returns exactly `(1+γ)/9`
+and has since §13–§14, and `λ_breaking(2,γ)/(2·breaking_diffusion(2,γ))` reproduces
+the formula above to machine precision. §12 used a closed form in a different
+module with the diffusion baked in at its γ=0 value, and nothing connected them.
+
+### 15.1 Two independent measurements, neither of them an expansion
+
+**Route A — the exact quasipotential.** `W(n) = −(1/Ω)·ln P_ss(n)` is the
+*definition*, and `cme.stationary` gives `P_ss` exactly, so the ridge curvature at
+the saddle **is** κ. Both limits are taken rather than assumed: fit window `w → 0`
+(quartic terms make the curvature drift, exactly as §2's own table drifts
+1.586 → 1.809) and `Ω → ∞` (`W` is Ω-independent only to leading WKB order).
+
+| γ | κ measured (Ω→∞) | `(3/2)(1−2γ)/(1+γ)` | ratio | κ/κ₁₂ | `1/(1+γ)` |
+|---|---|---|---|---|---|
+| 0.35 | 0.333482 | 0.333333 | **1.0004** | 0.7411 | 0.7407 |
+| 0.40 | 0.214008 | 0.214286 | **0.9987** | 0.7134 | 0.7143 |
+| 0.45 | 0.103570 | 0.103448 | **1.0012** | 0.6905 | 0.6897 |
+
+Agreement to **0.1% at three γ** against a formula with no fitted parameter,
+where κ₁₂ overshoots by 35% / 40% / 45%.
+
+**Route B — the original instrument.** Exact first-passage error probability from a
+biased start, fit as `−ln P = c·Ω + const`, then `c/ε²` — §1–2's own method, which
+touches neither the stationary distribution nor the ridge minimisation, and which
+reaches the γ where Route A cannot go. Across the 10 cells with adequate
+statistics (γ = 0.25–0.40, ε/δ* = 0.22–0.34):
+
+    mean c/eps^2 divided by (3/2)(1-2g)/(1+g)  =  0.990   (range 0.88 - 1.07)
+    mean c/eps^2 divided by (3/2)(1-2g)        =  0.755   (never near 1)
+
+The per-cell ε→0 extrapolations (1.06–1.12) are **not** quoted: three points each,
+drifting in the opposite direction from §2's, and the small-ε cells lose
+populations to the p < 0.1 cut. The raw cells are the evidence.
+
+**Route A's window runs the wrong way, which is worth stating.** `P_ss` comes from
+a double-precision solve, so probabilities more than ~1e-13 below the mode are
+round-off; since `W` is a log, the resolvable barrier is capped at `≈30/Ω` — which
+**shrinks** as Ω grows. Meanwhile ε is quantised at `1/Ω`, so a narrow window at
+small Ω is a parabola through a handful of sites. The two guards pull in opposite
+directions and the window between them is **empty for γ ≤ 0.25**: at γ = 0.25 the
+lattice needs Ω ≥ 137 and the floor needs Ω ≤ 115. That is a real limit of the
+route. Before those guards existed this experiment produced two contaminated
+points, one from each side (γ=0.35 at Ω=400, γ=0.45 at Ω=150), both of which
+looked like ordinary data. Route B exists partly to cover the gap.
+
+### 15.2 What it does to §12, on §12's own stored data
+
+§12's 216 cells store their raw `p_flip`, so the collapse refits with no rerun:
+
+| | pooled | γ=0.05 | γ=0.15 | γ=0.30 | γ=0.45 |
+|---|---|---|---|---|---|
+| R², §12's κ | 0.9329 | 0.9894 | 0.9564 | 0.8944 | 0.9688 |
+| R², corrected κ | **0.9604** | 0.9916 | 0.9702 | **0.9349** | 0.9741 |
+| slope, §12's κ | 0.742 | 0.795 | 0.626 | 0.419 | 0.497 |
+| slope, corrected κ | **0.783** | 0.812 | 0.675 | **0.507** | **0.684** |
+
+Every cell improves and every slope moves toward 1. **But the slope does not reach
+1 and stays non-monotone in γ** (0.81, 0.68, 0.51, 0.68), so this is part of §12's
+residual and not the whole of it — the rest is presumably §12's own second saddle
+point, which minimises a sum of two exponents and keeps only the minimum.
+
+**What this explicitly does not do.** It does not explain §12's fitted slopes as a
+missing `1/(1+γ)`. Those slopes are non-monotone and no smooth function of γ
+reproduces them; that was the first hypothesis, it was checked against §12's
+per-γ table, and it failed. The claim here is about the coefficient — verified
+against two exact instruments — not about §12's regression.
+
+`information.wall_coefficient` now returns the corrected value;
+`wall_coefficient_gain_only` keeps §12's published numbers reproducible.
+
+---
+
+## 16. Tilted landscapes: what asymmetry buys and what it costs — `networks/am_asymmetric.py`
+
+Every network up to here is symmetric under relabelling the symbols, so both
+attractors are mirror images and one coefficient describes both. Q4 asked what
+happens when they are not. The minimal honest tilt puts a factor on each
+autocatalytic branch and keeps every reverse at γ× **its own** forward:
+
+    f2: B + X -> 2X   at k(1+β)      r2: 2X -> B + X   at γk(1+β)
+    f3: B + Y -> 2Y   at k(1-β)      r3: 2Y -> B + Y   at γk(1-β)
+
+Every reversible pair keeps ratio `1/γ`, so the **cycle affinity stays `−3 ln γ`
+for every β** (checked against the general `cycle_affinity`, not asserted), and
+the Wegscheider product is still `γ³`. So β is a clean second axis against γ:
+it costs no thermodynamic *force*. It is not free in the dissipation *rate*,
+which is force times flux — a distinction this project has got wrong before
+(§9.2's threshold, §10.3's control rails) and which is left measured, not assumed.
+
+**The tilt breaks the pitchfork into an imperfect bifurcation.** Raising β
+deepens the X basin, shrinks the Y basin, and slides the saddle toward Y until
+saddle and Y-attractor annihilate at `β_c(γ)`. Past β_c the network is
+monostable: **it answers X no matter what it is shown.** β_c collapses as the
+landscape weakens — 0.998 / 0.809 / 0.281 / 0.103 / 0.050 at γ = 0.05 / 0.20 /
+0.35 / 0.42 / 0.45 — so near γ_c **a 5% rate mismatch destroys the device
+outright**, while at strong drive almost any tilt is survivable. (The γ = 0.05
+entry sits against the bisection's upper bound of 0.999 and should be read as
+"essentially any tilt", not as a measured number; β_c → 1 as γ → 0 because Y's
+autocatalysis only vanishes at β = 1.)
+
+**The bias lives in the saddle, not the attractors — at strong drive.** At
+γ = 0.05 the attractors sit at (0.000, 0.952) and (0.952, 0.000) even at
+β = 0.5·β_c ≈ 0.50, while the basin boundary has moved to `−0.367·δ*`: X wins from
+a starting Y-majority of a third of the landscape width. **Reading a tilt off the
+attractor positions would report no tilt at all.** This weakens as γ rises — at
+γ = 0.45 the same β/β_c puts the attractors at (0.160, 0.526) and (0.558, 0.134),
+visibly unequal — so the "attractors don't move" reading is a strong-drive
+statement, not a general one. The boundary shift is the general one: `−0.12·δ*`
+to `−0.22·δ*` at β = 0.25·β_c across the whole γ range. This is a *systematic*
+error, a different failure mode from the random error the wall protects against,
+and the two are easy to confuse because both present as "wrong answer".
+
+### 16.1 A prediction of mine that was wrong
+
+Written before running: *"`c₊ + c₋` is not conserved; it decreases monotonically
+with |β|, so symmetric AM maximises total restoration capacity"* — reasoning that
+the saddle is driven into the shallow attractor until they annihilate, so `c₋ → 0`
+while `c₊` cannot diverge. **The sum goes up, not down.**
+
+Escape barriers from the exact quasipotential, at Ω = 250:
+
+| | β = 0 | β = 0.5·β_c | β = 0.97·β_c |
+|---|---|---|---|
+| **γ = 0.42** (β_c = 0.1034) | | | |
+| ΔW₊ (X basin) | 0.02388 | 0.04361 | 0.06706 |
+| ΔW₋ (Y basin) | 0.02388 | 0.00937 | 0.00107 |
+| sum | 0.04776 | 0.05298 | **0.06813** |
+| **γ = 0.45** (β_c = 0.0500) | | | |
+| ΔW₊ | 0.01017 | 0.01790 | 0.02685 |
+| ΔW₋ | 0.01017 | 0.00429 | 0.00069 |
+| sum | 0.02034 | 0.02219 | **0.02754** |
+
+The same at Ω = 150, so it is not a single-Ω artifact. The favoured basin deepens
+**2.8×** while the disfavoured one loses only 0.023: tilting *creates* barrier
+height rather than reallocating it. The error in the prediction was assuming `c₊`
+is bounded — the saddle rises relative to *both* wells, since it is one bottleneck
+and it moves up as it moves sideways.
+
+**But the sum is maximised exactly where the device stops working.** At
+β = 0.97·β_c the Y barrier is 0.001 — Y cannot be stored at all. So the total
+barrier height is the wrong figure of merit, and that is the useful part of the
+refutation: a metric can improve monotonically while the thing it is supposed to
+measure collapses.
+
+### 16.2 The figure of merit that does work
+
+Mutual information through the tilted restorer, symmetric source, same |ε| for
+both symbols, exact first-passage. Reported as `I/I(β=0)`:
+
+| β/β_c | Ω=120 | Ω=200 | Ω=300 | Ω=400 |
+|---|---|---|---|---|
+| 0.25 | 0.953 | 0.906 | 0.854 | 0.810 |
+| 0.50 | 0.825 | 0.672 | 0.527 | 0.419 |
+| 0.75 | 0.650 | 0.408 | 0.230 | 0.132 |
+| 0.95 | 0.504 | 0.239 | 0.093 | **0.037** |
+
+γ = 0.42, input ε = 0.10·δ*. **I falls monotonically with |β| at every Ω, so
+symmetric AM is optimal for a symmetric source** — β = 0 is a maximum, not merely
+a stationary point.
+
+Repeating the sweep at ε = 0.25·δ* reproduces the same shape but **not** the same
+numbers: within 1% at β ≤ 0.25·β_c, then diverging to 0.062 against 0.037 at
+β = 0.95·β_c, Ω = 400. Both are monotone and both show the Ω-amplification below,
+so the conclusion is robust to the input strength while the *rate* of collapse is
+not — the deep-tilt cells are two small numbers whose ratio is unstable, and they
+should not be quoted as a measured tilt penalty.
+
+**The population makes it worse, not better.** The penalty at fixed β/β_c grows
+steadily with Ω: at β = 0.95·β_c a 3.3× population takes the retained information
+from 50% down to 3.7%. Molecules buy reliability for the favoured symbol
+exponentially and buy nothing for the other, so more molecules *amplify* a design
+asymmetry instead of averaging it out. Everywhere else in this file more molecules
+help; this is the first place they reliably hurt.
+
+**One harness bug worth recording**, because it produced a clean, plausible,
+impossible number. The first run showed `P(ok|X) = 0.638` against
+`P(ok|Y) = 0.667` at **β = 0**, where symmetry forces them equal. The cause was
+integer division in building the two initial states: `(rest ± d0)//2` gave biases
+of +9 and −11 counts when `rest − d0` was odd. Forcing the parity fixes it. The
+asymmetry under test was 3% and the artifact was 20% of it.
+
 
 ## Open questions
 

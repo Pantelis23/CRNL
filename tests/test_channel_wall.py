@@ -10,6 +10,7 @@ import pytest
 
 from crnl.information import (
     crossover_omega, flip_probability, predicted_exponent, wall_coefficient,
+    wall_coefficient_gain_only,
 )
 from crnl.networks.am_reversible import GAMMA_C, delta_star, lambda_antisym
 
@@ -21,13 +22,34 @@ def test_wall_coefficient_reduces_to_the_irreversible_value():
     assert wall_coefficient(0.0) == pytest.approx(1.5)
 
 
-def test_wall_coefficient_tracks_the_restoring_gain():
-    """kappa = (9/2) * lambda_antisym, and both vanish together at gamma_c --
-    which is what makes restoration impossible there rather than merely slow."""
+def test_wall_coefficient_is_gain_over_diffusion_both_at_gamma():
+    """kappa = lambda / (2 D_0) with BOTH evaluated at gamma (FINDINGS 15).
+
+    Checked against `n_winner_reversible`'s independently written van Kampen
+    diffusion at n = 2 rather than against the closed form, because the whole
+    correction is that the closed form in FINDINGS 12 held D_0 fixed at its
+    gamma = 0 value while the repo already had the gamma-dependent one.
+    """
+    from crnl.networks.n_winner_reversible import (
+        breaking_diffusion, lambda_breaking,
+    )
     for gamma in (0.0, 0.1, 0.25, 0.4, 0.49):
         assert wall_coefficient(gamma) == pytest.approx(
-            4.5 * lambda_antisym(gamma), rel=1e-12)
+            lambda_breaking(2, gamma) / (2.0 * breaking_diffusion(2, gamma)),
+            rel=1e-9)
+        assert wall_coefficient(gamma) == pytest.approx(
+            1.5 * (1 - 2 * gamma) / (1 + gamma), rel=1e-12)
     assert wall_coefficient(GAMMA_C) == pytest.approx(0.0, abs=1e-15)
+
+
+def test_superseded_coefficient_is_kept_and_differs_by_one_plus_gamma():
+    """FINDINGS 12's kappa stays callable so its published numbers reproduce."""
+    for gamma in (0.05, 0.15, 0.3, 0.45):
+        assert wall_coefficient_gain_only(gamma) == pytest.approx(
+            4.5 * lambda_antisym(gamma), rel=1e-12)
+        assert (wall_coefficient(gamma) / wall_coefficient_gain_only(gamma)
+                == pytest.approx(1.0 / (1.0 + gamma), rel=1e-12))
+    assert wall_coefficient_gain_only(0.0) == pytest.approx(1.5)
 
 
 # -- the two limits of one formula -----------------------------------------

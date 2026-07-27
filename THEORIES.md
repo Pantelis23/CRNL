@@ -29,18 +29,27 @@ Confirmed, and then sharpened into something better than the original claim. A
 saddle point over where a flip happens gives one parameter-free expression for
 both regimes:
 
-    −ln p ≈ κ·Ω·δ*² / (1 + 2κΩσ²),    κ(γ) = (3/2)(1−2γ) = (9/2)·λ_antisym(γ)
+    −ln p ≈ κ·Ω·δ*² / (1 + 2κΩσ²),    κ(γ) = (3/2)(1−2γ)/(1+γ) = λ(γ)/(2·D₀(γ))
 
-Pooled collapse over 216 cells: **R² = 0.933**. The population-limited side, which
+Pooled collapse over 216 cells: **R² = 0.960** (0.933 with §12's κ, which scaled
+the restoring gain with γ but left the diffusion at its γ=0 value — corrected in
+§15). The population-limited side, which
 nothing had explored, is dramatic — 11 orders of magnitude in p across Ω at
 σ_ch/δ* = 0.10. §11's protocol sat on the channel-limited side, which is *why* it
 found no efficiency optimum in Ω.
 
-**What is still open here (T1a):** the fitted slope is 0.74 pooled and drifts with
-γ (0.80 / 0.63 / 0.42 / 0.50), where an exact saddle point would give 1. The
-missing piece is the prefactor and the Gaussian-tail correction, neither of which
-was worked out. A derivation that predicts the slope — or shows why it should
-drift with γ — would turn a collapse into a law.
+**What is still open here (T1a), now smaller.** The slope was 0.74 pooled,
+drifting 0.80 / 0.63 / 0.42 / 0.50 with γ. **Part of that was a wrong exponent,
+not a missing prefactor**: with the corrected `κ` of §15 the same 216 cells give
+0.783 pooled and 0.81 / 0.68 / 0.51 / 0.68 per γ. So "the missing piece is the
+prefactor and the Gaussian-tail correction" — what this entry used to say — was
+wrong about the first ingredient it named.
+
+What remains is a slope of 0.783 rather than 1, still non-monotone in γ. The
+likeliest home for it is §12's *own* saddle point, which minimises a sum of two
+exponents and keeps only the minimum, discarding the curvature of that
+minimisation. A derivation that predicts 0.783 — or shows why the slope should
+drift with γ at all — would turn a collapse into a law.
 **How to kill it:** find a (γ, σ, Ω) region where p departs from the formula by
 more than the prefactor could explain, i.e. where the *shape* in Ω is wrong rather
 than the scale.
@@ -105,10 +114,19 @@ guessed, *times* `κ ∝ (1−2γ) ∝ (γ_c−γ)`. The barrier therefore falls
 directly: the quadratic form has been inferred from the collapse, not measured by
 sweeping γ finely near γ_c.
 
+**§15 changes the coefficient but not this conclusion.** The corrected
+`κ = (3/2)(1−2γ)/(1+γ)` still vanishes linearly in `(γ_c − γ)` — the `1/(1+γ)`
+factor is finite and smooth at γ_c = 1/2, contributing only a constant `2/3`. So
+the barrier still falls like `(γ_c−γ)²` and the population still diverges like
+`1/(γ_c−γ)²`; only the prefactor moves.
+
 **How to kill it:** sweep γ finely in [0.40, 0.499] and fit the barrier's exponent
 in `(γ_c − γ)`. A measured exponent of 1 would restore T4's original guess and
-falsify the κ correction; anything other than 2 means `κ ∝ λ_antisym` is wrong even
-though it improves the §12 collapse.
+falsify the κ correction; anything other than 2 means the gain's linear vanishing
+is wrong, which would also break §15 — the two now stand or fall together, and
+that is a cheap way to test both. **The exact quasipotential of §15 is the right
+instrument for it, and its usable window (large γ, small barrier) happens to be
+exactly this region.**
 
 ### T5. The flat 430–470 k_BT middle range has an analytic form
 **Status: open, no candidate expression.**
@@ -190,6 +208,24 @@ transient bias amplification §2 already flags at n=2.
 
 ---
 
+
+**T8: a coefficient is a gain over a noise, and BOTH depend on the drive.**
+**CONFIRMED -> §15.** `kappa = lambda/(2 D_0)`, and every place this project
+carried a coefficient to a new regime it scaled the gain and forgot the noise.
+The correct `kappa(gamma) = (3/2)(1-2gamma)/(1+gamma)` was verified by two
+instruments that share no machinery -- the exact quasipotential's ridge curvature
+(1.0004 / 0.9987 / 1.0012 at gamma = 0.35 / 0.40 / 0.45) and the original
+first-passage wall measurement (mean ratio 0.990 over 10 cells) -- and it was
+sitting in the repo the whole time as `breaking_diffusion(2, gamma)`, written for
+a different section.
+
+**Where else to look:** anywhere a rate, gain, or eigenvalue was carried to a new
+parameter and the diffusion was not recomputed. §13's `A_c(n) -> 9 ln n` and
+§14's `lambda/D_0 -> 1` both *do* recompute it (that is what §14 is about), so
+they are clean. §12 was the one that did not.
+
+---
+
 ## 2. Open questions with no theory yet
 
 - **Q1. Where does the efficiency frontier end?** §11.1's marginal cost rises 77×
@@ -265,12 +301,20 @@ transient bias amplification §2 already flags at n=2.
   test was named correctly and the answer was still assumed for two commits before
   anyone ran it.
 
-  **What survives.** §12's slope 0.74 is unexplained and is the only member never
-  tested across σ — but it is now known to be the same *species* of defect (an
-  exponent scale), so testing it as a prefactor would be testing the wrong thing.
-  The live question is no longer "what amplitude is missing" but **"why is the
-  saddle-point exponent off by 26% here and 7% there"** — see Q9a, which asks the
-  same thing in δ.
+  **What survives, and it is now smaller.** §12's slope was 0.74 because part of
+  its exponent was simply wrong: `kappa` scaled the restoring gain with gamma and
+  left the diffusion at its gamma = 0 value, when `D_0(gamma) = (1+gamma)/9`
+  (§15). Refitting §12's own 216 cells with `kappa = (3/2)(1-2g)/(1+g)` lifts the
+  pooled collapse from R^2 = 0.933 to 0.960 and every slope toward 1 (pooled
+  0.742 -> 0.783). **So one of the three "prefactors" turned out to be an
+  ingredient left out of the exponent** -- not a Laplace amplitude, and not a
+  mystery.
+
+  What is left is smaller and still real: the corrected slope is 0.783, not 1, and
+  still non-monotone in gamma (0.81 / 0.68 / 0.51 / 0.68). That residual most
+  likely belongs to §12's *own* saddle point, which minimises a sum of two
+  exponents and keeps only the minimum. **Do not merge it with Q9a** -- that
+  reflex is what this section is a monument to.
 - ~~**Q9. Why does the barrier exponent grow with alphabet size?**~~ **Measured at
   n = 32 and 64 → §14.1. It does not keep growing.** p = 2.08 / 2.27 / 2.48 / 2.53 /
   2.40 at n = 2 / 8 / 16 / 32 / 64; n=32 and n=64 differ by 0.45σ. Two things came
@@ -376,10 +420,35 @@ transient bias amplification §2 already flags at n=2.
   the special one. **New (Q3a): why the cube?** The 9 factors as 3×3 — three
   reactions per cycle, and a γ_c suppressed by n³ — but nothing derives the cube.
   A derivation would turn a measured exponent (−3.02, still drifting) into a law.
-- **Q4. Structured (asymmetric) landscapes.** Unequal rate constants, deformed
-  basins — the honest bridge toward real chemistry. Note §9.2's closed-form EP
-  identity **fails** there, which is exactly why `thermo.entropy_step` exists as
-  the general primitive.
+- **Q4. Structured (asymmetric) landscapes.** **Opened -> §16.**
+  `networks/am_asymmetric` tilts the two autocatalytic branches by `beta` while
+  keeping every reverse at gamma x its own forward, so the cycle affinity stays
+  `-3 ln gamma` and beta is a clean second axis costing no thermodynamic force.
+  Three things are now measured:
+
+  * a saddle-node at `beta_c(gamma)` past which the network answers X whatever it
+    is shown; `beta_c` collapses as gamma rises (0.998 -> 0.050 over
+    gamma = 0.05 -> 0.45), so near gamma_c a few percent of rate mismatch kills it;
+  * the bias sits in the **saddle**, not the attractors, so reading a tilt off
+    attractor positions reports no tilt at all;
+  * mutual information falls monotonically in |beta| and **the penalty grows with
+    Omega** -- the first place in this file where more molecules reliably hurt.
+
+  **Still open (Q4a): is the symmetric design still optimal for a BIASED source?**
+  §16 only shows beta = 0 maximises I for a 50/50 source, which is the easy case.
+  A source with prior p != 1/2 should want a matched tilt, and if it does, the
+  relation between the optimal beta and the prior is the first design rule this
+  project would have. Prediction to beat: the optimum is set by matching the two
+  barriers' *difference* to `ln(p/(1-p))/Omega`, which would make the optimal tilt
+  shrink like 1/Omega -- i.e. vanish in the very limit where restoration works
+  best.
+
+  **Still open (Q4b): what does the tilt cost in dissipation?** The affinity is
+  beta-independent by construction, but the EP *rate* is force times flux and the
+  flux moves. Unmeasured, and §16 is careful to claim only the force.
+
+  Note §9.2's closed-form EP identity **fails** on these networks, which is
+  exactly why `thermo.entropy_step` exists as the general primitive.
 - **Q5. Does EIR's decode falloff share CRNL's mechanism?** §8 showed the radix
   penalty survives per-n hyperparameter tuning, so it is structural. Whether it is
   *basin crowding* (CRNL's mechanism) or partly a search effect needs a variant

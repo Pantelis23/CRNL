@@ -160,22 +160,50 @@ def flip_probability(gamma: float, omega: int, t_stage: float,
     return float(0.5 * (1.0 - np.exp(slope / 2.0)))
 
 
+def wall_coefficient_gain_only(gamma: float) -> float:
+    """SUPERSEDED by `wall_coefficient`. Kept so FINDINGS 12 stays reproducible.
+
+    This is `lambda(gamma) / (2 * D_0(0))` -- the restoring gain taken at gamma,
+    the diffusion left at its gamma = 0 value:
+
+        kappa_12(gamma) = (3/2) * (1 - 2 gamma) = (9/2) * lambda_antisym(gamma)
+
+    It is an improvement on using 3/2 everywhere (which pools at R^2 = 0.69),
+    but it is not the coefficient -- see `wall_coefficient` and FINDINGS 15.
+    """
+    return 1.5 * (1.0 - 2.0 * gamma)
+
+
 def wall_coefficient(gamma: float) -> float:
     """kappa(gamma): the restoration-wall coefficient, P(err) ~ exp(-kappa*e^2*Omega).
 
-    design.md 9 derives kappa = 3/2 for IRREVERSIBLE AM, from the saddle's
-    restoring gain lambda = 1/3 against finite-count diffusion D = 1/(9 Omega).
-    At finite gamma the gain is lambda_antisym(gamma) = (1-2gamma)/3, so the
-    barrier scales with it:
+    design.md 9 derives kappa = 3/2 for IRREVERSIBLE AM as the saddle's restoring
+    gain against the finite-count diffusion, kappa = lambda / (2 D_0) with
+    lambda = 1/3 and D_0 = 1/9. BOTH ingredients depend on gamma:
 
-        kappa(gamma) = (3/2) * (1 - 2 gamma) = (9/2) * lambda_antisym(gamma)
+        lambda(gamma) = (1 - 2 gamma) / 3          the gain shrinks
+        D_0(gamma)    = (1 + gamma) / 9            the noise GROWS
 
-    Using the gamma=0 value everywhere fails badly as gamma -> gamma_c: the
-    collapse of `predicted_exponent` degrades from R^2 = 0.99 at gamma=0.05 to
-    0.60 at gamma=0.45, and pooling all gamma gives 0.69. With this correction
-    the pooled collapse is 0.93.
+    because the reverse reactions 2X -> B + X and 2Y -> B + Y are extra jumps
+    along the decision mode, each contributing gamma/9 to the sum
+    sum_r (v . S_r)^2 a_r at the symmetric point. Hence
+
+        kappa(gamma) = lambda / (2 D_0) = (3/2) * (1 - 2 gamma) / (1 + gamma).
+
+    This is exactly `lambda_breaking(2, gamma) / (2 * breaking_diffusion(2, gamma))`
+    -- the gamma-dependent diffusion was already in the repo, in
+    `networks/n_winner_reversible`, written for FINDINGS 13/14. FINDINGS 12 scaled
+    the gain and not the noise, which is `wall_coefficient_gain_only` above.
+
+    Measured against the exact quasipotential's ridge curvature, extrapolated in
+    both Omega and fit width: 1.0004 / 0.9987 / 1.0012 of this value at
+    gamma = 0.35 / 0.40 / 0.45 (FINDINGS 15). Refitting FINDINGS 12's own 216
+    stored cells with it lifts the pooled collapse from R^2 = 0.933 to 0.960 and
+    moves every per-gamma slope toward 1.
+
+    Unchanged at gamma = 0, so FINDINGS 1-2 are untouched.
     """
-    return 1.5 * (1.0 - 2.0 * gamma)
+    return 1.5 * (1.0 - 2.0 * gamma) / (1.0 + gamma)
 
 
 def predicted_exponent(gamma: float, omega: int,

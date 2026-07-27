@@ -16,8 +16,17 @@ parameter (see crnl/information.predicted_exponent):
 
     -ln p  ~  kappa Omega delta*^2 / (1 + 2 kappa Omega sigma^2)
 
-with kappa(gamma) = (3/2)(1 - 2 gamma) tracking the landscape's restoring gain
-lambda_antisym. The crossover is at Omega_x = 1/(2 kappa sigma^2).
+with kappa(gamma) = lambda(gamma) / (2 D_0(gamma)) = (3/2)(1 - 2 gamma)/(1 + gamma).
+The crossover is at Omega_x = 1/(2 kappa sigma^2).
+
+NOTE ON WHICH KAPPA. FINDINGS 12 was produced with kappa = (3/2)(1 - 2 gamma),
+which scales the restoring gain with gamma but leaves the diffusion at its
+gamma = 0 value. FINDINGS 15 corrects that -- the reverse reactions are extra
+jumps along the decision mode, so D_0(gamma) = (1+gamma)/9 -- and refitting these
+same 216 cells with the corrected value lifts the pooled collapse from R^2 = 0.933
+to 0.960. `information.wall_coefficient` now returns the corrected value, so a
+fresh run of this experiment will NOT reproduce FINDINGS 12's printed slopes;
+`information.wall_coefficient_gain_only` does.
 
 This experiment measures p(Omega, sigma_ch) directly and tests that collapse.
 

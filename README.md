@@ -290,9 +290,13 @@ rewards a stage that does nothing, so the experiment refuses `--depth < 5`.
 
 Because the protocol above sits on the wrong side of a crossover. A saddle point
 over where a flip happens gives **one parameter-free formula** covering both
-regimes — `−ln p ≈ κΩδ*²/(1+2κΩσ²)` with `κ(γ) = (3/2)(1−2γ)` — whose limits are
-§1–2's restoration wall (`κΩδ*²`, exponential in Ω) and an Ω-independent channel
-floor (`δ*²/2σ²`). It collapses **216 cells to R² = 0.933**. On the wall side the
+regimes — `−ln p ≈ κΩδ*²/(1+2κΩσ²)` — whose limits are §1–2's restoration wall
+(`κΩδ*²`, exponential in Ω) and an Ω-independent channel floor (`δ*²/2σ²`). It
+collapses **216 cells to R² = 0.960**, with the coefficient
+`κ(γ) = λ(γ)/(2D₀(γ)) = (3/2)(1−2γ)/(1+γ)` — a restoring gain over a diffusion,
+both taken at γ. §12 originally scaled the gain and left the noise at its γ=0
+value (R² = 0.933); §15 measures κ against the exact quasipotential and against
+first passage and corrects it. On the wall side the
 per-stage flip probability falls **eleven orders of magnitude** with population; on
 the floor side molecules buy nothing. Every cascade result here used σ_ch/δ* = 0.35,
 which is on the floor side — which is *why* the frontier saturates.

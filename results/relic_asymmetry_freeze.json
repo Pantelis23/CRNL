@@ -1,0 +1,162 @@
+[
+  {
+    "gamma": 0.05,
+    "beta": 0.0,
+    "omega": 120,
+    "hubble": 0.02,
+    "trials": 800,
+    "p_decided": 1.0,
+    "p_x_given_decided": 0.50875,
+    "p_undecided": 0.0
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.0,
+    "omega": 120,
+    "hubble": 0.05,
+    "trials": 800,
+    "p_decided": 0.96125,
+    "p_x_given_decided": 0.5305591677503251,
+    "p_undecided": 0.03875
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.0,
+    "omega": 120,
+    "hubble": 0.1,
+    "trials": 800,
+    "p_decided": 0.24875,
+    "p_x_given_decided": 0.48743718592964824,
+    "p_undecided": 0.75125
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.0,
+    "omega": 120,
+    "hubble": 0.2,
+    "trials": 800,
+    "p_decided": 0.0,
+    "p_x_given_decided": NaN,
+    "p_undecided": 1.0
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.04044848986563,
+    "omega": 120,
+    "hubble": 0.02,
+    "trials": 800,
+    "p_decided": 1.0,
+    "p_x_given_decided": 0.70875,
+    "p_undecided": 0.0
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.04044848986563,
+    "omega": 120,
+    "hubble": 0.05,
+    "trials": 800,
+    "p_decided": 0.9575,
+    "p_x_given_decided": 0.7349869451697127,
+    "p_undecided": 0.0425
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.04044848986563,
+    "omega": 120,
+    "hubble": 0.1,
+    "trials": 800,
+    "p_decided": 0.31875,
+    "p_x_given_decided": 0.788235294117647,
+    "p_undecided": 0.68125
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.04044848986563,
+    "omega": 120,
+    "hubble": 0.2,
+    "trials": 800,
+    "p_decided": 0.0,
+    "p_x_given_decided": NaN,
+    "p_undecided": 1.0
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.08089697973126,
+    "omega": 120,
+    "hubble": 0.02,
+    "trials": 800,
+    "p_decided": 1.0,
+    "p_x_given_decided": 0.8475,
+    "p_undecided": 0.0
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.08089697973126,
+    "omega": 120,
+    "hubble": 0.05,
+    "trials": 800,
+    "p_decided": 0.975,
+    "p_x_given_decided": 0.8628205128205129,
+    "p_undecided": 0.025
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.08089697973126,
+    "omega": 120,
+    "hubble": 0.1,
+    "trials": 800,
+    "p_decided": 0.4475,
+    "p_x_given_decided": 0.9581005586592178,
+    "p_undecided": 0.5525
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.08089697973126,
+    "omega": 120,
+    "hubble": 0.2,
+    "trials": 800,
+    "p_decided": 0.00125,
+    "p_x_given_decided": 1.0,
+    "p_undecided": 0.99875
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.16179395946252,
+    "omega": 120,
+    "hubble": 0.02,
+    "trials": 800,
+    "p_decided": 1.0,
+    "p_x_given_decided": 0.975,
+    "p_undecided": 0.0
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.16179395946252,
+    "omega": 120,
+    "hubble": 0.05,
+    "trials": 800,
+    "p_decided": 0.995,
+    "p_x_given_decided": 0.9736180904522613,
+    "p_undecided": 0.005
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.16179395946252,
+    "omega": 120,
+    "hubble": 0.1,
+    "trials": 800,
+    "p_decided": 0.75625,
+    "p_x_given_decided": 0.996694214876033,
+    "p_undecided": 0.24375
+  },
+  {
+    "gamma": 0.05,
+    "beta": 0.16179395946252,
+    "omega": 120,
+    "hubble": 0.2,
+    "trials": 800,
+    "p_decided": 0.0025,
+    "p_x_given_decided": 1.0,
+    "p_undecided": 0.9975
+  }
+]

@@ -345,21 +345,37 @@ how to *build* the chemistry rather than how it behaves:
 > log-odds — `ln(e₋/e₊) ∝ ln(p/(1−p))`, measured at R² = 0.9999 with a
 > predicted-zero intercept of 0.018.
 
-The proportionality constant should be 1; it measures 0.76 at Ω=200 and rises to
-0.88 by Ω=400, but four times in Ω does not pin the limit and the best-fitting
-extrapolations overshoot 1 — so the *form* is confirmed and the *coefficient* is
-open. The optimal tilt is gentle (`β*/β_c` = 0.016–0.114) and the realisable gain
-is 0.5–16%, well below the asymptotic promise.
+**The proportionality constant is 1.** It reads 0.76 at Ω=200 — the finite-
+population correction is `1 − 28·Ω^{−0.90}` — and reaches 0.946 by Ω=1000, where
+the predicted-zero intercept is 0.0002. Getting there needed the measurement
+reposed: `dI/dβ = 0` is a root find in the prior, not an optimisation over β, which
+is ~20× cheaper and bought a 10× population lever. The optimal tilt is gentle
+(`β*/β_c` = 0.016–0.114) and the realisable gain is 0.5–16%, well below the
+asymptotic promise.
+
+**And who survives an annihilation.** `X + Y → 2B` is matter meeting antimatter,
+so a tilted AM in an expanding volume has all three of Sakharov's ingredients.
+From an exactly symmetric start the surviving species is set by the tilt above
+`β√Ω ≈ 0.82` and by chance below it, with `P(X) = Φ(u)` parameter-free to under
+1%. The decisive asymmetry *shrinks* as `Ω^{−1/2}` — a bigger system needs a
+smaller bias to have a determined outcome. Under an expansion deadline the relics
+that do form are *more* purely tilt-aligned, not less (0.958 against Φ = 0.841,
+11σ), because surviving the deadline selects for the trajectories the tilt sped
+up. The autocatalysis has no cosmological counterpart, so this is not
+baryogenesis — it is what changes when an asymmetry runs through a *restoring*
+landscape instead of a passive one.
 
 Also here: a wall coefficient corrected after being carried to `γ > 0` with its
 gain scaled and its noise left behind, two predictions of mine that were wrong,
 and a harness bug that made a symmetric channel look asymmetric.
-[`FINDINGS.md`](FINDINGS.md) §15–§17.
+[`FINDINGS.md`](FINDINGS.md) §15–§18.
 
 ```bash
 python -m experiments.wall_coefficient_exact
 python -m experiments.asymmetric_landscape --part fold
 python -m experiments.biased_source
+python -m experiments.tilt_rule_limit --omegas 100 200 400
+python -m experiments.relic_asymmetry
 ```
 
 ## License

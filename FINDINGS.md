@@ -1625,7 +1625,7 @@ Note how *gentle* the optimal tilt is: β\*/β_c runs 0.016 → 0.114, so the ti
 that helps is 1–10% of the tilt that destroys the device (§16's fold). Nothing
 about the optimum lives near β_c.
 
-### 17.2 The coefficient rises with Ω, and this data cannot say where it stops
+### 17.2 The coefficient rises with Ω, and *this* data cannot say where it stops
 
 At p = 0.80, sweeping Ω:
 
@@ -1651,11 +1651,52 @@ would give "extrapolates to 0.947, confirming P2" from the *worst*-fitting ansat
 of the five. Four times in Ω is not enough to resolve this, and the honest
 statement is that the coefficient is rising and 1 is inside the plausible range.
 
+**§17.3 resolves it** — with a 10× range and a test that does not require picking
+an ansatz. The value of leaving this subsection standing is that the tempting
+shortcut and the real answer can be compared: the shortcut would have reached the
+right conclusion by the wrong route, which is not the same as being right.
+
 P3 itself shows the same incompleteness directly: `β* ∝ Ω^−x` with x measured at
 **0.508 / 0.603 / 0.678 / 0.752** across consecutive Ω pairs — drifting toward the
 predicted 1 and nowhere near it yet.
 
-### 17.3 The careful refinement was worse than the crude argument
+### 17.3 The coefficient is 1 — `tilt_rule_limit.py`
+
+§17.2 could not decide this: over a 4× range the candidate extrapolations gave
+0.947 / 1.004 / 1.120 / 1.685 and the best-fitting two overshot. **The obstacle
+was cost, not principle, and the measurement was badly posed.** β\* was being
+found by *maximising* the exact mutual information — ~40 CME solves per cell. But
+`dI/dβ = 0` is a scalar equation in `p`, so the question inverts: instead of "given
+p, which β is optimal", ask **"given β, which prior makes it optimal"** — a root
+find in `p` needing no solves once the error curve `e±(β)` is known. One sweep of
+~13 β values yields the whole line. That is ~20× cheaper, and it reproduces the
+direct optimisation to **0.0001 in slope** at Ω=200 (0.7624 against 0.7625).
+
+| Ω | 100 | 150 | 200 | 300 | 400 | 600 | 800 | 1000 |
+|---|---|---|---|---|---|---|---|---|
+| r | 0.5868 | 0.6760 | 0.7624 | 0.8368 | 0.8752 | 0.9111 | 0.9334 | **0.9459** |
+| intercept | 0.055 | 0.033 | 0.019 | 0.007 | 0.003 | 0.0013 | 0.0005 | **0.0002** |
+| R² | 0.9974 | 0.9992 | 0.9998 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+
+Over a 10× range the extrapolations are still spread — 0.978 (`1/Ω`), 1.029
+(`Ω^−0.75`), 1.131 (`1/√Ω`), 1.701 (`1/lnΩ`) — so quoting one is still choosing the
+answer. **Two tests that do not require choosing:**
+
+    deficit:      1 - r  =  27.9 * Omega^(-0.902)      R² = 0.9978
+    free limit:   r -> 1.037 +- 0.030                  1.0 is 1.23 sigma away
+
+The first is the decisive one. If `r` converged to anything below 1 the deficit
+would approach a constant and the log-log plot would flatten; instead it is a
+clean power law across the whole 10×, with residuals under 0.06 in ln units.
+
+**So the design rule is exactly parameter-free:**
+
+    ln(e-/e+) at beta*  =  ln( p / (1-p) )
+
+with a finite-population correction of `1 − 28·Ω^{−0.90}`, which is why it reads
+0.76 at Ω = 200. The intercept, predicted zero, falls to 0.0002.
+
+### 17.4 The careful refinement was worse than the crude argument
 
 **P1 is refuted.** It was derived *after* P2, as the more careful version keeping
 the log factors, and it fails badly — `p·h(e₊) / ((1−p)·h(e₋))` should be 1 and is:
@@ -1676,6 +1717,98 @@ the asymptotic `2√(p(1−p))` = 0.980 / 0.917 / 0.800 / 0.600 / 0.436. So the
 **realisable** gain from matching the tilt at accessible population is 0.5–16%,
 not the asymptotic 2–56%. It is a real gain and it is not a large one; anyone reading
 P4 as the payoff would overstate it by 3×.
+
+
+---
+
+## 18. Which one survives: the relic asymmetry — `relic_asymmetry.py`
+
+AM's disagreement reaction is literally an annihilation — `X + Y → 2B` is
+matter + antimatter → two photons, with `2B → X + Y` as pair production — and the
+three ingredients Sakharov requires for a matter excess are all knobs already in
+the rig: **number violation** (`X−Y` is untouched by annihilation and pair
+production; only the recruitment reactions move it), **C/CP violation** (§16's
+tilt β), and **departure from equilibrium** (γ < 1, and §5.1's expansion deadline
+`1/H`).
+
+**Where it stops being a mapping, stated up front.** Recruitment `B + X → 2X` is
+autocatalysis and has no counterpart in the standard picture, where an asymmetry
+survives *linearly*: annihilation removes matched pairs and the pre-existing
+excess is what is left. Here the excess is *amplified* by an instability. This is
+therefore not a model of baryogenesis — it is the question of what changes when an
+asymmetry is fed through a **restoring** landscape rather than a passive one. That
+difference is the content and it should not be dressed up as a cosmology result.
+
+### 18.1 Dynamical or accidental, and a parameter-free answer
+
+From an exactly symmetric start two things can decide which species survives: the
+tilt's deterministic push and shot noise.
+
+    g/λ  =  (2β/3)·(1−γ)/(1−2γ)                     the tilt
+    σ    =  sqrt( (D₀/2) / (λΩ) ) = sqrt( (1+γ) / (3(1−2γ)Ω) )    the noise
+
+— the σ uses **§15's corrected `D₀(γ) = (1+γ)/9`**, so this result depends on that
+correction. The relic is dynamical when `g/λ > σ`, i.e. above
+
+    β·√Ω  =  (√3/2)·(1−2γ)/(1−γ)          = 0.820 at γ = 0.05
+
+**Prediction, written before running: P(X survives) collapses onto a single curve
+in `u = (g/λ)/σ`, and that curve is `Φ(u)`.** Both parts parameter-free. Computed
+exactly as a splitting probability from the symmetric start, so no sampling error
+can hide a failed collapse.
+
+| u | 0.25 | 0.50 | 1.00 | 1.50 | 2.00 | 3.00 |
+|---|---|---|---|---|---|---|
+| spread of P(X) across Ω = 60→240 | 0.0013 | 0.0022 | **0.0028** | 0.0019 | 0.0007 | 0.0001 |
+| mean P(X) − Φ(u) | −0.0027 | −0.0049 | **−0.0065** | −0.0050 | −0.0025 | −0.0002 |
+
+**Both hold to under 1%.** A 4× population change moves P(X) by at most 0.0028 at
+fixed u, and the parameter-free `Φ(u)` is right to 0.0065 at its worst. The
+residual is systematically negative and shrinking with Ω (at u=1: 0.0080 / 0.0063 /
+0.0052 at Ω = 60 / 120 / 240), consistent with the one approximation in the
+derivation — the effective-seed picture treats accumulated noise as a single
+Gaussian kick.
+
+So **`β√Ω ≈ 0.82` separates a relic whose sign is set by the chemistry from one
+set by a coin flip.** The scaling is the interesting half: the asymmetry needed to
+be decisive *falls* as `Ω^{−1/2}`, so a larger system needs a smaller bias, not a
+larger one.
+
+### 18.2 The deadline does not just decide whether — it decides which, harder
+
+With expansion, §5.1's exact time change means the expanding SSA is ordinary SSA
+stopped at internal time `1/H`, so this is a stopped run, not a second integrator.
+
+**Prediction, written before running:** the deadline decides *whether* a relic
+forms, not *which* — `P(X | decided)` stays `Φ(u)` at every H while `P(decided)`
+falls with H. **The first half is wrong.**
+
+`P(decided) / P(X | decided)`, γ = 0.05, Ω = 120, 800 trials:
+
+| u | Φ(u) | H=0.02 | H=0.05 | H=0.1 | H=0.2 |
+|---|---|---|---|---|---|
+| 0.0 | 0.500 | 1.000 / 0.509 | 0.961 / 0.531 | 0.249 / 0.487 | 0.000 / — |
+| 0.5 | 0.691 | 1.000 / 0.709 | 0.958 / 0.735 | 0.319 / **0.788** | 0.000 / — |
+| 1.0 | 0.841 | 1.000 / 0.848 | 0.975 / 0.863 | 0.448 / **0.958** | 0.001 / — |
+| 2.0 | 0.977 | 1.000 / 0.975 | 0.995 / 0.974 | 0.756 / **0.997** | 0.003 / — |
+
+At a generous deadline `P(X | decided) = Φ(u)` as predicted. At `H = 0.1` it runs
+far above: 0.958 against 0.841 at u = 1 is **11σ** on 358 decided trials.
+Reproduced at Ω = 240 (0.766 against 0.691 at u = 0.5, H = 0.07, 4.4σ), and the
+u = 0 row stays at 0.5 throughout, which is the symmetry check that says this is
+not an artifact.
+
+**The mechanism is a selection effect.** Beating the deadline requires fast growth
+away from the symmetric point; the tilt supplies exactly that; so conditioning on
+"a relic formed at all" preferentially keeps tilt-aligned trajectories. The two
+effects do not factorise, and the reading is the opposite of the intuition that
+rushing the expansion randomises the outcome: **the faster the expansion, the
+purer the surviving relic's alignment with the asymmetry** — there is just far
+less of it. Past `H ≈ 0.2` nothing decides at all (P(decided) ≤ 0.003).
+
+**One caveat on the table.** The `H = 0.12` cells at Ω = 240 have 10–37 decided
+trials out of 900 and are quoted nowhere for that reason; the `H = 0.2` column
+above is reported only as "nothing survives", not as a ratio.
 
 
 ## Open questions

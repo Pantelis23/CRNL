@@ -226,6 +226,36 @@ they are clean. §12 was the one that did not.
 
 ---
 
+
+**T9: an asymmetry is decisive only when it beats the shot noise, and the
+threshold falls as the system grows.** **CONFIRMED -> §18.** AM's `X + Y -> 2B` is
+an annihilation, so a tilted AM in an expanding volume has all three of Sakharov's
+ingredients. From an exactly symmetric start the surviving species is set by the
+tilt when `g/lambda > sigma` and by chance below it, i.e. above
+
+    beta * sqrt(Omega) = (sqrt3/2)(1-2 gamma)/(1-gamma)      [0.820 at gamma = 0.05]
+
+and `P(X) = Phi(u)` with `u = (g/lambda)/sigma`, parameter-free, verified to
+under 1% with a collapse holding to 0.0028 across a 4x population change. The
+`sigma` uses §15's corrected `D_0(gamma) = (1+gamma)/9`, so this result rests on
+that correction and would be visibly wrong with §12's.
+
+**What is worth noticing:** the decisive asymmetry SHRINKS as `Omega^-1/2`. A
+bigger system needs a *smaller* bias to have its outcome determined rather than
+accidental -- the opposite of the usual "more molecules, more averaging" reading,
+because what grows with Omega is the amplifier, not the noise.
+
+**T9a, open: the analogy is not a mapping and the gap is the interesting part.**
+Recruitment `B + X -> 2X` has no cosmological counterpart; there an asymmetry
+survives linearly, here it is amplified. Nothing here says what a *passive*
+annihilation network (no autocatalysis) would give, and that is the control this
+entry needs before any of it is described as baryogenesis. **How to kill T9:**
+run the same measurement on annihilation + pair production alone. If `Phi(u)`
+survives with no restoring landscape, the landscape was never doing the work and
+§18's framing is decoration.
+
+---
+
 ## 2. Open questions with no theory yet
 
 - **Q1. Where does the efficiency frontier end?** §11.1's marginal cost rises 77×
@@ -447,14 +477,30 @@ they are clean. §12 was the one that did not.
   The optimal tilt is gentle: beta*/beta_c runs 0.016 -> 0.114, so the tilt that
   helps is 1-10% of the tilt that destroys the device.
 
-  **Q4a-i, still open: is the coefficient 1?** It should be, and it is measured at
-  0.76 (Omega=200), rising 0.644 -> 0.879 across Omega = 100 -> 400. But four times
-  in Omega does not pin the limit -- extrapolations give 0.947 / 1.004 / 1.120 /
-  1.685 depending on whether the correction is assumed to go as 1/Omega,
-  Omega^-0.75, 1/sqrt(Omega) or 1/ln(Omega), **and the two best-fitting forms both
-  overshoot 1**. Quoting the 1/Omega row alone would "confirm" the prediction from
-  the worst-fitting ansatz of the five. Needs a larger Omega range, which means a
-  cheaper error probability than an exact CME solve.
+  ~~**Q4a-i: is the coefficient 1?**~~ **ANSWERED: YES -> §17.3.** It was 0.76 at
+  Omega = 200 and the 4x range available then could not pin the limit. The
+  obstacle was cost, not principle: `beta*` was being found by maximising the
+  exact mutual information, ~40 CME solves per cell. **Inverting the optimality
+  condition** -- asking "given beta, which prior makes it optimal", a root find in
+  p rather than an optimisation over beta -- yields the whole line from ONE error
+  sweep, about 20x cheaper, and it reproduces the direct measurement to 0.0001 in
+  slope. That buys the range: r rises 0.587 -> 0.911 over Omega = 100 -> 600 with
+  the intercept collapsing 0.055 -> 0.0013 and R^2 reaching 0.999999.
+
+  Over the 10x range the extrapolations still spread (0.978 / 1.029 / 1.131 /
+  1.701), so two tests that need no chosen ansatz settle it: the **deficit**
+  `1 - r = 27.9 * Omega^-0.902` is a clean power law at R^2 = 0.9978 (a limit
+  below 1 would flatten it), and a **free-limit** fit gives `r -> 1.037 +- 0.030`,
+  putting 1.0 at 1.23 sigma. So the rule is exactly
+
+      ln(e-/e+) at beta*  =  ln( p/(1-p) )
+
+  with a finite-population correction `1 - 28 Omega^-0.90`. The intercept,
+  predicted zero, is 0.0002 at Omega = 1000.
+
+  **The methodological point is worth keeping separately: the measurement was not
+  impossible, it was badly posed.** An optimisation was being run where a root
+  find would do, and the cost of that was mistaken for a limit of the method.
 
   **What was wrong in the prediction this entry used to carry.** It read: *"the
   optimum is set by matching the two barriers' difference to ln(p/(1-p))/Omega,

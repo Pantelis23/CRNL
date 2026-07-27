@@ -1581,6 +1581,103 @@ of +9 and −11 counts when `rest − d0` was odd. Forcing the parity fixes it. 
 asymmetry under test was 3% and the artifact was 20% of it.
 
 
+---
+
+## 17. A design rule: matching the tilt to a biased source — `biased_source.py`
+
+§16 showed `β = 0` maximises information for a 50/50 source, which is the easy
+case — symmetry alone makes `β = 0` stationary and the only content was the sign
+of the second derivative. **Q4a asks the case with no symmetry to lean on.**
+
+Predictions were written down before running (`biased_source.py`'s docstring
+holds them verbatim). With `e₊ = P(err | X sent)`, `e₋ = P(err | Y sent)`, small
+errors, and `e± = A·exp(−Ω·c±)`, setting `dL/dβ = 0` on the information deficit
+gives `p·h(e₊) = (1−p)·h(e₋)` (**P1**), whose leading form is
+`ln(e₋/e₊) = ln(p/(1−p))` (**P2**), hence `β* ∝ ln(p/(1−p))/Ω` (**P3**) and a
+deficit falling by `2√(p(1−p))` (**P4**). β* is found by maximising the *exact*
+mutual information, and P1–P4 are then checked at the measured β*.
+
+**The headline: β\* > 0 at every prior. Symmetric restoration is not optimal for
+a biased source**, and this is the first statement in this project about how to
+*build* the chemistry rather than how it behaves.
+
+### 17.1 The form is exact; the coefficient is not 1
+
+At Ω = 200, γ = 0.35, sweeping the prior:
+
+| p | 0.60 | 0.70 | 0.80 | 0.90 | 0.95 |
+|---|---|---|---|---|---|
+| β\* | 0.00455 | 0.00949 | 0.01546 | 0.02428 | 0.03211 |
+| β\*/β_c | 0.016 | 0.034 | 0.055 | 0.086 | 0.114 |
+| `ln(e₋/e₊)` measured | 0.319 | 0.664 | 1.083 | 1.702 | 2.253 |
+| `ln(p/(1−p))` | 0.406 | 0.847 | 1.386 | 2.197 | 2.944 |
+| ratio | 0.786 | 0.784 | 0.782 | 0.775 | 0.765 |
+
+    ln(e-/e+) at beta* = 0.7625 * ln(p/(1-p)) + 0.0178      R² = 0.999867
+
+**P2's shape is confirmed to R² = 0.9999** — the ratio is constant to 2.7% across
+a 7.3× range in log-odds, and the intercept is 0.018 against a predicted 0. So the
+rule is real and it is exactly the predicted one: **tilt until the log-ratio of
+the two error probabilities matches the prior log-odds** — up to a coefficient
+that is 0.76 here rather than 1.
+
+Note how *gentle* the optimal tilt is: β\*/β_c runs 0.016 → 0.114, so the tilt
+that helps is 1–10% of the tilt that destroys the device (§16's fold). Nothing
+about the optimum lives near β_c.
+
+### 17.2 The coefficient rises with Ω, and this data cannot say where it stops
+
+At p = 0.80, sweeping Ω:
+
+| Ω | 100 | 150 | 200 | 300 | 400 |
+|---|---|---|---|---|---|
+| β\* | 0.02259 | 0.01839 | 0.01546 | 0.01175 | 0.00946 |
+| `ln(e₋/e₊)` / `ln(p/(1−p))` | 0.644 | 0.711 | 0.781 | 0.844 | 0.879 |
+
+Monotone toward the predicted 1. **But the limit is not determined**, and the
+tempting move — fitting `1/Ω` because that is what P3 predicts — is the one to
+avoid:
+
+| assumed correction | extrapolated limit | R² |
+|---|---|---|
+| `1/Ω` | 0.947 | 0.973 |
+| `Ω^−0.75` | 1.004 | 0.985 |
+| `1/√Ω` | 1.120 | **0.992** |
+| `1/lnΩ` | 1.685 | **0.993** |
+| free power `c − aΩ^−b` | 1.342 | — |
+
+**The two forms that fit best both overshoot 1.** Quoting the `1/Ω` row alone
+would give "extrapolates to 0.947, confirming P2" from the *worst*-fitting ansatz
+of the five. Four times in Ω is not enough to resolve this, and the honest
+statement is that the coefficient is rising and 1 is inside the plausible range.
+
+P3 itself shows the same incompleteness directly: `β* ∝ Ω^−x` with x measured at
+**0.508 / 0.603 / 0.678 / 0.752** across consecutive Ω pairs — drifting toward the
+predicted 1 and nowhere near it yet.
+
+### 17.3 The careful refinement was worse than the crude argument
+
+**P1 is refuted.** It was derived *after* P2, as the more careful version keeping
+the log factors, and it fails badly — `p·h(e₊) / ((1−p)·h(e₋))` should be 1 and is:
+
+| p | 0.60 | 0.70 | 0.80 | 0.90 | 0.95 |
+|---|---|---|---|---|---|
+| P1 ratio | 1.21 | 1.48 | 1.90 | 2.80 | **4.05** |
+
+Not only wrong but systematically worse the more extreme the prior, while P2's
+ratio stays flat to 2.7% over the same range. The extra structure P1 added is
+structure that is not there. Worth recording: *a refinement that fits worse than
+the thing it refines is evidence against the refinement, not noise* — the same
+logic §5.1 used to reject the three-parameter freeze-out fit.
+
+**P4 is directionally right and quantitatively far off.** The deficit ratio at
+Ω = 200 measures 0.995 / 0.979 / 0.947 / 0.888 / 0.837 at p = 0.60 → 0.95 against
+the asymptotic `2√(p(1−p))` = 0.980 / 0.917 / 0.800 / 0.600 / 0.436. So the
+**realisable** gain from matching the tilt at accessible population is 0.5–16%,
+not the asymptotic 2–56%. It is a real gain and it is not a large one; anyone reading
+P4 as the payoff would overstate it by 3×.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

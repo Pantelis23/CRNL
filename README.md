@@ -320,6 +320,48 @@ python -m experiments.dissipation_cascade --quick
 python -m experiments.bit_cost --quick
 ```
 
+## Asymmetric landscapes, and the one design rule
+
+Every network above is symmetric under relabelling the symbols. Tilting the two
+autocatalytic branches by `β` — each reverse still `γ×` its own forward, so the
+cycle affinity stays `−3 ln γ` and the tilt costs no thermodynamic *force* — gives
+a second axis, and three results.
+
+There is a **fold at `β_c(γ)`** past which the network is monostable and answers X
+whatever it is shown. It collapses from 0.998 to 0.050 across γ = 0.05 → 0.45, so
+near the bifurcation a 5% rate mismatch destroys the device. The bias lives in the
+**saddle**, not the attractors: at strong drive the attractors do not visibly move
+at all while the basin boundary shifts by a third of the landscape width.
+
+For a **symmetric source, `β = 0` is optimal**, and the penalty for tilt *grows*
+with population — at `β = 0.95·β_c`, information retained falls from 50% at Ω=120
+to 3.7% at Ω=400. This is the one place in the project where more molecules
+reliably hurt.
+
+For a **biased source it is not**, which gives the project's first statement about
+how to *build* the chemistry rather than how it behaves:
+
+> Tilt until the log-ratio of the two error probabilities matches the prior
+> log-odds — `ln(e₋/e₊) ∝ ln(p/(1−p))`, measured at R² = 0.9999 with a
+> predicted-zero intercept of 0.018.
+
+The proportionality constant should be 1; it measures 0.76 at Ω=200 and rises to
+0.88 by Ω=400, but four times in Ω does not pin the limit and the best-fitting
+extrapolations overshoot 1 — so the *form* is confirmed and the *coefficient* is
+open. The optimal tilt is gentle (`β*/β_c` = 0.016–0.114) and the realisable gain
+is 0.5–16%, well below the asymptotic promise.
+
+Also here: a wall coefficient corrected after being carried to `γ > 0` with its
+gain scaled and its noise left behind, two predictions of mine that were wrong,
+and a harness bug that made a symmetric channel look asymmetric.
+[`FINDINGS.md`](FINDINGS.md) §15–§17.
+
+```bash
+python -m experiments.wall_coefficient_exact
+python -m experiments.asymmetric_landscape --part fold
+python -m experiments.biased_source
+```
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).

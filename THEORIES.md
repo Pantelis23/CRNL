@@ -434,14 +434,45 @@ they are clean. §12 was the one that did not.
   * mutual information falls monotonically in |beta| and **the penalty grows with
     Omega** -- the first place in this file where more molecules reliably hurt.
 
-  **Still open (Q4a): is the symmetric design still optimal for a BIASED source?**
-  §16 only shows beta = 0 maximises I for a 50/50 source, which is the easy case.
-  A source with prior p != 1/2 should want a matched tilt, and if it does, the
-  relation between the optimal beta and the prior is the first design rule this
-  project would have. Prediction to beat: the optimum is set by matching the two
-  barriers' *difference* to `ln(p/(1-p))/Omega`, which would make the optimal tilt
-  shrink like 1/Omega -- i.e. vanish in the very limit where restoration works
-  best.
+  ~~**Q4a: is the symmetric design still optimal for a BIASED source?**~~
+  **ANSWERED IN FORM -> §17. No -- and the rule is the predicted one.** beta* > 0
+  at every prior, and
+
+      ln(e-/e+) at beta*  =  0.7625 * ln(p/(1-p)) + 0.018      R^2 = 0.999867
+
+  i.e. **tilt until the log-ratio of the two error probabilities matches the
+  prior log-odds**, the ratio holding to 2.7% over a 7.3x range in log-odds with
+  a predicted-zero intercept measured at 0.018. That is the first statement in
+  this project about how to *build* the chemistry rather than how it behaves.
+  The optimal tilt is gentle: beta*/beta_c runs 0.016 -> 0.114, so the tilt that
+  helps is 1-10% of the tilt that destroys the device.
+
+  **Q4a-i, still open: is the coefficient 1?** It should be, and it is measured at
+  0.76 (Omega=200), rising 0.644 -> 0.879 across Omega = 100 -> 400. But four times
+  in Omega does not pin the limit -- extrapolations give 0.947 / 1.004 / 1.120 /
+  1.685 depending on whether the correction is assumed to go as 1/Omega,
+  Omega^-0.75, 1/sqrt(Omega) or 1/ln(Omega), **and the two best-fitting forms both
+  overshoot 1**. Quoting the 1/Omega row alone would "confirm" the prediction from
+  the worst-fitting ansatz of the five. Needs a larger Omega range, which means a
+  cheaper error probability than an exact CME solve.
+
+  **What was wrong in the prediction this entry used to carry.** It read: *"the
+  optimum is set by matching the two barriers' difference to ln(p/(1-p))/Omega,
+  which would make the optimal tilt shrink like 1/Omega."* The **matching
+  condition is right**; the **1/Omega is not reached** (the measured exponent of
+  `beta* ~ Omega^-x` is 0.51 / 0.60 / 0.68 / 0.75 across consecutive Omega, still
+  climbing); and the barrier difference it names is the wrong K -- attractor-to-
+  saddle barriers give `K = 0.874` at gamma = 0.35, which predicts a slope 1.9x
+  off, because the errors here start from a *biased input*, not from the
+  attractor. Those are different barriers and the entry conflated them.
+
+  **A refinement that made things worse (recorded, because it is a pattern).**
+  A more careful derivation keeping the log factors gives
+  `p*h(e+) = (1-p)*h(e-)` -- equal deficit contributions from the two symbols.
+  It is **refuted**: the ratio runs 1.21 / 1.48 / 1.90 / 2.80 / 4.05 across
+  p = 0.60 -> 0.95, systematically worse the more extreme the prior, while the
+  cruder form it was supposed to improve stays flat to 2.7%. See §5.1's
+  three-parameter fit for the same lesson.
 
   **Still open (Q4b): what does the tilt cost in dissipation?** The affinity is
   beta-independent by construction, but the EP *rate* is force times flux and the

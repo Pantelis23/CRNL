@@ -2072,6 +2072,92 @@ competition: *restoration does not run until the fuel is gone and then stop — 
 degrades continuously as the fuel goes, and the channel finishes it early.*
 
 
+---
+
+## 21. What a simulation may throw away — `crnl/approximations.py`, `approximation_hierarchy.py`
+
+CRNL's method is a two-point version of this question — ODE against exact SSA, and
+the gap is the subject. This fills in the levels between, so "what can a simulation
+discard and still get restoration right?" becomes a measurement.
+
+The observable is the one with an exact answer: `P(error)` from a start biased by
+ε, as a CME splitting probability with **no sampling error at all**. Every
+approximate level is scored against that reference rather than against each other.
+
+**Why this is not a numerics exercise.** Kurtz's theorem says the density process
+converges to the mass-action ODE on finite time intervals, and §5.1 leans on it to
+prove `Hc = 0`. It is true, and it does **not** license discarding the molecules for
+this observable: restoration lives in tails and long times, where the convergence is
+not uniform. The error probability vanishes in the limit while being nonzero at
+every finite Ω. **A limit theorem cannot tell you what your simulation may throw
+away.**
+
+### 21.1 The error exponent, by level
+
+`c = d(−ln p)/dΩ` fitted over Ω = 40 → 140, γ = 0.30, 6000 trials per cell:
+
+| ε/δ* | CME (exact) | SSA | CLE | τ=0.05 | τ=0.3 |
+|---|---|---|---|---|---|
+| 0.25 | 0.01503 | 0.01500 | 0.01543 | 0.01612 | 0.01689 |
+| 0.40 | 0.03587 | 0.03606 | 0.03673 | 0.03607 | 0.03452 |
+| **ODE** | **p = 0** | **p = 0** | **p = 0** | **p = 0** | **p = 0** |
+
+**P1 confirmed. The ODE fails categorically, not quantitatively.** It reports
+exactly 0 in all sixteen cells where the truth ranges over 1.5e-3 to 1.6e-1. There
+is no refinement parameter that improves it — it is not an inaccurate number, it is
+the wrong kind of number.
+
+**P2 confirmed. The SSA is the exact chain.** Exponents agree with the CME to 0.2%
+and 0.5%. The per-cell ratios sat 1–3% high across six cells, which is a 1-in-64
+sign pattern, so it was rechecked at 60,000 trials: **ratio 1.0085 (z = +0.89) and
+1.0100 (z = +0.81)** — sampling noise, not bias. The anchor holds.
+
+### 21.2 The prediction that was wrong, and in sign
+
+P3 argued the CLE should **overestimate** the failure probability: it is the
+quadratic truncation of the jump Hamiltonian `Σ a_j(e^{p·S_j} − 1)`, and for a 1-D
+birth–death chain the exact barrier `∫ln(a₊/a₋)` exceeds the diffusion
+approximation's `∫2(a₊−a₋)/(a₊+a₋)`, since `ln r > 2(r−1)/(r+1)`.
+
+**It underestimates it.** The CLE exponent is **+2.7% and +2.4%** — a *larger*
+barrier, hence a smaller error probability. The 1-D intuition does not survive the
+move to two dimensions, and the sign of the correction is not something I could
+read off the scalar case.
+
+The magnitude prediction fares no better: I expected the discrepancy to **grow with
+the barrier**, and it is flat (+2.7% at ε/δ* = 0.25, +2.4% at 0.40). Two ε values
+cannot establish flatness either — recorded as unsupported rather than refuted.
+
+**P4 partly confirmed.** τ-leaping degrades monotonically with the window at
+ε/δ* = 0.25 (0.01500 → 0.01612 → 0.01689) and does not at 0.40 (0.03607 → 0.03452,
+moving the other way). One ε in each direction is not an interpolation law.
+
+### 21.3 The finding all four predictions missed: it is a cliff, not a slope
+
+Every level that keeps **any** noise at all gets the restoration exponent right to
+2–12%. The one level that keeps **none** is infinitely wrong. There is no graded
+degradation in between — the ODE is not "the coarsest member of a hierarchy", it is
+categorically apart, and CLE, τ-leaping and the exact SSA are all in one class.
+
+Put as an answer to the question this section exists to ask: **you can discard the
+discreteness (CLE keeps real-valued counts), the exact jump timing (τ-leaping fires
+in windows), and the correct jump distribution (Gaussian instead of Poisson) — and
+still recover the restoration exponent to a few percent. What you cannot discard is
+having noise at all.**
+
+The corollary is about cost. The exponent — the physics of §1–§2, the thing the
+whole project is about — is reproduced by a cheap SDE at O(1/dt) per unit time. The
+expensive exactness (O(Ω) events for the SSA, O(Ω²) memory for the CME) buys the
+*prefactor* and the individual probabilities. So a simulation that only needs to
+know **how fast reliability grows with population** can be cheap; one that needs to
+know **the actual failure rate** cannot.
+
+**Scope, stated plainly.** One network, one observable, γ = 0.30, Ω ≤ 140, two ε.
+Whether the cliff is a general feature of restoring networks or a property of AM is
+untested, and the 2.5% CLE offset is small enough that a second network could
+plausibly move it either way.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

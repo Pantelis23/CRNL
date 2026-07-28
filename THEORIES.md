@@ -346,6 +346,42 @@ budget property and the whole two-ceiling framing needs rewording.
 
 ---
 
+
+**T11: coarse-graining restoration is a cliff, not a slope.** **MEASURED -> §21.**
+Against an exact CME reference, every level that keeps ANY noise recovers the
+restoration error exponent to 2-12% -- the chemical Langevin equation (real-valued
+counts, Gaussian noise), tau-leaping (windowed Poisson firings) and the exact SSA
+are all in one class. The ODE, which keeps none, reports p = 0 in all sixteen cells
+where the truth spans 1.5e-3 to 1.6e-1, and has no refinement parameter that
+improves it.
+
+**So: the discreteness, the exact jump timing and the correct jump distribution are
+all discardable for this observable; having noise at all is not.** The corollary is
+about cost -- a cheap SDE gets the exponent, and the expensive exactness buys the
+prefactor and the individual probabilities. A simulation that needs to know how
+fast reliability grows with population can be cheap; one that needs the actual
+failure rate cannot.
+
+**Why this is not a numerics result.** Kurtz's theorem licenses the ODE limit on
+finite time intervals and §5.1 uses it. It is true and it does not cover this
+observable, because restoration lives in tails where the convergence is not
+uniform. **A limit theorem cannot tell you what your simulation may throw away.**
+
+**T11a, open: is the cliff a property of restoration or of AM?** One network, one
+observable, gamma = 0.30, Omega <= 140, two eps. **How to kill:** run the same
+ladder on `n_winner_reversible` at n >= 3, or on `am_asymmetric` with a tilt. If
+the CLE's exponent error grows past a few percent there, the cliff is an AM
+property and §21's headline needs narrowing.
+
+**T11b, open: what sets the CLE's sign?** I predicted the CLE would OVERestimate
+the failure probability from the 1-D birth-death comparison
+(`ln r > 2(r-1)/(r+1)`), and it underestimates it by 2.5%. The scalar intuition
+does not survive two dimensions and I cannot currently derive the sign. A
+2-D Hamiltonian calculation would settle it, and would say whether 2.5% is
+universal or accidental.
+
+---
+
 ## 2. Open questions with no theory yet
 
 - **Q1. Where does the efficiency frontier end?** §11.1's marginal cost rises 77×

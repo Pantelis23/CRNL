@@ -2015,6 +2015,63 @@ which one binds is decided by the fuel concentration rather than by either
 mechanism on its own.
 
 
+### 20.3 Which ceiling binds for a cascade — `cascade_fuel_vs_noise.py`
+
+§20.1 gives a fuel-limited *lifetime*; §12.1 gives a noise-limited *depth*. They
+are different units and had never been put side by side. Both arms run through one
+harness here — same channel, same stage length, same clock — differing only in
+whether the drive can run out. The channel kicks the decision coordinate by moving
+molecules between X and Y **only**, so `n_X+n_Y`, `n_B` and the tank are untouched;
+not resetting `n_B` is deliberate, since a reset would hand the chemistry a fresh
+blank pool it did not earn.
+
+**The stage has to be measured in relaxation times, not absolute time.** Fixing
+`t_stage = 8` made the first run useless: at fuel concentration 10 the whole tank
+lasts ≈7.5 time units (§20.1), so the cascade died at depth 1. The relaxation time
+is `1/(λ·f₀)`, which itself shrinks as the tank gets richer, and holding the stage
+at a fixed multiple of it is what makes depths comparable across budgets.
+
+Median depth at which the bit is lost, Ω = 40, γ₀ = 0.30, stage = 2 relaxation times:
+
+| σ_ch/δ* | 0.03 | 0.08 | 0.15 | 0.22 | 0.30 | 0.40 |
+|---|---|---|---|---|---|---|
+| control (drive held forever) | **>400** | **>317** | 60 | 21 | 7 | 7 |
+| fuel, φ = 50 | 11 | 10 | 8 | 7 | 5 | 5 |
+| fuel, φ = 150 | 23 | 23 | 14 | 12 | 8.5 | 6 |
+
+(The two control cells marked **>** are censored — 62% and 40% of trials reached the
+depth cap — so they are lower bounds, not measurements.)
+
+**P2 and P3 confirmed.** The control depth is unbounded as the channel quietens
+while the fueled depth is not, so the binding ceiling changes hands: at σ/δ* = 0.40
+the two arms agree within a factor 1.2 (noise binds both), and at σ/δ* = 0.03 the
+fueled cascade dies **36× earlier** than the control. **Below the crossover a
+cascade dies of exhaustion** — a failure mode nothing in §1–§19 could produce.
+
+**P1 refuted, and the reason is the interesting part.** I predicted the fuel-limited
+depth would be roughly independent of the channel noise, since the tank is drained
+by the restoring chemistry rather than by the channel. It falls **2.2×** (φ=50) and
+**3.8×** (φ=150) across the σ range. **The two ceilings are not independent and do
+not combine as a `min()`.** Spent fuel raises `γ_eff`, which shrinks both `δ*` and
+`κ(γ)` — so a half-empty tank makes the *same* channel noise bite harder. Exhaustion
+and noise compound: the drive degrading is itself what lets the channel win.
+
+**P4's premise was wrong, and its conclusion is unsettled.** P4 assumed
+`D_fuel ∝ Φ`, which would make the crossover move only as `1/√(ln Φ)` — a
+logarithmically weak lever. Measured, `D_fuel` grows **sub-linearly**: 11 → 23 for a
+3× budget, i.e. `∝ Φ^0.67`. The crossover does move in the predicted direction (more
+fuel ⇒ noise binds sooner: above σ/δ* = 0.40 at φ=50, down to ≈0.26 at φ=150), but
+that is a ≥35% shift where the log estimate said ~10%. **Two fuel concentrations and
+a six-point σ grid cannot pin the scaling**, and with the ceilings compounding there
+is no reason to expect the clean form P4 assumed. Recorded as unsettled rather than
+fitted.
+
+**What this settles for T10b-ii.** A cascade has two ways to die and the fuel
+concentration decides which. But the honest headline is the coupling, not the
+competition: *restoration does not run until the fuel is gone and then stop — it
+degrades continuously as the fuel goes, and the channel finishes it early.*
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

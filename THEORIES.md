@@ -323,11 +323,26 @@ R^2 = 0.969 and a saturating `c - a*Omega^-b` fits comparably at `c = 1.43 +- 0.
 Six times in Omega cannot separate them -- the same wall §17.2 hit, and the same
 refusal to quote the flattering one. Needs a longer lever.
 
-**T10b-ii, open: which ceiling binds for a CASCADE?** §20 measures a lifetime for a
-single held bit. §12.1's ceiling is a depth. Converting between them needs the fuel
-cost per restoration stage, which §9's net-firing count already supplies but which
-has not been put together with a fuel budget. That is the measurement that would
-say whether a deep cascade dies of exhaustion or of noise first.
+~~**T10b-ii: which ceiling binds for a CASCADE?**~~ **MEASURED -> §20.3, and the
+premise of the question was wrong.** Both arms through one harness: at
+sigma_ch/delta* = 0.40 they agree within 1.2x (noise binds both) and at 0.03 the
+fueled cascade dies 36x earlier (exhaustion binds). So a cascade does have two ways
+to die and the fuel concentration decides which.
+
+**But they do not combine as a min().** The fuel-limited depth was predicted to be
+independent of the channel noise and instead falls 2.2x-3.8x across the sigma
+range: spent fuel raises `gamma_eff`, which shrinks `delta*` AND `kappa(gamma)`, so
+a half-empty tank makes the same channel noise bite harder. **Exhaustion and noise
+compound.** The right picture is not "restoration runs until the fuel is gone and
+then stops" but "restoration degrades continuously as the fuel goes, and the
+channel finishes it early."
+
+**T10b-iii, open: how does D_fuel scale with the budget?** Measured sub-linear
+(11 -> 23 for a 3x budget, ~Phi^0.67) where the crossover argument assumed linear.
+Two fuel concentrations cannot pin an exponent, and with the ceilings compounding
+there is no reason to expect a clean power law at all. **How to kill:** four or more
+budgets at a fixed quiet channel; if the exponent drifts with sigma, D_fuel is not a
+budget property and the whole two-ceiling framing needs rewording.
 
 ---
 

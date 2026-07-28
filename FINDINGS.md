@@ -2180,11 +2180,33 @@ rejecting that sweep — moved the CLE/CME ratio from 0.855 to 0.967 at Ω = 45.
 because the minority species sits near zero, which is exactly where the restoration
 observable lives.
 
-**What this retracts.** The claim in §21.2 that the CLE's exponent is *systematically*
-+2.5%, and §21.4's 5.3%, are **withdrawn as measurements**: both are smaller than the
-CLE's own discretization and boundary-policy scatter, so neither establishes a bias.
-The refutation of my P3 (that the CLE would *over*estimate the failure probability)
-also loses its force — the sign it was refuted on is not resolved either.
+**Correction to this correction — the reason above is wrong.** Both symptoms were
+themselves measured at 4,000 trials, where the standard error on p is ~5%, so the
+"11% drift" was ~2σ. Re-run at **40,000 trials** with the batched integrator, the
+CLE is *converged and correct*:
+
+| n=3, Ω=45 | dt=0.02 | 0.01 | 0.005 | 0.002 | 0.001 |
+|---|---|---|---|---|---|
+| CLE/CME | 0.9916 | 1.0005 | 0.9970 | 1.0271 | 0.9998 |
+| z vs exact | −0.58 | +0.04 | −0.21 | +1.85 | −0.01 |
+
+No dt dependence, and agreement with the exact reference at every step size. So the
+CLE arm is **not** unconverged — the earlier scatter was sampling noise, and this
+subsection's first draft withdrew the right numbers for the wrong reason.
+
+**What this retracts, on the corrected grounds.** §21.2's +2.5% and §21.4's 5.3% are
+**withdrawn as sampling noise**, not as discretization artifacts. Re-measured at
+40,000 trials the n=2 exponent ratio is **0.980** (ε/δ*=0.25) and **1.001** (0.40),
+against the 6,000-trial run's 1.027 and 1.024 — the sign itself flipped. The
+refutation of my P3 goes with them: there is no established CLE exponent bias at
+either alphabet size, so there is no sign to have been wrong about.
+
+**One thing that did survive, flagged not claimed.** Across all eight n=2 cells at
+40,000 trials the CLE sits *above* the exact p — ratios 1.018 to 1.045, every z
+positive, combining to roughly 3σ for a **~+3% uniform excess**. A uniform factor on
+p is a *prefactor* effect and would not touch the exponent, which is consistent with
+the CLE being the correct diffusion limit with a slightly wrong amplitude. It is one
+step size and ~3σ; it is recorded as a hint, not a result.
 
 **What survives untouched.** §21.3's cliff, which is the section's actual result. It
 rests on a contrast between *exactly zero* and *within ~10%*, and a 10% wobble in the

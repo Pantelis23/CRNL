@@ -381,11 +381,20 @@ n = 3 with the statistics of the n = 2 one (the cost is the CME at larger Omega,
 C(Omega+3,3) states), or n = 4 where gamma_c = 0.068 makes the landscape shallower
 and any breakdown should show sooner.
 
-**T11b, WITHDRAWN as posed -> §21.3a.** The CLE's exponent deviation (+2.5% at
-n = 2, 5.3% at n = 3) turns out to be smaller than its own dt-convergence and
-negativity-policy scatter (~10%), so there is no established sign to explain. The
-question only becomes askable again with a CLE integrator that is converged --
-smaller dt, or a boundary-respecting scheme. What the original entry said:
+**T11b, WITHDRAWN as posed -> §21.3a.** At 40,000 trials the CLE's exponent matches
+exact (ratios 0.980 and 1.001 at n = 2; per-cell agreement within 2 sigma at every
+dt at n = 3), so the +2.5% and 5.3% deviations were sampling noise and there is no
+sign to explain. Note the first draft of this withdrawal blamed dt-convergence,
+which was itself a 4,000-trial artifact -- the CLE is converged AND correct.
+
+**T11b-i, the residue worth keeping:** across all eight n = 2 cells the CLE sits
+above the exact p (1.018 to 1.045, every z positive, ~3 sigma combined for a +3%
+uniform excess). A uniform factor on p is a PREFACTOR effect and leaves the
+exponent alone -- consistent with the CLE being the right diffusion limit with a
+slightly wrong amplitude, which is what §15's saddle-curvature agreement would
+predict. One step size and 3 sigma. **How to kill:** two more step sizes at 100k
+trials; if the excess is dt-dependent it is discretization, if it is flat it is the
+Gaussian-noise prefactor. What the original entry said:
 
 **~~T11b, open: what sets the CLE's sign?~~** I predicted the CLE would OVERestimate
 the failure probability from the 1-D birth-death comparison

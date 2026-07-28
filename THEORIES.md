@@ -381,7 +381,13 @@ n = 3 with the statistics of the n = 2 one (the cost is the CME at larger Omega,
 C(Omega+3,3) states), or n = 4 where gamma_c = 0.068 makes the landscape shallower
 and any breakdown should show sooner.
 
-**T11b, open: what sets the CLE's sign?** I predicted the CLE would OVERestimate
+**T11b, WITHDRAWN as posed -> §21.3a.** The CLE's exponent deviation (+2.5% at
+n = 2, 5.3% at n = 3) turns out to be smaller than its own dt-convergence and
+negativity-policy scatter (~10%), so there is no established sign to explain. The
+question only becomes askable again with a CLE integrator that is converged --
+smaller dt, or a boundary-respecting scheme. What the original entry said:
+
+**~~T11b, open: what sets the CLE's sign?~~** I predicted the CLE would OVERestimate
 the failure probability from the 1-D birth-death comparison
 (`ln r > 2(r-1)/(r+1)`), and it underestimates it by 2.5%. The scalar intuition
 does not survive two dimensions and I cannot currently derive the sign. A

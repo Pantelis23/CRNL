@@ -34,7 +34,7 @@ import time
 
 import numpy as np
 
-from crnl.approximations import cle_run, tau_leap_run
+from crnl.approximations import run_batch
 from crnl.cme import splitting_probability
 from crnl.deterministic import integrate
 from crnl.networks.am_reversible import reverse_pairing
@@ -120,18 +120,33 @@ def p_ode(n, gamma, omega, n0):
     return 0.0 if int(np.argmax(traj.final()[:n])) == 0 else 1.0
 
 
-def _sampled(runner, n, gamma, omega, n0, thr, trials, seed, **kw):
+def _absorbing_batch(n_committed, thr):
+    """Batched stop predicate: (T, S) -> (T,) bool."""
+    def f(m):
+        v = np.sort(m[:, :n_committed], axis=1)
+        return (v[:, -1] - v[:, -2]) >= thr
+    return f
+
+
+def _sampled(poisson, n, gamma, omega, n0, thr, trials, seed, step):
+    """CLE (poisson=False) or tau-leap (True), vectorised over trajectories.
+
+    The per-trajectory loop that FINDINGS 21 used caps the statistics at a few
+    thousand, and 21.4's whole limitation was that the exact-SSA anchor's own
+    scatter (4.0%) was as large as the effect under test. Advancing every
+    trajectory on one clock is what buys the samples back.
+    """
     comp = compile_network(n_winner_reversible(n, gamma), float(omega))
     rng = np.random.default_rng(seed)
-    stop = _absorbing(n, thr)
-    wrong = ok = 0
-    for _ in range(trials):
-        r = runner(comp, n0, rng, stop=stop, t_max=6000.0, **kw)
-        if r.hit_budget:
-            continue
-        ok += 1
-        wrong += int(np.argmax(r.n_final[:n]) != 0)
-    return (wrong / ok if ok else float("nan")), ok
+    out = run_batch(comp, n0, rng, step=step, stop=_absorbing_batch(n, thr),
+                    trials=trials, t_max=6000.0, poisson=poisson)
+    fin = out["n"]
+    done = _absorbing_batch(n, thr)(fin)
+    ok = int(done.sum())
+    if ok == 0:
+        return float("nan"), 0
+    wrong = int((np.argmax(fin[done][:, :n], axis=1) != 0).sum())
+    return wrong / ok, ok
 
 
 def p_ssa(n, gamma, omega, n0, thr, trials, seed):
@@ -188,13 +203,13 @@ def main() -> None:
             rec = {"n": n, "gamma": gamma, "omega": om, "eps_frac": ef,
                    "realised_margin": realised, "p_cme": pc, "p_ode": po,
                    "p_ssa": ps}
-            pl, _ = _sampled(cle_run, n, gamma, om, n0, thr, args.trials,
-                             args.seed + 1000 + om, dt=args.dt)
+            pl, _ = _sampled(False, n, gamma, om, n0, thr, args.trials,
+                             args.seed + 1000 + om, args.dt)
             line += f" | {pl:>12.3e} {pl/pc if pc > 0 else float('nan'):>7.3f}"
             rec["p_cle"] = pl
             for tau in args.taus:
-                pt, _ = _sampled(tau_leap_run, n, gamma, om, n0, thr, args.trials,
-                                 args.seed + 2000 + om, tau=tau)
+                pt, _ = _sampled(True, n, gamma, om, n0, thr, args.trials,
+                                 args.seed + 2000 + om, tau)
                 line += f" | {pt:>11.3e} {pt/pc if pc > 0 else float('nan'):>7.3f}"
                 rec[f"p_tau_{tau}"] = pt
             print(line)

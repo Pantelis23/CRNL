@@ -50,7 +50,8 @@ import numpy as np
 
 from .vectorized import Compiled, propensities_fast
 
-__all__ = ["ApproxResult", "cle_run", "tau_leap_run", "MAX_RETRY"]
+__all__ = ["ApproxResult", "cle_run", "tau_leap_run", "MAX_RETRY",
+           "propensities_batch", "run_batch"]
 
 #: Step halvings allowed before a step is abandoned. Six is a 64x reduction.
 MAX_RETRY = 6
@@ -127,3 +128,61 @@ def tau_leap_run(compiled: Compiled, n0, rng, *, tau: float, stop=None,
     """
     return _run(compiled, n0, rng, step=tau, stop=stop, t_max=t_max,
                 max_steps=max_steps, poisson=True)
+
+
+def propensities_batch(compiled: Compiled, n: np.ndarray) -> np.ndarray:
+    """Propensities for a BATCH of states: (T, n_species) -> (T, n_reactions).
+
+    `vectorized.propensities_fast` is vectorised over reactions, one state at a
+    time, which is right for an SSA that must take jumps in sequence. The
+    approximate integrators advance every trajectory on the same clock, so they
+    can be vectorised over TRAJECTORIES instead -- and that is the difference
+    between 8,000 samples and 128,000. Same falling-factorial construction, same
+    coefficient conventions; `test_batch_matches_reference` pins them together.
+    """
+    n = np.asarray(n, dtype=np.float64)
+    counts = n[:, compiled.react_sp]                       # (T, entries)
+    coeffs = compiled.react_coeff
+    num = np.ones_like(counts)
+    for d in range(compiled.kmax):
+        num *= np.where(coeffs > d, counts - d, 1.0)
+    combs = num / compiled.coeff_fact
+    a = np.repeat(compiled.cs[None, :], n.shape[0], axis=0)
+    np.multiply.at(a, (slice(None), compiled.react_rx), combs)
+    return np.clip(a, 0.0, None)
+
+
+def run_batch(compiled: Compiled, n0, rng, *, step: float, stop, trials: int,
+              t_max: float, max_steps: int = 200_000, poisson: bool) -> dict:
+    """Advance `trials` trajectories together until each one stops.
+
+    Negativity is handled by REJECTING that trajectory's step for this sweep (it
+    simply does not advance) rather than clipping a species at zero. Conservation
+    stays exact because every applied step is a whole combination of
+    stoichiometry columns. `rejected` counts how often that happened; a run that
+    rejects constantly is reporting that its step is too big, not a result.
+    """
+    S = compiled.S.astype(float)
+    n = np.tile(np.asarray(n0, dtype=float), (trials, 1))
+    live = np.ones(trials, dtype=bool)
+    t = np.zeros(trials)
+    rejected = 0
+    for _ in range(max_steps):
+        if not live.any():
+            break
+        idx = np.where(live)[0]
+        a = propensities_batch(compiled, n[idx])
+        mean = a * step
+        if poisson:
+            fire = rng.poisson(mean)
+        else:
+            fire = mean + np.sqrt(mean) * rng.standard_normal(mean.shape)
+        cand = n[idx] + fire @ S.T
+        ok = (cand >= 0.0).all(axis=1)
+        rejected += int((~ok).sum())
+        upd = idx[ok]
+        n[upd] = cand[ok]
+        t[upd] += step
+        done = stop(n[idx]) | (t[idx] >= t_max)
+        live[idx[done]] = False
+    return {"n": n, "t": t, "unfinished": int(live.sum()), "rejected": rejected}

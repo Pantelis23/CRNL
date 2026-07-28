@@ -2158,6 +2158,48 @@ untested, and the 2.5% CLE offset is small enough that a second network could
 plausibly move it either way.
 
 
+### 21.3a Correction: the CLE arm is not converged, and its small deviations do not stand
+
+Pushing the statistics (a trajectory-batched integrator, `approximations.run_batch`,
+which reproduces the reference propensities to 0.0) exposed something the original
+run could not see: **the CLE's answer depends on its own step size and on its
+negativity policy at the ~10% level** — larger than the deviations §21.1 and §21.4
+reported for it.
+
+Two independent symptoms, both at n = 3, ε/δ = 0.25:
+
+| | Ω = 45 | Ω = 60 |
+|---|---|---|
+| p at dt = 0.02 | 0.0985 | 0.0953 |
+| p at dt = 0.005 | 0.1092 | 0.0945 |
+| p at dt = 0.001 | 0.1055 | **0.0848** |
+
+and switching the negativity policy alone — halving the step and retrying, versus
+rejecting that sweep — moved the CLE/CME ratio from 0.855 to 0.967 at Ω = 45. Euler
+–Maruyama drives the state negative often here (thousands of rejections per run),
+because the minority species sits near zero, which is exactly where the restoration
+observable lives.
+
+**What this retracts.** The claim in §21.2 that the CLE's exponent is *systematically*
++2.5%, and §21.4's 5.3%, are **withdrawn as measurements**: both are smaller than the
+CLE's own discretization and boundary-policy scatter, so neither establishes a bias.
+The refutation of my P3 (that the CLE would *over*estimate the failure probability)
+also loses its force — the sign it was refuted on is not resolved either.
+
+**What survives untouched.** §21.3's cliff, which is the section's actual result. It
+rests on a contrast between *exactly zero* and *within ~10%*, and a 10% wobble in the
+CLE cannot bridge a categorical failure. The ODE reports 0 in every cell of both
+networks; every level that keeps noise lands within about ten percent of exact. That
+statement does not depend on resolving the CLE at the percent level. §21.2's P1 and
+P2 are also unaffected — P2 was verified at 60,000 trials against an exact reference,
+and the SSA has no step size to converge.
+
+**The lesson, which is the familiar one.** The comparison was set up to measure
+differences between approximation levels and was never checked for convergence
+*within* a level. An approximation's own numerical parameter is a second axis, and
+this file's standing rule — constancy along the axis you happened to sweep is not
+constancy — applies to dt exactly as it applies to Ω.
+
 ### 21.4 The cliff survives a bigger alphabet — `approximation_hierarchy_nwinner.py`
 
 T11a's kill test: the same ladder on `n_winner_reversible` at n = 3, at the same

@@ -2158,6 +2158,46 @@ untested, and the 2.5% CLE offset is small enough that a second network could
 plausibly move it either way.
 
 
+### 21.4 The cliff survives a bigger alphabet — `approximation_hierarchy_nwinner.py`
+
+T11a's kill test: the same ladder on `n_winner_reversible` at n = 3, at the same
+fraction of the bifurcation (γ = 0.6·γ_c = 0.121, γ_c(3) = 0.202) so the two
+networks are asked the same question.
+
+| Ω | ε realised | CME (exact) | ODE | SSA | CLE | τ=0.05 |
+|---|---|---|---|---|---|---|
+| 45 | 0.2222 | 1.065e-1 | **0** | 1.111e-1 | 9.106e-2 | 1.111e-1 |
+| 60 | 0.2167 | 9.160e-2 | **0** | 8.687e-2 | 8.066e-2 | 8.687e-2 |
+| 80 | 0.2250 | 4.120e-2 | **0** | 4.100e-2 | 4.050e-2 | 3.975e-2 |
+| 110 | 0.2273 | 2.094e-2 | **0** | 2.262e-2 | 1.937e-2 | 1.988e-2 |
+
+`κ = d(−ln p)/d(ε²Ω)`: **0.4909** (CME) / 0.4714 (SSA) / 0.4650 (CLE) / 0.5098 (τ),
+i.e. ratios **0.960 / 0.947 / 1.038**.
+
+**The cliff survives.** The ODE reports exactly 0 in all four cells where the truth
+spans 2.1e-2 to 1.1e-1, and every level that keeps noise lands within ~5% of exact.
+§21.3's statement is not an AM artifact.
+
+**What this run cannot resolve, and it matters.** The SSA is the exact chain, so
+its 4.0% deviation is this measurement's **noise floor**, not a bias — and the
+CLE's 5.3% sits barely outside it. At n = 2 the noise floor was 0.2–0.5% and the
+CLE's 2.5% was cleanly resolved; here it is not. **So whether the CLE's error grows
+with alphabet size is untested by this run**, and quoting 5.3% against 2.5% as a
+trend would be reading a difference smaller than the anchor's own scatter.
+
+**Two setup problems, both caught by the reference disagreeing with itself.**
+`cme.first_passage` scores its favoured set as `n[0] > n[1]`, which is right at
+n = 2 and silently wrong above it — a state where X3 has won can satisfy it —
+so `cme.splitting_probability` now takes the predicate (it reproduces
+`first_passage` to 0.00e+00 on AM). And the first integer construction let the
+realised champion-minus-rival margin overshoot by up to n−1 counts, which made the
+exact CME error probability **non-monotone in Ω** (0.115 → 0.064 → 0.092 → 0.026).
+A first-passage probability cannot do that, which is how it was caught. The margin
+is now pinned exactly, Ω = 30 is excluded (the lattice there is 22% off target),
+and the fit is against `ε²Ω` rather than Ω so the residual lattice drift is
+absorbed rather than mistaken for physics.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

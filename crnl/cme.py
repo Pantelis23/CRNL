@@ -277,3 +277,45 @@ def first_passage(
     return {"mean_time": mean_time, "split": float(h[r]),
             "net_reaction_firings": net_firings, "boundary": boundary,
             "valid": valid, "residual": residual}
+
+
+def splitting_probability(net: ReactionNetwork, total: int, omega: float,
+                          start, is_absorbing, is_favoured) -> dict:
+    """P(absorbed in the favoured set | start), for an arbitrary favoured set.
+
+    `first_passage` hardcodes its favoured set as `n[0] > n[1]`, which is exactly
+    right for two committed species and silently WRONG for more: in a 3-winner
+    race a state where X3 has won can still satisfy n_X1 > n_X2 and would be
+    scored as a success. This takes the predicate instead, so the caller says what
+    winning means.
+
+    Solves the same harmonic system on the transient states,
+    `Q_tt h = -Q_ta f`, and returns `valid=False` with the residual rather than a
+    plausible-looking number when the solve is untrustworthy.
+    """
+    states, index = enumerate_states(net.n_species, total)
+    absorbing = np.array([bool(is_absorbing(s)) for s in states])
+    if not absorbing.any():
+        raise ValueError("no absorbing states: splitting probability undefined")
+    if absorbing.all():
+        raise ValueError("every state is absorbing: nothing to solve")
+
+    Q = generator(net, total, omega)
+    trans = np.where(~absorbing)[0]
+    tmap = {int(i): r for r, i in enumerate(trans)}
+    Qtt = Q[trans][:, trans].tocsr()
+    fav = np.array([bool(is_favoured(s)) for s in states])[absorbing].astype(float)
+    Qta = Q[trans][:, np.where(absorbing)[0]].tocsr()
+    rhs = -(Qta @ fav)
+    h = spla.spsolve(Qtt, rhs)
+    residual = float(np.linalg.norm(Qtt @ h - rhs) / max(np.linalg.norm(rhs), 1e-300))
+
+    si = index[tuple(np.asarray(start, dtype=np.int64))]
+    if absorbing[si]:
+        return {"split": float(fav[absorbing[:si + 1].sum() - 1]),
+                "valid": True, "residual": 0.0}
+    val = float(h[tmap[si]])
+    valid = bool(np.isfinite(val) and -1e-9 <= val <= 1 + 1e-9
+                 and residual <= RESIDUAL_MAX)
+    return {"split": min(max(val, 0.0), 1.0), "valid": valid,
+            "residual": residual}

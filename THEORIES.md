@@ -367,11 +367,19 @@ finite time intervals and §5.1 uses it. It is true and it does not cover this
 observable, because restoration lives in tails where the convergence is not
 uniform. **A limit theorem cannot tell you what your simulation may throw away.**
 
-**T11a, open: is the cliff a property of restoration or of AM?** One network, one
-observable, gamma = 0.30, Omega <= 140, two eps. **How to kill:** run the same
-ladder on `n_winner_reversible` at n >= 3, or on `am_asymmetric` with a tilt. If
-the CLE's exponent error grows past a few percent there, the cliff is an AM
-property and §21's headline needs narrowing.
+~~**T11a: is the cliff a property of restoration or of AM?**~~ **RUN AT n = 3 ->
+§21.4. The cliff survives.** The ODE reports exactly 0 in all four cells where the
+truth spans 2.1e-2 to 1.1e-1, and every noisy level lands within ~5% of exact
+(kappa ratios 0.960 SSA / 0.947 CLE / 1.038 tau). §21.3 is not an AM artifact.
+
+**T11a-i, still open: does the CLE's error GROW with alphabet size?** Not resolved.
+The SSA is the exact chain, so its 4.0% deviation is the noise floor of that run,
+and the CLE's 5.3% sits barely outside it -- where at n = 2 the floor was 0.2-0.5%
+and the CLE's 2.5% was clean. Reading 5.3% against 2.5% as a trend would be reading
+a difference smaller than the anchor's own scatter. **How to kill:** the same run at
+n = 3 with the statistics of the n = 2 one (the cost is the CME at larger Omega,
+C(Omega+3,3) states), or n = 4 where gamma_c = 0.068 makes the landscape shallower
+and any breakdown should show sooner.
 
 **T11b, open: what sets the CLE's sign?** I predicted the CLE would OVERestimate
 the failure probability from the 1-D birth-death comparison

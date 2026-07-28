@@ -286,12 +286,48 @@ relic abundance and is unmeasured. **How to kill T10:** show the relic collapses
 onto a function of `s_c` (the pitchfork crossing) alone, which would make the
 cooling schedule a reparametrised deadline after all.
 
-**T10b, still missing: the drive never depletes.** `gamma` is an infinite
-reservoir -- set it and it holds forever, at no cost. So §9 measures what
-restoration dissipates but nothing ever runs down, and §12.1's depth ceiling is
-purely noise-limited with no thermodynamic competitor. A depth-D cascade costs
-D x dS; with finite fuel the landscape would flatten as the fuel is spent, giving
-a second ceiling. Unbuilt.
+~~**T10b: the drive never depletes.**~~ **BUILT AND MEASURED -> §20.** The drive
+is now a fuel species: `F` is consumed and `W` produced by every forward step, so
+`gamma_eff = gamma_inf * w/f` RISES as the tank empties -- the mirror of §19's
+cooling. Not bookkeeping: `n_F` is a genuinely independent coordinate, because a
+full cycle `f1->f2->f3` returns (X,Y,B) exactly to its start while burning three
+fuel, so **the fixed-gamma model is a projection that discards a coordinate which
+must exist.** Anchored the way §19 was: with the tank frozen the drift equals
+`am_reversible(gamma_inf w/f)` time-rescaled by `f`, to 1e-16.
+
+**The second ceiling is real and has a different shape from the first.** The
+fuel-limited memory lifetime is FLAT in Omega -- spread 1.08x and 1.16x over a 6x
+population range at two fuel concentrations -- while the noise-limited lifetime on
+the same clock is `exp(0.1215*Omega)` at R^2 = 0.984. They cross at Omega ~ 3-8,
+and by Omega = 180 the noise ceiling is 1e9 times further away. **Above a
+population of about ten, restoration is fuel-limited and more molecules buy
+nothing** -- the exact mirror of §1's wall. §12.1's ceiling is untouched but no
+longer alone: that one is a DEPTH set by channel noise and independent of the
+drive, this one is a LIFETIME set by the budget and independent of the population.
+
+**More fuel gives a SHORTER lifetime** (7.5 at concentration 10, 4.6 at 30). In
+waste-fraction units the burn rate is exactly fuel-concentration-independent, so a
+bigger tank buys no extra fractional runway; it only makes the chemistry fast
+relative to the fuel clock, so the state tracks the collapsing landscape more
+adiabatically and gives the bit up earlier in the tank's life.
+
+**A prediction of mine failed in SIGN, and the miss is instructive.** I predicted
+the bit is lost BEFORE the drive formally dies, since the barrier degrades
+continuously on the way. It outlives it by 7-37%: once `gamma_eff` passes
+`gamma_c` the landscape is gone but the state must still physically relax off the
+old attractor, and that relaxation burns more fuel. I reasoned about the barrier
+degrading and not about what happens after it vanishes.
+
+**T10b-i, open: does the overshoot saturate?** `0.069*ln(Omega) + 1.018` fits at
+R^2 = 0.969 and a saturating `c - a*Omega^-b` fits comparably at `c = 1.43 +- 0.03`.
+Six times in Omega cannot separate them -- the same wall §17.2 hit, and the same
+refusal to quote the flattering one. Needs a longer lever.
+
+**T10b-ii, open: which ceiling binds for a CASCADE?** §20 measures a lifetime for a
+single held bit. §12.1's ceiling is a depth. Converting between them needs the fuel
+cost per restoration stage, which §9's net-firing count already supplies but which
+has not been put together with a fuel budget. That is the measurement that would
+say whether a deep cascade dies of exhaustion or of noise first.
 
 ---
 

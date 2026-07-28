@@ -1909,6 +1909,112 @@ never depletes — a cascade dissipates but nothing ever runs down, so §12.1's 
 ceiling remains purely noise-limited with no thermodynamic competitor.
 
 
+---
+
+## 20. A second ceiling: restoration that dies of exhaustion — `networks/am_fueled.py`, `fuel_ceiling.py`
+
+**The last free lunch.** Everywhere above, `γ` is a free parameter held fixed
+forever — an infinite reservoir, set once and maintained at no cost. §9 therefore
+measures what restoration *dissipates* while nothing ever runs down, and §12.1's
+depth ceiling is purely noise-limited with no thermodynamic competitor.
+
+**Fuel as chemistry, not bookkeeping.** A drive `γ < 1` physically *is* a coupling
+to fuel hydrolysis, so the fuel becomes a reactant:
+
+    f1: X + Y + F -> 2B + W        r1: 2B + W -> X + Y + F     (× γ∞)
+    f2: B + X + F -> 2X + W        r2: 2X + W -> B + X + F     (× γ∞)
+    f3: B + Y + F -> 2Y + W        r3: 2Y + W -> B + Y + F     (× γ∞)
+
+The drive the chemistry feels is `γ_eff = γ∞·w/f`, which **rises** as the tank
+empties — the mirror of §19's cooling, which drove γ down. Letting the integrator
+adjust γ from a running count of firings instead would be the harness doing the
+chemistry, the failure mode behind three withdrawn results here.
+
+**`n_F` is a genuinely independent coordinate.** A complete cycle `f1→f2→f3`
+returns (X, Y, B) exactly to where it started while consuming three fuel, so the
+fixed-γ model is a **projection** that discards a coordinate which must exist.
+
+**Anchored on the known case**, in §19's style: with the tank held fixed, the
+(X, Y, B) drift equals `am_reversible(γ∞·w/f)` with time rescaled by `f`, to
+**1e-16** over 120 random interior states at four (f, w).
+
+**What it costs structurally.** These reactions are 3→3, so the network leaves the
+uniform-order-2 class that made §5.1's reduction exact. It stays *uniform* order 3,
+so `expanding.common_order` still accepts it and §19's machinery survives with
+`λ = 2H` — but trimolecular steps are a real idealisation, stated rather than hidden.
+
+### 20.1 The two ceilings have different shapes
+
+Bit held at the X attractor; loss is the first state with `n_X ≤ n_Y` (a readout,
+never an intervention). Control: the same chemistry at the same drive held forever.
+
+**The control needs its clock fixed, and this is not a detail.** The fueled network
+is third order, so its rates carry a factor `f` — at fuel concentration 10 with
+`γ_eff(0)=0.30` that is `f₀ = 7.69`. Comparing raw lifetimes across the arms without
+scaling the control by `f₀` compares different clocks, which is exactly the
+mismatched-control error that produced §10.3's withdrawn result. Unscaled, the
+control read 1483 at Ω=30; scaled, 193. Every number below is on a shared clock.
+
+| Ω | 30 | 45 | 60 | 90 | 120 | 180 |
+|---|---|---|---|---|---|---|
+| fueled lifetime, φ=10 | 7.53 | 7.60 | 7.61 | 7.15 | 7.37 | 7.72 |
+| fueled lifetime, φ=30 | 4.23 | 4.32 | 4.59 | 4.68 | 4.91 | 4.85 |
+| noise control, φ=10 clock | 193 | — | — | — | — | — |
+
+**P3 confirmed, and it is the headline.** The fuel-limited lifetime is **flat in Ω**
+— spread **1.08×** (φ=10) and **1.16×** (φ=30) across a **6× population range**, at
+two fuel concentrations, which is the second axis. The noise-limited lifetime over
+the same clock is exponential:
+
+    ln(lifetime) = 0.1215·Ω + const        R² = 0.9842
+
+so the two cross at **Ω ≈ 3** (φ=10) and **Ω ≈ 8** (φ=30), and by Ω = 180 the noise
+ceiling is **2.3e9×** and **1.2e9×** further away. **Above a population of about
+ten, restoration is fuel-limited and more molecules buy nothing** — the exact mirror
+of §1's wall, where molecules bought exponential reliability. Both ceilings are
+real; only one had ever been measured.
+
+**More fuel gives a *shorter* lifetime** — 7.5 at φ=10 against 4.6 at φ=30 — which
+is not a mistake. In waste-fraction units the burn rate is exactly
+φ-independent, `dω/dt = (1−ω)(xy+bx+by) − γ∞·ω(b²+x²+y²)`, so **a bigger tank buys
+no extra fractional runway**. What it does buy is faster chemistry relative to the
+fuel clock, so the state follows the collapsing landscape more adiabatically and
+gives the bit up *earlier in the tank's life* (see §20.2). More of the resource does
+not help, for the same structural reason more molecules do not.
+
+### 20.2 A prediction of mine that was wrong, in sign
+
+Written before running: *"the bit is lost BEFORE the formal death point, because
+γ_eff rises continuously and the barrier degrades all the way up to it — the loss
+fraction should approach 1 from below."* **It exceeds 1 everywhere.**
+
+| Ω | 30 | 45 | 60 | 90 | 120 | 180 |
+|---|---|---|---|---|---|---|
+| w_loss/w_death, φ=10 | 1.240 | 1.287 | 1.307 | 1.328 | 1.350 | **1.367** |
+| w_loss/w_death, φ=30 | 1.073 | 1.123 | 1.163 | 1.186 | 1.212 | **1.238** |
+
+**The bit outlives the landscape's death by 7–37%.** What the prediction missed:
+once `γ_eff` passes `γ_c` the landscape is gone, but the state still has to
+physically *relax* off the old attractor, and that relaxation burns further fuel.
+I accounted for the barrier degrading and not for what happens after it vanishes.
+
+The overshoot **grows with Ω and shrinks with fuel concentration**, and both make
+sense on the same mechanism: crossing `n_X = n_Y` needs a fluctuation, which is
+relatively smaller at large Ω, while a richer tank makes the chemistry fast
+compared to the fuel clock so the state tracks the collapse more adiabatically.
+
+**Whether it saturates is undetermined**, and this is flagged rather than resolved:
+`0.069·lnΩ + 1.018` fits at R² = 0.969, and a saturating form `c − aΩ^{−b}` fits
+comparably with `c = 1.43 ± 0.03`. Six times in Ω cannot separate them — the same
+limitation §17.2 hit, and the same refusal to pick the flattering one.
+
+**§12.1's ceiling is untouched but no longer alone.** That ceiling is a depth, set
+by channel noise and independent of the drive; this one is a *lifetime*, set by the
+budget and independent of the population. A cascade now has two ways to die, and
+which one binds is decided by the fuel concentration rather than by either
+mechanism on its own.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

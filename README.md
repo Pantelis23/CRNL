@@ -400,6 +400,35 @@ scopes its reduction to uniform-order kinetics. [`FINDINGS.md`](FINDINGS.md) §1
 python -m experiments.cooling_relic --hubbles 0.005 0.01 0.02
 ```
 
+## The last free lunch: a drive that can run out
+
+`γ` was a free parameter held fixed forever — an infinite reservoir, set once and
+maintained at no cost. So §9 measured what restoration *dissipates* while nothing
+ever ran down, and §12.1's depth ceiling was purely noise-limited. Making the fuel
+a reactant (`X + Y + F → 2B + W`, and so on) gives `γ_eff = γ∞·w/f`, which **rises**
+as the tank empties. `n_F` is a genuinely independent coordinate — a full cycle
+returns X, Y, B exactly to their start while burning three fuel — so the fixed-γ
+model is a *projection* that discards a coordinate which must exist.
+
+**There is a second ceiling, and it has a different shape.** The fuel-limited
+memory lifetime is **flat in Ω** (spread 1.08× and 1.16× over a 6× population
+range, at two fuel concentrations) while the noise-limited lifetime on the same
+clock is `exp(0.12·Ω)`, R² = 0.984. They cross at Ω ≈ 3–8, and by Ω = 180 the noise
+ceiling is 10⁹× further away. **Above a population of about ten, restoration is
+fuel-limited and more molecules buy nothing** — the exact mirror of the restoration
+wall above, where molecules bought exponential reliability.
+
+Two counterintuitive results came with it: **more fuel gives a *shorter* lifetime**
+(the fractional burn rate is fuel-independent, so a bigger tank buys no extra
+runway and only makes the chemistry track its own collapse more faithfully), and
+**the bit outlives the drive's death by 7–37%** — I predicted the opposite sign,
+having reasoned about the barrier degrading but not about the state still needing
+to relax once it vanishes. [`FINDINGS.md`](FINDINGS.md) §20.
+
+```bash
+python -m experiments.fuel_ceiling --omegas 30 60 120 --fuel-concs 10 --trials 60
+```
+
 ```bash
 python -m experiments.wall_coefficient_exact
 python -m experiments.asymmetric_landscape --part fold

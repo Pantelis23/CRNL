@@ -2201,7 +2201,31 @@ against the 6,000-trial run's 1.027 and 1.024 — the sign itself flipped. The
 refutation of my P3 goes with them: there is no established CLE exponent bias at
 either alphabet size, so there is no sign to have been wrong about.
 
-**One thing that did survive, flagged not claimed.** Across all eight n=2 cells at
+**Followed up over a 16x range in dt, and left unresolved on purpose —
+`cle_prefactor.py`.** Three step sizes a factor 4 apart, 60,000 trials per cell.
+Euler–Maruyama is weak-order 1, so a discretisation excess decays monotonically
+with dt and a prefactor excess is flat; the measurement is neither.
+
+| pooled CLE/CME | dt=0.02 | dt=0.005 | dt=0.00125 |
+|---|---|---|---|
+| ε/δ* = 0.25 | 1.0036 ± 0.0077 | 1.0298 ± 0.0079 | 1.0175 ± 0.0078 |
+| ε/δ* = 0.40 | 1.0092 ± 0.0304 | 1.0305 ± 0.0315 | 1.0096 ± 0.0302 |
+
+The excess is real in the sense that it is positive in 5 of 6 pooled cells and
+~+1.7% ± 0.5% at the well-resolved ε, but it is **non-monotone in dt and scatters
+by more than its binomial error** — so it is not the clean decay discretisation
+would give, nor the flat plateau a prefactor would give. The exponent meanwhile is
+untouched at every step size (ratios 1.011 / 0.969 / 0.986 and 1.003 / 0.977 /
+1.001), which is P3 confirmed and is the part that matters for §21.3.
+
+**This thread is closed as unresolved rather than pursued further.** It has now run
+three rounds — claimed at 2.5%, withdrawn for the wrong reason, withdrawn again for
+the right one — and a ~2% effect that will not hold still across dt is at the edge
+of what this setup resolves. Separating it would need a positivity-preserving
+integrator rather than more samples, which is a different piece of work and buys
+nothing for the cliff.
+
+**The original hint, kept for the record.** Across all eight n=2 cells at
 40,000 trials the CLE sits *above* the exact p — ratios 1.018 to 1.045, every z
 positive, combining to roughly 3σ for a **~+3% uniform excess**. A uniform factor on
 p is a *prefactor* effect and would not touch the exponent, which is consistent with

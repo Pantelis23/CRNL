@@ -387,7 +387,16 @@ dt at n = 3), so the +2.5% and 5.3% deviations were sampling noise and there is 
 sign to explain. Note the first draft of this withdrawal blamed dt-convergence,
 which was itself a 4,000-trial artifact -- the CLE is converged AND correct.
 
-**T11b-i, the residue worth keeping:** across all eight n = 2 cells the CLE sits
+**T11b-i, CLOSED AS UNRESOLVED -> §21.3a.** Measured over a 16x range in dt at
+60,000 trials per cell. The excess is positive in 5 of 6 pooled cells (~+1.7% +-
+0.5% at the well-resolved eps) but NON-MONOTONE in dt, scattering by more than its
+binomial error -- so it is neither the monotone decay discretisation gives nor the
+flat plateau a prefactor gives. The exponent is untouched at every dt, which is the
+part §21.3 depends on. Closed rather than pursued: three rounds in, a ~2% effect
+that will not hold still across dt needs a positivity-preserving integrator rather
+than more samples, and that buys nothing for the cliff. What the entry asked:
+
+**~~T11b-i, the residue worth keeping:~~** across all eight n = 2 cells the CLE sits
 above the exact p (1.018 to 1.045, every z positive, ~3 sigma combined for a +3%
 uniform excess). A uniform factor on p is a PREFACTOR effect and leaves the
 exponent alone -- consistent with the CLE being the right diffusion limit with a

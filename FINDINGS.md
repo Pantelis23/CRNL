@@ -2286,6 +2286,61 @@ and the fit is against `ε²Ω` rather than Ω so the residual lattice drift is
 absorbed rather than mistaken for physics.
 
 
+---
+
+## 22. How the barrier dies — T4's kill test — `barrier_near_gamma_c.py`
+
+T4 guessed the restoration barrier vanishes like `(γ_c − γ)`. §12 implied **two**
+vanishing factors — `κ·δ*²` with both linear in the gap — hence `(γ_c − γ)²`, and a
+population cost diverging like `1/(γ_c−γ)²`. That had only ever been *inferred from
+a collapse*, never measured by sweeping γ.
+
+Measured directly with §15's exact quasipotential, whose usable window — large γ,
+small barrier — is exactly this region. Each `ΔW` extrapolated to `1/Ω → 0`.
+
+| γ | γ_c−γ | δ* | ΔW (Ω→∞) |
+|---|---|---|---|
+| 0.400 | 0.1000 | 0.5408 | 3.243e-2 |
+| 0.420 | 0.0800 | 0.4925 | 2.106e-2 |
+| 0.440 | 0.0600 | 0.4345 | 1.201e-2 |
+| 0.455 | 0.0450 | 0.3818 | 6.830e-3 |
+| 0.470 | 0.0300 | 0.3165 | 3.069e-3 |
+| 0.480 | 0.0200 | 0.2611 | 1.368e-3 |
+| 0.487 | 0.0130 | 0.2120 | 5.775e-4 |
+
+    dW = 3.0906 * (gamma_c - gamma)^1.9745        R² = 0.999969
+
+**Exponent 2, confirmed. T4's original guess of 1 is dead.** And the approach is
+the right shape: the local slope between consecutive γ climbs **monotonically**
+toward 2 as the gap closes — 1.935 / 1.952 / 1.962 / 1.973 / 1.993 / **2.0015** —
+which is what an asymptotic normal form must do. Near a pitchfork `W = −a·x²/2 +
+b·x⁴/4` with `a ∝ (γ_c−γ)`, so the barrier is `a²/(4b)`; the 1.3% shortfall in the
+pooled fit is the non-asymptotic end of the sweep, not a discrepancy.
+
+**This was a 2-for-1 and §15 passes it too.** The corrected `κ = λ/(2D₀)` rests on
+`λ = (1−2γ)/3` vanishing *linearly* at γ_c. An exponent of 1 would have restored T4
+and falsified that; anything but 2 would have broken the pitchfork picture. THEORIES
+said the two stand or fall together — they stand.
+
+### 22.1 What it does to the residuals, which is the point of running it
+
+§12's collapse slope (0.783, not 1) and §12.1's ceiling exponent (`k = 1.0695`, not
+1) are both saddle-point residuals, and the obvious shared suspect was that the
+saddle gets the barrier's **γ-dependence** wrong. **It does not** — the exact barrier
+reproduces `κ·δ*²`'s scaling to 1.3% pooled and to 0.1% asymptotically.
+
+So that hypothesis is eliminated, and the two residuals must live in the *other*
+ingredients: §12's **second** saddle point (it minimises a sum of two exponents over
+the flip location and keeps only the minimum) and §12.1's σ-dependence. They are not
+a shared failure of the barrier.
+
+This is the useful outcome. The four items grouped as "the saddle-point exponent is
+inexact" are now **two fewer**, and — unlike the Q7 episode, which consolidated on
+constancy and was wrong about two of three members — this narrowing came from
+measuring the suspected common cause and finding it innocent, rather than from
+noticing that some numbers looked alike.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

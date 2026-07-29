@@ -120,8 +120,22 @@ factor is finite and smooth at γ_c = 1/2, contributing only a constant `2/3`. S
 the barrier still falls like `(γ_c−γ)²` and the population still diverges like
 `1/(γ_c−γ)²`; only the prefactor moves.
 
-**How to kill it:** sweep γ finely in [0.40, 0.499] and fit the barrier's exponent
-in `(γ_c − γ)`. A measured exponent of 1 would restore T4's original guess and
+**MEASURED -> §22. The exponent is 2 and T4's guess of 1 is dead.**
+`dW = 3.09·(γ_c−γ)^1.9745` at R² = 0.99997 over seven γ, with the local slope
+climbing monotonically to **2.0015** at the smallest gap — the approach an
+asymptotic normal form must make. §15 passes the same test: an exponent of 1 would
+have restored T4 and falsified the corrected κ, since that rests on λ vanishing
+linearly at γ_c. They stood together.
+
+**And it eliminates a suspect.** §12's slope 0.783 and §12.1's k = 1.0695 were both
+plausibly a saddle point getting the barrier's γ-dependence wrong. It does not get
+it wrong, so those residuals live in the other ingredients — §12's second saddle
+over the flip location, §12.1's σ-dependence — and are not a shared failure. Unlike
+Q7, this narrowing came from measuring the suspected common cause, not from
+noticing that numbers looked alike.
+
+**The original kill test, now spent:** sweep γ finely in [0.40, 0.499] and fit the
+barrier's exponent in `(γ_c − γ)`. A measured exponent of 1 would restore T4's original guess and
 falsify the κ correction; anything other than 2 means the gain's linear vanishing
 is wrong, which would also break §15 — the two now stand or fall together, and
 that is a cheap way to test both. **The exact quasipotential of §15 is the right

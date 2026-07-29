@@ -402,12 +402,43 @@ compound.** The right picture is not "restoration runs until the fuel is gone an
 then stops" but "restoration degrades continuously as the fuel goes, and the
 channel finishes it early."
 
-**T10b-iii, open: how does D_fuel scale with the budget?** Measured sub-linear
-(11 -> 23 for a 3x budget, ~Phi^0.67) where the crossover argument assumed linear.
-Two fuel concentrations cannot pin an exponent, and with the ceilings compounding
-there is no reason to expect a clean power law at all. **How to kill:** four or more
-budgets at a fixed quiet channel; if the exponent drifts with sigma, D_fuel is not a
-budget property and the whole two-ceiling framing needs rewording.
+~~**T10b-iii: how does D_fuel scale with the budget?**~~ **MEASURED -> §23, and the
+kill test fired: `D_fuel` is NOT a budget property.** Five budgets x three channels x
+three populations. The exponent is `0.6498 +- 0.019` at the quiet channel, so the
+sub-linear two-point reading was right and §20's crossover argument (which assumed
+linear) is wrong -- and the exponent **drifts with the channel**, 0.650 -> 0.495 over
+sigma_ch/delta* = 0.03 -> 0.15 at 5.5 sigma, reproduced at 4.1-4.2 sigma at Omega 25
+and 60. It drifts with Omega too (0.547 -> 0.650 -> 0.672).
+
+**So the wording that has to go is "the" fuel-limited depth.** There is no
+fuel-limited depth attached to a tank; there is one **for a given channel and
+population**, with a budget exponent running 0.65 -> 0.26 across the range tested.
+The compounding claim above is unaffected -- §23 is the same fact from the budget
+side -- but any statement of the form "a tank of size Phi buys depth D_fuel(Phi)"
+is now known to be incomplete.
+
+Mechanism, and it is not the one predicted: fuel burned per stage is FLAT in the
+budget (25-34 molecules over 16x, slope -0.01 to -0.03), exactly as the a-priori
+argument requires (third-order burn rate goes like `f`, `stage_time` like `1/f`).
+What collapses is the **usable burn fraction**, 0.198 -> 0.069. A bigger tank means
+more stages spent while the drive is still strong, and every one of those stages
+carries its own loss probability, so the bit goes at a shallower `gamma_eff`:
+0.75 at Phi/Omega = 25 (past `gamma_c` -- the bit outlived the landscape) but 0.43
+at Phi/Omega = 400 (landscape still alive). A louder channel raises the per-stage
+loss probability, hence the sigma-drift.
+
+**T10b-iii-a, open: what IS the exponent a function of?** §23 establishes the drift
+and refuses to fit it: three sigma (one disqualified as noise-bound) and three Omega
+can kill a null but cannot support a law, and §22.5 is the standing warning about
+fitting harder than the data. The accumulation picture above predicts something
+specific and checkable -- the exponent should be a function of the per-stage loss
+probability alone, not of sigma and Omega separately. **How to kill:** measure the
+per-stage loss probability `p` directly in the healthy-tank regime across a grid of
+(sigma, Omega), and test whether the exponent collapses onto a single curve in `p`.
+If cells with matched `p` but different (sigma, Omega) give different exponents, the
+accumulation picture is incomplete and the sigma-dependence has a second source.
+Keep every cell exhaustion-bound (fueled depth < 0.8x control) or the limit is
+definitional rather than measured.
 
 ---
 

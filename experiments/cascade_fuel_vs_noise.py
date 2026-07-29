@@ -37,6 +37,65 @@ PREDICTIONS, written before running:
       and D_fuel is linear in Phi, so sigma_c moves only as 1/sqrt(ln Phi).
       **Fuel is a logarithmically weak lever**: tripling the budget should move
       the crossover noise by ~10%, not by 3x.
+
+P1 was REFUTED (§20.3: D_fuel falls 2.2x-3.8x across sigma -- the ceilings
+compound). P4's premise -- `D_fuel` linear in `Phi` -- was never tested; the two
+budgets on hand gave `~Phi^0.67`. That is T10b-iii, and the second prediction
+block below is for it.
+
+PREDICTIONS for T10b-iii, written before reading any output of the multi-budget
+run:
+
+  P5  THE EXPONENT IS 1, not 0.67. Mechanism: the cascade does not die when the
+      tank hits zero, it dies when `gamma_eff = gamma_inf*w/f` climbs far enough
+      that `kappa(gamma_eff)*delta*(gamma_eff)^2` no longer beats the channel.
+      That is a condition on the BURN FRACTION `w/(w+f)`, which is scale-free in
+      `Phi`. Fuel burned per stage is set by how many molecules must be flipped,
+      i.e. by Omega, not by the tank. Fixed usable fraction / fixed per-stage
+      cost = linear. The measured 0.67 rests on two points and I expect it to be
+      an artifact of exactly the compounding that killed P1: at the smaller
+      budget the tank is a larger fraction spent by any given depth, so the
+      channel bites earlier and drags the low-Phi point DOWN -- which bends the
+      two-point chord UP, not down. So 0.67 is not even the sign I would predict
+      for that contamination, and if the five-budget fit lands near 0.67 the
+      burn-fraction picture is wrong.
+  P6  THE LOAD-BEARING ONE. Whatever the exponent is, it is **the same at both
+      sigma** within fit error. `D_fuel` is a property of the budget; sigma sets
+      the prefactor (P1's refutation) but not the scaling. If the exponents
+      differ between sigma/delta* = 0.03 and 0.08 by more than their uncertainty,
+      then there is no such thing as "the fuel-limited depth" as a budget
+      property, and 20.3's two-ceiling framing has to be reworded rather than
+      refined.
+
+OUTCOME of P5/P6 (five budgets, sigma/delta* = 0.03 and 0.08): P5 REFUTED, the
+exponent is 0.664 +- 0.017 and 0.607 +- 0.050, with linear 20 and 8 sigma away.
+P6 survived at 1.09 sigma -- but the test was weak, see P7.
+
+WHERE THE SUBLINEARITY LIVES. Decomposing `D = (theta - theta_0) Phi / c` with
+`theta` the waste fraction at loss and `theta_0 = gamma_0/(1+gamma_0)` the seeded
+waste: fuel burned per stage `c` is FLAT (25-32 molecules over a 16x budget), as
+the a-priori argument requires -- burn rate is third order so it goes like `f`,
+and `stage_time` goes like `1/f`. The whole effect is that the USABLE burn
+fraction collapses, 0.198 -> 0.069. Equivalently the cascade dies at a shallower
+`gamma_eff`: 0.75 at Phi=1000 (past gamma_c, the landscape was already dead) but
+only 0.43 at Phi=16000 (landscape still alive).
+
+  MECHANISM: a bigger tank does not buy proportionally more depth because the
+  extra stages each carry their own per-stage loss probability. More stages
+  spent in the healthy part of the tank means more accumulated chances to lose
+  the bit, so the bit goes while the drive is still strong. This is 20.3's
+  compounding, seen from the budget side.
+
+  P7, THE FORK, written before running the wider sweep. That mechanism makes the
+  exponent a function of the CHANNEL, not of the budget: raise sigma and each
+  stage is likelier to lose the bit, so the accumulation bites sooner and the
+  exponent must FALL. **I predict the exponent drops monotonically across
+  sigma/delta* = 0.03, 0.15, 0.30, refuting P6 once the channel is wide enough
+  to matter.** P6 passed only because 0.03 and 0.08 sit on the SAME side of
+  20.3's crossover -- both exhaustion-bound, depths differing by 1.1x -- so it
+  never asked the question. If instead the exponent holds near 0.66 out to 0.30,
+  the accumulation mechanism above is wrong and D_fuel really is a budget
+  property, which is the answer T10b-iii asked for but not the one I expect.
 """
 from __future__ import annotations
 

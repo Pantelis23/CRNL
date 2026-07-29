@@ -2066,6 +2066,11 @@ a six-point σ grid cannot pin the scaling**, and with the ceilings compounding 
 is no reason to expect the clean form P4 assumed. Recorded as unsettled rather than
 fitted.
 
+> **Settled in §23**, and the two-point reading above was right: five budgets give
+> `Φ^0.6498 ± 0.019` at σ/δ* = 0.03. But the exponent **drifts with the channel and
+> with Ω**, so there is no single `D_fuel(Φ)` to pin — the numbers above stand for
+> their cells and the framing is reworded there.
+
 **What this settles for T10b-ii.** A cascade has two ways to die and the fuel
 concentration decides which. But the honest headline is the coupling, not the
 competition: *restoration does not run until the fuel is gone and then stop — it
@@ -2542,6 +2547,121 @@ exponent measured 1.9745 with the local slope reaching 2.0015 — a direct
 quasipotential measurement, and §15 stands with it. §22.4–§22.5: §12's residual is
 error cancellation between a framework that assumes completion and a barrier that is
 too stiff, both now quantified. §22.2 and §22.3's readings are withdrawn.
+
+
+## 23. What a fuel budget actually buys — T10b-iii's kill test — `cascade_fuel_vs_noise.py`
+
+§20.3 established two ways for a cascade to die — exhaustion and noise — and that
+they **compound** rather than combining as a `min()`. It also left the crossover
+argument (§20's P4) resting on an untested premise: that the fuel-limited depth
+`D_fuel` is **linear** in the budget `Φ`. Two budgets gave `~Φ^0.67`, which was
+recorded as unresolved. T10b-iii named the kill test: *four or more budgets at a
+fixed quiet channel; if the exponent drifts with σ, `D_fuel` is not a budget
+property and the whole two-ceiling framing needs rewording.*
+
+**Scope.** `am_fueled(γ_inf = 1.0)`, γ₀ = 0.3, stage = 2 relaxation times (so
+`t_stage ∝ 1/Φ`, §20.1's fair clock), Ω ∈ {25, 40, 60}, `Φ/Ω` ∈ {25, 50, 100, 200,
+400}, σ_ch/δ* ∈ {0.03, 0.15, 0.30}, 100–120 trials per cell, `max_depth` 500. Zero
+censoring in every fueled cell. The control is `am_reversible(γ₀, k = f₀)` — the
+same drive held forever on the same clock.
+
+### 23.1 The exponent is not 1, and the two-point 0.67 was not an artifact
+
+Depths at Ω = 40 (median over 120 trials):
+
+| σ_ch/δ* | control | Φ/Ω=25 | 50 | 100 | 200 | 400 | exponent (mean depth) |
+|---|---|---|---|---|---|---|---|
+| 0.03 | 500 (57% censored) | 7 | 12 | 17 | 27 | 44 | **0.6498 ± 0.019** |
+| 0.15 | 69 | 6 | 9 | 13 | 17.5 | 28 | **0.4954 ± 0.021** |
+| 0.30 | 7 | 5 | 6 | 6 | 7 | 9 | **0.2586 ± 0.016** |
+
+> **Prediction P5, refuted.** I predicted the exponent is **1**, on the argument
+> that the cascade dies at a condition on the *burn fraction* `w/(w+f)`, which is
+> scale-free in Φ, while fuel burned per stage is set by Ω. Fixed usable fraction
+> ÷ fixed per-stage cost = linear. Measured 0.6498 ± 0.019 at the quiet channel,
+> with linear **20σ** away. I also predicted the two-point 0.67 was contaminated
+> and that the contamination had the wrong sign to produce it; it was neither
+> contaminated nor wrongly signed. The a-priori argument was wrong about which
+> factor is scale-free — see §23.3.
+
+### 23.2 `D_fuel` is not a budget property — P6 refuted, and its first pass was under-powered
+
+> **Prediction P6** — the load-bearing one — said the exponent is *the same at
+> every σ* within fit error: Φ sets the scaling, σ only the prefactor. On the
+> first pass (σ/δ* = 0.03 and 0.08) it **passed** at 1.09σ. That pass was worth
+> nothing: both values sit on the same side of §20.3's crossover, both
+> exhaustion-bound, with depths differing by 1.1×, so the test never asked the
+> question. It is recorded here because a null result from an instrument that
+> cannot resolve the effect is exactly the failure this project keeps buying rules
+> with (§17.2, T10b-i).
+
+Widened to σ/δ* = 0.30, the exponent **falls monotonically**: 0.6498 → 0.4954 →
+0.2586, steps of **5.5σ** and **9.1σ** (15.9σ end to end). And the drift is not an
+Ω = 40 accident — measured along the axis it was not swept on (rule 9):
+
+| Ω | exponent @ σ/δ*=0.03 | @ 0.15 | drift |
+|---|---|---|---|
+| 25 | 0.5473 ± 0.028 | 0.4050 ± 0.020 | −0.1423 ± 0.034 (4.2σ) |
+| 40 | 0.6498 ± 0.019 | 0.4954 ± 0.021 | −0.1543 ± 0.028 (5.5σ) |
+| 60 | 0.6722 ± 0.028 | 0.5269 ± 0.022 | −0.1453 ± 0.035 (4.1σ) |
+
+**Two things at once.** The drift per σ-step is itself remarkably Ω-independent
+(−0.142/−0.154/−0.145 across a 2.4× population range), but the exponent *level*
+also climbs with Ω (0.547 → 0.650 → 0.672, apparently saturating). So the budget
+exponent is a function of **both** the channel and the population.
+
+**The honest caveat, which cuts the 0.30 column out of the argument.** At
+σ/δ* = 0.30 the control depth is 7 and four of the five fueled cells are within
+0.8× of it — noise binds, not fuel. In the fully noise-bound limit the depth is
+Φ-independent by construction, so an exponent falling toward 0 there is partly
+definitional and cannot carry the claim. **The load-bearing comparison is
+0.03 → 0.15**, where the fueled arm is the binding ceiling at every budget
+(28 vs a control of 69 at the largest tank) and the exponent still moves 4.1–5.5σ
+at all three Ω. That is the kill test passing on its own terms.
+
+### 23.3 Where the sublinearity lives, and what it costs §20.3
+
+Decomposing `D = (θ − θ₀)·Φ / c`, with θ the waste fraction at loss, θ₀ = γ₀/(1+γ₀)
+the seeded waste, and `c` the fuel burned per stage:
+
+| σ_ch/δ* | slope of usable burn fraction | slope of burn per stage `c` | `c` (molecules, Φ/Ω = 25 → 400) |
+|---|---|---|---|
+| 0.03 | −0.3630 | −0.0127 | 26.4 → 25.0 |
+| 0.15 | −0.5151 | −0.0105 | 27.9 → 28.1 |
+| 0.30 | −0.7741 | −0.0326 | 33.7 → 30.5 |
+
+`c` is **flat** — 25–34 molecules per stage across a 16× budget at every σ — which
+is the one half of P5's argument that survives, and it was an a-priori prediction:
+the burn rate is third order so it goes like `f`, and `stage_time` goes like `1/f`.
+The entire effect is that the **usable burn fraction collapses**, 0.198 → 0.069,
+and steepens as the channel gets louder.
+
+*(The three-term decomposition sums to the measured exponent to 0.0000 by
+construction — `c` was obtained as `(θ−θ₀)Φ/D`, so that is bookkeeping, not a test.
+What is measured is that the `c` slope is −0.01 to −0.03 rather than something of
+order the others, i.e. 1–3% of the effect.)*
+
+Equivalently, in terms of the drive the cascade dies with: γ_eff at loss is **0.75**
+at Φ/Ω = 25 — *past* γ_c = 0.5, so the landscape was already dead and the bit
+outlived it — but only **0.43** at Φ/Ω = 400, where the landscape is still alive
+when the bit goes.
+
+**The mechanism, and the rewording §20.3 owes.** A bigger tank does not buy
+proportionally more depth because the extra stages each carry their own per-stage
+loss probability. More stages spent in the healthy part of the tank means more
+accumulated chances to lose the bit, so **the bit goes while the drive is still
+strong** — and a louder channel raises the per-stage loss probability, which is why
+the exponent is a function of σ. §20.3's "exhaustion and noise compound" is right
+and this is the same fact from the budget side; what has to go is the residual
+picture of `D_fuel` as *a* number attached to a tank. There is no fuel-limited depth
+in the abstract: there is a fuel-limited depth **for a given channel and
+population**, and its budget exponent runs from 0.65 down to 0.26 within the range
+tested here.
+
+**What §23 does not establish.** No functional form for the exponent's σ- or
+Ω-dependence is claimed. Three σ (one of which is disqualified above) and three Ω
+are enough to establish the drift and kill P6; they are not enough to fit a law, and
+§22.5's lesson about fitting harder than the data supports applies here unchanged.
 
 
 ## Open questions

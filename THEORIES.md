@@ -459,7 +459,44 @@ landscape. NOT established: any general "the state lags the rail" statement. Tha
 prediction's statistic was confounded and the matched-`gamma_eff` version scatters
 0.70-1.65 with no ordering in Phi (§23.4).
 
-**T10b-iii-b, open: can the kinetic excess be computed rather than named?** §23.4
+~~**T10b-iii-b: can the kinetic excess be computed rather than named?**~~ **TESTED ->
+§23.5, and the attribution is WITHDRAWN.** Two arms at the quiet channel:
+
+- **Imposing quasi-staticity by hand** (re-seed X,Y,B onto the current rail every
+  stage -- a DIAGNOSTIC with a free restoring element, rule 10, not a physical
+  result) gives exponent `0.7077 +- 0.030`: **5.4 sigma from the hazard integral's
+  0.8925 and only 1.6 sigma from the plain simulation's 0.6474.** Re-seeding on a
+  median 52 of 52 stages closes essentially none of the gap. So the quasi-static
+  state assumption is NOT what separates the integral from the measurement, and the
+  integral's error is somewhere other than the state.
+- **The adaptive-stage sweep proposed below as the kill test is a WEAK INSTRUMENT and
+  its null carries nothing.** The exponent is flat across a 30x cap sweep
+  (0.621/0.644/0.641/0.645) -- but the adaptive prescription stays within 2.4x of the
+  fixed stage until `theta > 0.29` and only diverges in the last stage or two, and
+  longer stages both help the state follow AND drain the tank faster, so a flat
+  exponent could be two effects cancelling. Recorded as inconclusive. The `cap = 1`
+  cell is a genuine control and passes: 0.6206 +- 0.012 against §23.1's 0.6474 +-
+  0.022, 1.1 sigma.
+
+**So: §23.4's phenomenon stands, its explanation does not.** Small tanks really do
+hold real bits (delta ~ 0.19) past `gamma_c` for a median 3 of 7 stages, 97% of
+trials against 9.5% for the largest tank. "Because `lambda(gamma_eff) -> 0` while the
+stage stays at `gamma_0`'s relaxation time" is withdrawn.
+
+**T10b-iii-c, open: why does the hazard integral over-predict the exponent at all?**
+The 0.25 gap is now unexplained with the state assumption eliminated. Surviving
+suspect: the integral hard-stops when `theta` crosses 1/3, because `initial_counts`
+gives zero separation past `gamma_c` so the measured `q(theta)` is 1 there by
+construction -- while the simulation holds a bit through that whole region. **How to
+kill:** re-measure `q(theta)` past `gamma_c` starting from the separation the cascade
+actually carries (median 0.19-0.23, §23.4) instead of from the nonexistent rail, and
+re-integrate. If the exponent falls from 0.89 toward 0.65 the hard stop was the
+error. **This costs the integral its parameter-free status** -- the starting delta is
+an empirical input -- so it must be reported as a one-parameter model, NOT as the
+absolute rule-16 test §23.4 ran. If it still gives ~0.89, the survival-product form
+itself is wrong (stages are not independent) and that is the next suspect.
+
+~~**Superseded kill test for T10b-iii-b, left visible:**~~ §23.4
 attributes the 0.25 exponent gap (quasi-static 0.893 -> measured 0.647) to holding
 past `gamma_c`, but nothing there predicts the number. The kinetic picture says the
 excess should be controlled by the ratio of the stage time to the relaxation time at

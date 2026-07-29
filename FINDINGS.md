@@ -2744,6 +2744,82 @@ small ones.
 γ_c but not *accounted for* — no calculation here predicts the measured 0.647 from
 the quasi-static 0.893 plus a kinetic term. That is T10b-iii-b.
 
+> ⚠ **The kinetic attribution above is withdrawn in §23.5.** The *phenomenon* — bits
+> held past γ_c, 97% of trials to 9.5% across the budget range — stands as measured.
+> The *explanation* offered for it, that the state cannot follow the collapsing
+> landscape because the stage is fixed at γ₀'s relaxation time, is not supported.
+
+### 23.5 The kinetic attribution fails both ways — `fuel_quasistatic.py`
+
+Two arms, Ω = 40, σ_ch/δ* = 0.03, 80 trials, five budgets. Both aimed at §23.4's
+claim that the small-tank excess is the state failing to follow the rail.
+
+**Arm A — impose quasi-staticity by hand.** Re-seed (X, Y, B) onto the attractor of
+the current γ_eff at every stage, leaving the tank exactly as the chemistry left it.
+
+> **This arm contains a free restoring element and is not a physical result.** It is
+> the "harness doing work the chemistry cannot" that cost this project three
+> withdrawn results (rule 10), used deliberately as an instrument so the simulation
+> obeys the same assumption the hazard integral does. It re-seeds (X, Y, B) only —
+> `n_X+n_Y+n_B = Ω` holds and the tank is untouched, so it is not also a reset blank
+> pool. Nothing about a real network may be read off it.
+
+| | exponent in Φ |
+|---|---|
+| hazard integral (§23.4) | 0.8925 ± 0.017 |
+| **Arm A, rail-reseeded every stage** | **0.7077 ± 0.030** |
+| plain simulation (§23.1) | 0.6474 ± 0.022 |
+
+> **Prediction P1 refuted.** I predicted Arm A would reproduce the integral at ~0.89.
+> It lands at 0.7077 — **5.4σ from the integral** and only **1.6σ from the plain
+> simulation**, i.e. statistically indistinguishable from doing nothing. Re-seeding
+> onto the rail on a median 52 of 52 stages closes essentially none of the 0.25 gap.
+> **The quasi-static state assumption is therefore not what separates the integral
+> from the simulation**, which is the opposite of what §23.4 assumed, and it also
+> means the integral has an error somewhere other than the state.
+
+**Arm B — give the state time to follow.** Stage time set from the current state,
+`t_stage = 2/(λ(γ_eff)·f)`, capped at `cap ×` the baseline and the cap swept
+(rule 13):
+
+| cap | 1 | 3 | 10 | 30 |
+|---|---|---|---|---|
+| exponent | 0.6206 ± 0.012 | 0.6437 ± 0.030 | 0.6408 ± 0.021 | 0.6451 ± 0.053 |
+
+Flat across a 30× sweep. **The `cap = 1` cell is a built-in control on the whole
+harness** — it is §23's own configuration, and it returns 0.6206 ± 0.012 against
+§23.1's 0.6474 ± 0.022 (1.1σ) with depths 7/11/17/28/42 against 7/12/17/27/44. The
+harness reproduces §23.
+
+> **Arm B is inconclusive, not evidence, and the reason is a design fault I did not
+> anticipate.** The adaptive prescription is within 2.4× of the fixed stage until
+> θ > 0.29 and only diverges in the final stage or two (ratio 1.00 → 1.40 → 2.37 →
+> 4.40 → 7.69 → 30.8 as θ goes 0.231 → 0.33). So it never tests the bulk of the
+> cascade. Worse, longer stages simultaneously let the state follow the rail *and*
+> drain the tank faster — the depth drop from cap 1 to cap 3 (7/11/17/28/42 →
+> 5/8/12/20/33) is that extra burn — so a flat exponent could be two effects
+> cancelling. Arm B neither supports nor refutes the lag; it is recorded because a
+> null from an instrument that cannot resolve the effect is exactly what §23.2
+> already had to disown once.
+
+**Where this leaves §23 as a whole.** §23.1–§23.2 stand: the exponent is 0.6498 ±
+0.019 at the quiet channel, it drifts with σ and with Ω, and `D_fuel` is not a budget
+property. §23.3's mechanism survives only as the account of the σ-drift, which the
+hazard integral reproduces (−0.121 vs −0.107). §23.4's *measurement* stands — small
+tanks hold real bits past γ_c and large tanks do not — but §23.4's *explanation* of
+it is withdrawn. **The 0.25 exponent gap between the quasi-static integral and the
+measurement is now unexplained**, with the state assumption eliminated as its source.
+
+The surviving suspect is the integral's own hard stop: it kills the bit the moment
+θ crosses 1/3, because `initial_counts` gives zero separation past γ_c and so the
+measured `q(θ)` is 1 by construction there — while the simulation demonstrably holds
+a δ ≈ 0.19 bit through a median 3 of 7 stages in that region. **How to kill:** extend
+the `q(θ)` measurement past γ_c starting from the separation the cascade actually
+carries there rather than from the (nonexistent) rail, and re-integrate. Note this
+costs the integral its parameter-free status — the starting δ becomes an empirical
+input — so the result is a one-parameter model and must be reported as one, not as
+the absolute test §23.4 ran.
+
 
 ## Open questions
 

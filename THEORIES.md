@@ -45,10 +45,19 @@ not a missing prefactor**: with the corrected `κ` of §15 the same 216 cells gi
 prefactor and the Gaussian-tail correction" — what this entry used to say — was
 wrong about the first ingredient it named.
 
-What remains is a slope of 0.783 rather than 1, still non-monotone in γ. The
-likeliest home for it is §12's *own* saddle point, which minimises a sum of two
-exponents and keeps only the minimum, discarding the curvature of that
-minimisation. A derivation that predicts 0.783 — or shows why the slope should
+What remains is a slope of 0.783 rather than 1, still non-monotone in γ, and **two
+of its three candidate causes are now eliminated by measurement** (§22.1, §22.2):
+the barrier's γ-dependence is right (exponent 2 to 0.1% asymptotically), and doing
+§12's δ-minimisation exactly instead of by saddle point improves R² everywhere
+(0.960 -> 0.970) while leaving the slope at 0.776.
+
+**The one untested ingredient is `c(δ) = κδ²` — the barrier quadratic in the
+displacement.** §2's own table has `c/ε²` drifting 1.586 -> 1.809 across
+ε ∈ [0.04, 0.20], and §14.1 measured `c ∝ δ^~2.5` at large n, so there is direct
+evidence it is not quadratic over the range the channel samples. **Kill test in
+§22.2:** put the exact ridge profile into the convolution and refit at γ = 0.30 and
+0.45, which are both inside the quasipotential's window and are the two worst
+slopes. A derivation that predicts 0.783 — or shows why the slope should
 drift with γ at all — would turn a collapse into a law.
 **How to kill it:** find a (γ, σ, Ω) region where p departs from the formula by
 more than the prefactor could explain, i.e. where the *shape* in Ω is wrong rather

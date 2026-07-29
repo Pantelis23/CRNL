@@ -2341,6 +2341,48 @@ measuring the suspected common cause and finding it innocent, rather than from
 noticing that some numbers looked alike.
 
 
+### 22.2 The second saddle is eliminated too, and what is left
+
+§22.1 cleared the barrier's γ-dependence. The next suspect was §12's **other**
+approximation: it minimises `f(δ) = (δ*−δ)²/2σ² + κΩδ²` over the flip location and
+keeps only the minimum. The exact version is a one-dimensional convolution of the
+channel Gaussian against the wall, and it is analytic:
+
+    p = Phi(-delta*/sigma)  +  [Gaussian prefactor] * exp(-kappa Omega delta*^2 / (1 + 2 kappa Omega sigma^2))
+
+The exponent is *exactly* §12's, so the saddle point loses two things: a prefactor,
+and an **Ω-independent** term — the channel crossing the saddle unaided — which no
+exponent can represent. Refitting §12's own 216 stored cells with the exact form:
+
+| | pooled slope | pooled R² | per-γ slopes (0.05 / 0.15 / 0.30 / 0.45) |
+|---|---|---|---|
+| §12's saddle | 0.7830 | 0.9604 | 0.81 / 0.68 / 0.51 / 0.68 |
+| exact convolution | 0.7756 | **0.9698** | 0.82 / 0.69 / 0.51 / 0.64 |
+
+**R² improves at every γ, so those two missing pieces are real — and the slope does
+not move.** It stays at ~0.78 and stays non-monotone in γ. The second saddle is
+eliminated as the explanation of the residual.
+
+**What that leaves, and it is now the only ingredient untested.** §12 uses
+`c(δ) = κδ²` — the barrier *quadratic in the displacement*. §22 checked how `κδ*²`
+scales with γ, not that `c` is quadratic in δ across the range the channel actually
+samples. There is already direct evidence it is not: §2's own table has `c/ε²`
+drifting **1.586 → 1.809** over ε ∈ [0.04, 0.20], and §14.1 measured `c ∝ δ^~2.5`
+for the n-winner at large n. A barrier that stiffens faster than quadratic away from
+the saddle would depress the fitted slope exactly as observed, and would do so
+γ-dependently because the sampled range of δ scales with δ*(γ).
+
+**Kill test:** replace `κδ²` with the exact ridge profile `W(0) − W(δ)` from
+`quasipotential.ridge_profile` inside the convolution above and refit. The
+instrument reaches γ = 0.30 and 0.45 — two of §12's four — which is enough, since
+those are the two with the worst slopes (0.51 and 0.64). If the slope goes to 1
+there, the residual is the quadratic barrier and §12's formula needs only its
+`c(δ)` replaced.
+
+**Three suspects, two down, by elimination rather than consolidation.** This is what
+the Q7 episode should have looked like.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

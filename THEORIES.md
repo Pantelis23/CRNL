@@ -161,7 +161,10 @@ FINDINGS open question 8 is answered in the same stroke for γ ≤ 0.30.
 **Status: DEAD in the simple form, and the failure sharpens §3.**
 
 §12 found `κ(γ) = (9/2)·λ_antisym(γ)` — the restoration barrier proportional to the
-symmetry-breaking eigenvalue. §13 computes that eigenvalue for any n, so the hope
+symmetry-breaking eigenvalue. (**That κ was later corrected to
+`λ(γ)/(2·D₀(γ)) = (3/2)(1−2γ)/(1+γ)` in §15**: §12 scaled the gain with γ and left
+the diffusion at its γ=0 value. It does not rescue T7 — the correction is a factor
+in γ, and T7 died on the *n*-dependence.) §13 computes that eigenvalue for any n, so the hope
 was that it would predict §3's measured `c(n)` and explain its unexplained
 saturation. It does not:
 
@@ -707,6 +710,27 @@ universal or accidental.
 - ~~Can restoration be priced per bit without a comparator?~~ → §11.
 - ~~Is the cascade channel-limited?~~ → §12, and with a parameter-free formula
   covering both regimes.
+
+---
+
+## 3a. State of the base
+
+Twenty-six load-bearing closed forms are re-derived from the current code by
+`experiments/verify_base.py` and checked against their published values; it runs as
+part of the suite (`tests/test_verify_base.py`), so drift is a failure rather than a
+later discovery. **All 26 agree** as of the §21 work.
+
+This exists because the suite alone does not answer the question. The suite proves
+the code is self-consistent *with itself*; the audit proves it still agrees with
+what is **written down**, and the two come apart the moment a behavioural function
+changes underneath sections already published. §15 changed
+`information.wall_coefficient`, which feeds `predicted_exponent` and
+`crossover_omega` and therefore §12 — those numbers are deliberately left as first
+published, with the refit tabulated in §15.2 and `wall_coefficient_gain_only` kept
+callable so they still reproduce.
+
+Sampling-derived results are excluded from the audit on purpose: they cannot be
+re-derived exactly, and their agreement is the suite's job, not this one's.
 
 ---
 

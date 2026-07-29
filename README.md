@@ -437,6 +437,48 @@ python -m experiments.tilt_rule_limit --omegas 100 200 400
 python -m experiments.relic_asymmetry
 ```
 
+## What a simulation is allowed to throw away
+
+CRNL's method has always been a two-point version of this — ODE against exact SSA,
+and the gap is the subject. Filling in the levels between (chemical Langevin,
+tau-leaping) and scoring all of them against an exact CME splitting probability
+gives a sharper answer than expected: **it is a cliff, not a slope.**
+
+Every level that keeps *any* noise recovers the restoration error exponent to
+within about ten percent — the CLE with real-valued counts and Gaussian noise,
+tau-leaping with windowed Poisson firings, and the exact SSA are all in one class.
+The ODE, keeping none, reports **exactly zero** in every cell where the truth spans
+1.5e-3 to 1.6e-1, and has no refinement parameter that improves it. So the
+discreteness, the exact jump timing and the correct jump distribution are all
+discardable for this observable; **having noise at all is not.** Checked at n = 2
+and again at n = 3, where it survives.
+
+The corollary is about cost: a cheap SDE gets the exponent, and the expensive
+exactness (O(Ω) events for the SSA, O(Ω²) memory for the CME) buys the *prefactor*
+and the individual probabilities. A simulation that needs to know how fast
+reliability grows with population can be cheap; one that needs the actual failure
+rate cannot.
+
+Why this is not a numerics exercise: Kurtz's theorem licenses the ODE limit on
+finite time intervals, and §5.1 leans on it. It is true, and it does not cover this
+observable, because restoration lives in tails where the convergence is not
+uniform. **A limit theorem cannot tell you what your simulation may throw away.**
+[`FINDINGS.md`](FINDINGS.md) §21.
+
+```bash
+python -m experiments.approximation_hierarchy --omegas 40 70 100 --trials 2000
+python -m experiments.verify_base            # re-derives the published closed forms
+```
+
+## Verifying the base
+
+`experiments/verify_base.py` re-derives 26 load-bearing closed forms from the
+current code and checks them against their published values, and runs as part of
+the suite. The tests prove the code is self-consistent with itself; the audit
+proves it still agrees with what is written down — a different question, and the
+one that rots silently when a behavioural function changes underneath sections
+already published (§15 changed the wall coefficient). All 26 currently agree.
+
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE).

@@ -427,18 +427,52 @@ carries its own loss probability, so the bit goes at a shallower `gamma_eff`:
 at Phi/Omega = 400 (landscape still alive). A louder channel raises the per-stage
 loss probability, hence the sigma-drift.
 
-**T10b-iii-a, open: what IS the exponent a function of?** §23 establishes the drift
-and refuses to fit it: three sigma (one disqualified as noise-bound) and three Omega
-can kill a null but cannot support a law, and §22.5 is the standing warning about
-fitting harder than the data. The accumulation picture above predicts something
-specific and checkable -- the exponent should be a function of the per-stage loss
-probability alone, not of sigma and Omega separately. **How to kill:** measure the
-per-stage loss probability `p` directly in the healthy-tank regime across a grid of
-(sigma, Omega), and test whether the exponent collapses onto a single curve in `p`.
-If cells with matched `p` but different (sigma, Omega) give different exponents, the
-accumulation picture is incomplete and the sigma-dependence has a second source.
-Keep every cell exhaustion-bound (fueled depth < 0.8x control) or the limit is
-definitional rather than measured.
+~~**T10b-iii-a: what IS the exponent a function of?**~~ **TESTED -> §23.4, and the
+mechanism above is mostly wrong.** The proposed kill test -- collapse the exponent
+onto a curve in the healthy-tank per-stage loss probability `p` -- was badly posed
+and §23.4 says why: at sigma_ch/delta* = 0.03 the healthy-tank `p` is at most
+0.00125, which over the 44 stages the largest tank lasts accumulates to ~5%. It
+cannot carry the effect, so there was nothing to collapse.
+
+Tested properly instead, as an ABSOLUTE hazard integral with no free parameter
+(measure `q(theta)` and `c(theta)` in single stages, integrate the survival product,
+read off the median depth). Verdict, three parts:
+
+- **The absolute depths come out right at the large budgets** -- 1.09x and 1.20x at
+  Phi/Omega = 200-400, parameter-free. Real support for the picture.
+- **Accumulated hazard explains the sigma-DRIFT and only that.** Forcing the hazard
+  to zero changes the predicted depth by 0.0% at four of five budgets, but flattens
+  the drift from -0.121 (measured -0.107) to -0.030.
+- **It does NOT explain the sublinearity.** With hazard off the exponent is 0.9156,
+  near the linear value; measured is 0.6474. The integral matches large tanks and
+  under-predicts small ones by up to 1.75x, so the sublinearity is mostly **small
+  tanks over-performing**, not big tanks under-performing.
+
+Why they over-perform, measured at 200 trials/cell: the smallest tank holds the bit
+for a median **3 of its 7 stages at `gamma_eff` > `gamma_c`**, i.e. in a MONOSTABLE
+landscape with no rail, at a real separation (median delta = 0.19, ~8 molecules at
+Omega=40); 97% of trials reach that regime against 9.5% for the largest tank.
+Restoration is unavailable and the bit persists on kinetics -- the stage is two
+relaxation times at `gamma_0` while `lambda(gamma_eff) -> 0` at `gamma_c`, so a tank
+that drains in a few stages gives the state no time to follow the collapsing
+landscape. NOT established: any general "the state lags the rail" statement. That
+prediction's statistic was confounded and the matched-`gamma_eff` version scatters
+0.70-1.65 with no ordering in Phi (§23.4).
+
+**T10b-iii-b, open: can the kinetic excess be computed rather than named?** §23.4
+attributes the 0.25 exponent gap (quasi-static 0.893 -> measured 0.647) to holding
+past `gamma_c`, but nothing there predicts the number. The kinetic picture says the
+excess should be controlled by the ratio of the stage time to the relaxation time at
+the CURRENT `gamma_eff`, i.e. by `lambda(gamma_eff) * t_stage`, which vanishes at
+`gamma_c` -- so it is a statement about a dimensionless group, not about Phi.
+**How to kill:** re-run §23's five-budget sweep with the stage time set adaptively
+from `lambda(gamma_eff)` instead of `lambda(gamma_0)`, so every stage is two CURRENT
+relaxation times and the state cannot fall behind. If the exponent rises to the
+quasi-static 0.89-0.92 the kinetic account is right; if it stays near 0.65 the excess
+is not a lag at all and §23.4's attribution must be withdrawn. Note the adaptive
+stage changes the fuel burned per stage, so `c(theta)` must be re-measured rather
+than reused -- and the control has to move onto the same clock or this repeats
+§10.3's mismatched-rail error.
 
 ---
 

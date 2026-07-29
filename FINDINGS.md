@@ -2658,10 +2658,91 @@ in the abstract: there is a fuel-limited depth **for a given channel and
 population**, and its budget exponent runs from 0.65 down to 0.26 within the range
 tested here.
 
+> ⚠ **The mechanism paragraph immediately above is mostly wrong — corrected in
+> §23.4.** It survives only as the explanation of the *σ-drift*. Accumulated hazard
+> is not what makes the scaling sublinear, and "more stages spent in the healthy
+> part of the tank" is the specific phrase that fails: the healthy-tank per-stage
+> loss probability is ≤ 0.00125 at σ/δ* = 0.03. Everything else in §23 stands.
+
 **What §23 does not establish.** No functional form for the exponent's σ- or
 Ω-dependence is claimed. Three σ (one of which is disqualified above) and three Ω
 are enough to establish the drift and kill P6; they are not enough to fit a law, and
 §22.5's lesson about fitting harder than the data supports applies here unchanged.
+
+### 23.4 Testing that mechanism absolutely — and correcting it — `fuel_hazard.py`, `fuel_rail_lag.py`
+
+§23.3's mechanism was read out of a decomposition, which is the failure mode rule 16
+exists for. Tested as an **absolute prediction with no free parameter**: measure the
+per-stage loss probability `q(θ)` and waste made per stage `c(θ)` in single stages
+from the attractor of each burn fraction θ, then integrate the survival product
+`θ_{d+1} = θ_d + c(θ_d)/Φ`, `S_{d+1} = S_d(1 − q(θ_d))` and read off where `S` crosses
+½. Ω = 40, γ₀ = 0.3, 800 trials per (θ, Φ) cell, 14 θ from 0.2308 to 0.48.
+
+**The absolute depths come out right — the exponent does not.** Predicted ÷ measured
+median depth, over the five budgets:
+
+| σ_ch/δ* | Φ/Ω=25 | 50 | 100 | 200 | 400 |
+|---|---|---|---|---|---|
+| 0.03 | 0.571 | 0.667 | 0.824 | **1.000** | **1.091** |
+| 0.15 | 0.667 | 0.667 | 0.923 | **1.200** | **1.107** |
+
+Parameter-free agreement to 1.09–1.20× at the large budgets is a real success for
+the picture. But the ratio *rises monotonically with Φ*, so the predicted exponent
+must be steeper than the measured one, and it is:
+
+| | σ/δ* = 0.03 | σ/δ* = 0.15 | σ-drift |
+|---|---|---|---|
+| hazard integral | 0.8925 ± 0.017 | 0.7716 ± 0.042 | **−0.121** |
+| same integral, hazard forced to 0 | 0.9156 ± 0.015 | 0.8857 ± 0.041 | −0.030 |
+| **measured (§23.1)** | **0.6474 ± 0.022** | **0.5404 ± 0.020** | **−0.107** |
+
+> **§23.3's mechanism, corrected.** Switching the hazard off changes the predicted
+> depth by **0.0% at four of the five budgets** (7.7% at the largest, quiet
+> channel). Accumulated hazard therefore cannot be what makes the scaling
+> sublinear — with it switched off the exponent is 0.916, near the linear value P5
+> argued for. What the hazard *does* explain is the **σ-drift**: −0.121 predicted
+> against −0.107 measured, agreeing within the fit errors, while the no-hazard
+> version drifts only −0.030. So the σ-dependence of the exponent is accumulated
+> hazard, exactly as §23.3 said; the *sublinearity itself* is not.
+
+**Which leaves a 0.25 gap, and it is not the big tanks under-performing.** The
+integral matches the large budgets and under-predicts the small ones by up to
+1.75×. The sublinearity is mostly **small tanks over-performing** — surviving
+longer than a quasi-static account permits. §23.3 recorded the symptom without
+reading it: the smallest tank loses the bit at γ_eff = 0.75, past γ_c = 0.5, where
+δ* does not exist and **the landscape is monostable**.
+
+Measured directly (200 trials per cell, tracking γ_eff and δ every stage):
+
+| σ/δ* = 0.03 | Φ/Ω=25 | 50 | 100 | 200 | 400 |
+|---|---|---|---|---|---|
+| median stages held at γ_eff ≥ γ_c | **3 of 7** | 3 of 11 | 1.5 of 16.5 | 0 of 27 | **0 of 46** |
+| trials reaching γ_eff ≥ γ_c | **97.0%** | 91.0% | 66.5% | 41.0% | **9.5%** |
+| median δ while past γ_c | 0.188 | 0.200 | 0.225 | 0.213 | — |
+
+The smallest tank spends a median **3 of its 7 stages holding a bit in a landscape
+with no stable rail**, and the bit is a real one — median separation 0.19, about 8
+molecules at Ω = 40 — not a marginal one. The largest tank essentially never enters
+that regime. Restoration has stopped being available and the bit persists on
+kinetics: the stage is two relaxation times at γ₀, but `λ(γ_eff) → 0` at γ_c, so a
+tank that drains in a handful of stages leaves the state no time to follow the
+collapsing landscape. This is why `fuel_hazard.py` matches the large budgets (P3:
+quasi-static, loss at γ_eff = 0.42 with the rail intact) and under-predicts the
+small ones.
+
+> **Prediction P1 of `fuel_rail_lag.py` is NOT supported, and its statistic was
+> badly chosen.** I predicted the carried separation would exceed the rail by more
+> at small Φ. Measured one stage before loss the ratio is confounded — δ is
+> necessarily small there, so the ratio tracks proximity to loss, not lag. Measured
+> instead at *matched* γ_eff, it scatters 0.70–1.65 with **no ordering in Φ** on the
+> 12 stored traces per cell. A general "the state lags the rail" claim is therefore
+> unestablished; what is established is the narrower and larger-sample fact in the
+> table — bits held past γ_c, 97% of trials to 9.5% across the budget range. P4,
+> which would have forced outright withdrawal, did not fire.
+
+**What §23.4 leaves open.** The 0.25 exponent gap is *attributed* to holding past
+γ_c but not *accounted for* — no calculation here predicts the measured 0.647 from
+the quasi-static 0.893 plus a kinetic term. That is T10b-iii-b.
 
 
 ## Open questions

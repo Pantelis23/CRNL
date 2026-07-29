@@ -51,8 +51,18 @@ the barrier's γ-dependence is right (exponent 2 to 0.1% asymptotically), and do
 §12's δ-minimisation exactly instead of by saddle point improves R² everywhere
 (0.960 -> 0.970) while leaving the slope at 0.776.
 
-**The one untested ingredient is `c(δ) = κδ²` — the barrier quadratic in the
-displacement.** §2's own table has `c/ε²` drifting 1.586 -> 1.809 across
+**MEASURED -> §22.3: the quadratic barrier WAS the main cause, and the
+γ-dependence is not.** Replacing `c(δ) = κδ²` with the exact ridge profile moves the
+slopes from 0.51 and 0.68 to 0.90 and 1.25 — from 40% low to bracketing 1 — where
+nothing else tried moved them at all. But R² *drops* (0.935 -> 0.810, 0.974 ->
+0.954) and the γ-spread is untouched (ratio 1.35 -> 1.39). So the residual splits:
+a large explained part from the quadratic assumption, and a smaller **still
+unexplained γ-dependence** that survives every correction applied. A fix that
+improves the slope while degrading the fit has the right first-order term and the
+wrong second-order one; the section names three untested candidates for that.
+
+**The original framing, now spent:** the one untested ingredient is `c(δ) = κδ²` —
+the barrier quadratic in the displacement. §2's own table has `c/ε²` drifting 1.586 -> 1.809 across
 ε ∈ [0.04, 0.20], and §14.1 measured `c ∝ δ^~2.5` at large n, so there is direct
 evidence it is not quadratic over the range the channel samples. **Kill test in
 §22.2:** put the exact ridge profile into the convolution and refit at γ = 0.30 and

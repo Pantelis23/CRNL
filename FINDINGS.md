@@ -2383,6 +2383,48 @@ there, the residual is the quadratic barrier and §12's formula needs only its
 the Q7 episode should have looked like.
 
 
+### 22.3 The quadratic barrier was the residual — identified, not resolved
+
+The kill test named in §22.2, run: replace `c(δ) = κδ²` with the exact ridge
+profile `W(0) − W(δ)` inside the convolution and refit §12's stored cells at the
+two γ inside the quasipotential's window — which are also its two worst slopes.
+
+| γ | slope, `c = κδ²` | R² | slope, **exact `c(δ)`** | R² |
+|---|---|---|---|---|
+| 0.30 | 0.5074 | 0.9349 | **0.9006** | 0.8103 |
+| 0.45 | 0.6838 | 0.9741 | **1.2495** | 0.9539 |
+
+**The quadratic barrier was the dominant residual.** The slopes move from 0.51 and
+0.68 — roughly 40% low — to 0.90 and 1.25, i.e. from well below 1 to bracketing it.
+Nothing else tried moved them at all: §22.1's γ-scaling check cleared the barrier's
+γ-dependence, and §22.2's exact convolution shifted the pooled slope by 0.007.
+
+**It is not a clean fix, and the two ways it falls short are different.** R² *drops*
+at both γ (0.935 → 0.810, 0.974 → 0.954), so the exact-`c` model fits worse even as
+it centres better. And the γ-spread is untouched: the two slopes ran 0.51 → 0.68
+(ratio 1.35) and now run 0.90 → 1.25 (ratio 1.39). **The correction moves the centre
+to ≈1 and leaves the γ-dependence exactly where it was.**
+
+So §12's residual splits into two things that were being read as one: a **large,
+now-explained** deficit from assuming the barrier is quadratic in the displacement,
+and a **smaller, still-unexplained** γ-dependence that survives every correction
+applied so far. §2 already showed the quadratic is only an ε→0 limit — `c/ε²` drifts
+1.586 → 1.809 over ε ∈ [0.04, 0.20] — and §14.1 measured `c ∝ δ^~2.5` at large n, so
+the first half was predictable in hindsight and is now measured.
+
+**Why the fit gets worse is the honest open end.** Candidates, none tested: the
+ridge profile carries its own Ω-error and was taken at a single Ω; the convolution
+still omits the transverse relaxation and the algebraic prefactor; and §12's cascade
+channel may not be exactly the Gaussian-on-δ this integral assumes. A correction
+that improves the slope while degrading the fit is reporting that it has the right
+first-order term and the wrong second-order one.
+
+**Scoreboard for §12's slope, three suspects and one session.** Barrier
+γ-dependence: cleared. Second saddle: cleared, and worth ~0.01 of slope. Quadratic
+barrier: **confirmed as the main cause**, worth ~0.4 of slope. Remaining: the
+γ-dependence, which no candidate so far touches.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

@@ -11,3 +11,6 @@ docs/superpowers/
 
 # agent worktrees and local Claude Code state
 .claude/
+
+# Local working rules, not part of the published record
+CLAUDE.md

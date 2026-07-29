@@ -2454,6 +2454,55 @@ barrier: **confirmed as the main cause**, worth ~0.4 of slope. Remaining: the
 γ-dependence, which no candidate so far touches.
 
 
+### 22.4 The convolution framework is not a model of §12, and §22.3's reading is withdrawn
+
+§22.2 and §22.3 fitted a convolution model against §12's stored `p_flip`. Fitting
+never tests a model's *absolute* correctness, so the model was finally compared
+against the exact same quantity it claims to predict: the single-stage flip
+probability, computed directly from `cascade_exact.stage_kernel` and
+`channel_matrix` with no fitting at all.
+
+Ratio of model to exact, γ = 0.30 and 0.45, Ω = 30/60/90, σ/δ* = 0.15/0.28/0.45:
+
+| model | ratio to exact |
+|---|---|
+| convolution with **exact** `c(δ)` | **5 – 3688×** |
+| convolution with `κδ²` | 1.0 – 10.4× |
+
+**The framework is wrong by up to three orders of magnitude, and the "improved"
+version is far worse than the crude one.** The cause is an approximation §22.2 and
+§22.3 never named: the convolution assumes the chemistry **runs to completion**, so
+the flip probability from displacement δ is `exp(−Ω·c(δ))`. §12's stage has a
+*finite* time, `t_stage = 16`, and a stage that has not finished cannot have
+completed an escape. The model therefore overestimates flipping, worst where the
+barrier is highest — 3688× at γ = 0.30, Ω = 90, σ/δ* = 0.15.
+
+**What this withdraws.** §22.3's reading — that replacing `κδ²` with the exact
+barrier moves the slope toward 1 and therefore identifies the quadratic barrier as
+§12's residual — **does not survive**. The slope did move, but a fitted slope from a
+model that is 10³ out in absolute terms is not evidence about §12's physics. The
+measurement stands; the interpretation does not.
+
+**What it establishes instead, and this is worth more.** The exact barrier is
+*shallower* than `κδ²` away from the saddle (that is the direction that makes the
+convolution predict *more* flipping). So `κδ²` **overestimates** the barrier, which
+suppresses predicted flipping — partially cancelling the framework's overestimate
+from assuming completion. **§12's formula fits as well as it does partly by error
+cancellation**: two wrong ingredients pulling opposite ways. That is why replacing
+one of them made agreement worse, and it is a better explanation of §12's residual
+than anything in §22.2 or §22.3.
+
+**§22.1 is untouched.** The `(γ_c−γ)²` barrier scaling was a direct quasipotential
+measurement with no convolution anywhere near it, and §15 stands or falls with it as
+before.
+
+**The lesson, and it is one of this file's own rules.** §22.2 and §22.3 compared
+models to each other and to a *fitted* slope, and never once asked what the model
+predicted in absolute terms against a quantity that could be computed exactly — even
+though `stage_kernel` has been in the repo since §12 and computes precisely that. A
+model that is only ever fitted is a model that is never tested.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

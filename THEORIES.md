@@ -51,8 +51,21 @@ the barrier's γ-dependence is right (exponent 2 to 0.1% asymptotically), and do
 §12's δ-minimisation exactly instead of by saddle point improves R² everywhere
 (0.960 -> 0.970) while leaving the slope at 0.776.
 
-**MEASURED -> §22.3: the quadratic barrier WAS the main cause, and the
-γ-dependence is not.** Replacing `c(δ) = κδ²` with the exact ridge profile moves the
+**§22.3's answer is WITHDRAWN by §22.4 — the model it used is 10^3 out.**
+Compared against the exact single-stage flip from `stage_kernel` (no fitting), the
+convolution framework is off by 5-3688x with the exact barrier and 1-10x with the
+quadratic one, because it assumes the chemistry RUNS TO COMPLETION where §12's
+stage has t_stage = 16. A fitted slope from such a model says nothing about §12's
+physics.
+
+**What replaced it is better.** The exact barrier is shallower than `κδ²` away from
+the saddle, so `κδ²` overestimates the barrier and suppresses predicted flipping --
+partially cancelling the framework's overestimate from assuming completion. **§12's
+formula fits as well as it does partly by error cancellation**, which explains why
+correcting one ingredient made agreement worse. §22.1 is untouched.
+
+**The superseded reading:** the quadratic barrier WAS the main cause, and the
+γ-dependence is not. Replacing `c(δ) = κδ²` with the exact ridge profile moves the
 slopes from 0.51 and 0.68 to 0.90 and 1.25 — from 40% low to bracketing 1 — where
 nothing else tried moved them at all. But R² *drops* (0.935 -> 0.810, 0.974 ->
 0.954) and the γ-spread is untouched (ratio 1.35 -> 1.39). So the residual splits:

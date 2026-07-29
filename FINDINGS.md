@@ -2503,6 +2503,47 @@ though `stage_kernel` has been in the repo since §12 and computes precisely tha
 model that is only ever fitted is a model that is never tested.
 
 
+### 22.5 The cancellation, measured
+
+§22.4 asserted that §12's formula works partly by error cancellation. Asserting is
+not measuring, so the two errors were separated. The exact barrier has *no* barrier
+error by construction, so `conv(exact c)/exact` isolates the **framework** error
+`F`; the ratio between the two convolutions isolates the **barrier** error `B`.
+
+| | range across γ = 0.30/0.45, Ω = 30/60/90, σ/δ* = 0.15/0.28/0.45 |
+|---|---|
+| **F** — framework (assumes the chemistry completes) | 5.0 → **3687.6** |
+| **B** — barrier (`κδ²` vs exact) | **0.0010** → 0.7840 |
+| **net** = F·B — what §12's formula actually costs | 1.03 → 10.4 |
+
+**Two errors spanning about three decades each, cancelling to within one.** That is
+the cancellation, and it is larger than §22.4 guessed. It explains both facts that
+motivated §22.2–§22.4: why §12's crude formula tracks the exact answer as well as it
+does, and why replacing one ingredient with an exact one made agreement *worse*.
+
+The two errors pull opposite ways for reasons that are now clear. `F > 1` because a
+stage that has not finished cannot have completed an escape, so assuming completion
+overestimates flipping. `B < 1` because `κδ²` is *stiffer* than the true barrier away
+from the saddle, so it suppresses flipping. And `B → 1` as the barrier shrinks
+(0.78, 0.74, 0.70 at γ = 0.45) exactly as it must, since §15 verified `κ` **is** the
+true curvature at the saddle — the quadratic is right there and wrong further out.
+
+**The mechanism's functional form is NOT established, and this is where to stop.**
+Finite stage time predicts `F` should grow with barrier height, and it does — but a
+pooled log-log fit gives `ln F = 0.969·ln(Ω·c(δ*)) + 2.48` at only **R² = 0.62**, and
+the behaviour differs *within* each γ: roughly exponential in the barrier at
+γ = 0.30 (F = 113 → 3688 for a 1.5× barrier change) and sublinear at γ = 0.45
+(F = 5.0 → 8.7 for a 3× change). Direction confirmed, law not. Given that this
+thread has already produced one withdrawn interpretation from over-reading a fit,
+the functional form is left unclaimed rather than fitted harder.
+
+**What stands from §22 as a whole.** §22.1: the barrier vanishes as `(γ_c−γ)²`,
+exponent measured 1.9745 with the local slope reaching 2.0015 — a direct
+quasipotential measurement, and §15 stands with it. §22.4–§22.5: §12's residual is
+error cancellation between a framework that assumes completion and a barrier that is
+too stiff, both now quantified. §22.2 and §22.3's readings are withdrawn.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

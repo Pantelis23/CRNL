@@ -62,7 +62,18 @@ physics.
 the saddle, so `κδ²` overestimates the barrier and suppresses predicted flipping --
 partially cancelling the framework's overestimate from assuming completion. **§12's
 formula fits as well as it does partly by error cancellation**, which explains why
-correcting one ingredient made agreement worse. §22.1 is untouched.
+correcting one ingredient made agreement worse.
+
+**§22.5 measures it.** The framework error runs **5 to 3688x** and the barrier error
+**0.001 to 0.78** -- two spans of about three decades cancelling to within one. `B`
+approaches 1 as the barrier shrinks (0.78 / 0.74 / 0.70 at γ = 0.45) exactly as it
+must, since §15 verified `κ` IS the true curvature **at** the saddle: the quadratic
+is right there and wrong further out. The mechanism's functional form is
+deliberately **left unclaimed** -- finite stage time predicts F should grow with the
+barrier and it does, but the pooled log-log fit is only R² = 0.62 and the
+within-γ behaviour differs (roughly exponential at γ = 0.30, sublinear at γ = 0.45).
+Direction confirmed, law not; this thread has already produced one withdrawn
+interpretation from over-reading a fit. §22.1 is untouched.
 
 **The superseded reading:** the quadratic barrier WAS the main cause, and the
 γ-dependence is not. Replacing `c(δ) = κδ²` with the exact ridge profile moves the

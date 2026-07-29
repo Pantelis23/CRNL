@@ -2419,6 +2419,35 @@ channel may not be exactly the Gaussian-on-δ this integral assumes. A correctio
 that improves the slope while degrading the fit is reporting that it has the right
 first-order term and the wrong second-order one.
 
+**Sensitivity to the instrument's own axis, which had to be checked before any of
+the above is quotable.** The ridge profile was built at a single Ω, and §15 showed
+it converges as 1/Ω — so the profile Ω is a second axis on this measurement:
+
+| γ | profile Ω | slope | R² |
+|---|---|---|---|
+| 0.30 | 150 / 162 / 174 | 0.894 / 0.902 / 0.909 | 0.8095 / 0.8105 / 0.8114 |
+| 0.45 | 300 / 500 / 900 | 1.202 / 1.280 / **1.339** | 0.9548 / 0.9533 / 0.9522 |
+
+Two things, and they point opposite ways.
+
+**R² is flat in the profile Ω at both γ** (fourth decimal). So the fit degradation
+reported above is **not** the profile's error — candidate 1 is eliminated, and the
+omitted prefactor/transverse relaxation (candidate 2) and the channel model
+(candidate 3) survive as the explanation.
+
+**But the γ = 0.45 slope is not converged.** It drifts 11% over a 3× change in
+profile Ω and is *still climbing* at Ω = 900. So the `1.2495` quoted above carries
+at least that much uncertainty and the true value is ≥ 1.34. The γ = 0.30 slope is
+solid (1.6% over its whole available window, which is narrow because the barrier
+there is near the floor).
+
+**This weakens the "brackets 1" reading and does not weaken the main result.** The
+slope at γ = 0.45 may sit well above 1 rather than just above it, which makes the
+overshoot larger and the remaining γ-dependence *worse*, not better — the two
+slopes are then 0.90 and ≥1.34, a ratio of ≥1.5 against the quadratic model's 1.35.
+The finding that the quadratic barrier is the dominant cause is untouched: it rests
+on the move from 0.51/0.68, which is far larger than this uncertainty.
+
 **Scoreboard for §12's slope, three suspects and one session.** Barrier
 γ-dependence: cleared. Second saddle: cleared, and worth ~0.01 of slope. Quadratic
 barrier: **confirmed as the main cause**, worth ~0.4 of slope. Remaining: the

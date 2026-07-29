@@ -59,7 +59,12 @@ nothing else tried moved them at all. But R² *drops* (0.935 -> 0.810, 0.974 ->
 a large explained part from the quadratic assumption, and a smaller **still
 unexplained γ-dependence** that survives every correction applied. A fix that
 improves the slope while degrading the fit has the right first-order term and the
-wrong second-order one; the section names three untested candidates for that.
+wrong second-order one. Of the three candidates named for that, the profile's own
+Omega-error is **eliminated** -- R^2 is flat to the fourth decimal across a 3x
+change in it -- leaving the omitted prefactor/transverse relaxation and the channel
+model. The same check found the gamma = 0.45 slope is **not converged** (1.20 ->
+1.34 and still climbing), so the overshoot there is larger than first reported and
+the residual gamma-dependence is worse, not better.
 
 **The original framing, now spent:** the one untested ingredient is `c(δ) = κδ²` —
 the barrier quadratic in the displacement. §2's own table has `c/ε²` drifting 1.586 -> 1.809 across

@@ -711,14 +711,44 @@ Also note §24's own full cell reached only 0.7026 against a measured 0.6325, so
 `(theta, delta)` is not the whole state of the fuel system and 0.0701 of exponent lies
 outside both coordinates -- that gap is untouched by this test.
 
-**T11-REFINED-a, open: does the signal/bookkeeping split survive when the roles are
-not obvious?** Both systems tested have one coordinate that is transparently the bit
-and one that is transparently a pool. **How to kill:** run the same projection on
-`n_winner_reversible` at n = 3 or 4, where the simplex has two or more signal
-directions and no single "the bit" coordinate. If noise must be retained in EVERY
-signal direction but none of the bookkeeping ones, the split is structural; if the
-required set does not decompose that cleanly, the distinction is a two-species
-convenience.
+~~**T11-REFINED-a: does the signal/bookkeeping split survive when the roles are not
+obvious?**~~ **PARTLY ANSWERED -> §24.2. The SUBSPACE-level split holds at n = 3; the
+within-subspace question is still open because the arm that tests it was invalid.**
+
+At n = 3, with `gamma = 0.60 * gamma_c(3)` matching §21.4 and an exact CME reference:
+`bookkeeping-only` (80% of the noise variance, all in the blank pool) is
+**categorically 0 in all eight cells**, and `signal-only` (19-20%) carries the
+exponent to 6.6-8.5%. So the split is not a two-species convenience -- it survives
+where the signal subspace is two-dimensional.
+
+**Wording consequence: "the signal COORDINATE" becomes "the signal SUBSPACE".** At
+n = 2 the difference subspace is one-dimensional, so §24.1 could not distinguish the
+two; n = 3 can, and it is the subspace that matters.
+
+Honest cost: `signal-only` runs 13-28% high at eps = 0.25 and 88-157% high at
+eps = 0.40, against n = 2's 2-18%. Dropping the pool's noise costs MORE with more
+rivals, and worsens with the barrier in both systems.
+
+**T11-REFINED-b, open: does the signal subspace decompose within itself?** The arm
+that would answer it -- `decision-only`, retaining only the champion-vs-rivals
+direction -- is INVALID as built. With the rival-vs-rival noise zeroed, `X2 - X3`
+evolves deterministically from its initial value, so the whole arm is decided by an
+integer-rounding parity in the start state: rivals tied -> p = 0 by construction,
+rivals differing by 1 -> p = 0.054. Same class as §12's floor-division artifact and
+§17's MI integer bias; more trials cannot fix it. **How to kill:** seed the rivals
+with a deliberate fixed asymmetry independent of Omega parity and re-run. If
+`decision-only` then recovers the exponent, an n-winner race needs noise in ONE
+direction of n, which is a statement about simulation cost; if it fails while
+`signal-only` works, the whole difference subspace is required and the split does not
+decompose further.
+
+**Also recorded, an error caught before it produced a result.** The first n = 3 run
+copied `gamma = 0.30` from §21's AM defaults, but `gamma_c` falls with n and
+`gamma_c(3) = 0.2023`, so it measured a network with NO LANDSCAPE -- width 0,
+threshold at its floor, the state sitting symmetric. It would have read as clean
+results. The experiment now takes `--gamma-frac` of `gamma_c` and refuses to run at
+zero width. **A parameter copied across networks is a parameter that has not been
+checked against the network it landed in.**
 
 ~~**T11a: is the cliff a property of restoration or of AM?**~~ **RUN AT n = 3 ->
 §21.4. The cliff survives.** The ODE reports exactly 0 in all four cells where the

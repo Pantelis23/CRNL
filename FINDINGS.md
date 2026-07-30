@@ -3324,6 +3324,77 @@ and an exact reference, and more sharply there than in §23 — categorical rath
 7×. §21's measurements stand as printed; **"having noise at all" is superseded by
 "having the signal coordinate's noise, at its own amplitude."**
 
+> **§24.2 sharpens "coordinate" to "subspace".** At n = 2 the difference subspace is
+> one-dimensional, so "the signal coordinate" and "the signal subspace" are the same
+> object and this section cannot tell them apart. At n = 3 they differ, and the
+> subspace-level split is what survives.
+
+### 24.2 At n = 3: the split is by SUBSPACE, and one arm was invalid — `noise_placement_nwinner.py`
+
+n = 2 has exactly one signal direction and one bookkeeping direction, so §24.1's
+split had nowhere to hide. At n = 3 the noise decomposes into three orthogonal free
+directions: **d1 = (1, −½, −½)** champion-vs-rivals, **d2 = (0, 1, −1)**
+rival-vs-rival, and the committed-vs-blank pool. `n_winner_reversible`, γ = 0.60·γ_c(3)
+= 0.1214 matching §21.4's convention, exact CME reference via
+`cme.splitting_probability`, 40,000 trials per cell.
+
+| ε | Ω | CME | full | signal-only | bookkeeping-only | rivals-only |
+|---|---|---|---|---|---|---|
+| 0.25 | 30 | 0.11530 | 0.11918 | 0.14780 | **0** | **0** |
+| 0.25 | 45 | 0.10654 | 0.10723 | 0.12392 | **0** | **0** |
+| 0.25 | 60 | 0.09160 | 0.09070 | 0.10378 | **0** | **0** |
+| 0.25 | 80 | 0.04120 | 0.04200 | 0.05025 | **0** | **0** |
+| 0.40 | 30 | 0.02858 | 0.03195 | 0.05378 | **0** | **0** |
+| 0.40 | 80 | 0.00075 | 0.00068 | 0.00193 | **0** | **0** |
+
+Variance retained: signal-only 19–20%, bookkeeping-only 80%, rivals-only 6%.
+Nothing unfinished in any cell.
+
+> **P1 confirmed.** `bookkeeping-only` — 80% of the noise, all in the blank pool —
+> is **categorically 0 in all eight cells**, reproducing §24.1's `s-only` at n = 3.
+> **P2 confirmed on the exponent, with a caveat on the probabilities:** `signal-only`
+> gets the exponent to 6.6% (−1.0239 against the exact −0.9608) and 8.5% (−3.3839
+> against −3.6995), but the probabilities themselves run **13–28% high at ε = 0.25
+> and 88–157% high at ε = 0.40** — substantially worse than n = 2's 2–18%, and
+> worsening with the barrier as it did there. Dropping the pool's noise costs more
+> when there are more rivals.
+
+> ⚠ **`decision-only` is INVALID as constructed and P3/P4 are unresolved.** Its
+> values were erratic and non-monotone in Ω — 0, 0.0537, 0, 0.0194 — and the cause is
+> not sampling. With d2's noise zeroed, X2 − X3 evolves *deterministically* from its
+> initial value, so the arm's entire behaviour is set by an integer-rounding parity
+> in the start state:
+>
+> | Ω | 30 | 45 | 60 | 80 |
+> |---|---|---|---|---|
+> | rivals at start | tied | differ by 1 | tied | tied |
+> | `decision-only` | 0.00000 | 0.05370 | 0.00000 | 0.00003 |
+>
+> When the rivals start tied they stay tied forever, no rival can break away, and X1
+> wins by construction. **This is the same class as the floor-division artifacts
+> already catalogued here** (§12's non-monotone CME error, §17's MI integer bias) and
+> no number of trials fixes it. **How to kill properly:** seed the rivals with a
+> deliberate fixed asymmetry independent of Ω parity, so the arm is not decided by
+> rounding. Until then, whether the signal subspace decomposes *within itself* is
+> untested. `rivals-only` is valid but near-definitional — with d1's noise removed,
+> X1 versus the rival mean is deterministic and X1 never loses.
+
+> **A second error caught before it produced anything, and worth recording.** The
+> first n = 3 run copied γ = 0.30 from §21's AM defaults. But γ_c falls with n —
+> γ_c(3) = 0.2023 — so that run measured a network with **no landscape at all**:
+> `landscape_width` = 0, the threshold collapsed to its floor of 2, the
+> bookkeeping-only state sat at a perfectly symmetric [9.2, 9.2, 9.2], and the "CME
+> reference" was the probability of a 2-count lead in a system with no attractor to
+> restore toward. It would have read as a clean set of results. The experiment now
+> takes `--gamma-frac` of γ_c like §21.4 and refuses to run if the width is zero.
+
+**What §24.2 settles.** The signal/bookkeeping split holds at n = 3: 80% of the noise
+is in the pool and removing it is categorical, while the 19% in the difference
+subspace carries the exponent. So §24's claim generalises to a **multi-dimensional
+signal subspace** — and its wording should be "the signal subspace", since n = 2
+could not distinguish that from a single coordinate. Whether the subspace decomposes
+further is open, with the arm that would test it named and currently broken.
+
 
 ## Open questions
 

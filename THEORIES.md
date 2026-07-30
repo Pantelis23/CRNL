@@ -534,8 +534,42 @@ separation it imposes past `gamma_c` at all**, so §23.6's 39.6% came from permi
 past-`gamma_c` stages at all, a structural correction, not from their value. Recorded
 as a rule 17 violation committed in the same paragraph that reported rule 17 working.
 
-~~**T10b-iii-e (pre-`gamma_c` over-prediction), and any further repair of the
-integral:**~~ **NOT OPENED, deliberately.** Three repairs have been tested -- imposed
+**T10b-iii-e, open: the residue is STRUCTURAL, and one structural approximation is
+left untested.** §23.9 reopened the thread on a different axis from the one closed
+below. The integral makes exactly two structural approximations -- deterministic
+`theta` and independent stages -- and the two surviving errors have their signs and
+`Phi`-scalings. Testing the first WITHOUT CHANGING ANY HAZARD VALUE (same `q(theta)`,
+same measured burn, `theta` propagated as an ensemble with per-stage burn drawn from
+its measured spread) moves the exponent 0.7919 -> 0.7641, closing 19.2%.
+
+Scoreboard against the 0.2393 gap from the hard-stop integral: **structural repairs
+39.6% + 11.6% = 51%; parametric repairs 2.7% + ~0% = 3%.** That is the pattern, and
+it points the remaining ~49% at the one structural approximation not yet tested:
+**stages are treated as independent, but `delta` carries memory across them** -- a bit
+knocked down stays down, so correlated trials die sooner than an independent product
+predicts, which is an OVER-prediction and matches the +10% at the large tanks that no
+past-`gamma_c` repair could touch.
+
+**How to kill:** measure the per-stage loss probability CONDITIONED on the separation
+carried into the stage, `q(theta, delta)`, and propagate `delta` as a second ensemble
+coordinate instead of collapsing it into `q(theta)`. If the exponent falls to ~0.65
+the independence assumption was the rest of the error. If it does not, the residue has
+no surviving suspect, structural or parametric, and the integral should be abandoned
+rather than repaired. **Note this is a genuinely different object** -- a two-variable
+stage map, which is most of the way to just running the simulation -- so the result
+worth having is the DECOMPOSITION (how much each approximation costs), not a working
+model.
+
+**Caveats to carry into it, both from §23.9.** (i) Part of the large-tank change under
+the ensemble is trajectories crossing the `theta_max` cutoff, a model boundary rather
+than physics. (ii) §23.9's own P4 fired: 0.0278 of exponent against a 0.032 combined
+fit error is 0.87 sigma, so `theta`-dispersion is a real contributor of the right sign
+and scaling but is NOT significant by the criterion set in advance. The paired
+per-budget ratios are monotone across all five budgets, which is the argument for it
+being real; both readings are on the record.
+
+~~**T10b-iii-e as first framed (pre-`gamma_c` over-prediction), and any further
+PARAMETRIC repair of the integral:**~~ **NOT OPENED, deliberately.** Three repairs have been tested -- imposed
 quasi-static state (1.6 sigma from nothing), removing the hard stop (39.6%),
 correcting the imposed separation (2.7%) -- and +0.14 survives as two errors in two
 regions. Following §22.5's precedent the residue is left named and unexplained rather

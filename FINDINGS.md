@@ -3002,6 +3002,87 @@ survival history (§23.7). The integral's own contribution is that it reproduced
 §23.3's proposed mechanism that survived contact with a test — and that it bounded
 three candidate errors well enough to eliminate two of them.
 
+### 23.9 Testing the integral's *form* instead of its numbers — `fuel_ensemble_integral.py`
+
+§23.8 closed the thread against further **parametric** repair. This reopens it on a
+different axis, because the two surviving errors have the signs and Φ-scalings of the
+integral's two **structural** approximations:
+
+```
+θ_{d+1} = θ_d + c(θ_d)/Φ        ← deterministic burn
+S_{d+1} = S_d · (1 − q(θ_d))    ← independent stages
+```
+
+**(a)** Real burn is stochastic, so at stage *d* there is a *distribution* of θ. Fast
+burners reach high θ and die, so survivors are biased below the mean; `q(θ)` rises
+steeply, so evaluating at the mean overstates the hazard among survivors and the
+integral under-predicts. Relative spread of accumulated burn ~ 1/√Φ, so this is
+strongest at small tanks — the sign and scaling of the −22%. **(b)** δ carries memory
+across stages, so correlated trials die sooner than an independent product — the +10%.
+
+This tests **(a) only**, and changes **no hazard value**: same measured `q(θ)`, same
+measured burn. The single change is that θ is propagated as an ensemble of stochastic
+trajectories, with per-stage burn drawn from its *measured* mean and spread.
+
+| Φ/Ω | deterministic | ensemble | measured | det/meas | ens/meas |
+|---|---|---|---|---|---|
+| 25 | 5.47 | 5.72 | 7 | 0.782 | 0.817 |
+| 50 | 8.66 | 8.87 | 12 | 0.722 | 0.739 |
+| 100 | 14.94 | 14.92 | 17 | 0.879 | 0.878 |
+| 200 | 26.97 | 26.49 | 27 | 0.999 | 0.981 |
+| 400 | 48.23 | 46.75 | 44 | 1.096 | 1.063 |
+| **exponent** | **0.7919 ± 0.022** | **0.7641 ± 0.023** | **0.6474 ± 0.022** | | |
+
+> **The same instrument fault as §23.6, reintroduced by me two sections later.** The
+> first pass took `np.median` of *integer* depths for the ensemble while comparing it
+> against the deterministic *continuous* crossing. That inflated the headline from
+> **19.2% to 27.3%**. Both numbers are recorded; 19.2% is the real one. Catching this
+> twice in one thread is the argument for making the continuous crossing the default
+> rather than a thing each new script re-derives.
+
+**Verdict: the effect is real, systematic, and small.**
+
+> **P1 refuted, and in the helpful direction.** I predicted ensemble ≥ deterministic
+> at every budget. It is higher only at the two smallest tanks and *lower* at the
+> three largest (48.23 → 46.75), so both ends move toward the measurement rather than
+> one. Caveat against over-reading that: part of the large-tank decrease is
+> trajectories fluctuating across the θ_max cutoff, which is a model boundary, not
+> physics.
+>
+> **P2 confirmed, but its escape clause was wrong.** I predicted < 50% of the
+> small-tank gap would close *unless* burn is much burstier than Poisson. Burn **is**
+> super-Poisson — measured sd/Poisson sd = 2.60, 2.66, 2.85, 3.00, 2.95 — and only
+> **16.2%** of the small-tank gap closed anyway. So the dispersion is ~3× larger than
+> my estimate assumed and still does not carry the error.
+>
+> **P3 approximately confirmed:** predicted ~0.72–0.75, measured 0.7641.
+>
+> **P4 fires on its own pre-registered criterion, and I am not going to argue it
+> away.** I wrote that if the exponent moved by less than its fit error, θ-dispersion
+> is not the small-tank error. The move is 0.0278 against a combined SE of 0.032 —
+> **0.87σ**. Against that: the two integrators share identical `q(θ)` and `c(θ)`, so
+> the *paired* difference is far better determined than independent fits imply, and
+> the per-budget ratios are monotone across all five (1.046, 1.024, 0.999, 0.982,
+> 0.969). Both readings are stated because picking the favourable one is exactly what
+> §23 has had to withdraw three times. **The honest position: (a) is a real
+> contributor of the right sign and scaling, worth ~19% of the residue, and not
+> significant by the test I set myself in advance.**
+
+**Where the 0.2393 gap now stands, measured from the hard-stop integral:**
+
+| | closes |
+|---|---|
+| removing the hard stop at θ = 1/3 (§23.6, structural) | 39.6% |
+| θ-dispersion (§23.9, structural) | 11.6% |
+| imposed separation (§23.8, parametric) | 2.7% |
+| quasi-static state (§23.5, parametric) | ~0% |
+| **unexplained** | **~48.8%** |
+
+The two structural repairs are worth 51%; the two parametric ones essentially nothing.
+That is the pattern the whole thread has been converging on, and it points the
+remainder at **(b)**, the independence assumption — untested here, and the only
+structural approximation left.
+
 
 ## Open questions
 

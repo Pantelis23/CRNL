@@ -711,6 +711,45 @@ Also note §24's own full cell reached only 0.7026 against a measured 0.6325, so
 `(theta, delta)` is not the whole state of the fuel system and 0.0701 of exponent lies
 outside both coordinates -- that gap is untouched by this test.
 
+**T11-REFINED-c -> §24.1a: the strongest competing explanation, tested and SPLIT.**
+An independent review named an account I had not written down: `s` is a fast STABLE
+variable (`lambda_sym = -(1+2g) = -1.60` against `lambda_antisym = +0.133` at
+g = 0.30, ratio 12) started on its own nullcline, so §24.1 might be the textbook
+large-deviation result that escape rates are set by diffusion along the UNSTABLE
+direction -- a property of the saddle geometry, i.e. of the system, which is §24's own
+named failure mode. The discriminating axis is `gamma`, since `3(1+2g)/(1-2g)` spans
+3.7 to 57.
+
+Measured: **`s-only` is exactly 0 at every gamma from 0.05 to 0.45**, including where
+the separation is only 3.7 and the pool holds ~1.9 molecules and so cannot be
+Gaussian-slaved at all. **The cliff is not slaving.** But `delta-only`'s residual cost
+falls monotonically with the separation -- 13.2%, 8.1%, 3.1%, 0.4% -- which IS
+subleading transverse diffusion. **So the categorical failure is about which subspace
+carries the observable; the few-percent residual is about timescale separation.**
+§24.1 left that residual unexplained; it now has a mechanism, and it is the
+reviewer's, not mine.
+
+**T12, open: does any observable of this system require the POOL's noise?** §25
+establishes that the requirement varies by observable but only DOWNWARD -- P(error)
+needs `span(delta)`, MFPT needs nothing -- and an observable needing the EMPTY
+subspace is weak evidence, since drift-dominated means are means. The strong form
+needs an observable requiring `span(s)` or `span(delta)+span(s)`. **How to kill:** two
+candidates, exact references, no definitional shortcut. (i) `Var(T)` at first passage:
+the ODE gives 0, so it is a pure-noise quantity like P(error), and the jitter could
+come from crossing-direction diffusion (-> delta) or from fluctuations in the RATE OF
+ADVANCE, which `n_B` sets through the recruitment propensities (-> s). Neither is
+guessable, and `E[T^2]` solves `Qtt m2 = -2T` beside the existing MFPT solve. (ii) A
+two-target race absorbing on `|n_X - n_Y| >= thr` OR `n_B <= m`, tuned to ~50/50,
+which `cme.splitting_probability` already supports with no new code. **If both come
+back needing `span(delta)` that does NOT establish one stiff direction** -- it means
+three saddle-dominated observables were chosen.
+
+**A rule that falls out of this thread and is worth keeping:** *a projection arm is
+informative only if its answer cannot be computed from the projection algebra alone.*
+`Var(n_B)` under `s-only` is computable in advance, therefore dead as evidence --
+though it is a good unit test of `project`. Stationary covariance is a 2x2 Lyapunov
+equation, so solve it before running and only run what the algebra says discriminates.
+
 ~~**T11-REFINED-a: does the signal/bookkeeping split survive when the roles are not
 obvious?**~~ **PARTLY ANSWERED -> §24.2. The SUBSPACE-level split holds at n = 3; the
 within-subspace question is still open because the arm that tests it was invalid.**

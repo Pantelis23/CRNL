@@ -64,6 +64,36 @@ PREDICTIONS, written before running:
       carrying strictly less noise. This is the placement-over-amplitude half.
   P3  The full CLE reproduces §21's own numbers, which is the harness control. If it
       does not, nothing else here is readable.
+  P0  THE COMPETING HYPOTHESIS I FAILED TO NAME, added after an independent review
+      and BEFORE the gamma sweep that tests it. The signal/bookkeeping reading is not
+      the only account of these results, and the alternative is more standard.
+      `am_reversible`'s saddle has `lambda_antisym = (1-2g)/3 = +0.133` at g = 0.30
+      (the delta direction, unstable) and `lambda_sym = -(1+2g) = -1.60` (the s
+      direction, strongly stable), a timescale ratio of 12 -- and `_setup` starts the
+      system AT the s-nullcline `b* = g/(1+g)`. So s may simply be a fast stable
+      variable slaved to delta, and §24.1 may be the textbook large-deviation
+      statement that an escape rate is set by the diffusion along the UNSTABLE
+      direction at the saddle, with transverse diffusion entering at subleading
+      order. That would predict exactly the measured 2-18% overestimate, with the
+      right sign and the right growth with barrier height -- and it is a property of
+      the SYSTEM's saddle geometry, not of any coordinate's role, i.e. precisely the
+      "this network has one stiff direction" collapse §24 named as its own failure
+      mode. A reviewer reaches for this immediately and no observable-swap test
+      touches it.
+
+      **The discriminating axis is gamma, not the observable.** The ratio
+      `|lambda_sym/lambda_antisym| = 3(1+2g)/(1-2g)` runs 3.67 at g = 0.05, 5.57 at
+      0.15, 12 at 0.30, 57 at 0.45. Role-based splitting predicts the s-only arm
+      fails categorically at EVERY gamma. Fast/slow slaving predicts it DEGRADES
+      TOWARD THE TRUTH as gamma falls and the timescales converge. Same observable,
+      same exact reference, one loop.
+
+      Second reason gamma -> 0 is the right axis: `b* = g/(1+g)` means the pool holds
+      n_B = 9.2 at (Omega = 40, g = 0.30) but only 1.9 at g = 0.05. A near-empty pool
+      gates the recruitment reactions multiplicatively and cannot be Gaussian-slaved.
+      If s-noise ever matters for P(error) here, it matters there -- and the CLE is
+      also at its worst there, so this is where the harness control earns its keep.
+
   P4  THE MESSY OUTCOME I EXPECT IS POSSIBLE and am naming so it is not spun later:
       `s-only` fails PARTIALLY -- better than the ODE's categorical zero, worse than
       the CLE. That would mean the signal/bookkeeping distinction is real but GRADED

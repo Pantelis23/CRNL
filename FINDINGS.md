@@ -3324,6 +3324,59 @@ and an exact reference, and more sharply there than in §23 — categorical rath
 7×. §21's measurements stand as printed; **"having noise at all" is superseded by
 "having the signal coordinate's noise, at its own amplitude."**
 
+### 24.1a The competing explanation I failed to name, and what the γ sweep does to it
+
+An independent review of §24.1 raised an account of these results that is more
+standard than mine and that I had not written down. `am_reversible`'s saddle has
+`λ_antisym = (1−2γ)/3 = +0.133` at γ = 0.30 (δ, unstable) against
+`λ_sym = −(1+2γ) = −1.60` (s, strongly stable) — a timescale ratio of **12** — and
+`_setup` starts the system *on* the s-nullcline `b* = γ/(1+γ)`. So s may simply be a
+fast stable variable **slaved** to δ, and §24.1 may be the textbook large-deviation
+result that an escape rate is set by diffusion along the unstable direction, with
+transverse diffusion entering at subleading order. That is a property of the saddle's
+geometry — of the *system* — and it is exactly the collapse §24 named as its own
+failure mode. **No observable-swap test touches it.** The discriminating axis is γ,
+because `|λ_sym/λ_antisym| = 3(1+2γ)/(1−2γ)` spans a factor of 15 over the usable
+range.
+
+| γ | timescale ratio | `s-only` | `δ-only` cost |
+|---|---|---|---|
+| 0.05 | 3.7 | **exactly 0 in 3/3** | +13.2% |
+| 0.15 | 5.6 | **exactly 0 in 3/3** | +8.1% |
+| 0.30 | 12.0 | **exactly 0 in 3/3** | +3.1% |
+| 0.45 | 57.0 | **exactly 0 in 3/3** | +0.4% |
+
+**The review is right about one half and wrong about the other, and the split is
+clean.**
+
+> **The cliff is not slaving.** `s-only` is categorically 0 at *every* γ, including
+> γ = 0.05 where the timescale separation is only 3.7 and the pool holds
+> `n_B ≈ 1.9` molecules — a near-empty pool that gates the recruitment reactions
+> multiplicatively and cannot be Gaussian-slaved at all. Adiabatic elimination
+> predicts `s-only` should recover as γ → 0. It does not, over a 15× range.
+>
+> **But the residual is slaving, and that is a better account than I had.** `δ-only`'s
+> cost — the price of throwing the pool's noise away — falls **monotonically with the
+> timescale separation**, 13.2% → 8.1% → 3.1% → 0.4%. That is precisely
+> subleading-order transverse diffusion, shrinking as the separation grows. §24.1
+> reported this residual as "2–18%, worsening with the barrier" and left it
+> unexplained; it now has a mechanism, and it is the reviewer's, not mine.
+
+So the two effects are different things: **the categorical failure is about which
+subspace carries the observable; the few-percent residual is about timescale
+separation.** §24.1's claim survives the sharpest attack available to it, and comes
+back with its error term explained.
+
+> **Also checked, from the same review: a real bug with no consequence here.**
+> `run_projected` advances the clock only for accepted steps (`t[upd] += dt`), so a
+> step rejected for negativity freezes that trajectory's time — an arm-dependent clock
+> distortion, and a rule-10 free-restoring-element instance (rejection acts as a
+> reflecting wall the chemistry lacks). Measured, the rejection rate is ≤ 7.7×10⁻⁴ and
+> exactly 0 for two of the four arms, so it cannot account for effects of a few
+> percent, let alone the cliff. **The mechanism is real and would matter in a regime
+> with more boundary contact**; it is recorded rather than fixed because fixing it
+> would change §21's published numbers, and it is bounded here.
+
 > **§24.2 sharpens "coordinate" to "subspace".** At n = 2 the difference subspace is
 > one-dimensional, so "the signal coordinate" and "the signal subspace" are the same
 > object and this section cannot tell them apart. At n = 3 they differ, and the
@@ -3455,6 +3508,107 @@ removing one of the two signal directions is not categorical but costs a third o
 answer, and only the full difference subspace reproduces it. For a simulation that
 means the saving is bounded — you may discard the bookkeeping noise entirely and get
 the exponent, but there is no further cheap truncation *inside* the signal directions.
+
+
+## 25. The required subspace belongs to the OBSERVABLE, not the system — `observable_dependence.py`
+
+§24 asserted that the required noise subspace is a property of the *(system,
+observable)* pair. That was an **inference**, and a load-bearing one: in
+twenty-four sections every observable this project had ever tested was the
+restoration error probability. If the required subspace were the same for every
+question, §24 would collapse to "AM has one stiff direction" — a fact about this
+network, not about simulation.
+
+**Design.** Identical machinery to §24.1 — same projected-noise CLE arms, same drift,
+same network, same start states — with **two observables read off the same
+trajectories**:
+
+- **P(error)** — a *tail* event: δ must cross against its drift.
+- **MFPT** — mean time to first passage at |n_X − n_Y| ≥ thr, a *bulk* quantity
+  carried by the drift.
+
+Both come out of **one `first_passage` solve**, so the references are exact and paired
+by construction. Projecting the noise does not rescale time, so the arms share a clock
+(rule 11). And this is not a definitional trap: under `s-only` the signal still
+reaches the threshold, carried by the drift every arm retains, so MFPT is an ordinary
+finite number whose correctness the run decides.
+
+| arm | variance | **P(error)** | **MFPT** |
+|---|---|---|---|
+| full CLE | 100% | −0.6% mean | +1.4% mean |
+| δ-only | 11% | +8.1% mean | +4.6% mean |
+| **s-only** | **88%** | **exactly 0 in 8/8 cells** | **within 6.1% everywhere** |
+| **uniform 11%** | **11%** | **−99.0%, exactly 0 in 3/8** | **+0.1% mean, within 15.1%** |
+
+Ω ∈ {40, 60, 80, 100}, ε/δ* ∈ {0.20, 0.35}, 40,000 trials per cell.
+
+> **P1, P2 and P3 all confirmed, and P2 is the point.** The **same arm**, on the
+> **same trajectories**, is categorically wrong about one observable and correct to a
+> few percent about another. `uniform 11%` is sharper still: wrong by two orders of
+> magnitude on P(error) while reproducing MFPT to **+0.1% on average**. The asymmetry
+> is one-sided as predicted — every arm is adequate for the bulk quantity, only some
+> for the tail — which is a difference in *requirement*, not a swap.
+
+> **P5's confound, controlled rather than mentioned.** The unconditional MFPT averages
+> over both outcomes and wrong-way trajectories take longer, so `s-only` — which
+> produces no wrong-way trajectories at all — could inherit its MFPT agreement from
+> its P(error) failure. Conditioning on the correct outcome puts the arms on matched
+> populations: `s-only / full` is **1.041 mean (0.987–1.167)** and `uniform / full` is
+> **1.064 (0.983–1.248)**. There is no exact reference for the conditional quantity —
+> it needs a Doob h-transform that is not implemented here — so it is an arm-to-arm
+> comparison only. **The conclusion survives both readings.**
+
+**What this settles.** The required noise subspace is **not a property of the
+system**. The same chemistry, at the same parameters, demands the signal subspace for
+one question and essentially nothing for another. §24's framing is now measured rather
+than inferred, and the statement that survives is:
+
+> **Which degrees of freedom a simulation may discard is a property of the question
+> being asked of it, not of the system being simulated.** A model can be certified
+> against one observable, retain 88% of the system's fluctuations, and still be
+> categorically wrong about a different observable of the same run — and no limit
+> theorem licensing the approximation will say so, because Kurtz's theorem is true and
+> covers neither case (§21).
+
+**Scope, and it is the WEAK form of the claim.** An independent review of this design
+made the sharp version of the objection, and it stands: the only outcome that would
+establish observable-dependence *strongly* is an observable requiring **span(s)** or
+**span(δ)⊕span(s)**. An observable requiring the **empty** subspace — any
+drift-dominated mean — is not evidence that requirements differ by question so much as
+evidence that means are means. MFPT is drift-dominated, so §25 demonstrates:
+
+- ✅ the required subspace is **not** a fixed property of the system (P(error) needs
+  span(δ); MFPT needs nothing) — this is measured and it is real;
+- ❌ **not** that some observable of this system needs the *pool's* noise. No
+  observable tested here does.
+
+So the honest statement is **"the requirement varies by observable, downward"**. The
+strong form needs an observable whose requirement points at s, and the review names
+two candidates with exact references and no definitional shortcut: **Var(T)** at first
+passage (the ODE gives 0, so it is a pure-noise quantity like P(error), and the two
+competing mechanisms — jitter from crossing-direction diffusion versus jitter from the
+*rate of advance*, which n_B sets through the recruitment propensities — are both
+credible and neither is guessable), and a **two-target race** absorbing on
+`|n_X − n_Y| ≥ thr` **or** `n_B ≤ m`, tuned to ~50/50, which `cme.splitting_probability`
+already supports with no new code. That is **T12**.
+
+Two further limits recorded rather than smoothed:
+
+> **`Var(n_B)` is deliberately not among the observables.** Under `s-only` the noise
+> *is* n_B's noise, so the arm is right by construction and the answer can be written
+> down without running anything — the exact mirror of §24.2's `decision-only` trap. It
+> has one legitimate use, as a **unit test of the projection code**, and none as
+> evidence.
+>
+> **Entropy production was considered and dropped as ill-posed, not merely trappy.**
+> For `dn = b dt + σ dW` with `D = σσᵀ` singular and drift components outside
+> `range(D)`, the process is not absolutely continuous with respect to its time
+> reversal and the EP rate is formally infinite. δ and s are both molecule counts and
+> both even under time reversal, so there is no parity trick to rescue it. Anything
+> computed by accumulating `ln(a_f/a_r)` along a projected path would be the EP the
+> *jump* process would have paid — a state functional that every arm reproduces
+> because every arm keeps the drift, i.e. right for reasons unrelated to noise
+> placement.
 
 
 ## Open questions

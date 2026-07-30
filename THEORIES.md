@@ -749,7 +749,32 @@ jitter than to the error probability**. Observable-dependence in the MAGNITUDE, 
 the categorical requirement is identical. Weaker than T12 set out to show, and it is
 what the data supports.
 
-**T12 remaining, open: the two-target race.** Absorb on `|n_X - n_Y| >= thr` OR
+~~**T12 remaining: the two-target race.**~~ **RUN -> §25.2. THE REQUIREMENT REVERSES,
+and T12's strong form is established.** Racing the decision target `|n_X-n_Y| >= thr`
+against a pool target `n_B <= m`, with `m` tuned per cell to make it ~50/50 (at
+Omega = 40, m = 5 against a starting pool of 9, so the pool must fluctuate DOWN BY 4):
+
+| observable | needs | other subspace alone | cost of dropping the other |
+|---|---|---|---|
+| P(error) | `span(delta)` | `span(s)` -> exactly 0, 8/8 | +3.1% at g=0.30 |
+| race | `span(s)` | `span(delta)` -> exactly 0, 4/4 | +9% to +13% |
+
+**So the requirement varies in BOTH directions**, and §25's "downward only" is
+superseded. The caveat, declared before the run and kept: each arm's categorical zero
+is semi-definitional within its own observable -- a pool target is a pool-fluctuation
+event, so an arm without pool noise cannot reach it. **The weight therefore rests on
+the QUANTITATIVE halves, which no construction forces:** dropping the pool's noise
+costs P(error) 3.1%, and dropping the signal's costs the race 9-13% (36 SE at 40,000
+trials). `s-only` landed "partial" not "recovers" against a band fixed in advance,
+and the band was not moved afterwards.
+
+**This also vindicates §25.1's worry about the instrument.** P(error), MFPT and
+Var(T) all live in `span(delta)` because all three are first-passage functionals OF
+DELTA. The race is the first observable here whose absorbing set is defined on a
+different coordinate -- which is what it took, and the limitation was the instrument,
+not the chemistry.
+
+~~**T12 remaining as first posed: the two-target race.**~~ Absorb on `|n_X - n_Y| >= thr` OR
 `n_B <= m`, tuned to ~50/50; `cme.splitting_probability` already supports it.
 **Caveat the review did not raise:** under `delta-only` the pool has no noise of its
 own, so whether it reaches `m` is driven only by delta's fluctuations feeding the

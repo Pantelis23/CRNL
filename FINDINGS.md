@@ -3582,6 +3582,11 @@ evidence that means are means. MFPT is drift-dominated, so §25 demonstrates:
 - ❌ **not** that some observable of this system needs the *pool's* noise. No
   observable tested here does.
 
+> ⚠ **Superseded by §25.2:** the requirement varies in **both** directions. The
+> two-target race is an observable of this same network whose requirement points at
+> `span(s)`, with `span(δ)` alone giving exactly 0 in 4/4 cells — the mirror of the
+> table above.
+
 So the honest statement is **"the requirement varies by observable, downward"**. The
 strong form needs an observable whose requirement points at s, and the review names
 two candidates with exact references and no definitional shortcut: **Var(T)** at first
@@ -3661,6 +3666,66 @@ closer to the definitional line than it appears: under `δ-only` the pool carrie
 noise of its own, so whether it reaches `m` is driven only by δ's fluctuations feeding
 the drift. That is not *forced* the way `Var(n_B)` is, but it is one step removed, and
 the pre-committed criterion should be written before it runs.
+
+### 25.2 The race, and the requirement reverses — `two_target_race.py`
+
+Two absorbing targets, one in each coordinate: **decision** at `|n_X − n_Y| ≥ thr`,
+**pool** at `n_B ≤ m`, with `m` chosen per cell to minimise |P(pool first) − ½| against
+the exact CME. At Ω = 40 that is m = 5 against a starting pool of 9 — **the pool must
+fluctuate down by 4 to win**, so it is a genuine fluctuation event, not a formality.
+Criterion fixed before any output: recovers |Δp| ≤ 0.05, fails |Δp| > 0.20.
+
+| Ω | m | n_B(0) | P(pool) exact | full | δ-only | s-only | uniform 11% |
+|---|---|---|---|---|---|---|---|
+| 40 | 5 | 9 | 0.4396 | 0.4970 | **0.0000** | 0.5727 | **0.0000** |
+| 50 | 7 | 12 | 0.4130 | 0.4522 | **0.0000** | 0.5216 | **0.0000** |
+| 60 | 10 | 14 | 0.5993 | 0.6099 | **0.0000** | 0.6648 | **0.0000** |
+| 70 | 12 | 16 | 0.5595 | 0.5651 | **0.0000** | 0.6229 | **0.0000** |
+
+Verdicts: full 3 recovers / 1 partial (P3 control passes); **δ-only 4/4 fails,
+categorically zero**; s-only 4/4 partial at +0.063 to +0.133; uniform 11% 4/4
+categorically zero. Simultaneous hits on both targets: 612 in ~640,000 trajectories,
+≈0.1%, assigned to the decision target.
+
+> **P1 confirmed and it carries no weight, exactly as declared in advance.** `δ-only`
+> reports the pool never winning. But the pool target *is* a pool-fluctuation event
+> and `δ-only` has no pool fluctuations, so that arm answers by construction. It is
+> the mirror of §24.1's `δ-only` anchor and I am not counting it as evidence.
+>
+> **P2 not met on its own terms:** `s-only` lands *partial*, not *recovers*, in all
+> four cells. The band was fixed in advance and it does not get moved now.
+>
+> **What is informative is the bias, and it is 36 standard errors.** `s-only`
+> over-predicts the pool winning by **+0.06 to +0.13** (SE ≈ 0.0025 at 40,000
+> trials). Without δ's fluctuations the decision target is reached less readily, so
+> the pool wins too often. That is a real, quantitative contribution from the signal
+> noise to an observable whose *necessary* ingredient is the pool noise — and it is
+> not definitional in either direction.
+
+**The mirror, which is the actual result.** Set the two observables of the same
+network, same arms, side by side:
+
+| | needs | other subspace alone | cost of dropping the other |
+|---|---|---|---|
+| **P(error)** | `span(δ)` | `span(s)` → **exactly 0**, 8/8 cells | +3.1% (γ = 0.30, §24.1a) |
+| **race** | `span(s)` | `span(δ)` → **exactly 0**, 4/4 cells | +9% to +13% |
+
+**T12's strong form is established, with its caveat attached.** There is an
+observable of this system whose requirement points at the pool, and it is the
+mirror-image of the one that points at the signal. §25's conclusion — that the
+requirement varies by observable "downward" only — is superseded: **it varies in both
+directions.** The honest qualification is that each arm's categorical zero is
+semi-definitional in its own observable, so the weight rests on the *quantitative*
+halves: dropping the pool's noise costs P(error) 3.1%, and dropping the signal's costs
+the race 9–13%. Those are the two numbers no construction forces.
+
+> **And the earlier negatives now read differently.** §25.1 concluded that three
+> observables all living in `span(δ)` meant I had asked one question three ways. That
+> was right, and the reason is visible here: P(error), MFPT and Var(T) are all
+> first-passage functionals *of δ*. The race is the first observable in this project
+> whose absorbing set is defined on a different coordinate — which is what it took,
+> and which supports the §25.1 worry that the limitation was in the **instrument**
+> rather than the chemistry.
 
 
 ## Open questions

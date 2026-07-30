@@ -501,7 +501,54 @@ numerical parameter is a second axis). **This changes no published number** -- t
 continuous integrator puts §23.4's hard-stop exponent at 0.8867 +- 0.016 against the
 printed 0.8925 +- 0.017, 0.25 sigma apart.
 
-**T10b-iii-d, open: is the residue survivor selection?** The remaining error is a
+~~**T10b-iii-d: is the residue survivor selection?**~~ **MEASURED -> §23.7. NO, and I
+had the sign backwards.** 3000 trials at each of three budgets, conditional hazard by
+past-`gamma_c` survival index `k`, controlled by dividing out the unconditional
+`q(theta)` the integral actually used. Predicted: ratio below 1 and FALLING with `k`,
+carried separation RISING. Measured: the ratio climbs 0.80 -> ~1 and hovers, and the
+separation **decays monotonically** at all three budgets (0.317 -> 0.117 at
+Phi/Omega = 25). Survivors are not the ones that kept a big bit; the bit is being
+ground down, which is what a monostable landscape does to it.
+
+**The same data gives a better result than the suspect it killed.** The decay is a
+function of `theta`, NOT of survival history: pooling 22 cells over three budgets and
+eight survival indices, `delta ~ theta` alone gives weighted R^2 = 0.9177, and adding
+`ln Phi` lifts it only to 0.9675 at coefficient -0.028 (~23% of the delta range, on
+medians quantised at 1/Omega). At matched `theta ~ 0.35` every budget carries
+`delta ~ 0.30` however many stages it took to get there. **So §23.6's closing note --
+that any repair makes the model non-Markovian in `theta` -- is wrong in the useful
+direction.** The constant `delta_past` was just the wrong constant.
+
+**And the residue is two errors in two regions**, which is the reframing this thread
+needed: at Phi/Omega = 25 the integral is -22% (past-`gamma_c`), at Phi/Omega = 400 it
+is +10% (pre-`gamma_c`, where only 9.5% of trials ever reach `gamma_c`). No single
+correction touches both.
+
+**The Markovian REPAIR that §23.7 proposed off the back of that collapse is refuted
+(§23.8), while the collapse itself stands.** Imposing the measured `delta_past(theta)`
+moved the exponent 0.7919 -> 0.7880, closing 2.7%. It cancels: the curve raises the
+imposed separation at low `theta` and lowers it at high `theta`, and the integral
+traverses both. Already visible in §23.6 and under-weighted -- a 2.5x sweep of the
+constant was worth 0.0103 of exponent. **The integral is not sensitive to the
+separation it imposes past `gamma_c` at all**, so §23.6's 39.6% came from permitting
+past-`gamma_c` stages at all, a structural correction, not from their value. Recorded
+as a rule 17 violation committed in the same paragraph that reported rule 17 working.
+
+~~**T10b-iii-e (pre-`gamma_c` over-prediction), and any further repair of the
+integral:**~~ **NOT OPENED, deliberately.** Three repairs have been tested -- imposed
+quasi-static state (1.6 sigma from nothing), removing the hard stop (39.6%),
+correcting the imposed separation (2.7%) -- and +0.14 survives as two errors in two
+regions. Following §22.5's precedent the residue is left named and unexplained rather
+than attacked a fourth time. The integral has done what an instrument should: it
+reproduced the sigma-drift (-0.121 vs -0.107 measured), which is the only part of
+§23.3's proposed mechanism that survived a test, and it eliminated two of three
+candidate errors. §23's measured results (§23.1, §23.2, §23.4's phenomenon, §23.7's
+collapse) require none of it. **If this is ever reopened, the kill test is the
+large-tank +10%, which lives entirely below `gamma_c` where §23.5 already showed the
+state assumption is innocent** -- so the next suspect there is the survival product's
+independence, not anything about the dying landscape.
+
+~~**Superseded framing of T10b-iii-d, left visible:**~~ The remaining error is a
 SHAPE error across `Phi`, not a scale error -- predicted/measured runs 0.78, 0.72,
 0.88, 1.00, 1.10 -- so no normalisation fixes both ends. *Suspect, stated as one:*
 the survival product is mean-field and applies the unconditional `q(theta)` every

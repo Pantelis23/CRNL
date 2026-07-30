@@ -2579,7 +2579,9 @@ Depths at Ω = 40 (median over 120 trials):
 > that the cascade dies at a condition on the *burn fraction* `w/(w+f)`, which is
 > scale-free in Φ, while fuel burned per stage is set by Ω. Fixed usable fraction
 > ÷ fixed per-stage cost = linear. Measured 0.6498 ± 0.019 at the quiet channel,
-> with linear **20σ** away. I also predicted the two-point 0.67 was contaminated
+> with linear **18.4σ** away (the 20.1σ figure belongs to the earlier two-σ run's
+> 0.6645 ± 0.0167, not to this one — see the sourcing note in §23.3). I also
+> predicted the two-point 0.67 was contaminated
 > and that the contamination had the wrong sign to produce it; it was neither
 > contaminated nor wrongly signed. The a-priori argument was wrong about which
 > factor is scale-free — see §23.3.
@@ -2645,6 +2647,22 @@ Equivalently, in terms of the drive the cascade dies with: γ_eff at loss is **0
 at Φ/Ω = 25 — *past* γ_c = 0.5, so the landscape was already dead and the bit
 outlived it — but only **0.43** at Φ/Ω = 400, where the landscape is still alive
 when the bit goes.
+
+> **Sourcing correction, found by re-deriving every §23 number from the stored
+> results.** The slope column above is from this section's stated scope — the
+> 5-budget × 3-σ × 3-Ω sweep in `fuel_depth_scaling.json`. Two figures in the two
+> paragraphs above were taken from the *earlier* two-σ run instead, and both are
+> left visible with the in-scope value beside them:
+>
+> | quantity | as printed (2-σ run) | in-scope (3-σ run) |
+> |---|---|---|
+> | usable burn fraction, Φ/Ω = 25 → 400 | 0.198 → 0.069 | **0.191 → 0.070** |
+> | γ_eff at loss, Φ/Ω = 25 | 0.75 | **0.729** |
+>
+> Neither shifts a conclusion — both runs agree that the fraction collapses by ~2.7×
+> and that the smallest tank dies past γ_c — but the section should not quote two
+> runs in one paragraph, and §23.4's repetition of γ_eff = 0.75 inherits the same
+> slip.
 
 **The mechanism, and the rewording §20.3 owes.** A bigger tank does not buy
 proportionally more depth because the extra stages each carry their own per-stage
@@ -2880,6 +2898,109 @@ normalisation fixes both ends.
 > product's independence assumption is the next thing to test. Either way the fix
 > makes the model non-Markovian in θ, which is a different object from the integral
 > §23.4 set out to build.
+
+### 23.7 Survivor selection is not the residue — the bit is ground down, not selected — `fuel_survivor_bias.py`
+
+Direct measurement, 3000 trials at each of Φ/Ω = 25, 50, 100, σ_ch/δ* = 0.03. Stages
+with γ_eff ≥ γ_c are indexed k = 1, 2, …; the conditional hazard at k is P(lost during
+the k-th such stage | survived k−1), and the control for the fact that γ_eff is *also*
+rising with k is to divide by the unconditional `q(θ)` that §23.6's integral actually
+used at the same θ.
+
+| Φ/Ω = 25 | k=1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|
+| trials entering | 2465 | 1741 | 1048 | 560 | 281 | 148 | 69 |
+| conditional hazard | 0.293 | 0.398 | 0.466 | 0.498 | 0.473 | 0.534 | 0.507 |
+| ÷ unconditional `q(θ)` | 0.798 | 0.899 | 0.983 | 0.998 | 0.918 | 1.061 | 1.014 |
+| mean carried δ | 0.317 | 0.231 | 0.172 | 0.144 | 0.121 | 0.119 | 0.135 |
+
+> **Predictions P1, P2 and P3 all refuted; P4 fires.** I predicted the hazard ratio
+> would sit below 1 and *fall* with k, and that the carried separation would *rise* —
+> the signature of survivors being the ones that kept a big bit. Both go the other
+> way at all three budgets: the ratio climbs from 0.80 to ≈1 and then hovers there,
+> and δ **decays monotonically** (Φ/Ω = 25: 0.317 → 0.117; 50: 0.309 → 0.117; 100:
+> 0.303 → 0.176). **Survivors are not selected upward, they are ground down** — which
+> is what a monostable landscape should do to a bit, and I had the sign backwards.
+> Survivor selection is eliminated as the residue.
+
+**What the same data does establish, and it is better news than the suspect it
+killed.** The decay is a function of **θ, not of survival history**: pooling all 22
+cells with ≥ 50 trials across three budgets and eight survival indices, `δ ~ θ` alone
+gives **weighted R² = 0.9177**, and adding `ln Φ` lifts it only to 0.9675 with
+coefficient −0.028 (≈23% of the δ range, and the medians are lattice-quantised at
+1/Ω = 0.025 which limits how much better either fit could look). At matched θ ≈ 0.35
+every budget carries δ ≈ 0.30 regardless of how many stages it took to get there.
+
+So §23.6's closing note — that any repair would make the model non-Markovian in θ —
+is **wrong in the useful direction.** The constant `δ_past` was simply the wrong
+constant, and the fix is a measured `δ_past(θ)`, which keeps the integral Markovian.
+
+> ⚠ **That last clause is a claim about a fix, not a measurement, and §23.8 refutes
+> it.** Imposing the measured `δ_past(θ)` moves the exponent 0.7919 → 0.7880 and
+> closes 2.7% of the residue. The δ(θ) *collapse itself stands* — it is a fact about
+> the data — but the inference that it repairs the integral does not. This is rule 17
+> being violated in the very paragraph that reported rule 17 working: I let a fix
+> inherit the credibility of the measurement it sat next to.
+
+**And the residue splits into two errors in two regions**, which reframes what is
+left to explain:
+
+| | predicted (δ_past = 0.20) | measured | error |
+|---|---|---|---|
+| Φ/Ω = 25 | 5.47 | 7 | **−22%**, past-γ_c region |
+| Φ/Ω = 400 | 48.23 | 44 | **+10%**, pre-γ_c region (9.5% of trials ever reach γ_c) |
+
+No single correction touches both. `δ_past(θ)` can only act on the small-tank end.
+
+### 23.8 The integral is insensitive to the imposed separation — closing the thread — `fuel_hazard_deltacurve.py`
+
+Imposing §23.7's measured `δ_past(θ)` — 0.30 at θ = 0.34 falling to 0.10 at θ = 0.49,
+22 pooled points — in place of the constant 0.20:
+
+| | Φ/Ω=25 | 50 | 100 | 200 | 400 | exponent |
+|---|---|---|---|---|---|---|
+| δ_past(θ) measured | 5.50 | 8.82 | 14.97 | 26.97 | 48.23 | **0.7880 ± 0.020** |
+| δ_past = 0.20 constant | 5.47 | 8.66 | 14.94 | 26.97 | 48.23 | 0.7919 ± 0.022 |
+| measured | 7 | 12 | 17 | 27 | 44 | 0.6474 ± 0.022 |
+
+> **P1 and P3 refuted, P2 confirmed, P5 fires.** I predicted the small-tank depth
+> would rise to 6–6.5 and the exponent to ~0.75. The depth moved 5.47 → 5.50 and the
+> exponent 0.7919 → 0.7880, closing **2.7%** of the residue. P2 was right that large
+> tanks cannot move (48.23 → 48.23, unchanged to two decimals).
+
+**Why it cancels, and what that says about the whole repair programme.** The measured
+curve raises the imposed separation at low θ (0.20 → 0.30, lowering the hazard) and
+lowers it at high θ (0.20 → 0.10, raising it). The two corrections very nearly cancel
+across the θ range the integral traverses. This was already visible in §23.6 and I
+under-weighted it: a **2.5× sweep of the constant moved the exponent by 0.0103**. The
+integral is simply not sensitive to the separation it imposes past γ_c. So §23.6's
+39.6% came from *permitting past-γ_c stages at all*, not from what separation they
+were given — a structural correction, not a parametric one.
+
+**Three repairs tested, and the thread closes here.**
+
+| repair | region | worth |
+|---|---|---|
+| quasi-static state imposed by hand (§23.5) | pre- and past-γ_c | 1.6σ from doing nothing |
+| removing the hard stop at θ = 1/3 (§23.6) | past-γ_c | **39.6%** of the error |
+| correcting the imposed separation (§23.8) | past-γ_c | 2.7% |
+
+What survives is **+0.14 in the exponent, split as −22% at the smallest tank and +10%
+at the largest** — two errors in two regions, neither of which is about the imposed
+separation, and the larger-tank one sitting in a region where §23.5 already showed the
+state assumption is not the problem. Following §22.5's precedent, the residue is left
+**named and unexplained** rather than fitted further, and no fourth repair is attempted
+in this session.
+
+**What §23 leaves standing.** The measured results need none of this: the budget
+exponent is 0.6498 ± 0.019 at the quiet channel (§23.1); it drifts with σ and Ω, so
+`D_fuel` is not a budget property (§23.2); burn per stage is flat in Φ while the usable
+burn fraction collapses (§23.3); small tanks hold real bits past γ_c and large ones do
+not (§23.4); the carried separation decays as a function of θ, R² = 0.9177, not of
+survival history (§23.7). The integral's own contribution is that it reproduced the
+**σ-drift** of the exponent, −0.121 against −0.107 measured — the single part of
+§23.3's proposed mechanism that survived contact with a test — and that it bounded
+three candidate errors well enough to eliminate two of them.
 
 
 ## Open questions

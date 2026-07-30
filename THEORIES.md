@@ -550,10 +550,39 @@ knocked down stays down, so correlated trials die sooner than an independent pro
 predicts, which is an OVER-prediction and matches the +10% at the large tanks that no
 past-`gamma_c` repair could touch.
 
-**How to kill:** measure the per-stage loss probability CONDITIONED on the separation
-carried into the stage, `q(theta, delta)`, and propagate `delta` as a second ensemble
-coordinate instead of collapsing it into `q(theta)`. If the exponent falls to ~0.65
-the independence assumption was the rest of the error. If it does not, the residue has
+**PARTLY ANSWERED -> §23.10: inter-stage memory is the largest single term, 56%.**
+Arm A (the rail-reseeded diagnostic, which REMOVES memory) re-run at 400 trials and
+paired against the plain arm from its own run gives `0.7217 +- 0.024` vs
+`0.6325 +- 0.016`, a difference of **+0.0893 +- 0.0286 = 3.1 sigma**, localised at the
+two largest budgets (+7%, +14%) and absent at the two smallest -- exactly where the
+integral over-predicts. Decomposition, all paired: integral 0.7919, memoryless
+simulation 0.7217, plain 0.6325, so **memory is 56% of the integral's error and the
+integral's residual error against a MEMORYLESS simulation is 44%**, of which
+theta-dispersion is 17%.
+
+**§23.5's "1.6 sigma from doing nothing" is WITHDRAWN.** It compared Arm A against
+§23.1's separate run instead of the plain arm in its own, and summarised at the
+exponent level a structure that lives per-budget. Rule 9 one level up: the axis was
+the budget, the statistic was a fit across it. Raised by an independent analysis of
+the stored data, verified here before adopting. Still unexplained and flagged:
+Phi/Omega = 50 moves the WRONG way under Arm A at both 80 and 400 trials.
+
+~~**Also proposed by that analysis: `c(theta)` is a conditional-mean error.**~~
+**Premise verified, consequence refuted (§23.10).** `hazard_at` really does pool
+losers into `c`, and the stoichiometry really does make losers burn more -- `f1` fires
+at a rate proportional to `n_X n_Y n_F`, maximal at `delta = 0`, and measured
+`c_lost/c_surv` reaches **4.28**. But the contamination is `q*(c_lost - c_surv)`, and
+`q` is tiny exactly where the ratio is large; peak contamination is 4.5% and
+re-integrating with `c_surv` moves the exponent 0.7914 -> 0.7918. A real rule-12
+defect inside the instrument with no measurable consequence, and another instance of
+§22.4's cancellation motif.
+
+**Still open:** the 44% the integral gets wrong even against a memoryless simulation,
+of which theta-dispersion is 17%. **How to kill the rest:** measure the per-stage loss
+probability CONDITIONED on the separation carried into the stage, `q(theta, delta)`,
+and propagate `delta` as a second ensemble coordinate instead of collapsing it into
+`q(theta)`. If the exponent falls to Arm A's 0.7217 the collapse onto `theta` alone
+was the whole of the remaining instrument error. If it does not, the residue has
 no surviving suspect, structural or parametric, and the integral should be abandoned
 rather than repaired. **Note this is a genuinely different object** -- a two-variable
 stage map, which is most of the way to just running the simulation -- so the result

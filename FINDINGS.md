@@ -3058,7 +3058,9 @@ trajectories, with per-stage burn drawn from its *measured* mean and spread.
 > **P3 approximately confirmed:** predicted ~0.72–0.75, measured 0.7641.
 >
 > **P4 fires on its own pre-registered criterion, and I am not going to argue it
-> away.** I wrote that if the exponent moved by less than its fit error, θ-dispersion
+> away.** (§23.10 later shows the same cross-run baseline problem it corrects in
+> §23.5 applies to this comparison too — paired against the same run, θ-dispersion is
+> 17% of the integral's error.) I wrote that if the exponent moved by less than its fit error, θ-dispersion
 > is not the small-tank error. The move is 0.0278 against a combined SE of 0.032 —
 > **0.87σ**. Against that: the two integrators share identical `q(θ)` and `c(θ)`, so
 > the *paired* difference is far better determined than independent fits imply, and
@@ -3082,6 +3084,79 @@ The two structural repairs are worth 51%; the two parametric ones essentially no
 That is the pattern the whole thread has been converging on, and it points the
 remainder at **(b)**, the independence assumption — untested here, and the only
 structural approximation left.
+
+### 23.10 A defect in the instrument that does not matter, and one in my reading that does — `fuel_burn_conditioning.py`
+
+An independent analysis of §23's stored data (a separate model, given the numbers and
+the eliminations but not my conclusions) raised two objections. Both were checked
+against the code and the stored results rather than adopted. **One is a real defect
+with no consequence; the other is a real error in how I read my own experiment.**
+
+**Objection 1 — `c(θ)` is a conditional-mean error.** Verified in the code:
+`hazard_at` runs `waste.append(...)` for *every* trial including the ones that lost
+the bit, and the integral spends that pooled mean on survivors. The stoichiometric
+argument is verified too — `f1: X + Y + F → 2B + W` has propensity ∝ n_X·n_Y·n_F,
+maximal at δ = 0, so a losing trial rides δ≈0 and burns hard. **This is rule 12
+inside the instrument**, and §23.6 and §23.8 both swept δ's effect on `q` while nobody
+swept its effect on `c`.
+
+Measured, 2000 trials per cell, burn split by outcome (Φ/Ω = 25):
+
+| θ | 0.231 | 0.269 | 0.308 | 0.327 | 0.384 | 0.423 | 0.461 |
+|---|---|---|---|---|---|---|---|
+| `q` | 0.001 | 0.012 | 0.129 | 0.301 | 0.419 | 0.467 | 0.494 |
+| `c_lost/c_surv` | **4.28** | 2.25 | 1.33 | 1.16 | 1.04 | 1.04 | 1.01 |
+| contamination `q·Δc`, as % of `c` | 0.3% | 1.4% | 4.1% | **4.5%** | 1.8% | 1.9% | 0.5% |
+
+> **The premise is confirmed and the consequence is refuted, by an anti-correlation
+> neither I nor the analysis anticipated.** Losers really do burn up to **4.3×** more.
+> But the pooled mean is contaminated by `q·(c_lost − c_surv)`, and `q` is tiny
+> exactly where the ratio is large — at θ = 0.231 the two losers in 2000 burn 4.3×
+> more and shift the mean by 0.3%. Where `q` is large the two populations burn
+> almost identically. Peak contamination is **4.5%**, and re-integrating with
+> `c_surv(θ)` moves the exponent 0.7914 → **0.7918**. My P3 (0.68–0.74) is refuted;
+> the independent analysis's sharper prediction (depths 7/10/16/28/52, exponent ~0.71)
+> is refuted harder — measured 5.49/8.89/15.02/26.89/49.11. **P5 fires: the burn side
+> is worth −0.3%, against θ-dispersion's 19.2%.** A genuine defect worth fixing on
+> principle, with no measurable consequence — and another instance of §22.4's
+> cancellation motif.
+
+**Objection 2 — §23.5's "1.6σ from doing nothing" was a bad read of a real effect.
+This one is upheld and the published conclusion is corrected.**
+
+§23.5 compared Arm A (0.7077 ± 0.030) against **§23.1's separate run** (0.6474 ±
+0.022) rather than against the plain arm measured in *its own* run. Re-run at 400
+trials with both arms paired:
+
+| | Φ/Ω=25 | 50 | 100 | 200 | 400 | exponent |
+|---|---|---|---|---|---|---|
+| Arm A (memory removed) | 7 | 10 | 17 | 29 | **52** | 0.7217 ± 0.024 |
+| plain, same run | 7 | 11 | 17 | 27 | **45.5** | 0.6325 ± 0.016 |
+
+The paired difference is **+0.0893 ± 0.0286 = 3.1σ**, and it is localised exactly
+where the integral over-predicts: nothing at the two smallest budgets, +7% and +14%
+at the two largest. §23.5's conclusion that re-seeding "closes essentially none of
+the gap" is **withdrawn** — it closes none of the *small-tank* gap and most of the
+*large-tank* one, and an exponent-level summary averaged that structure away. This is
+rule 9 applied one level up: the axis was the budget, and the statistic was a fit
+*across* it.
+
+**The decomposition this yields**, all paired within the 400-trial run:
+
+| | exponent | share of the integral's error |
+|---|---|---|
+| deterministic integral | 0.7919 | — |
+| Arm A — simulation with memory removed | 0.7217 | integral vs memoryless: **+0.0702 (44%)** |
+| plain simulation | 0.6325 | inter-stage memory: **+0.0893 (56%)** |
+
+So **inter-stage memory is the single largest term at 56%**, θ-dispersion is 17%, and
+the burn conditioning is 0%. Hypothesis (b) of §23.9 is now supported by direct
+measurement rather than by elimination.
+
+> **Left unexplained, and flagged rather than smoothed:** Φ/Ω = 50 moves the *wrong*
+> way under Arm A (10 against plain 11) and does so at both 80 and 400 trials, so it
+> is not sampling noise. Every other budget moves in the predicted direction or not
+> at all. No account of it is offered here.
 
 
 ## Open questions

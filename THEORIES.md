@@ -483,18 +483,37 @@ hold real bits (delta ~ 0.19) past `gamma_c` for a median 3 of 7 stages, 97% of
 trials against 9.5% for the largest tank. "Because `lambda(gamma_eff) -> 0` while the
 stage stays at `gamma_0`'s relaxation time" is withdrawn.
 
-**T10b-iii-c, open: why does the hazard integral over-predict the exponent at all?**
-The 0.25 gap is now unexplained with the state assumption eliminated. Surviving
-suspect: the integral hard-stops when `theta` crosses 1/3, because `initial_counts`
-gives zero separation past `gamma_c` so the measured `q(theta)` is 1 there by
-construction -- while the simulation holds a bit through that whole region. **How to
-kill:** re-measure `q(theta)` past `gamma_c` starting from the separation the cascade
-actually carries (median 0.19-0.23, §23.4) instead of from the nonexistent rail, and
-re-integrate. If the exponent falls from 0.89 toward 0.65 the hard stop was the
-error. **This costs the integral its parameter-free status** -- the starting delta is
-an empirical input -- so it must be reported as a one-parameter model, NOT as the
-absolute rule-16 test §23.4 ran. If it still gives ~0.89, the survival-product form
-itself is wrong (stages are not independent) and that is the next suspect.
+~~**T10b-iii-c: why does the hazard integral over-predict the exponent at all?**~~
+**TESTED -> §23.6. The hard stop was 39.6% of the error, and no more.** Seeding the
+past-`gamma_c` cells at an imposed separation instead of the nonexistent rail moves
+the exponent `0.8867 -> 0.7919` against a measured `0.6474`, leaving **+0.1445, 4.6
+sigma** unexplained. Reported as the one-parameter model it is, with `delta_past`
+swept rather than fitted -- and the sweep barely matters: 0.0103 of exponent across a
+2.5x change, so the one imported number is nearly inert.
+
+**An instrument fault fell out of this and is worth carrying forward.** The integrator
+counted WHOLE stages, and at the smallest budget the predicted depth is ~5 stages, so
+four visibly different models returned byte-identical exponents to four decimals --
+which is the only reason it was caught. The measured past-`gamma_c` hazard really does
+fall from `q = 0.429` to `0.302` across the sweep; the integer depth could not move.
+Interpolating the survival crossing in `ln S` fixes it (rule 13: an approximation's own
+numerical parameter is a second axis). **This changes no published number** -- the
+continuous integrator puts §23.4's hard-stop exponent at 0.8867 +- 0.016 against the
+printed 0.8925 +- 0.017, 0.25 sigma apart.
+
+**T10b-iii-d, open: is the residue survivor selection?** The remaining error is a
+SHAPE error across `Phi`, not a scale error -- predicted/measured runs 0.78, 0.72,
+0.88, 1.00, 1.10 -- so no normalisation fixes both ends. *Suspect, stated as one:*
+the survival product is mean-field and applies the unconditional `q(theta)` every
+stage, but among trials that survive several past-`gamma_c` stages the separation is
+selected upward, so survivors face a lower hazard than `q` says. The bias grows with
+the number of past-`gamma_c` stages -- 3 of 7 at the smallest tank, 0 of 46 at the
+largest -- i.e. exactly where the integral under-predicts. **How to kill:** measure
+`q` conditioned on having already survived `k` past-`gamma_c` stages; if it falls with
+`k`, selection is the residue. If it is flat in `k`, the independence assumption
+itself is next. Either fix makes the model non-Markovian in `theta`, which is a
+different object from the integral §23.4 set out to build -- so this may be the point
+at which the integral has served its purpose rather than a defect to repair.
 
 ~~**Superseded kill test for T10b-iii-b, left visible:**~~ §23.4
 attributes the 0.25 exponent gap (quasi-static 0.893 -> measured 0.647) to holding

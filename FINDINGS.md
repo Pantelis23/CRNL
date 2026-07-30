@@ -2820,6 +2820,67 @@ costs the integral its parameter-free status — the starting δ becomes an empi
 input — so the result is a one-parameter model and must be reported as one, not as
 the absolute test §23.4 ran.
 
+### 23.6 The hard stop is 40% of the error — `fuel_hazard_pastgc.py`
+
+Past γ_c the state is seeded at an **imposed** separation `δ_past` instead of the
+nonexistent rail, then the stage runs unchanged. `δ_past` is an empirical input read
+off §23.4, so this is a **one-parameter model, not the absolute test §23.4 ran**, and
+it is swept rather than fitted. Seeding a state the simulation was *observed* to
+occupy is not a free restoring element — no separation is created that the chemistry
+was not already carrying, and the conditional hazard measured from it is a real one.
+
+**First, an instrument fault that had to be fixed before any of it could be read.**
+`predict_depth` counts whole stages. At Φ/Ω = 25 the predicted depth is ~5 stages, so
+one stage is 20% of it — and the four swept models returned **byte-identical
+exponents to four decimals**, which is what exposed it. The sweep was working: the
+measured past-γ_c hazard falls from `q = 0.429` to `0.302` as δ_past goes 0.10 → 0.25.
+The integer depth simply could not move. Interpolating the survival crossing in `ln S`
+removes the integrator's own discreteness (rule 13) and makes the dependence visible.
+**No published number changes:** the continuous integrator puts §23.4's hard-stop
+exponent at 0.8867 ± 0.016 against the 0.8925 ± 0.017 printed there, 0.25σ apart.
+
+| model | exponent in Φ |
+|---|---|
+| hard stop at θ = 1/3 (§23.4), continuous | 0.8867 ± 0.016 |
+| past-γ_c seeded, δ_past = 0.10 | 0.7987 ± 0.022 |
+| δ_past = 0.15 | 0.7960 ± 0.022 |
+| δ_past = 0.20 | 0.7919 ± 0.022 |
+| δ_past = 0.25 | 0.7884 ± 0.022 |
+| **measured (§23.1)** | **0.6474 ± 0.022** |
+
+**The hard stop was 39.6% of the error and no more.** Removing it moves the exponent
+0.8867 → 0.7919 at the δ_past matching §23.4's observed 0.19–0.23, leaving **+0.1445,
+4.6σ** still unexplained.
+
+> **Prediction P1, approximately right.** I predicted ~0.76 from §23.4's stage counts
+> (3 extra stages of 7 at the small end, 0 of 46 at the large end, so ~0.13 off a
+> log-log fit spanning ln 16). Measured 0.7919 — the estimate was 0.03 low because
+> the small-tank depth rose ×1.35 rather than the ×1.43 I assumed. **P2** predicted
+> "about half the gap, ~0.11 left"; actual is 40% with 0.145 left. **P3** predicted
+> monotone decrease in δ_past: confirmed, 0.7987 → 0.7884 — but the whole effect is
+> **0.0103 across a 2.5× sweep**, so the one imported parameter barely matters and
+> the model is nearly parameter-free in practice. **P4** did not fire.
+
+**What remains is a shape error, not a scale error.** Predicted ÷ measured depth at
+δ_past = 0.20 runs 0.78, 0.72, 0.88, 1.00, 1.10 across the five budgets — still
+under-predicting small tanks and now over-predicting large ones. No overall
+normalisation fixes both ends.
+
+> **Suspect for the remaining 0.145, named as a suspect** (rule 17 — this thread has
+> already withdrawn two mechanisms stated in the confident voice of their
+> measurements). The survival product is mean-field: it applies the *unconditional*
+> hazard `q(θ)` at every stage. But δ_past is the median separation observed *while
+> past γ_c*, and among trials that survive several such stages the separation is
+> selected upward — survivors are the ones that happened to keep a big bit, and they
+> face a lower hazard than `q(θ)` says. That bias grows with the number of past-γ_c
+> stages, which is 3 of 7 at the smallest tank and 0 of 46 at the largest, so it acts
+> exactly where the integral under-predicts. **How to kill:** measure `q` conditioned
+> on having already survived `k` past-γ_c stages and check whether it falls with `k`.
+> If it is flat in `k`, survivor selection is not the residue and the survival
+> product's independence assumption is the next thing to test. Either way the fix
+> makes the model non-Markovian in θ, which is a different object from the integral
+> §23.4 set out to build.
+
 
 ## Open questions
 

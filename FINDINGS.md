@@ -3159,6 +3159,90 @@ measurement rather than by elimination.
 > at all. No account of it is offered here.
 
 
+## 24. Two axes of coarse-graining — which coordinate, not how much noise — `coarse_grain_axes.py`
+
+§21 is this project's sharpest result: against an exact CME reference, every
+approximation that keeps **any** noise recovers the restoration error exponent to
+2–12%, while the deterministic ODE is categorically wrong. The lesson written down
+was *noise is what matters*.
+
+§23 then built a stage-level approximation and spent seven subsections failing to
+repair it, and the decomposition (§23.10) put its error at 56% inter-stage memory and
+17% θ-dispersion. But that model is not merely deterministic — it also **collapses the
+state**, keeping the burn fraction θ and discarding δ, the coordinate the bit lives
+in. §21's levels (CLE, tau-leaping) keep every species, so they retain the noise *and*
+the coordinates, and could never separate the two. That makes the lesson ambiguous in
+a way nobody had noticed, and testable.
+
+**Design.** One measured kernel `K(θ, δ)` — per-stage loss probability, outgoing-δ
+distribution, and burn — propagated four ways, so nothing differs between cells except
+what the propagation retains. Ω = 40, σ_ch/δ* = 0.03, 12 θ × 8 δ × 600 trials,
+10⁵ trajectories per cell.
+
+| | δ kept | δ collapsed |
+|---|---|---|
+| **θ stochastic** | **0.7026 ± 0.019** | 0.7855 ± 0.025 |
+| **θ deterministic** | **0.7001 ± 0.022** | 0.8001 ± 0.025 |
+
+*(plain simulation, paired: 0.6325 ± 0.016)*
+
+**From the fully collapsed corner, the two axes are worth wildly different amounts:**
+
+| retained | buys |
+|---|---|
+| the coordinate δ only | **+0.1000** |
+| the noise in θ only | +0.0146 |
+| both | +0.0975 |
+
+> **P1 confirmed.** Keeping the coordinate while propagating θ *deterministically*
+> (0.7001) beats keeping the noise while discarding the coordinate (0.7855) — 2.6σ
+> unpaired, and the paired per-budget ratios are monotone across all five budgets
+> (0.991, 0.960, 0.879, 0.840, 0.788), which by rule 18 is the reading that counts
+> since all four cells share one kernel. **δ is worth about 7× what θ-noise is
+> worth.**
+>
+> **And once δ is kept, θ-noise is worth nothing at all** — 0.7001 → 0.7026, the
+> wrong sign, with per-budget ratios 0.969–0.985 that are systematically *below* 1.
+> Adding noise to the bookkeeping coordinate slightly *hurts*.
+>
+> **P3 confirmed:** not additive. The two singles sum to +0.1146 and keeping both buys
+> +0.0975 — another instance of the cancellation motif running through §22.4, §23.8
+> and §23.10.
+
+**The refinement this forces, and it reconciles rather than overturns §21.** "Noise is
+what matters" cannot be right as stated, because here the noise axis buys +0.0146
+against the coordinate axis's +0.1000. But §21's ODE is deterministic in **every**
+coordinate, *including δ*. The `δ kept / θ deterministic` cell is deterministic only in
+θ, while δ still fluctuates through its measured transition histogram. In both cells
+that work, the bit-carrying coordinate keeps its noise; in both that fail, it has been
+removed or discarded.
+
+> **So the statement both results support is: noise matters in the coordinate that
+> carries the signal, and costs nothing in a bookkeeping coordinate.** θ is
+> bookkeeping — it sets how hostile the landscape is, but no decision happens in it.
+> δ is where the bit is. §21's cliff removed noise from δ; §23's integral removed δ
+> outright. Same failure, seen twice, and it explains the otherwise awkward 17% that
+> §23.9's θ-dispersion bought.
+>
+> **Stated as a suspect, per rule 17.** This is one system, one channel, one Ω, and the
+> signal/bookkeeping distinction is clean here in a way it may not be elsewhere. **How
+> to kill:** run §21's ladder with a level that keeps full noise but *collapses* a
+> signal-carrying species, and one that is deterministic in a bookkeeping species
+> only. If the cliff tracks the coordinate rather than the noise there too, it
+> generalises; if §21's levels all fail the moment any species is collapsed
+> regardless of role, the signal/bookkeeping distinction is an artifact of the fuel
+> system's peculiar structure.
+
+**What this does not establish.** The full cell reaches 0.7026 against a measured
+0.6325, so **P2 is refuted** — (θ, δ) is not the whole state either, and 0.0701 of
+exponent remains outside both coordinates. And the collapsed cells here are **not**
+§23.4's integral: this collapse forces δ onto the mean the full model occupies, giving
+60.7 stages at Φ/Ω = 400 where §23.4's rail-seeded integral gave 48.2. Absolute depths
+do not compare across sections; only the ordering within this one kernel does. A first
+draft of the experiment advertised those cells as a built-in control on §23.4, which
+a smoke run refuted before the real one was launched.
+
+
 ## Open questions
 
 1. ~~**Universality class of the freeze-out transition** (§5). Is a = 0.38 really

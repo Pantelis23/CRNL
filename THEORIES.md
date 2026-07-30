@@ -663,6 +663,33 @@ finite time intervals and §5.1 uses it. It is true and it does not cover this
 observable, because restoration lives in tails where the convergence is not
 uniform. **A limit theorem cannot tell you what your simulation may throw away.**
 
+**T11-REFINED -> §24: "having noise at all" is not the right axis, and §21 could not
+have seen it.** Every level in §21's ladder keeps every species, so it retains the
+noise AND the coordinates; the two were never separated. §24 separates them on one
+measured kernel `K(theta, delta)`: keeping the coordinate `delta` while propagating
+`theta` DETERMINISTICALLY buys `+0.1000` of exponent, while keeping `theta`-noise and
+discarding `delta` buys `+0.0146` -- about 7x -- and once `delta` is kept, adding
+`theta`-noise is worth `-0.0026`, the wrong sign. Paired ratios monotone across all
+five budgets.
+
+This RECONCILES with §21 rather than overturning it, under a sharper statement.
+§21's ODE is deterministic in every coordinate INCLUDING `delta`; §24's working cells
+are deterministic only in `theta` while `delta` still fluctuates. In every cell that
+works the bit-carrying coordinate keeps its noise; in every cell that fails it has
+been removed or collapsed. **Noise matters in the coordinate that carries the signal
+and costs nothing in a bookkeeping coordinate** -- which also explains why §23.9's
+theta-dispersion bought only 17%, a number that is awkward for "noise is what matters"
+and natural here.
+
+*Suspect, not law (rule 17).* One system, one channel, one Omega, and the
+signal/bookkeeping split is unusually clean in the fuel network. **How to kill:** add
+to §21's ladder a level that keeps full noise but COLLAPSES a signal-carrying species,
+and one deterministic in a bookkeeping species only. If the cliff tracks the coordinate
+there too it generalises; if every collapse fails regardless of the species' role, the
+distinction is an artifact of this network. Note §24's full cell reaches only 0.7026
+against a measured 0.6325, so `(theta, delta)` is not the whole state either and
+0.0701 of exponent lies outside both.
+
 ~~**T11a: is the cliff a property of restoration or of AM?**~~ **RUN AT n = 3 ->
 §21.4. The cliff survives.** The ODE reports exactly 0 in all four cells where the
 truth spans 2.1e-2 to 1.1e-1, and every noisy level lands within ~5% of exact

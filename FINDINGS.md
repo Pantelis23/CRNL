@@ -2150,6 +2150,17 @@ in windows), and the correct jump distribution (Gaussian instead of Poisson) —
 still recover the restoration exponent to a few percent. What you cannot discard is
 having noise at all.**
 
+> ⚠ **"Having noise at all" is refined in §24, and this section could not have seen
+> it.** Every level on this ladder keeps *every species*, so it retains the noise and
+> the coordinates together and cannot separate them. Separating them on one kernel
+> (§24) gives the coordinate axis **+0.1000** of exponent against the noise axis's
+> **+0.0146** — and once the signal-carrying coordinate is kept, adding noise to a
+> bookkeeping one is worth −0.0026. The measurements in §21 stand exactly as printed;
+> what changes is which axis they are evidence about. The sharper statement both
+> support: **noise matters in the coordinate that carries the signal, and costs
+> nothing in a bookkeeping coordinate.** §24 records it as a suspect with a kill test
+> aimed at this ladder.
+
 The corollary is about cost. The exponent — the physics of §1–§2, the thing the
 whole project is about — is reproduced by a cheap SDE at O(1/dt) per unit time. The
 expensive exactness (O(Ω) events for the SSA, O(Ω²) memory for the CME) buys the

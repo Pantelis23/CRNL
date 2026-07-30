@@ -729,7 +729,36 @@ Honest cost: `signal-only` runs 13-28% high at eps = 0.25 and 88-157% high at
 eps = 0.40, against n = 2's 2-18%. Dropping the pool's noise costs MORE with more
 rivals, and worsens with the barrier in both systems.
 
-**T11-REFINED-b, open: does the signal subspace decompose within itself?** The arm
+~~**T11-REFINED-b: does the signal subspace decompose within itself?**~~ **MEASURED ->
+§24.3. NO.** With the rival skew forced to a fixed value independent of Omega, the
+parity artifact is gone and `decision-only` is smooth at every Omega -- and it
+**never recovers**, under-estimating in all fifteen surviving cells across two skews,
+averaging 0.666 of the exact answer at skew 2 and 0.716 at skew 4. Keeping only the
+champion-vs-rivals direction loses about a third of the failure probability.
+
+**So the coarse-graining picture is now bounded on both sides.** Removing the pool's
+noise (80% of the variance) is categorical; removing one of the two signal directions
+is NOT categorical but costs a third; only the full difference subspace reproduces the
+answer. For a simulation: discard the bookkeeping noise entirely and keep the
+exponent, but there is no further cheap truncation INSIDE the signal directions.
+
+*Suspect, not established:* the order-statistic reading -- that the champion loses to
+the best of two NOISY rivals, which sits higher than the best of two separated by
+drift alone. Consistent with the sign and with the growth in the rival count, but
+nothing here isolates it from other consequences of deleting d2.
+
+**Limits on §24.3, carried forward rather than buried.** (i) The ratio drifts +0.063
+between skew 2 and skew 4, so P7's DIRECTION is robust and its MAGNITUDE is not.
+(ii) Exponents are not fittable from those runs: `setup_skewed` absorbs its
+divisibility remainder into the MARGIN, so realised eps wobbles +-11% and the CME
+reference goes non-monotone in Omega -- the very corruption
+`approximation_hierarchy_nwinner.setup` was written to prevent, reintroduced while
+fixing a different artifact. **The fix, for whoever runs this next:** absorb the
+remainder into the SKEW instead, which §24.3 shows matters weakly, rather than the
+margin, which §24.2 shows matters a lot. (iii) One cell is excluded by the stated gate
+|full/CME - 1| < 0.25, because the full CLE control is itself 1.53x the CME there.
+
+~~**T11-REFINED-b as first posed, left visible:**~~ The arm
 that would answer it -- `decision-only`, retaining only the champion-vs-rivals
 direction -- is INVALID as built. With the rival-vs-rival noise zeroed, `X2 - X3`
 evolves deterministically from its initial value, so the whole arm is decided by an

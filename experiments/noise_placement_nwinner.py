@@ -49,6 +49,34 @@ PREDICTIONS, written before running:
   P5  IF `rivals-only` RECOVERS, the rival-rival direction feeds the champion's fate
       through the nonlinearity and the observable is not as directional as §24.1
       suggested. That would weaken the refinement rather than kill it.
+
+OUTCOME (§24.2): P1 and P2 confirmed -- `bookkeeping-only` is categorically 0 in all
+eight cells with 80% of the variance, `signal-only` carries the exponent to 6.6-8.5%.
+P3 and P4 UNRESOLVED, because `decision-only` was invalid: with rival-vs-rival noise
+zeroed, `X2 - X3` evolves deterministically from its start, and `setup` leaves the
+rivals differing by 0 or 1 according to an Omega parity, so the arm returned 0 when
+they started tied and 0.054 when they did not.
+
+T11-REFINED-b, PREDICTIONS for the `--rival-skew` fix, written before running:
+
+  P6  With a fixed skew the arm becomes smooth in Omega -- no more alternation
+      between 0 and a finite value -- and `full` and `signal-only` barely move,
+      since they always carried rival-vs-rival noise and never depended on the
+      parity. If THEY move materially, the skew is not a neutral repair and the
+      whole comparison has to be redone at matched start states.
+  P7  THE SUBSTANTIVE ONE, and I expect `decision-only` to UNDER-estimate rather
+      than recover. The champion loses to the BEST rival, not to the rival mean, and
+      the best of two NOISY rivals sits higher than the best of two rivals whose
+      separation is fixed by drift alone -- an order-statistic effect that
+      `decision-only` throws away along with d2. So removing rival-vs-rival noise
+      should LOWER the champion's failure probability, by a factor that grows with
+      the number of rivals. If instead `decision-only` matches `signal-only`, then
+      one direction of n suffices, and that is a real statement about how cheap a
+      restoration simulation can be.
+  P8  Sweeping the skew (2 vs 4) is the convergence check WITHIN the repair (rule
+      13): `decision-only` should depend on it only weakly. A strong dependence
+      means the arm is still being driven by the initial condition rather than by
+      the dynamics, and the answer stays unresolved rather than becoming P7's.
 """
 from __future__ import annotations
 
@@ -68,6 +96,44 @@ from experiments.approximation_hierarchy_nwinner import (
 )
 
 MODES = ("full", "signal-only", "bookkeeping-only", "decision-only", "rivals-only")
+
+
+def setup_skewed(n, gamma, omega, eps_frac, theta, width, skew):
+    """Start state with the champion's margin AND a fixed rival asymmetry.
+
+    T11-REFINED-b. `approximation_hierarchy_nwinner.setup` pins the rival maximum
+    and takes the remainder off the other rivals, so at n = 3 the two rivals differ
+    by 0 or 1 depending on an integer parity in Omega. That is harmless for arms
+    that carry rival-vs-rival noise and FATAL for `decision-only`, which zeroes it:
+    with X2 - X3 evolving deterministically from its initial value, rivals that
+    start tied stay tied and the champion wins by construction (§24.2).
+
+    Forcing `max(rivals) - min(rivals) = skew` exactly, independent of Omega,
+    removes the parity. Same discipline as `setup`: pin the rival maximum, absorb
+    the remainder by nudging the margin, and assert both invariants.
+    """
+    from crnl.networks.n_winner_reversible import symmetric_state
+    _, b = symmetric_state(n, gamma)
+    nb = int(round(b * omega))
+    rest = omega - nb
+    m = max(1, int(round(eps_frac * width * omega)))
+    for dm in (0, 1, -1, 2, -2, 3, -3):
+        mm = m + dm
+        if mm < 1:
+            continue
+        num = rest - mm + (n - 2) * skew
+        if num % n:
+            continue
+        R = num // n
+        rivals = [R] + [R - skew] * (n - 2)
+        c = R + mm
+        n0 = np.array([c] + rivals + [nb], dtype=np.int64)
+        if (n0 >= 0).all() and int(n0.sum()) == omega \
+                and c - max(rivals) == mm \
+                and (n == 2 or max(rivals) - min(rivals) == skew):
+            thr = max(2, int(round(theta * width * omega)))
+            return n0, thr, float(mm) / omega
+    raise ValueError(f"no exact-margin start at Omega={omega}, n={n}, skew={skew}")
 
 
 def _dirs(n: int) -> tuple[np.ndarray, np.ndarray]:
@@ -153,6 +219,10 @@ def main() -> None:
     ap.add_argument("--dt", type=float, default=0.02)
     ap.add_argument("--trials", type=int, default=40000)
     ap.add_argument("--seed", type=int, default=20260730)
+    ap.add_argument("--rival-skew", type=int, default=0,
+                    help="fixed max(rivals)-min(rivals) in the start state. 0 uses "
+                         "the original setup, whose 0-or-1 parity invalidated "
+                         "decision-only (§24.2). >=2 is T11-REFINED-b's fix.")
     ap.add_argument("--out", type=pathlib.Path,
                     default=pathlib.Path("results/noise_placement_nwinner.json"))
     args = ap.parse_args()
@@ -169,12 +239,17 @@ def main() -> None:
     print(f"n={n} gamma={g:.5f} (= {args.gamma_frac} x gamma_c={gamma_critical(n):.5f}) "
           f"theta={args.theta} dt={args.dt} trials={args.trials}")
     print(f"  landscape width (champion - best rival at the attractor) = {width:.5f}")
+    print(f"  rival skew = {args.rival_skew}"
+          + ("  [T11-REFINED-b: fixed, so decision-only is not decided by Omega parity]"
+             if args.rival_skew else "  [original setup; decision-only INVALID here]"))
     print(f"\n{'eps':>5} {'Omega':>6} {'CME':>10} {'full':>10} {'signal':>10} "
           f"{'bookkeep':>10} {'decision':>10} {'rivals':>10}  variance kept")
     rows = []
     for eps in args.eps_fracs:
         for om in args.omegas:
-            n0, thr, realised = setup(n, g, om, eps, args.theta, width)
+            n0, thr, realised = (
+                setup_skewed(n, g, om, eps, args.theta, width, args.rival_skew)
+                if args.rival_skew else setup(n, g, om, eps, args.theta, width))
             comp = compile_network(n_winner_reversible(n, g), float(om))
             stop = _absorbing_batch(n, thr)
             exact = p_cme(n, g, om, n0, thr)

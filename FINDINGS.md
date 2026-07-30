@@ -3395,6 +3395,67 @@ signal subspace** — and its wording should be "the signal subspace", since n =
 could not distinguish that from a single coordinate. Whether the subspace decomposes
 further is open, with the arm that would test it named and currently broken.
 
+### 24.3 The signal subspace does not decompose — `--rival-skew` — T11-REFINED-b
+
+§24.2's `decision-only` arm was decided by an Ω parity. The repair forces
+`max(rivals) − min(rivals) = skew` exactly in the start state, independent of Ω, and
+applies it to every arm and to the CME reference alike. Run at skew = 2 and skew = 4,
+40,000 trials per cell.
+
+**Ratios to the exact CME, paired on an identical start state** (rule 18 — these are
+matched-start comparisons, which is what the following claim rests on):
+
+| ε | Ω | full | signal-only | decision-only (skew 2) | decision-only (skew 4) |
+|---|---|---|---|---|---|
+| 0.25 | 30 | 1.026 | 1.270 | 0.612 | 0.705 |
+| 0.25 | 45 | 1.003 | 1.256 | 0.589 | 0.657 |
+| 0.25 | 60 | 1.002 | 1.135 | 0.550 | 0.596 |
+| 0.25 | 80 | 1.043 | 1.296 | 0.544 | 0.590 |
+| 0.40 | 45 | 0.985 | 2.482 | 0.799 | 0.838 |
+| 0.40 | 60 | 1.091 | 1.975 | 0.700 | 0.833 |
+| 0.40 | 80 | 1.047 | 2.454 | 0.818 | 0.793 |
+
+> **P6 confirmed.** The parity is gone: `decision-only` is smooth and finite at every
+> Ω, and `full` and `signal-only` barely move, so the skew is a neutral repair rather
+> than a different experiment.
+>
+> **P7 confirmed in direction.** `decision-only` **never recovers** — it
+> under-estimates in all fifteen surviving cells across both skews, averaging
+> **0.666** of the exact answer at skew 2 and **0.716** at skew 4. Keeping only the
+> champion-vs-rivals direction loses roughly a third of the failure probability. The
+> order-statistic mechanism I predicted is *consistent* with this — the champion
+> loses to the best of two noisy rivals, which sits higher than the best of two whose
+> separation is set by drift alone — but nothing here isolates that mechanism from
+> other consequences of deleting d2, so it stays a suspect (rule 17).
+>
+> **P8 partially fails, and the magnitude is therefore not pinned.** The ratio drifts
+> systematically upward with the skew — +0.063 averaged over the four cells present
+> in both runs. The direction of P7 is robust to that; its size is not.
+
+**Two limits on these runs, stated rather than worked around.**
+
+> **Exponents are not fittable here.** `setup_skewed` absorbs its divisibility
+> remainder into the *margin*, so realised ε wobbles ±11% around target (0.912–1.115)
+> and the CME reference is non-monotone in Ω — precisely the corruption
+> `approximation_hierarchy_nwinner.setup`'s docstring was written to prevent, which I
+> reintroduced while fixing a different artifact. Only the paired per-cell ratios
+> above are used. **The fix** is to absorb the remainder into the *skew* instead,
+> letting it vary 2–3 while the margin stays exact: P8 shows the skew dependence is
+> weak and §24.2 shows the margin dependence is not.
+>
+> **One cell is excluded on a stated criterion, not by inspection.** At ε = 0.40,
+> Ω = 30, skew = 4 the realised ε is 14% high and **the full-CLE control is itself
+> 1.53× the CME** — the level is outside its own validity there, independently of any
+> projection. The gate applied is |full/CME − 1| < 0.25, which drops that one cell and
+> keeps 15 of 16.
+
+**Where this leaves §24.** The split is by **subspace**, and the subspace is not
+further decomposable: removing the pool's noise (80% of the variance) is categorical,
+removing one of the two signal directions is not categorical but costs a third of the
+answer, and only the full difference subspace reproduces it. For a simulation that
+means the saving is bounded — you may discard the bookkeeping noise entirely and get
+the exponent, but there is no further cheap truncation *inside* the signal directions.
+
 
 ## Open questions
 

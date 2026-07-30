@@ -681,14 +681,44 @@ and costs nothing in a bookkeeping coordinate** -- which also explains why §23.
 theta-dispersion bought only 17%, a number that is awkward for "noise is what matters"
 and natural here.
 
-*Suspect, not law (rule 17).* One system, one channel, one Omega, and the
-signal/bookkeeping split is unusually clean in the fuel network. **How to kill:** add
-to §21's ladder a level that keeps full noise but COLLAPSES a signal-carrying species,
-and one deterministic in a bookkeeping species only. If the cliff tracks the coordinate
-there too it generalises; if every collapse fails regardless of the species' role, the
-distinction is an artifact of this network. Note §24's full cell reaches only 0.7026
-against a measured 0.6325, so `(theta, delta)` is not the whole state either and
-0.0701 of exponent lies outside both.
+~~*Suspect, not law (rule 17).*~~ **KILL TEST RUN -> §24.1, and it GENERALISES --
+more sharply in §21's own system than in the fuel network.** Same ladder, same
+observable, same exact CME reference; `am_reversible` conserves n_X+n_Y+n_B so the
+CLE noise splits cleanly into `delta = n_X - n_Y` (the signal) and `s = n_X + n_Y`
+(the blank pool, bookkeeping). Projecting the noise while keeping the drift full:
+
+| arm | delta-noise | s-noise | result |
+|---|---|---|---|
+| full CLE | 100% | 100% | correct to 0.2-5% |
+| delta-only | 100% | 0% | correct to 2-18% |
+| uniform 11% | 11% | 11% | wrong by 17-770x, or categorically 0 |
+| s-only | 0% | 88% | **categorically 0, like the ODE, in all eight cells** |
+
+**A model can keep seven-eighths of the noise and be as categorically wrong as one
+that keeps none.** No graded middle -- the messy outcome named in advance did not
+occur. And the `uniform 11%` arm, added expecting it to PASS and thereby show
+amplitude was irrelevant, failed instead: keeping 11% of the SIGNAL's own noise is as
+fatal as keeping none, because barrier crossing is exponential in the noise amplitude
+along the crossing direction.
+
+**So T11's headline is superseded: not "having noise at all" but "having the signal
+coordinate's noise, at its own amplitude."** §21's measurements stand as printed.
+
+Honest residue: dropping the blank-pool noise is not free -- delta-only runs +1.5% to
++4.5% high at eps = 0.20 and +10% to +18% at eps = 0.35, systematically over, and
+worsening with the barrier. Bookkeeping noise is MOSTLY discardable, not exactly.
+Also note §24's own full cell reached only 0.7026 against a measured 0.6325, so
+`(theta, delta)` is not the whole state of the fuel system and 0.0701 of exponent lies
+outside both coordinates -- that gap is untouched by this test.
+
+**T11-REFINED-a, open: does the signal/bookkeeping split survive when the roles are
+not obvious?** Both systems tested have one coordinate that is transparently the bit
+and one that is transparently a pool. **How to kill:** run the same projection on
+`n_winner_reversible` at n = 3 or 4, where the simplex has two or more signal
+directions and no single "the bit" coordinate. If noise must be retained in EVERY
+signal direction but none of the bookkeeping ones, the split is structural; if the
+required set does not decompose that cleanly, the distinction is a two-species
+convenience.
 
 ~~**T11a: is the cliff a property of restoration or of AM?**~~ **RUN AT n = 3 ->
 §21.4. The cliff survives.** The ODE reports exactly 0 in all four cells where the

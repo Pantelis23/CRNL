@@ -2159,7 +2159,9 @@ having noise at all.**
 > what changes is which axis they are evidence about. The sharper statement both
 > support: **noise matters in the coordinate that carries the signal, and costs
 > nothing in a bookkeeping coordinate.** §24 records it as a suspect with a kill test
-> aimed at this ladder.
+> aimed at this ladder — **and §24.1 runs it here and it holds**: with the noise
+> projected onto the blank pool only, 88% of the variance retained, this section's
+> observable reads exactly 0 in all eight cells, the ODE's own failure.
 
 The corollary is about cost. The exponent — the physics of §1–§2, the thing the
 whole project is about — is reproduced by a cheap SDE at O(1/dt) per unit time. The
@@ -3252,6 +3254,75 @@ exponent remains outside both coordinates. And the collapsed cells here are **no
 do not compare across sections; only the ordering within this one kernel does. A first
 draft of the experiment advertised those cells as a built-in control on §23.4, which
 a smoke run refuted before the real one was launched.
+
+### 24.1 The kill test, on §21's own ladder — `noise_placement.py`
+
+§24's claim was recorded as a suspect on one system. Its kill test was to run the
+coordinate-vs-noise question in §21's ladder, with §21's observable (P(error) from a
+start biased by ε, decided at |n_X − n_Y| ≥ 0.8·δ*·Ω), against §21's exact CME
+reference. `am_reversible` conserves n_X + n_Y + n_B, so the CLE noise increment sums
+to zero and splits by role: **δ = n_X − n_Y is the signal**, **s = n_X + n_Y is
+bookkeeping** (the blank pool, `Ω − n_B`). Project the noise, keep the drift full:
+
+| ε | Ω | CME (exact) | CLE full | δ-only | s-only | uniform 11% |
+|---|---|---|---|---|---|---|
+| 0.20 | 40 | 0.23385 | 0.23728 | 0.24440 | **0** | 0.01405 |
+| 0.20 | 60 | 0.17307 | 0.17340 | 0.17608 | **0** | 0.00235 |
+| 0.20 | 80 | 0.15607 | 0.15770 | 0.16105 | **0** | 0.00112 |
+| 0.20 | 100 | 0.11997 | 0.11975 | 0.12172 | **0** | 0.00015 |
+| 0.35 | 40 | 0.09833 | 0.09940 | 0.11115 | **0** | 0.00007 |
+| 0.35 | 60 | 0.05195 | 0.05003 | 0.05720 | **0** | 0 |
+| 0.35 | 80 | 0.02347 | 0.02228 | 0.02633 | **0** | 0 |
+| 0.35 | 100 | 0.01312 | 0.01315 | 0.01553 | **0** | 0 |
+
+δ-only keeps **11%** of the total noise variance; s-only keeps **88%**.
+40,000 trials per cell.
+
+> **P1 confirmed, and not as a matter of degree.** `s-only` — 88% of the noise
+> variance retained, all of it in the blank pool — reports **exactly 0 in all eight
+> cells**, which is the ODE's signature failure. **P4 did not fire:** there is no
+> graded middle to restate as a continuum. A model can keep seven-eighths of the
+> noise and be as categorically wrong as one that keeps none.
+>
+> **P2 confirmed.** `δ-only` recovers the exponent — −0.7122 against the exact
+> −0.6867 at ε = 0.20, and −2.1719 against −2.2142 at ε = 0.35 — on 11% of the noise.
+> **P3 confirmed**, the harness control: the full CLE tracks the CME to 0.2–5%.
+
+**And the arm I added expecting it to pass is the one that makes the argument.** I
+built `uniform 11%` — the same *total* variance as δ-only but spread over both
+coordinates — to show that amplitude was not the driver, writing in the code that "if
+11% everywhere works while 88% in the wrong place fails, the total is not what the
+observable is sensitive to." **It does not work.** It is wrong by factors of 17 to 770
+at ε = 0.20 and categorically zero at ε = 0.35.
+
+So the sharp statement is neither "noise matters" nor "placement matters", but both
+together, and the three arms pin it exactly:
+
+| | δ-noise | s-noise | result |
+|---|---|---|---|
+| full CLE | 100% | 100% | correct to 0.2–5% |
+| **δ-only** | **100%** | 0% | **correct to 2–18%** |
+| uniform 11% | 11% | 11% | wrong by 17–770×, or categorically 0 |
+| **s-only** | **0%** | **88%** | **categorically 0, like the ODE** |
+
+**The observable is sensitive to the noise in the signal coordinate at its correct
+amplitude, and essentially indifferent to everything else.** Removing 88% of the
+noise costs 2–18%; removing the remaining 11% costs everything; keeping 11% of the
+*signal's own* noise is as fatal as keeping none, because barrier crossing depends
+exponentially on the noise amplitude in the crossing direction.
+
+> **What it costs to drop the bookkeeping noise, stated honestly rather than
+> rounded.** δ-only is not free: it runs **+1.5% to +4.5% high at ε = 0.20** and
+> **+10% to +18% at ε = 0.35**, systematically over-estimating and worsening with the
+> bias. That is inside §21's own 2–12% band at the smaller bias and outside it at the
+> larger. Blank-pool noise is *mostly* discardable for this observable, not exactly
+> discardable, and the error grows with the barrier.
+
+**§24 generalises.** The signal/bookkeeping distinction was not an artifact of the
+fuel network: it reproduces in the system §21 was measured on, with §21's observable
+and an exact reference, and more sharply there than in §23 — categorical rather than
+7×. §21's measurements stand as printed; **"having noise at all" is superseded by
+"having the signal coordinate's noise, at its own amplitude."**
 
 
 ## Open questions

@@ -236,3 +236,52 @@ def test_first_passage_requires_reachable_absorbing_set():
     with pytest.raises(ValueError):
         first_passage(net, 9, 9.0, start=np.array([3, 3, 3]),
                       is_absorbing=lambda n: False)      # nothing absorbs
+
+
+def test_first_passage_moments_pins_the_mean_to_first_passage():
+    from crnl.cme import first_passage, first_passage_moments
+    net = am_reversible(0.3)
+    N = 24
+    ab = lambda n: abs(int(n[0]) - int(n[1])) >= 12
+    start = np.array([9, 7, 8])
+    a = first_passage(net, N, float(N), start, ab)
+    b = first_passage_moments(net, N, float(N), start, ab)
+    assert a["valid"] and b["valid"]
+    assert b["mean_time"] == pytest.approx(a["mean_time"], rel=1e-12)
+    assert b["var_time"] > 0.0
+    assert b["second_moment"] == pytest.approx(
+        b["var_time"] + b["mean_time"] ** 2, rel=1e-12)
+
+
+def test_first_passage_variance_matches_the_ssa():
+    """The exact second moment against sampled jump trajectories.
+
+    This is the check that matters: the recursion Qtt m2 = -2T is easy to write
+    with a wrong factor, and a wrong factor still produces a positive, plausible
+    variance. Only an independent estimator catches it.
+    """
+    from crnl.cme import first_passage_moments
+    from crnl.networks.am_reversible import reverse_pairing
+    from crnl.thermo import gillespie_instrumented
+    from crnl.vectorized import compile_network
+    net = am_reversible(0.3)
+    N = 24
+    thr = 12
+    start = np.array([9, 7, 8])
+    exact = first_passage_moments(net, N, float(N), start,
+                                  lambda n: abs(int(n[0]) - int(n[1])) >= thr)
+    comp = compile_network(net, float(N))
+    pair = reverse_pairing(net)
+    rng = np.random.default_rng(4242)
+    times = []
+    for _ in range(4000):
+        r = gillespie_instrumented(
+            comp, start, rng, pair,
+            stop=lambda n: abs(int(n[0]) - int(n[1])) >= thr)
+        times.append(float(r.t_final))
+    t = np.array(times)
+    # standard error of a variance estimate is ~ var * sqrt(2/(n-1)) for Gaussian
+    # data and larger for a skewed first-passage time, so the band is generous;
+    # a factor-of-2 error in the recursion would still fail it by a mile.
+    assert t.var(ddof=1) == pytest.approx(exact["var_time"], rel=0.15)
+    assert t.mean() == pytest.approx(exact["mean_time"], rel=0.06)

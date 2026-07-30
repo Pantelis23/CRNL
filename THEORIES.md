@@ -729,7 +729,38 @@ carries the observable; the few-percent residual is about timescale separation.*
 §24.1 left that residual unexplained; it now has a mechanism, and it is the
 reviewer's, not mine.
 
-**T12, open: does any observable of this system require the POOL's noise?** §25
+**T12: PARTLY TESTED -> §25.1. The best candidate came back negative.** `Var(T)` at
+first passage -- a PURE-noise observable, deterministic limit exactly zero, with two
+credible and non-guessable mechanisms -- is recovered by `delta-only` alone (ratio
+1.183, 8/8 inside a band fixed before looking) while `s-only` captures only 16% and
+fails 8/8. The P4 control rules out bimodality: `Var(T | correct)` for `s-only` is
+0.198 of full, so the shortfall is missing jitter, not missing slow error paths.
+Exact reference added as `cme.first_passage_moments` and pinned against the SSA,
+because a wrong factor in `Qtt m2 = -2T` still yields a plausible positive variance.
+
+**So three observables have now been tested and all three live in `span(delta)`.**
+Per the review's own framing that does NOT establish one stiff direction -- it
+establishes that P(error), MFPT and Var(T) are the same question asked three ways.
+
+**What survives as a positive result:** the pool's noise is not irrelevant to Var(T),
+just insufficient. `delta-only` overshoots Var(T) by 18% where it overshoots P(error)
+by 3.1% at the same gamma (§24.1a), so **the pool matters ~6x more to the timing
+jitter than to the error probability**. Observable-dependence in the MAGNITUDE, where
+the categorical requirement is identical. Weaker than T12 set out to show, and it is
+what the data supports.
+
+**T12 remaining, open: the two-target race.** Absorb on `|n_X - n_Y| >= thr` OR
+`n_B <= m`, tuned to ~50/50; `cme.splitting_probability` already supports it.
+**Caveat the review did not raise:** under `delta-only` the pool has no noise of its
+own, so whether it reaches `m` is driven only by delta's fluctuations feeding the
+drift -- not forced the way `Var(n_B)` is, but one step removed. Write the
+pre-committed criterion before running. **And if this too comes back needing
+`span(delta)`, the right conclusion is not "one stiff direction" but that every
+observable reachable with this absorbing-set machinery is a question about delta,
+which would be a limitation of the INSTRUMENT and should be recorded as one.**
+
+~~**T12 as first posed: does any observable of this system require the POOL's
+noise?**~~ §25
 establishes that the requirement varies by observable but only DOWNWARD -- P(error)
 needs `span(delta)`, MFPT needs nothing -- and an observable needing the EMPTY
 subspace is weak evidence, since drift-dominated means are means. The strong form

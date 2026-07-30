@@ -319,3 +319,61 @@ def splitting_probability(net: ReactionNetwork, total: int, omega: float,
                  and residual <= RESIDUAL_MAX)
     return {"split": min(max(val, 0.0), 1.0), "valid": valid,
             "residual": residual}
+
+
+def first_passage_moments(net: ReactionNetwork, total: int, omega: float,
+                          start, is_absorbing) -> dict:
+    """Mean, second moment and VARIANCE of the first-passage time, exactly.
+
+    `first_passage` already solves `Qtt T = -1` for the mean. The second moment
+    satisfies the same system shape with the mean as its source:
+
+        Qtt @ m2 = -2 T
+
+    which is the k = 2 case of the standard recursion `Qtt @ m_k = -k m_{k-1}`.
+    Variance is then `m2 - T^2`.
+
+    This exists because the VARIANCE of the decision time is a pure-noise
+    observable -- the deterministic limit gives exactly zero -- which makes it
+    usable as a reference where a mean is not: a mean is dominated by the drift
+    that every approximation retains, so it cannot discriminate between them
+    (FINDINGS 25). `mean_time` here is solved identically to `first_passage`'s and
+    the two are pinned together by test.
+    """
+    states, index = enumerate_states(net.n_species, total)
+    absorbing = np.array([bool(is_absorbing(s)) for s in states])
+    if not absorbing.any():
+        raise ValueError("no absorbing states: first passage is undefined")
+    if absorbing.all():
+        raise ValueError("every state is absorbing: nothing to solve")
+
+    Q = generator(net, total, omega)
+    trans = np.where(~absorbing)[0]
+    tmap = {int(i): r for r, i in enumerate(trans)}
+    Qtt = Q[trans][:, trans].tocsr()
+
+    b = -np.ones(len(trans))
+    T = spla.spsolve(Qtt, b)
+    res_mean = float(np.linalg.norm(Qtt @ T - b) / np.linalg.norm(b))
+
+    rhs2 = -2.0 * T
+    m2 = spla.spsolve(Qtt, rhs2)
+    res_m2 = float(np.linalg.norm(Qtt @ m2 - rhs2) / max(np.linalg.norm(rhs2), 1e-300))
+
+    start = np.asarray(start, dtype=np.int64)
+    si = index[tuple(start)]
+    if absorbing[si]:
+        return {"mean_time": 0.0, "second_moment": 0.0, "var_time": 0.0,
+                "std_time": 0.0, "valid": True, "residual": 0.0}
+    r = tmap[si]
+    mean_time, second = float(T[r]), float(m2[r])
+    var = second - mean_time ** 2
+    residual = max(res_mean, res_m2)
+    # A negative variance is not a small number to be clipped: it means the solve
+    # is untrustworthy, and reporting sqrt of it would launder that into a plot.
+    valid = bool(np.isfinite(mean_time) and np.isfinite(second)
+                 and 0.0 < mean_time <= MFPT_MAX
+                 and var > 0.0 and residual <= RESIDUAL_MAX)
+    return {"mean_time": mean_time, "second_moment": second,
+            "var_time": var, "std_time": float(np.sqrt(var)) if var > 0 else float("nan"),
+            "valid": valid, "residual": residual}

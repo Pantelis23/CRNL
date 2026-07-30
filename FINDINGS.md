@@ -3610,6 +3610,58 @@ Two further limits recorded rather than smoothed:
 > because every arm keeps the drift, i.e. right for reasons unrelated to noise
 > placement.
 
+### 25.1 T12's best candidate, and the strong form is not found — `timing_jitter.py`
+
+`Var(T)` at first passage was the sharpest candidate for an observable requiring the
+pool's noise: it is a **pure-noise** quantity (the deterministic limit gives exactly
+zero, so there is no drift-dominated leading order to dilute against), and it has two
+credible mechanisms neither of which is guessable — jitter from diffusion along the
+**crossing direction** (→ `span(δ)`), or jitter from fluctuations in the **rate of
+advance**, since every recruitment propensity carries `n_B` and the pool holds only
+~9 molecules at Ω = 40 (→ `span(s)`). Exact reference added as
+`cme.first_passage_moments` (`Qtt m2 = −2T`), pinned against sampled jump
+trajectories by `test_first_passage_variance_matches_the_ssa` — necessary because a
+wrong factor in that recursion still yields a positive, plausible variance.
+
+**Verdict bands were fixed before looking at output** (recovers ≤ 25% off, fails
+> 3× off), because §24.1's exact zeros will not recur and "categorical" must not be
+decided by eye.
+
+| arm | Var(T) ratio | verdicts | P(error), same trajectories |
+|---|---|---|---|
+| full | 1.013 [0.977–1.039] | 8/8 recovers | fine |
+| **δ-only** | **1.183 [1.116–1.241]** | **8/8 recovers** | +8.1% |
+| **s-only** | **0.160 [0.109–0.199]** | **0/8, 8 fails** | **exactly 0 in 8/8** |
+| uniform 11% | 0.148 [0.075–0.380] | 7 fails, 1 partial | 0 in 3/8 |
+
+> **P1 and P2 refuted, P3 confirmed. The strong form is not found.** I predicted
+> neither arm would recover alone, making Var(T) an observable requiring
+> `span(δ)⊕span(s)`. Instead **`δ-only` recovers it alone** and `s-only` captures only
+> 16% of the variance. The P4 control rules out bimodality as the explanation:
+> `Var(T | correct)` for `s-only` is 0.198 of full, so the shortfall is genuine
+> missing jitter, not the absence of slow error paths.
+>
+> **So `Var(T)` is a third δ-observable**, and the honest reading is the one the
+> review pre-supplied: three observables tested, all of them saddle- or
+> drift-dominated. That does **not** establish "one stiff direction" — it establishes
+> that I have now asked the same question three ways.
+
+**One thing worth keeping from a negative result.** The pool's noise is not
+*irrelevant* to Var(T), just insufficient: `s-only` captures 16–20% of it, and
+`δ-only` overshoots by 18% where it overshoots P(error) by only 3.1% at the same γ
+(§24.1a). **So the pool's contribution is roughly 6× more important to the timing
+jitter than to the error probability** — observable-dependence in the *magnitude*,
+even where the categorical requirement is the same. That is a weaker claim than T12
+set out to make and it is the one the data supports.
+
+**T12's remaining candidate, with a caveat the review did not raise.** The two-target
+race — absorbing on `|n_X − n_Y| ≥ thr` **or** `n_B ≤ m`, tuned to ~50/50 — is still
+untested and `cme.splitting_probability` supports it with no new code. But it may sit
+closer to the definitional line than it appears: under `δ-only` the pool carries no
+noise of its own, so whether it reaches `m` is driven only by δ's fluctuations feeding
+the drift. That is not *forced* the way `Var(n_B)` is, but it is one step removed, and
+the pre-committed criterion should be written before it runs.
+
 
 ## Open questions
 

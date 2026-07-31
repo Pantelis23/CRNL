@@ -4658,3 +4658,84 @@ two withdrawn within the session that proposed them** (rule 17): the sign-conser
 account of `rivals-only`, then the G₂₃ gate. The measurements survive; the stories
 about them keep not surviving, and the one that did survive is the one that was derived
 algebraically and checked to 4×10⁻¹⁶ rather than inferred from a monotone table.
+
+### 31 An additive drift term breaks the categorical zero — `additive_term.py` — T15-b
+
+§29 predicted that "a network whose `b_δ` carries an additive term would give a small
+but nonzero `s-only`, not a zero." That prediction had never been tested, which left
+"the identity is *why* the zero happens" as an explanation with no independent
+confirmation — rule 17's exact situation. `am_asymmetric` supplies the term. Derived by
+hand from its propensities, with s = n_X + n_Y and δ = n_X − n_Y:
+
+> **dδ/dt = δ·(k/Ω)·[ n_B − γ(s−1) ] + (kβ/Ω)·[ n_B·s − γ((s²+δ²)/2 − s) ]**
+
+The first term is §29's identity verbatim; the second exists for every β ≠ 0 and
+vanishes identically at β = 0. **P1: verified against the network's own propensities at
+six β, worst relative residual 1.8×10⁻¹⁴.** So β tunes precisely the thing §29 says the
+zero depends on, in a network already in the repo.
+
+The champion is **Y**, the *disfavoured* symbol, so the additive term erodes its lead
+rather than protecting it. γ = 0.25, Ω = 80, threshold 49, ε = 0.06, 100,000
+trajectories per arm, `full`/`delta-only`/`s-only` paired on one start state per cell.
+
+**Two start rules, because β lowers the barrier as well as adding the term** — the
+§30.2 lesson applied before the run instead of after. `fixed` holds the start state
+across β; `matched` holds a fixed distance from the saddle, so the barrier is held.
+
+**The `matched` rule, with the barrier held to 7.1% across the whole sweep:**
+
+| β | saddle | start | CME | `full` | `delta-only` | **`s-only`** | δ flips | closest |
+|---|---|---|---|---|---|---|---|---|
+| 0.00 | 0.0000 | [30, 34, 16] | 0.32291 | 0.32412 | 0.32568 | **0** (theorem) | 0 | +0.875 |
+| 0.02 | −0.0200 | [29, 35, 16] | 0.30801 | 0.31020 | 0.31397 | **< 3.0×10⁻⁵** | 0 | +0.826 |
+| 0.05 | −0.0500 | [28, 36, 16] | 0.32633 | 0.32830 | 0.33648 | **< 3.0×10⁻⁵** | 0 | +0.764 |
+| 0.10 | −0.0999 | [26, 38, 16] | 0.32918 | 0.32989 | 0.34424 | **0.00001** | 1 | −4.084 |
+| 0.15 | −0.1496 | [24, 40, 16] | 0.33107 | 0.33329 | 0.35716 | **0.00069** | 69 | −3.075 |
+| 0.30 | −0.2971 | [18, 46, 16] | 0.32672 | 0.32770 | 0.37448 | **0.03210** | 3210 | −1.761 |
+
+> **P3 confirmed under the barrier-controlled rule: §29's prediction holds.** At an
+> essentially constant barrier — CME 0.323 → 0.327, spread 7.1%, `full` flat at
+> 0.324–0.333 — `s-only` goes from an **exact zero** to **3.2%**. The claim under test
+> is categorical, and no change in barrier height can turn an exact zero into a
+> nonzero: a theorem does not weaken, it applies or it does not.
+
+> **The control that makes it airtight.** `s-only` retains **0.891 of the variance at
+> every β, identical to three decimals** — the noise amplitude is constant across the
+> entire sweep and only the *drift structure* changes. So this cannot be an amplitude
+> effect, which is the one alternative §24.1's `uniform-11pct` arm showed matters.
+> Rejections held at 5–10×10⁻⁵ of steps, flat in β and not tracking the effect (rule
+> 10); zero unfinished trajectories anywhere (rule 12).
+
+> ⚠ **β = 0.02 and 0.05 are BOUNDS, not zeros — only β = 0 is a theorem zero.** Zero
+> of 100,000 gives a 95% upper bound of 3.0×10⁻⁵, and at β = 0.10 the measured value is
+> 1×10⁻⁵, i.e. just at the resolution. So the transition is *smooth and turns on below
+> the instrument's floor*, not sharp at some β. Writing "the zero survives to β = 0.05"
+> would repeat exactly the bound-versus-zero error §24.1 made and §29 corrected.
+
+> ⚠ **P3 as written FAILED, and the scoring is reported as it came out.** P3 demanded
+> nonzero under *both* start rules. Under `fixed` it is not, because **4 of that rule's
+> 6 cells are inadmissible on P4** — at β ≥ 0.05 the saddle slides past the fixed start
+> and the noiseless ODE no longer reaches Y's attractor. Its only admissible β > 0 cell
+> is β = 0.02, which sits below the resolution floor. So `fixed` does not contradict
+> P3; **it cannot test it.** The honest statement is: confirmed under `matched`,
+> untestable under `fixed`, and the two-rule design was worth having anyway for the
+> reason below.
+
+> **P4 was load-bearing, not ceremonial.** In the four inadmissible `fixed` cells
+> `s-only` reads **0.597, 1.000, 1.000, 1.000**. Reported without the ODE control that
+> would have looked like a spectacular confirmation — "the additive term drives
+> `s-only` from 0 to certainty". It is nothing of the kind: the champion is losing
+> *deterministically*, which is `am_asymmetric`'s systematic tilt and not a restoration
+> failure at all. That module's own docstring warns the bias and the random error "both
+> show up as a wrong answer", and that warning was worth what it cost.
+
+> **P6, unpredicted and recorded:** `delta-only`/`full` runs 1.005 → 1.143 as β rises,
+> so the signal arm stays inside §24.1's 2–18% band even with the tilt, and degrades
+> smoothly rather than breaking.
+
+**What §31 settles.** The mechanism behind §24.1, §29 and §30 now has the independent
+test it was missing: the categorical zero tracks the *presence of an additive drift
+term*, not the amount of noise removed. **This is the first mechanism in this arc to
+survive a test aimed at it** — §30's two did not — and it survived because it was
+derived algebraically and checked in absolute terms first, then given a knob that turns
+it off and on at fixed barrier. Rule 16, one level up.

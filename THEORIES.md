@@ -1669,3 +1669,80 @@ predicts its `s-only` analogue would then be small but NONZERO. If every network
 restores has the multiplicative form, the identity is constitutive rather than
 incidental; if one restores without it, the definition is too narrow and the general
 claim in §24 stays dead.
+
+**T15-b -> §31: CONFIRMED, and it is the first mechanism in this arc to survive its own
+kill test.** §29 predicted that a network whose signal drift carries an ADDITIVE term
+would give a small but nonzero `s-only`. `am_asymmetric` has one, exactly:
+
+    d(delta)/dt = delta*(k/Om)*[n_B - gamma*(s-1)]
+                + (k*beta/Om)*[n_B*s - gamma*((s^2+delta^2)/2 - s)]
+
+verified against the network's own propensities at six beta, worst residual 1.8e-14.
+The second term vanishes identically at beta = 0 and grows with beta, so beta is a knob
+that turns off and on the very thing the zero is claimed to depend on.
+
+At a barrier held to 7.1% (exact CME 0.323 -> 0.327, `full` flat at 0.324-0.333),
+`s-only` goes from an EXACT zero at beta = 0 to 3.2% at beta = 0.30 -- while retaining
+**0.891 of the variance at every beta, identical to three decimals**. The noise
+amplitude is constant across the sweep and only the drift structure changes, so this is
+not an amplitude effect. The claim is categorical, and no barrier change can turn an
+exact zero into a nonzero.
+
+**Two cautions kept in the record.** beta = 0.02 and 0.05 are BOUNDS (< 3.0e-5 at
+100,000 trajectories), not zeros -- only beta = 0 is a theorem zero, and the transition
+turns on below the instrument's floor rather than sharply. And P3 as written demanded
+the effect under BOTH start rules; it failed, because the `fixed` rule's cells at
+beta >= 0.05 are inadmissible (the saddle slides past the start and the noiseless ODE
+already fails) and its one admissible beta > 0 cell sits under the resolution floor.
+Confirmed under `matched`, UNTESTABLE under `fixed` -- not contradicted.
+
+**The P4 control was load-bearing.** In the four inadmissible cells `s-only` reads
+0.597, 1.000, 1.000, 1.000. Without the ODE check that reads as a spectacular
+confirmation; it is `am_asymmetric`'s systematic tilt deciding the answer
+deterministically, which is not a restoration failure at all.
+
+**Why this one survived when §30's two did not:** it was derived algebraically, checked
+in absolute terms to 1e-14, and then given a parameter that switches it off at fixed
+barrier. §30.1's mechanism was inferred from a monotone table and died to the first
+sweep aimed at it. Rule 16, one level up.
+
+**T16, open: does CONCATENATED AM show a threshold, or does the ceiling survive?**
+FINDINGS 1's wall and 12.1's depth ceiling say a single AM stage has a fidelity ceiling
+-- more molecules buy exponentially less, and past a point nothing. The threshold
+theorem of fault-tolerant computing says the opposite about a restoring code: below a
+threshold physical error rate, CONCATENATION buys arbitrary fidelity at polylog
+overhead. Both are statements about restoration, they disagree, and the reason may
+simply be that nothing in this project has ever concatenated -- every result here is
+level-0.
+
+**The construction must be chemistry-only, and this is where the experiment can be
+faked without noticing (rule 10).** The obvious version -- run k tanks and take the
+majority of their answers in numpy -- inserts a free, noiseless, perfectly reliable
+majority gate, the exact class of error that has already cost three withdrawn results.
+The honest version is a POOL MERGE: run k independent AM tanks of size Omega, then
+physically combine their contents into one tank of size k*Omega and run AM there. The
+merged tank's initial margin is the sum of the k committed margins -- positive iff a
+majority answered correctly -- and the combining stage carries its own noise because it
+IS an AM tank. No sign(), no free comparison, nothing the chemistry could not do.
+
+**How to kill.** Measure p_L at concatenation level L and fit the level-to-level map.
+  * THRESHOLD (QEC): with k = 3 the merge fails only if two of three units fail, so
+    p_{L+1} = C*p_L^2 and p_L falls doubly exponentially below p* = 1/C. **The sharp
+    test is the EXPONENT of a log-log fit of p_{L+1} against p_L: 2, not 1.** A trend
+    alone proves nothing (§30.2).
+  * CEILING: p_{L+1} ~ p_L, or p_L -> p_inf > 0, the merged tank's own error floor
+    cancelling whatever the vote bought.
+
+**Two traps already visible.** (i) The merged tank has k*Omega molecules, so comparing
+it to a level-0 tank of Omega compares different systems; the control is a SINGLE tank
+of size k*Omega at the same margin (rule 18), without which a "threshold" is just the
+exp(-Omega V) scaling FINDINGS 1 already published. (ii) The k units must fail
+independently for the vote to help. They share nothing by construction, but the merge
+correlates them afterwards, so independence must be MEASURED, not assumed.
+
+**Why it is worth doing.** If the ceiling survives concatenation there is a structural
+difference between chemical and quantum restoration worth naming. If a threshold
+appears, this project has an independent classical instance of the deepest theorem in
+fault-tolerant computing, in a model where the thermodynamic cost of every stage is
+already measured (9.1's affinity floor, 20's fuel lifetime) -- which the quantum
+version does not have.

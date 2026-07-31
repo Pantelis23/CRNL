@@ -1545,3 +1545,33 @@ a measured constant, and R^2 = 0.887 over a factor of 3 in `sep` is not a strong
 **How to kill:** extend to gamma = 0.05 and 0.10, where `sep` falls to 3.7 and 4.5 and
 any real power law must predict a large excess. If the excess saturates instead of
 growing, the reduction error has a floor and the inverse-square reading is wrong.
+
+**T15 -> §29: §24.1's categorical zero is a THEOREM, and that bounds what §24 may
+claim.** The projected CLE was ported to MLRift, gated against all four Python arms at
+§24.1's cell, and run to 2,000,000 trajectories with `s-only` still exactly 0. The
+reason is algebraic, not statistical:
+
+    b_delta = delta * [ c_het*B - c_hom*(s-1) ]     -- no additive term
+
+because `f1/r1` change X and Y equally (contributing 0), `f2/f3` give `c_het*B*delta`,
+and `r2/r3` give `-c_hom*delta*(s-1)`. Verified numerically: `b_delta/delta` constant
+to 4.6e-16 over a 25x range in delta. So under `s-only`, `d(delta)/dt = delta*g(t)`
+gives `delta(t) = delta_0 exp(int g)`, and **sign(delta) is CONSERVED**. No number of
+trajectories could ever have found a crossing.
+
+**§24.1's "categorical" was right; §24's REASON for it was not.** §24 read the zero as
+"noise in the wrong subspace is worthless for barrier crossing". The mechanism is that
+AM's drift is exactly proportional to the signal coordinate. **A network whose
+`b_delta` carries an additive term would give a small but NONZERO `s-only`**, so §24's
+"seven-eighths of the noise and as categorically wrong as none" is a statement about
+AM, not about coarse-graining in general. The QUANTITATIVE half of §24.1 is untouched:
+`delta-only` at 11% of variance recovers to 2-18%, and `uniform 11%` is wrong by
+17-770x while retaining reduced delta-noise.
+
+**T15-a, open: does the identity hold at n >= 3?** §24.2's `rivals-only` also returned
+categorical zeros, which the same structure would explain. **How to kill:** test
+whether the drift along each signal direction of `n_winner_reversible` is exactly
+proportional to that direction's coordinate, as it is at n = 2. If yes, §24.2 needs
+the same qualification and the "subspace" result is likewise AM-family-specific. If
+no, the n = 3 zeros have a different cause and are genuine evidence for the coordinate
+reading.

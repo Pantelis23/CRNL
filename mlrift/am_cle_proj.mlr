@@ -1,0 +1,290 @@
+// CRNL — projected-noise chemical Langevin equation for reversible AM (MLRift).
+//
+// §24.1 measured that deleting the SIGNAL subspace's noise while keeping 88% of the
+// total gives `P(error) = exactly 0 in 8/8 cells`, the ODE's own failure, and called
+// it categorical. But that was 40,000 trials, so the honest statement is
+//
+//     P(s-only) < 2.5e-5   while the truth is 2.3e-1
+//
+// -- a bound, not a zero. Whether `s-only` is EXACTLY zero or merely tiny is a
+// different claim, and the words "categorical" and "exactly 0" in §24.1 assert the
+// former on evidence for the latter.
+//
+// GOING DEEPER IN OMEGA CANNOT SETTLE IT, and that is worth stating because it was my
+// first instinct (T14-b as originally posed). Deeper cells make the TRUTH fall faster
+// than the sampling floor, so the ratio between "bound" and "truth" shrinks and the
+// claim gets WEAKER. The test that settles it is more trajectories at a FIXED SHALLOW
+// cell: at Omega = 40 the truth is 2.3e-1, so 1e8 trajectories push the bound to
+// ~1e-8 and open a factor of 1e7 between them.
+//
+// GATE, before any s-only number is admissible -- the full-noise arm must reproduce
+// the Python CLE at the same cell (§24.1, gamma = 0.30, Omega = 40, eps/delta* = 0.20,
+// thr = 23, start 18/13/9, dt = 0.02, 40,000 trials):
+//     full        0.237275        exact CME 0.233847
+//     delta-only  0.244400
+//     s-only      0.000000
+//
+// Projections are §24.1's, on the species-space noise increment `nz` (which sums to
+// zero because every reaction conserves X+Y+B):
+//     full        nz unchanged
+//     delta-only  keep (a-b)/2 in delta, zero the pool   -> signal noise only
+//     s-only      keep the pool, zero the delta component -> the arm under test
+//     uniform     nz * sqrt(0.111), same total variance as delta-only
+//
+// Env: CRNL_MODE (0 full, 1 delta-only, 2 s-only, 3 uniform), CRNL_NTRAJ, CRNL_NW,
+//      CRNL_SEED, CRNL_OMEGA, CRNL_THR, CRNL_X0/Y0/B0, CRNL_GAMMA_PERMILLE,
+//      CRNL_DT_MICRO (dt in millionths), CRNL_TMAX.
+
+import "../../MLRift/std/math_float.mlr"
+import "../../MLRift/std/thread.mlr"
+import "../../MLRift/std/sys.mlr"
+
+static u64 g_mode = 0
+static u64 g_thr = 23
+static u64 g_seed = 20260731
+static f64 g_x0 = 18.0
+static f64 g_y0 = 13.0
+static f64 g_b0 = 9.0
+static f64 g_c_het = 0.025
+static f64 g_c_hom = 0.0075
+static f64 g_dt = 0.02
+static f64 g_tmax = 4000.0
+static f64 g_unif = 0.333166   // sqrt(0.111): §24.1's equal-variance control
+
+static u64[32] out_done
+static u64[32] out_wrong
+
+fn env_u64(u64 name_ptr, u64 dflt) -> u64 {
+    u64 p = sys_getenv(name_ptr)
+    if p == 0 { return dflt }
+    u64 v = 0
+    u64 any = 0
+    u64 i = 0
+    while i < 24 {
+        u8 c = 0
+        unsafe { *((p + i) as u8) -> c }
+        if c < 48 { i = 24 } else {
+            if c > 57 { i = 24 } else {
+                v = v * 10 + (c - 48)
+                any = 1
+                i = i + 1
+            }
+        }
+    }
+    if any == 0 { return dflt }
+    return v
+}
+
+fn splitmix64(u64 x) -> u64 {
+    u64 z = x + 0x9E3779B97F4A7C15
+    z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9
+    z = (z ^ (z >> 27)) * 0x94D049BB133111EB
+    return z ^ (z >> 31)
+}
+
+fn u01(u64 seed, u64 ctr) -> f64 {
+    u64 z = splitmix64(seed + ctr * 0x9E3779B97F4A7C15)
+    u64 m = z >> 11
+    f64 num = int_to_f64(m)
+    f64 den = int_to_f64(9007199254740992)
+    f64 u = num / den
+    if u <= 0.0 { u = 1.0 / den }
+    return u
+}
+
+fn chunk_start(u64 w, u64 nw, u64 n) -> u64 { return n * w / nw }
+fn chunk_end(u64 w, u64 nw, u64 n) -> u64 { return n * (w + 1) / nw }
+
+fn cle_worker(u64 t0, u64 t1, u64 wid) {
+    u64 thr = g_thr
+    u64 seed = g_seed
+    u64 mode = g_mode
+    f64 dt = g_dt
+    f64 c_het = g_c_het
+    f64 c_hom = g_c_hom
+    f64 sdt = sqrt(dt)
+    f64 two_pi = f64_two_pi()
+    u64 max_steps = 400000
+
+    u64 wrong = 0
+    u64 done = 0
+
+    u64 traj = t0
+    while traj < t1 {
+        f64 X = g_x0
+        f64 Y = g_y0
+        f64 B = g_b0
+        f64 t = 0.0
+        u64 ctr = traj * 8000000
+        u64 step = 0
+        u64 fin = 0
+
+        while step < max_steps {
+            f64 dd = X - Y
+            if dd < 0.0 { dd = 0.0 - dd }
+            if dd >= int_to_f64(thr) {
+                fin = 1
+                step = max_steps
+            } else {
+                if t >= g_tmax {
+                    step = max_steps
+                } else {
+                    f64 a1 = c_het * X * Y
+                    f64 a2 = c_het * B * X
+                    f64 a3 = c_het * B * Y
+                    f64 a4 = c_hom * B * (B - 1.0)
+                    f64 a5 = c_hom * X * (X - 1.0)
+                    f64 a6 = c_hom * Y * (Y - 1.0)
+                    if a4 < 0.0 { a4 = 0.0 }
+                    if a5 < 0.0 { a5 = 0.0 }
+                    if a6 < 0.0 { a6 = 0.0 }
+
+                    // three Box-Muller pairs -> six unit normals
+                    f64 g1 = 0.0
+                    f64 g2 = 0.0
+                    f64 g3 = 0.0
+                    f64 g4 = 0.0
+                    f64 g5 = 0.0
+                    f64 g6 = 0.0
+                    f64 ua = u01(seed, ctr)
+                    f64 ub = u01(seed, ctr + 1)
+                    f64 ra = sqrt(0.0 - 2.0 * log(ua))
+                    g1 = ra * cos(two_pi * ub)
+                    g2 = ra * sin(two_pi * ub)
+                    f64 uc = u01(seed, ctr + 2)
+                    f64 ud = u01(seed, ctr + 3)
+                    f64 rb = sqrt(0.0 - 2.0 * log(uc))
+                    g3 = rb * cos(two_pi * ud)
+                    g4 = rb * sin(two_pi * ud)
+                    f64 ue = u01(seed, ctr + 4)
+                    f64 uf = u01(seed, ctr + 5)
+                    f64 rc = sqrt(0.0 - 2.0 * log(ue))
+                    g5 = rc * cos(two_pi * uf)
+                    g6 = rc * sin(two_pi * uf)
+                    ctr = ctr + 6
+
+                    f64 f1 = a1 * dt + sqrt(a1) * sdt * g1
+                    f64 f2 = a2 * dt + sqrt(a2) * sdt * g2
+                    f64 f3 = a3 * dt + sqrt(a3) * sdt * g3
+                    f64 f4 = a4 * dt + sqrt(a4) * sdt * g4
+                    f64 f5 = a5 * dt + sqrt(a5) * sdt * g5
+                    f64 f6 = a6 * dt + sqrt(a6) * sdt * g6
+
+                    // deterministic part of each firing count
+                    f64 m1 = a1 * dt
+                    f64 m2 = a2 * dt
+                    f64 m3 = a3 * dt
+                    f64 m4 = a4 * dt
+                    f64 m5 = a5 * dt
+                    f64 m6 = a6 * dt
+
+                    // stoichiometry: f1 X+Y->2B, f2 B+X->2X, f3 B+Y->2Y,
+                    //                r1 2B->X+Y, r2 2X->B+X, r3 2Y->B+Y
+                    f64 dX = 0.0 - f1 + f2 + f4 - f5
+                    f64 dY = 0.0 - f1 + f3 + f4 - f6
+                    f64 dB = 2.0 * f1 - f2 - f3 - 2.0 * f4 + f5 + f6
+                    f64 mX = 0.0 - m1 + m2 + m4 - m5
+                    f64 mY = 0.0 - m1 + m3 + m4 - m6
+                    f64 mB = 2.0 * m1 - m2 - m3 - 2.0 * m4 + m5 + m6
+
+                    // noise-only part, then project it
+                    f64 nX = dX - mX
+                    f64 nY = dY - mY
+                    f64 nB = dB - mB
+                    if mode == 1 {
+                        f64 h = 0.5 * (nX - nY)
+                        nX = h
+                        nY = 0.0 - h
+                        nB = 0.0
+                    }
+                    if mode == 2 {
+                        f64 h = 0.5 * (nX + nY)
+                        nX = h
+                        nY = h
+                    }
+                    if mode == 3 {
+                        nX = nX * g_unif
+                        nY = nY * g_unif
+                        nB = nB * g_unif
+                    }
+
+                    f64 cX = X + mX + nX
+                    f64 cY = Y + mY + nY
+                    f64 cB = B + mB + nB
+                    if cX >= 0.0 {
+                        if cY >= 0.0 {
+                            if cB >= 0.0 {
+                                X = cX
+                                Y = cY
+                                B = cB
+                                t = t + dt
+                            }
+                        }
+                    }
+                    step = step + 1
+                }
+            }
+        }
+
+        if fin == 1 {
+            done = done + 1
+            if X <= Y { wrong = wrong + 1 }
+        }
+        traj = traj + 1
+    }
+
+    out_done[wid] = done
+    out_wrong[wid] = wrong
+}
+
+fn main() {
+    g_mode = env_u64("CRNL_MODE", 0)
+    u64 n_traj = env_u64("CRNL_NTRAJ", 40000)
+    u64 nw = env_u64("CRNL_NW", 24)
+    g_seed = env_u64("CRNL_SEED", 20260731)
+    g_thr = env_u64("CRNL_THR", 23)
+    u64 omega = env_u64("CRNL_OMEGA", 40)
+    u64 gperm = env_u64("CRNL_GAMMA_PERMILLE", 300)
+    g_x0 = int_to_f64(env_u64("CRNL_X0", 18))
+    g_y0 = int_to_f64(env_u64("CRNL_Y0", 13))
+    g_b0 = int_to_f64(env_u64("CRNL_B0", 9))
+    g_dt = int_to_f64(env_u64("CRNL_DT_MICRO", 20000)) / 1000000.0
+    g_tmax = int_to_f64(env_u64("CRNL_TMAX", 4000))
+
+    f64 om_f = int_to_f64(omega)
+    g_c_het = 1.0 / om_f
+    g_c_hom = int_to_f64(gperm) / 1000.0 / om_f
+
+    u64 i = 0
+    while i < 32 { out_done[i] = 0; out_wrong[i] = 0; i = i + 1 }
+
+    thread_pool_init(nw)
+    u64 fp = fn_addr("cle_worker")
+    u64 w = 0
+    while w < nw {
+        thread_pool_submit(w, fp, chunk_start(w, nw, n_traj),
+                           chunk_end(w, nw, n_traj), w)
+        w = w + 1
+    }
+    thread_pool_wait()
+
+    u64 done = 0
+    u64 wrong = 0
+    u64 k = 0
+    while k < nw {
+        done = done + out_done[k]
+        wrong = wrong + out_wrong[k]
+        k = k + 1
+    }
+    thread_pool_shutdown()
+
+    print("mode=")
+    print(g_mode)
+    print(" ntraj=")
+    print(n_traj)
+    print(" absorbed=")
+    print(done)
+    print(" wrong=")
+    println(wrong)
+    exit(0)
+}

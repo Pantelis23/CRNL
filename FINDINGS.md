@@ -4319,3 +4319,70 @@ excess falls as roughly **sep⁻²** — and unlike §28.1's discarded fit, this
 > 0.006 of each other, which a genuine `sep⁻²` law would not produce (7.00/5.57 = 1.26,
 > so ~37% of excess is expected between them). Something beyond a clean power law is
 > present at small γ, and this run cannot say what.
+
+
+## 29. §24.1's categorical zero is a theorem — and that bounds what it means — `mlrift/am_cle_proj.mlr`
+
+§24.1 reported `s-only` giving **exactly 0 in 8/8 cells** and called the failure
+categorical. But that rested on 40,000 trials, so the defensible statement was
+`P < 2.5×10⁻⁵` against a truth of 2.3×10⁻¹ — a bound, not a zero. §24's language
+asserted the stronger thing on evidence for the weaker one.
+
+> **Going deeper in Ω cannot settle it, and that was my first instinct.** Deeper cells
+> make the *truth* fall faster than the sampling floor, so the gap between bound and
+> truth shrinks and the claim gets **weaker**. The test that settles it is more
+> trajectories at a fixed shallow cell.
+
+The projected CLE was ported to MLRift and gated against the Python arms at §24.1's
+cell (γ=0.30, Ω=40, ε/δ*=0.20, 40,000 trials):
+
+| arm | MLRift | Python §24.1 |
+|---|---|---|
+| full | 0.23820 | 0.237275 |
+| δ-only | 0.24813 | 0.244400 |
+| s-only | **0** | 0.000000 |
+| uniform 11% | 0.01498 | 0.014050 |
+
+At **2,000,000 trajectories** `s-only` is still exactly 0 — and that prompted the
+right question, which turns out to have an algebraic answer rather than a statistical
+one.
+
+**The drift of the signal coordinate is exactly proportional to the signal.** For
+`am_reversible`, collecting the six reactions' contributions to `b_δ = ẋ − ẏ`:
+
+- `f1: X+Y→2B` and `r1: 2B→X+Y` change X and Y **equally**, contributing **0**;
+- `f2/f3` give `c_het·B·(X−Y) = c_het·B·δ`;
+- `r2/r3` give `−c_hom·[X(X−1) − Y(Y−1)] = −c_hom·δ·(s−1)`.
+
+```
+b_δ = δ · [ c_het·B − c_hom·(s−1) ]        no additive term
+```
+
+Verified numerically: `b_δ/δ` is constant to **4.6×10⁻¹⁶** across a 25× range in δ at
+three pool states. So under the `s-only` projection, where δ carries no noise of its
+own, δ obeys `dδ/dt = δ·g(t)` with g depending only on the (stochastically evolving)
+pool — giving `δ(t) = δ₀·exp(∫g)`, which **cannot change sign in finite time**.
+
+> **`P(error) = 0` for `s-only` is exact and structural, not a sampling result.**
+> §24.1's "categorical" was right, and is now right for a stated reason. No number of
+> trajectories was ever going to find a crossing.
+
+**But the reason is not the one §24 gave, and that bounds the claim.** §24 read the
+zero as *noise in the wrong subspace is worthless for a barrier-crossing observable*.
+The actual mechanism is that AM's drift is exactly proportional to δ, making
+**sign(δ) a conserved quantity** once δ's own noise is removed. That is a property of
+this network's bilinear structure, not a general fact about coordinate roles.
+
+> **What survives and what narrows.** The *quantitative* half of §24.1 is untouched:
+> `δ-only` keeps 11% of the variance and recovers the answer to 2–18%, and the
+> `uniform 11%` arm is wrong by 17–770× while retaining δ-noise at reduced amplitude —
+> both real measurements about placement and amplitude. What narrows is the
+> *categorical* half: **a network whose `b_δ` carries an additive term would give a
+> small but nonzero `s-only`, not a zero**, and §24's "a model can keep seven-eighths
+> of the noise and be as categorically wrong as one that keeps none" is then a
+> statement about AM rather than about coarse-graining.
+
+**Open, and it is the obvious next check:** does the same identity hold for
+`n_winner_reversible`? §24.2's `rivals-only` arm also returned categorical zeros at
+n = 3, which the same structure would explain — and if it does, §24.2's subspace
+result needs the same qualification as §24.1's.

@@ -4047,7 +4047,18 @@ Fixed work of 1.2M trajectories at the gate cell (Ryzen 9 7900X, 12 physical cor
 
 **98% efficiency to 12 physical cores** — the per-worker accumulator design has no
 contention, and NW = 1 reproduces the standalone single-threaded rate (6,198 vs
-6,211) so the pool adds no overhead. Against Python's 351 traj/sec this is **353×**,
+6,211) so the pool adds no overhead.
+
+> **Checked for thermal throttling, because the scaling points above ran only
+> 10–194 s and NW = 24 ran just 9.7 s — inside the boost window.** Re-run sustained
+> at 15M trajectories (~2–3 min each): NW = 16 gives 95,063 traj/s against its 88,889
+> burst (107% retention) and NW = 24 gives 127,866 against 123,967 (103%). **Both are
+> faster sustained than in burst** — the short runs were slightly pessimistic from
+> startup overhead amortised over less work — so there is no throttling and NW = 24
+> stays 34% ahead. Worth noting this workload is atypical: three integers and a
+> counter per trajectory, entirely in registers with no memory traffic, which is the
+> best case for SMT. A bandwidth-bound workload on the same machine would peak near
+> the physical core count instead. Against Python's 351 traj/sec this is **353×**,
 which puts 10⁸ trajectories at ~13 minutes.
 
 > **What this does and does not change.** §27 found the exact CME reaches 2.9×10⁻⁸

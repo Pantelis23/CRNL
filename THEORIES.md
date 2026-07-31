@@ -1396,3 +1396,38 @@ guard that was supposed to catch it, because the guard watched the wrong quantit
 `θ/δ*` was correctly constant while the *input* relative to θ was not; the control's
 rails were never checked against the chemistry's. And in every case the claim was
 first written down as a number that had not been run.
+
+---
+
+**T14: the sampling floor is the binding constraint, and it is now movable.**
+Every tail claim here is capped by sampling rather than physics -- §24.1c's
+conclusions rest on a nine-cell pattern precisely because per-cell error (~5% at
+p ~ 0.0094) is comparable to the effects compared, and the founding claim concerns a
+switch that errs at 1e-15 while every measured number sits between 1e-1 and 1e-2.
+Exact CME reaches small probabilities but its state space grows as ~Omega^2/2;
+sampling handles any Omega but floors at 1/N. Large Omega AND small probability is
+reachable by neither.
+
+**MEASURED -> §26.** An exact Gillespie SSA written in MLRift reproduces the exact
+CME at the gate cell -- P(error) 0.232450 vs 0.233847 (1.5 sigma), MFPT 13.42224 vs
+13.41524 (0.37 sigma) -- at **6,211 trajectories/sec on one core against Python's
+351, an 18x single-core speedup**. That puts p ~ 1e-6 at 4.5 CPU-hours, or ~11
+minutes threaded, against Python's 79 hours. **The GPU is not needed for the first
+deep-tail result**, and that ordering is deliberate: the CPU implementation validated
+against an exact reference is what a later GPU port must be diffed against.
+
+**T14-a, open: does the barrier law survive five decades?** §22 measured the barrier
+dying as `(gamma_c - gamma)^1.9745` and §12/§15 the collapse `P ~ exp(-Omega dW)`,
+both over roughly ONE decade of probability. The transistor analogy that motivates
+this project lives at 1e-15. **How to kill:** rerun the collapse at fixed gamma over
+Omega wide enough to span 1e-2 to 1e-6, now affordable. If the exponent drifts with
+decade the collapse is local and the extrapolation to real restoration is
+unsupported; if it holds over five decades it is the strongest quantitative claim
+this project has. **Gate:** every cell that HAS an exact CME reference must match it
+before any cell that does not is reported.
+
+**T14-b, open: the deep-tail coordinate result.** §24.1's categorical failure
+(`s-only` reporting exactly 0) was measured where the truth is 1e-1 to 1e-2. Whether
+"exactly zero" survives at 1e-6 -- or whether the pool's noise contributes a floor
+that only becomes visible far into the tail -- is untested and is the sharper version
+of the §24 claim.

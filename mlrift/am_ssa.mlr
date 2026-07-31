@@ -1,0 +1,177 @@
+// CRNL — exact Gillespie SSA for reversible approximate majority, in MLRift.
+//
+// PROBE, not a port. The only question this answers: can an MLRift SSA
+// reproduce the Python/scipy exact CME reference? Until it does, nothing it
+// computes in the deep-tail regime (where no exact reference exists) is
+// admissible.
+//
+// GATE — the cell this must reproduce, from crnl.cme.first_passage:
+//     gamma = 0.30, Omega = 40, eps_frac = 0.20, theta = 0.80
+//     start = (X=18, Y=13, B=9), thr = 23
+//     P(error)  = 0.233847      (exact, no sampling error)
+//     MFPT      = 13.4152       (exact)
+//
+// CONVENTIONS, copied from crnl/reactions.py and NOT reinvented -- getting
+// these wrong is the likeliest way for the probe to fail for a reason that has
+// nothing to do with MLRift:
+//     heterobimolecular  A+B  ->  c = k / Omega,      a = c * nA * nB
+//     homodimer          A+A  ->  c = 2k / Omega,     a = c * nA*(nA-1)/2
+// so the homodimer propensity collapses to (k/Omega) * n*(n-1). Writing
+// k/Omega for a homodimer silently halves its noise relative to its own ODE.
+//
+// Reactions (crnl/networks/am_reversible.py), forward k = 1, reverse kr = gamma:
+//     f1: X + Y -> 2B      f2: B + X -> 2X      f3: B + Y -> 2Y
+//     r1: 2B -> X + Y      r2: 2X -> B + X      r3: 2Y -> B + Y
+//
+// RNG is counter-based splitmix64, not a stateful stream: reproducibility is
+// the acceptance criterion here, and a counter-based generator gives the same
+// draws whether trajectories run in sequence on a CPU or in parallel lanes on a
+// GPU. That property is what makes the later GPU port checkable against this
+// file rather than merely fast.
+
+import "../../MLRift/std/math_float.mlr"
+
+fn splitmix64(uint64 x) -> uint64 {
+    uint64 z = x + 0x9E3779B97F4A7C15
+    z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9
+    z = (z ^ (z >> 27)) * 0x94D049BB133111EB
+    return z ^ (z >> 31)
+}
+
+// Uniform in (0, 1): top 53 bits over 2^53, with 0 nudged off the boundary so
+// log(u) can never be -inf.
+fn u01(uint64 seed, uint64 ctr) -> f64 {
+    uint64 z = splitmix64(seed + ctr * 0x9E3779B97F4A7C15)
+    uint64 m = z >> 11
+    f64 num = int_to_f64(m)
+    f64 den = int_to_f64(9007199254740992)
+    f64 u = num / den
+    if u <= 0.0 { u = 1.0 / den }
+    return u
+}
+
+fn main() {
+    uint64 omega = 40
+    uint64 thr = 23
+    uint64 n_traj = 200000
+    uint64 max_steps = 2000000
+    uint64 seed = 20260731
+
+    f64 gamma = 0.30
+    f64 om_f = int_to_f64(omega)
+    f64 c_het = 1.0 / om_f              // k / Omega,      k = 1
+    f64 c_hom = gamma / om_f            // (2*kr/Omega)/2, kr = gamma
+
+    uint64 x0 = 18
+    uint64 y0 = 13
+    uint64 b0 = 9
+
+    uint64 wrong = 0
+    uint64 done = 0
+    f64 t_sum = 0.0
+
+    uint64 traj = 0
+    while traj < n_traj {
+        uint64 X = x0
+        uint64 Y = y0
+        uint64 B = b0
+        f64 t = 0.0
+        uint64 ctr = traj * 4000000
+        uint64 step = 0
+        uint64 finished = 0
+
+        while step < max_steps {
+            uint64 d = 0
+            if X > Y { d = X - Y } else { d = Y - X }
+            if d >= thr {
+                finished = 1
+                step = max_steps
+            } else {
+                f64 fX = int_to_f64(X)
+                f64 fY = int_to_f64(Y)
+                f64 fB = int_to_f64(B)
+
+                f64 a1 = c_het * fX * fY
+                f64 a2 = c_het * fB * fX
+                f64 a3 = c_het * fB * fY
+                f64 a4 = 0.0
+                f64 a5 = 0.0
+                f64 a6 = 0.0
+                if B >= 2 { a4 = c_hom * fB * int_to_f64(B - 1) }
+                if X >= 2 { a5 = c_hom * fX * int_to_f64(X - 1) }
+                if Y >= 2 { a6 = c_hom * fY * int_to_f64(Y - 1) }
+
+                f64 tot = a1 + a2 + a3 + a4 + a5 + a6
+                if tot <= 0.0 {
+                    step = max_steps
+                } else {
+                    f64 u1 = u01(seed, ctr)
+                    ctr = ctr + 1
+                    f64 u2 = u01(seed, ctr)
+                    ctr = ctr + 1
+
+                    t = t - log(u1) / tot
+
+                    f64 pick = u2 * tot
+                    if pick < a1 {
+                        X = X - 1
+                        Y = Y - 1
+                        B = B + 2
+                    } else {
+                        f64 p2 = pick - a1
+                        if p2 < a2 {
+                            B = B - 1
+                            X = X + 1
+                        } else {
+                            f64 p3 = p2 - a2
+                            if p3 < a3 {
+                                B = B - 1
+                                Y = Y + 1
+                            } else {
+                                f64 p4 = p3 - a3
+                                if p4 < a4 {
+                                    B = B - 2
+                                    X = X + 1
+                                    Y = Y + 1
+                                } else {
+                                    f64 p5 = p4 - a4
+                                    if p5 < a5 {
+                                        X = X - 1
+                                        B = B + 1
+                                    } else {
+                                        Y = Y - 1
+                                        B = B + 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    step = step + 1
+                }
+            }
+        }
+
+        if finished == 1 {
+            done = done + 1
+            t_sum = t_sum + t
+            if X <= Y { wrong = wrong + 1 }
+        }
+        traj = traj + 1
+    }
+
+    print("n_traj=")
+    println(n_traj)
+    print("absorbed=")
+    println(done)
+    print("wrong=")
+    println(wrong)
+    print("p_error_x1e6=")
+    f64 pe = int_to_f64(wrong) / int_to_f64(done)
+    f64 pe6 = pe * 1000000.0
+    println_str(fmt_f64(pe6, 1))
+    print("mfpt=")
+    f64 mf = t_sum / int_to_f64(done)
+    println_str(fmt_f64(mf, 5))
+    print("# exact P(error)=0.233847  MFPT=13.41524\n")
+    exit(0)
+}

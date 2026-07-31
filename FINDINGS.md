@@ -3960,3 +3960,60 @@ is a functional of" is ambiguous, which is the obvious next attack.
    relaxation time, so the fixed value used in §10–§12 does not smuggle in a
    γ-dependent effort. Still true that cost grows linearly in t while fidelity
    saturates, so "cost per stage" must always be quoted with its t.
+
+
+## 26. An MLRift SSA that agrees with the exact CME — `mlrift/am_ssa.mlr`
+
+Every tail claim in this project is capped by sampling, not by physics. §24.1c's
+conclusions rest on the pattern across nine cells precisely because the per-cell
+sampling error (~5% relative at p ≈ 0.0094) is comparable to the effects being
+compared. And the project's founding claim concerns a switch that errs at 10⁻¹⁵,
+while every number measured here sits between 10⁻¹ and 10⁻².
+
+The two instruments are blocked in opposite directions: the **exact CME** reaches
+arbitrarily small probabilities but its state space grows as ~Ω²/2, and **sampling**
+handles any Ω but has a floor at 1/N. Large Ω *and* small probability is reachable by
+neither.
+
+**This is a probe of whether MLRift can move the sampling floor** — an exact Gillespie
+SSA for reversible AM, written in MLRift (Pantelis Christou's self-hosted compiler,
+which AOT-compiles to native machine code with no Python, LLVM or ROCm in the path).
+
+> **The gate, fixed before writing a line: it must reproduce the Python/scipy exact
+> CME.** Until it does, nothing it computes where no exact reference exists is
+> admissible. The propensity conventions were copied from `crnl/reactions.py` rather
+> than rederived — heterobimolecular `c = k/Ω`, homodimer `c = 2k/Ω` with `n(n−1)/2` —
+> because getting those wrong is the likeliest way for a probe to fail for a reason
+> that has nothing to do with the language.
+
+At γ = 0.30, Ω = 40, ε/δ* = 0.20, θ = 0.80 (start X=18, Y=13, B=9; thr = 23),
+200,000 trajectories:
+
+| | MLRift SSA | exact CME | deviation | sampling error |
+|---|---|---|---|---|
+| P(error) | 0.232450 | **0.233847** | −0.60% | ±0.41% (1.5σ) |
+| MFPT | 13.42224 | **13.41524** | +0.052% | ±0.14% (0.37σ) |
+
+Both agree within sampling error, on the first run, and the file compiled with zero
+errors on the first attempt. The RNG is **counter-based splitmix64 rather than a
+stateful stream**, so the same draws are produced whether trajectories run in sequence
+on a CPU or in parallel lanes on a GPU — which is what will make a later GPU port
+checkable against this file rather than merely faster than it.
+
+**What it buys, measured on the identical cell rather than estimated:**
+
+| | trajectories/sec | time for 10⁸ (p ~ 10⁻⁶) |
+|---|---|---|
+| Python exact SSA (`gillespie_instrumented`) | 351 | 79 hours |
+| MLRift, one core | **6,211** | **4.5 hours** |
+| MLRift, 24 cores (estimate, not yet built) | ~149,000 | ~11 min |
+
+**18× on a single core**, which puts the deep-tail regime within reach on CPU alone —
+the GPU is not required for the first result, and that ordering is deliberate: a CPU
+implementation validated against an exact reference is the thing a GPU port must later
+be diffed against.
+
+> **Scope.** One cell, one γ, one Ω. The 24-core figure is an *estimate* — no
+> multithreading is implemented yet. And this validates the sampler, not any physics:
+> its only purpose is to license deep-tail measurements that no exact reference can
+> reach, and each of those will still need its own scope stated.

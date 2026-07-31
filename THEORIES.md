@@ -1575,3 +1575,34 @@ proportional to that direction's coordinate, as it is at n = 2. If yes, §24.2 n
 the same qualification and the "subspace" result is likewise AM-family-specific. If
 no, the n = 3 zeros have a different cause and are genuine evidence for the coordinate
 reading.
+
+**T14-c-iii -> §28.3: the eps axis CONFIRMS the attribution; the power law does not
+survive.** Self-calibrating matched grids (every cell bisects Omega to span 1e-2 to
+1e-6, 12 points, one rule everywhere) over gamma in [0.05,0.35] and eps in {0.35,0.50};
+four cells exceeded the Omega<=900 cap and are reported, not dropped.
+
+**P2, the discriminating test, passes decisively.** At fixed gamma the ratio moves only
+2.6-3.0% between eps = 0.35 and 0.50, against a 16-point drift across gamma. The
+residual is a property of the slaved MANIFOLD, not of where on it the trajectory
+starts -- exactly what the 1-D-reduction attribution predicts and what a defect in
+`kappa delta*^2` would not.
+
+**P1 fails.** The excess keeps growing toward small gamma (0.1598 at gamma=0.10, so
+saturation is dead too) but not as `sep^-2`: refitted over the wider range the exponent
+is **-2.53, not -2.03**, and an exponent that moves with the window is not an exponent.
+Decisively, **the excess reaches zero** (0.0044 at gamma=0.35) and no power law in
+`sep` can. `excess = 0.2240 - 0.6276*gamma` fits at R^2 = 0.9905 crossing zero near
+gamma ~ 0.357, but that is six points and two parameters -- a description, not a law.
+**§28.2's exponent is withdrawn as a description; its ATTRIBUTION survives on P2.**
+
+At gamma = 0.35, eps = 0.35 the parameter-free prediction is within **0.4%** -- the
+closest agreement in the project.
+
+**T14-c-iv, open: what vanishes near gamma ~ 0.357?** The excess crosses zero there and
+one cell (gamma=0.35, eps=0.50) reads 0.975, i.e. slightly below 1 -- but with the
+eps-spread at 3% the sign is NOT resolved. **How to kill:** measure at gamma in
+{0.38, 0.41, 0.44} where the linear description predicts a clearly negative excess. If
+the excess goes reliably negative, the reduction error changes sign and no current
+account explains that; if it flattens at zero, the linear description is wrong and the
+reduction error simply dies out. Note the Omega cap bites hardest here (shallow
+collapses need large Omega), so the sampler of §26 may be the only instrument.

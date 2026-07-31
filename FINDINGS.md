@@ -4386,3 +4386,56 @@ this network's bilinear structure, not a general fact about coordinate roles.
 `n_winner_reversible`? §24.2's `rivals-only` arm also returned categorical zeros at
 n = 3, which the same structure would explain — and if it does, §24.2's subspace
 result needs the same qualification as §24.1's.
+
+### 28.3 The ε axis confirms the attribution; the power law does not survive — T14-c-iii
+
+§28.2 attributed the residual to the 1-D slaved reduction and described it as
+`excess = 5.987·sep⁻²·⁰³`. Two things were untested: whether the excess keeps growing
+at small γ as that law demands, and whether it depends on **ε**, which the closed form
+had never been tested against. Self-calibrating grids — every cell bisects Ω to span
+P = 10⁻² → 10⁻⁶ with 12 points, one rule everywhere — over γ ∈ [0.05, 0.35] and
+ε ∈ {0.35, 0.50}. **Four cells exceeded the Ω ≤ 900 cap and are reported, not
+dropped:** (0.05, 0.35), (0.10, 0.50), (0.15, 0.50), (0.30, 0.50).
+
+**P2 is the discriminating test, and it passes decisively.** If the residual is a
+property of the slaved *manifold*, it should not care where on the manifold the
+trajectory starts:
+
+| γ | ε = 0.35 | ε = 0.50 | spread |
+|---|---|---|---|
+| 0.20 | 1.110 | 1.079 | **2.8%** |
+| 0.25 | 1.063 | 1.036 | **2.6%** |
+| 0.35 | 1.004 | 0.975 | **3.0%** |
+
+**~3% across a 43% change in ε, against a 16-point drift across γ.** The residual is a
+manifold property, not a start-point one — which is what the 1-D-reduction attribution
+predicts and what a defect in `κδ*²` would not.
+
+**P1 fails, and the power law goes with it.** The excess does keep growing toward
+small γ — 0.0044, 0.0339, 0.0634, 0.1098, 0.1255, **0.1598** at γ = 0.35 → 0.10, so
+the "saturation" alternative is also dead — but not as `sep⁻²`:
+
+| γ | 0.10 | 0.15 | 0.20 | 0.25 | 0.30 | 0.35 |
+|---|---|---|---|---|---|---|
+| excess | 0.1598 | 0.1255 | 0.1098 | 0.0634 | 0.0339 | **0.0044** |
+| §28.2 law predicts | 0.2822 | 0.1829 | 0.1150 | 0.0690 | 0.0385 | 0.0190 |
+| ratio | 0.57 | 0.69 | 0.95 | 0.92 | 0.88 | **0.23** |
+
+> **§28.2's exponent is withdrawn as a description.** Refitted over this wider range
+> it is **−2.53** (R² = 0.87), not −2.03; an exponent that moves with the fitting
+> window is not an exponent. And the decisive objection is structural: **the excess
+> reaches zero** (0.0044 at γ = 0.35), which no power law in `sep` can do. A straight
+> line in γ fits far better — `excess = 0.2240 − 0.6276·γ`, **R² = 0.9905**, crossing
+> zero at γ ≈ 0.357 — but that is six points and a two-parameter fit, and is offered
+> as a description rather than a law.
+
+> **What stands: the attribution, not the formula.** The residual is ε-independent to
+> 3% and γ-dependent by 16 points, which is exactly the signature of the slaved
+> reduction and not of `κδ*²`. §15's closed form survives the absolute test, and at
+> γ = 0.35, ε = 0.35 the parameter-free prediction is within **0.4%** — the closest
+> agreement anywhere in this project.
+
+> **One ratio sits below 1** (γ = 0.35, ε = 0.50: 0.975). With the ε-spread at 3%, the
+> excess at γ = 0.35 is consistent with zero and **its sign is not resolved**. So the
+> honest statement is that the excess declines monotonically from 0.16 at γ = 0.10 to
+> ~0 near γ = 0.35, and beyond that this instrument cannot say.

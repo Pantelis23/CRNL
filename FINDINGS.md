@@ -4138,3 +4138,72 @@ at n = 3, but for `n_winner_reversible` at n = 4 it is ~Ω⁴/24, which is 6.7×
 at Ω = 200 and out of reach. **Multi-species networks and large Ω are where sampling
 is the only instrument**, and that is where §26's 18×-per-core belongs — not where I
 first pointed it.
+
+
+## 28. Predicting the collapse slope from closed forms — T14-c — `collapse_slope_absolute.py`
+
+§27's `ln P = −0.024904·Ω + …` is a **fitted** slope, and rule 16 says a law only ever
+fitted is never tested. §15 gives `κ(γ) = (3/2)(1−2γ)/(1+γ)` and `δ*(γ)` in closed
+form and `breaking_diffusion` gives `D₀`, so the slope is computable with **no free
+parameter**.
+
+For a 1-D diffusion `dδ = μ dt + √(D/Ω) dW` between absorbing barriers, the scale
+function is `exp(−2Ω V(x))` with `V(x) = ∫₀ˣ μ/D`. By Laplace the numerator is
+dominated by the start and the denominator by the saddle, giving
+
+```
+d(ln P)/dΩ = −2·V(x₀)          exact         V from the slaved 1-D reduction
+d(ln P)/dΩ = −κ·x₀²            quadratic     μ ≈ λδ, D ≈ D(0) near the saddle
+```
+
+> **The normalisation is the trap, and it is worth stating because it would have read
+> as physics.** `breaking_mode` is a *unit* vector, so `D₀` is computed with
+> `(1,−1,0)/√2` while the coordinate `δ = x−y` corresponds to the *unnormalised*
+> `(1,−1,0)`. Hence `D_δ = 2D₀`, and the near-saddle exponent is `κx₀²/2`, giving
+> `−κx₀²` and **not** `−2κx₀²`. The wrong factor turns a 12% agreement into a 2.3×
+> failure. A numerical guard is built in — the exact integral's `x→0` limit divided by
+> the quadratic — and it returns **1.0000 at every γ**.
+
+| γ | measured | quadratic | ratio | **exact integral** | **ratio** | decades | R² |
+|---|---|---|---|---|---|---|---|
+| 0.15 | −0.062353 | −0.083230 | 1.335 | −0.077306 | **1.240** | 12.39 | 0.9907 |
+| **0.30** | **−0.025108** | −0.028293 | 1.127 | **−0.026132** | **1.041** | 5.21 | 0.99959 |
+| ~~0.45~~ | ~~−0.002196~~ | ~~−0.002033~~ | ~~0.926~~ | ~~−0.001895~~ | ~~0.863~~ | **0.40** | 0.9960 |
+
+> **γ = 0.45 is excluded on a stated criterion, not by eye.** Its collapse spans
+> **0.40 decades** over Ω = 40–500; reaching three decades needs
+> `ΔΩ ≈ 3·ln10/0.0022 ≈ 3140`, i.e. Ω ~ 3000 and ~4.5M states. The slope is
+> under-determined and no conclusion rests on it.
+
+**P1 confirmed:** the exact integral beats the quadratic at every γ, as it must —
+the quadratic linearises a drift evaluated 35% of the way to the attractor.
+**P2 confirmed on the valid cells:** the quadratic over-estimates the slope magnitude,
+consistent with §22.4's finding that `κδ²` is stiffer than the exact barrier away from
+the saddle.
+
+> **The genuine success: at γ = 0.30, over 5.21 decades, the parameter-free prediction
+> is 4.1% from the measurement.** That is the project's central law tested in absolute
+> terms rather than fitted — the thing rule 16 exists to demand, on the claim §12 and
+> §15 rest on.
+
+**P4 fires: the ratio drifts with γ, and it is not finite-Ω.** 1.041 at γ = 0.30
+against 1.240 at γ = 0.15. The prediction is a large-Ω Laplace asymptotic, so the
+obvious defence is that small-Ω cells pollute the fit — but refitting on the upper
+half moves the ratios **further from 1**, not closer:
+
+| γ | Ω 40–500 | Ω 200–500 | Ω 340–620 |
+|---|---|---|---|
+| 0.15 | 1.240 | **1.362** | — |
+| 0.30 | 1.041 | 1.053 | **1.063** |
+
+So the closed form is good to ~4–6% at γ = 0.30 and off by 24–36% at γ = 0.15, and
+the degradation is real.
+
+> **Suspect, named as one (rule 17).** The prediction uses a **1-D reduction with the
+> pool slaved to its nullcline**, and §24.1a measured that reduction's error shrinking
+> monotonically with the timescale separation `3(1+2γ)/(1−2γ)` — which is **5.6 at
+> γ = 0.15 against 12.0 at γ = 0.30**. Worse reduction where the prediction is worse,
+> in the right direction. **How to kill:** measure at γ ∈ {0.20, 0.25, 0.35} and test
+> whether the discrepancy collapses against the separation. Two points fit anything;
+> five would make it a curve or kill it. If it does not collapse, the γ-dependence is
+> in `κδ*²` itself and §15's closed form does not survive the absolute test.

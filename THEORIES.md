@@ -1460,3 +1460,31 @@ terms?** §27 measures the slope -0.025283 empirically. §15's closed forms give
 parameter -- and rule 16 says a law that is only ever fitted is never tested. **How to
 kill:** predict the slope from `kappa delta*^2` and compare the ratio; the sweep is
 already cheap enough to repeat at several gamma, which turns one ratio into a curve.
+
+~~**T14-c: does the collapse rate match `kappa delta*^2` in ABSOLUTE terms?**~~
+**TESTED -> §28. At gamma = 0.30 yes, to 4.1% over 5.21 decades with NO free
+parameter. At gamma = 0.15 no, off by 24-36%, and the drift is real.**
+
+The prediction is the scale-function exponent `d(lnP)/dOmega = -2 V(x0)` with
+`V = int mu/D` on the slaved 1-D manifold; its near-saddle limit is `-kappa x0^2`.
+**Normalisation trap, stated because it would have read as physics:** `breaking_mode`
+is a UNIT vector so `D_delta = 2 D_0`, making the near-saddle exponent `-kappa x0^2`
+and NOT `-2 kappa x0^2`; the wrong factor turns 12% agreement into a 2.3x failure. A
+numerical guard (exact integral / quadratic as x->0) returns 1.0000 at every gamma.
+
+gamma=0.45 is EXCLUDED on a stated criterion: its collapse spans 0.40 decades and
+three decades would need Omega ~ 3000 (~4.5M states). Under-determined.
+
+**P4 fired and it is not finite-Omega.** Refitting on the upper Omega half moves the
+ratios FURTHER from 1 (gamma=0.15: 1.240 -> 1.362; gamma=0.30: 1.041 -> 1.063), so
+the small-Omega defence fails.
+
+**T14-c-i, open: does the discrepancy collapse against the timescale separation?**
+*Suspect:* the prediction's 1-D slaved reduction, whose error §24.1a measured as
+shrinking monotonically with `3(1+2g)/(1-2g)` -- **5.6 at gamma=0.15 vs 12.0 at
+gamma=0.30**, i.e. worse reduction exactly where the prediction is worse. **How to
+kill:** measure at gamma in {0.20, 0.25, 0.35} and test whether discrepancy collapses
+against separation. Two points fit anything; five make it a curve or kill it. **If it
+does not collapse, the gamma-dependence lives in `kappa delta*^2` itself and §15's
+closed form does not survive the absolute test** -- which would be the most consequential
+withdrawal in the project, since §15 corrected §12 and everything after leans on it.

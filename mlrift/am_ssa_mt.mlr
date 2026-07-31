@@ -1,0 +1,229 @@
+// CRNL — exact Gillespie SSA for reversible AM, multithreaded (MLRift).
+//
+// Threaded extension of `mlrift/am_ssa.mlr`, which reproduced the exact CME at
+// the gate cell (P(error) 0.232450 vs 0.233847; MFPT 13.42224 vs 13.41524) at
+// 6,211 trajectories/sec on one core. §26.
+//
+// THE POINT is not speed for its own sake. Every tail claim in this project is
+// capped by sampling rather than physics, and the founding claim concerns a
+// switch that errs at 1e-15 while every number measured here sits between 1e-1
+// and 1e-2. Threading puts p ~ 1e-6 within a coffee break instead of a working
+// day, which is what T14-a needs.
+//
+// WHY THREADING CANNOT CHANGE THE ANSWER HERE, which is the only reason it is
+// safe to add: the RNG is counter-based splitmix64 keyed on the GLOBAL
+// trajectory index, not a stateful stream. Trajectory k draws exactly the same
+// numbers whichever worker runs it, and workers touch disjoint index ranges.
+// So the threaded result must be BIT-IDENTICAL to the single-threaded one, not
+// merely statistically compatible -- and that is the acceptance test, stronger
+// than the CME gate because it admits no sampling slack at all.
+//
+// Accumulators are per-worker slots summed by the main thread after the
+// barrier. No atomics, no contention, and no dependence on summation order for
+// the integer counts. `t_sum` is f64 and therefore IS order-dependent at the
+// last bits; the test below compares it at 5 decimals, and the counts (which
+// carry the P(error) claim) are exact integers.
+
+import "../../MLRift/std/math_float.mlr"
+import "../../MLRift/std/thread.mlr"
+
+static u64 NW = 12
+
+static u64 g_omega = 40
+static u64 g_thr = 23
+static u64 g_seed = 20260731
+static u64 g_x0 = 18
+static u64 g_y0 = 13
+static u64 g_b0 = 9
+static u64 g_max_steps = 2000000
+static f64 g_c_het = 0.025
+static f64 g_c_hom = 0.0075
+
+static u64[32] out_done
+static u64[32] out_wrong
+static f64[32] out_tsum
+
+fn splitmix64(u64 x) -> u64 {
+    u64 z = x + 0x9E3779B97F4A7C15
+    z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9
+    z = (z ^ (z >> 27)) * 0x94D049BB133111EB
+    return z ^ (z >> 31)
+}
+
+fn u01(u64 seed, u64 ctr) -> f64 {
+    u64 z = splitmix64(seed + ctr * 0x9E3779B97F4A7C15)
+    u64 m = z >> 11
+    f64 num = int_to_f64(m)
+    f64 den = int_to_f64(9007199254740992)
+    f64 u = num / den
+    if u <= 0.0 { u = 1.0 / den }
+    return u
+}
+
+fn chunk_start(u64 w, u64 nw, u64 n) -> u64 { return n * w / nw }
+fn chunk_end(u64 w, u64 nw, u64 n) -> u64 { return n * (w + 1) / nw }
+
+// One worker: trajectories [t0, t1). Counter is keyed on the GLOBAL index so
+// the partition cannot change any draw.
+fn ssa_worker(u64 t0, u64 t1, u64 wid) {
+    u64 thr = g_thr
+    u64 seed = g_seed
+    u64 max_steps = g_max_steps
+    f64 c_het = g_c_het
+    f64 c_hom = g_c_hom
+
+    u64 wrong = 0
+    u64 done = 0
+    f64 t_sum = 0.0
+
+    u64 traj = t0
+    while traj < t1 {
+        u64 X = g_x0
+        u64 Y = g_y0
+        u64 B = g_b0
+        f64 t = 0.0
+        u64 ctr = traj * 4000000
+        u64 step = 0
+        u64 finished = 0
+
+        while step < max_steps {
+            u64 d = 0
+            if X > Y { d = X - Y } else { d = Y - X }
+            if d >= thr {
+                finished = 1
+                step = max_steps
+            } else {
+                f64 fX = int_to_f64(X)
+                f64 fY = int_to_f64(Y)
+                f64 fB = int_to_f64(B)
+
+                f64 a1 = c_het * fX * fY
+                f64 a2 = c_het * fB * fX
+                f64 a3 = c_het * fB * fY
+                f64 a4 = 0.0
+                f64 a5 = 0.0
+                f64 a6 = 0.0
+                if B >= 2 { a4 = c_hom * fB * int_to_f64(B - 1) }
+                if X >= 2 { a5 = c_hom * fX * int_to_f64(X - 1) }
+                if Y >= 2 { a6 = c_hom * fY * int_to_f64(Y - 1) }
+
+                f64 tot = a1 + a2 + a3 + a4 + a5 + a6
+                if tot <= 0.0 {
+                    step = max_steps
+                } else {
+                    f64 u1 = u01(seed, ctr)
+                    ctr = ctr + 1
+                    f64 u2 = u01(seed, ctr)
+                    ctr = ctr + 1
+
+                    t = t - log(u1) / tot
+
+                    f64 pick = u2 * tot
+                    if pick < a1 {
+                        X = X - 1
+                        Y = Y - 1
+                        B = B + 2
+                    } else {
+                        f64 p2 = pick - a1
+                        if p2 < a2 {
+                            B = B - 1
+                            X = X + 1
+                        } else {
+                            f64 p3 = p2 - a2
+                            if p3 < a3 {
+                                B = B - 1
+                                Y = Y + 1
+                            } else {
+                                f64 p4 = p3 - a3
+                                if p4 < a4 {
+                                    B = B - 2
+                                    X = X + 1
+                                    Y = Y + 1
+                                } else {
+                                    f64 p5 = p4 - a4
+                                    if p5 < a5 {
+                                        X = X - 1
+                                        B = B + 1
+                                    } else {
+                                        Y = Y - 1
+                                        B = B + 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    step = step + 1
+                }
+            }
+        }
+
+        if finished == 1 {
+            done = done + 1
+            t_sum = t_sum + t
+            if X <= Y { wrong = wrong + 1 }
+        }
+        traj = traj + 1
+    }
+
+    out_done[wid] = done
+    out_wrong[wid] = wrong
+    out_tsum[wid] = t_sum
+}
+
+fn main() {
+    u64 n_traj = 2000000
+    u64 nw = NW
+
+    f64 om_f = int_to_f64(g_omega)
+    g_c_het = 1.0 / om_f
+    g_c_hom = 0.30 / om_f
+
+    u64 i = 0
+    while i < 32 {
+        out_done[i] = 0
+        out_wrong[i] = 0
+        out_tsum[i] = 0.0
+        i = i + 1
+    }
+
+    thread_pool_init(nw)
+
+    u64 fp = fn_addr("ssa_worker")
+    u64 w = 0
+    while w < nw {
+        u64 s = chunk_start(w, nw, n_traj)
+        u64 e = chunk_end(w, nw, n_traj)
+        thread_pool_submit(w, fp, s, e, w)
+        w = w + 1
+    }
+    thread_pool_wait()
+
+    u64 done = 0
+    u64 wrong = 0
+    f64 t_sum = 0.0
+    u64 k = 0
+    while k < nw {
+        done = done + out_done[k]
+        wrong = wrong + out_wrong[k]
+        t_sum = t_sum + out_tsum[k]
+        k = k + 1
+    }
+
+    thread_pool_shutdown()
+
+    print("threads=")
+    println(nw)
+    print("n_traj=")
+    println(n_traj)
+    print("absorbed=")
+    println(done)
+    print("wrong=")
+    println(wrong)
+    print("p_error_x1e6=")
+    f64 pe = int_to_f64(wrong) / int_to_f64(done)
+    println_str(fmt_f64(pe * 1000000.0, 1))
+    print("mfpt=")
+    println_str(fmt_f64(t_sum / int_to_f64(done), 5))
+    print("# exact P(error)=0.233847  MFPT=13.41524\n")
+    exit(0)
+}

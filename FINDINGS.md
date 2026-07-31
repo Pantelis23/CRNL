@@ -4017,3 +4017,75 @@ be diffed against.
 > multithreading is implemented yet. And this validates the sampler, not any physics:
 > its only purpose is to license deep-tail measurements that no exact reference can
 > reach, and each of those will still need its own scope stated.
+
+
+## 27. The restoration collapse holds over 6.5 decades — exactly — T14-a
+
+§12 and §15 measured `P(error) ~ exp(−Ω·ΔW)` and §22 the barrier dying as
+`(γ_c−γ)^1.9745`, both across roughly **one decade** of probability. The transistor
+analogy that motivates this project lives at 10⁻¹⁵. T14-a asked whether the collapse
+survives further down, or whether one decade of agreement is being extrapolated past
+its evidence.
+
+> **§26's stated motivation was wrong, and the correction matters more than the
+> result.** §26 argued the deep tail needed a faster sampler because the exact CME's
+> state space "grows as ~Ω²/2". It does — but Ω²/2 is *small*. At Ω = 620 that is
+> 193,131 states and scipy solves it in **13.6 seconds**. The deep tail was reachable
+> exactly the whole time; I assumed a limit instead of measuring one, and built a
+> sampler partly on that assumption. What MLRift is actually for is stated at the end
+> of this section.
+
+**Measured exactly, γ = 0.30, ε/δ* = 0.35, θ = 0.80:**
+
+| Ω | states | P(error), exact | solve |
+|---|---|---|---|
+| 40 | 861 | 9.833×10⁻² | 0.0 s |
+| 120 | 7,381 | 7.430×10⁻³ | 0.4 s |
+| 200 | 20,301 | 8.800×10⁻⁴ | 1.1 s |
+| 340 | 58,311 | 2.875×10⁻⁵ | 3.6 s |
+| 500 | 125,751 | 6.004×10⁻⁷ | 8.1 s |
+| **620** | **193,131** | **2.927×10⁻⁸** | **13.6 s** |
+
+**6.53 decades**, no sampling anywhere, ~35 s of solving in total.
+
+**The raw local slopes bounce, and §24.3 already taught me not to trust that.** They
+run −0.0358, −0.0288, −0.0218, −0.0315, −0.0229 — non-monotone by ±40%. The cause is
+the same integer-lattice artifact §24.3 found: the start-state margin `d0` is an
+integer, so **realised ε swings 10.2%** across the sweep (0.909 to 1.010 of target,
+worst at Ω = 40). The threshold's own rounding contributes nothing — adding it to the
+fit moves R² from 0.999533 to 0.999534.
+
+| fit | R² | max residual |
+|---|---|---|
+| `ln P ~ Ω` | 0.998639 | 0.4063 |
+| **`ln P ~ Ω + Ω·(ε deviation)`** | **0.999533** | **0.1622** |
+
+**With the lattice artifact removed:**
+
+```
+ln P = −0.024904·Ω − 0.2145·Ω·(ε−ε̄) − 1.7280        R² = 0.999533
+```
+
+ε-corrected local slopes have **mean −0.025283 and 7.1% scatter**, against raw slopes
+that swung ±40%. First half −0.026064 versus second half −0.024212 — a **+7.3%
+difference against 7.1% scatter, i.e. within noise.**
+
+> **T14-a answered: the exponential collapse holds across 6.5 decades with a local
+> slope stable to ~7%, and no significant drift.** This is the widest-range
+> quantitative claim in the project and it required no sampling. The extrapolation
+> §12 and §15 made from one decade is supported, at this γ and ε.
+
+**MLRift validated 265× deeper than its gate.** §26 checked the SSA at Ω = 40 where
+P = 0.234. Re-checked at Ω = 200 where the exact answer is 8.800×10⁻⁴: 2.4M
+trajectories over 12 processes gave **2097 errors = 8.7375×10⁻⁴, −0.71% against a
+2.18% sampling error (0.33σ)**, in 118 s wall. Process sharding is bit-exact — four
+shards summed to 46490 errors against the single process's 46490 — because the RNG is
+counter-based on the global trajectory index. (`std/thread.mlr` segfaults on Linux 7;
+in-process threading turned out to be unnecessary.)
+
+**So what is the sampler actually for?** Not deep tails in two-species AM — the CME
+owns those. The exact state space is `~Ω^(n−1)/(n−1)!` in the number of species: fine
+at n = 3, but for `n_winner_reversible` at n = 4 it is ~Ω⁴/24, which is 6.7×10⁷ states
+at Ω = 200 and out of reach. **Multi-species networks and large Ω are where sampling
+is the only instrument**, and that is where §26's 18×-per-core belongs — not where I
+first pointed it.

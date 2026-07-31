@@ -1431,3 +1431,32 @@ before any cell that does not is reported.
 "exactly zero" survives at 1e-6 -- or whether the pool's noise contributes a floor
 that only becomes visible far into the tail -- is untested and is the sharper version
 of the §24 claim.
+
+~~**T14-a: does the barrier law survive five decades?**~~ **ANSWERED -> §27. It
+survives 6.53 decades, and needed no sampling at all.** Exact CME from
+`P = 9.833e-2` at Omega=40 to `2.927e-8` at Omega=620 (193,131 states, 13.6 s).
+eps-controlled fit `ln P = -0.024904*Omega - 0.2145*Omega*(eps-dev) - 1.7280`,
+R^2 = 0.999533; eps-corrected local slopes mean -0.025283 with 7.1% scatter and a
+first-half/second-half difference of +7.3%, i.e. within noise. **The one-decade
+extrapolation §12 and §15 made is supported at this gamma and eps.**
+
+**Two corrections fall out and both are mine.** (i) §26 argued the deep tail needed a
+faster sampler because the CME state space grows as ~Omega^2/2. It does, but Omega^2/2
+is SMALL -- I assumed a limit instead of measuring one, and motivated a sampler on it.
+(ii) The raw local slopes bounce by +-40% and that is the §24.3 integer-lattice
+artifact again: realised eps swings 10.2% because the start margin `d0` is an integer.
+Controlling for it takes R^2 from 0.998639 to 0.999533 and halves the max residual;
+the threshold's rounding contributes nothing.
+
+**Where the sampler DOES belong:** the exact state space is `~Omega^(n-1)/(n-1)!` in
+species count -- fine at n=3, but `n_winner_reversible` at n=4 is ~Omega^4/24, i.e.
+6.7e7 states at Omega=200 and out of reach. Multi-species networks and large Omega are
+where sampling is the only instrument. §26's validated SSA was re-checked 265x deeper
+than its gate (Omega=200, 8.7375e-4 vs exact 8.800e-4, 0.33 sigma).
+
+**T14-c, open: does the collapse rate match `kappa(gamma) delta*^2` in ABSOLUTE
+terms?** §27 measures the slope -0.025283 empirically. §15's closed forms give
+`kappa = (3/2)(1-2g)/(1+g)` and `delta*`, so the barrier is computable with no free
+parameter -- and rule 16 says a law that is only ever fitted is never tested. **How to
+kill:** predict the slope from `kappa delta*^2` and compare the ratio; the sweep is
+already cheap enough to repeat at several gamma, which turns one ratio into a curve.

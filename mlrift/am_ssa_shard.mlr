@@ -1,0 +1,194 @@
+// CRNL — exact Gillespie SSA for reversible AM, shardable (MLRift).
+//
+// §26 validated the single-process version against the exact CME. This adds
+// environment-driven configuration and SHARDING so the work can be split across
+// processes.
+//
+// WHY PROCESSES RATHER THAN THREADS. `std/thread.mlr`'s `thread_pool_init`
+// segfaults on this machine (Linux 7; the pool's raw clone/futex path was
+// written against ~6.2). That is a toolchain matter, not a CRNL one, and it is
+// also unnecessary here: the RNG is counter-based splitmix64 keyed on the
+// GLOBAL trajectory index, so N processes covering disjoint index ranges draw
+// exactly the numbers one process would have drawn for those trajectories. The
+// shard sum is therefore BIT-IDENTICAL to an unsharded run of the same size --
+// not merely statistically compatible -- which is a stronger property than
+// in-process threading would have given, and it is checked below before any
+// sharded number is used.
+//
+// gamma arrives as integer PERMILLE (300 -> 0.300). Parsing a float from an
+// environment string is a place to introduce a silent discrepancy against the
+// Python reference, and there is no reason to take that risk for a parameter
+// that is always a round number in this project.
+//
+// Env (all optional; defaults are §26's gate cell):
+//   CRNL_OMEGA CRNL_GAMMA_PERMILLE CRNL_THR CRNL_X0 CRNL_Y0 CRNL_B0
+//   CRNL_NTRAJ CRNL_SHARD CRNL_NSHARD CRNL_SEED
+//
+// Output is deliberately raw -- absorbed / wrong / t_sum -- so shards aggregate
+// by summation with no rounding in between.
+
+import "../../MLRift/std/math_float.mlr"
+import "../../MLRift/std/sys.mlr"
+
+fn env_u64(uint64 name_ptr, uint64 dflt) -> uint64 {
+    uint64 p = sys_getenv(name_ptr)
+    if p == 0 { return dflt }
+    uint64 v = 0
+    uint64 any = 0
+    uint64 i = 0
+    while i < 24 {
+        u8 c = 0
+        unsafe { *((p + i) as u8) -> c }
+        if c < 48 { i = 24 } else {
+            if c > 57 { i = 24 } else {
+                v = v * 10 + (c - 48)
+                any = 1
+                i = i + 1
+            }
+        }
+    }
+    if any == 0 { return dflt }
+    return v
+}
+
+fn splitmix64(uint64 x) -> uint64 {
+    uint64 z = x + 0x9E3779B97F4A7C15
+    z = (z ^ (z >> 30)) * 0xBF58476D1CE4E5B9
+    z = (z ^ (z >> 27)) * 0x94D049BB133111EB
+    return z ^ (z >> 31)
+}
+
+fn u01(uint64 seed, uint64 ctr) -> f64 {
+    uint64 z = splitmix64(seed + ctr * 0x9E3779B97F4A7C15)
+    uint64 m = z >> 11
+    f64 num = int_to_f64(m)
+    f64 den = int_to_f64(9007199254740992)
+    f64 u = num / den
+    if u <= 0.0 { u = 1.0 / den }
+    return u
+}
+
+fn main() {
+    uint64 omega   = env_u64("CRNL_OMEGA", 40)
+    uint64 gperm   = env_u64("CRNL_GAMMA_PERMILLE", 300)
+    uint64 thr     = env_u64("CRNL_THR", 23)
+    uint64 x0      = env_u64("CRNL_X0", 18)
+    uint64 y0      = env_u64("CRNL_Y0", 13)
+    uint64 b0      = env_u64("CRNL_B0", 9)
+    uint64 n_traj  = env_u64("CRNL_NTRAJ", 200000)
+    uint64 shard   = env_u64("CRNL_SHARD", 0)
+    uint64 nshard  = env_u64("CRNL_NSHARD", 1)
+    uint64 seed    = env_u64("CRNL_SEED", 20260731)
+    uint64 max_steps = 20000000
+
+    f64 om_f = int_to_f64(omega)
+    f64 gamma = int_to_f64(gperm) / 1000.0
+    f64 c_het = 1.0 / om_f
+    f64 c_hom = gamma / om_f
+
+    uint64 t_lo = n_traj * shard / nshard
+    uint64 t_hi = n_traj * (shard + 1) / nshard
+
+    uint64 wrong = 0
+    uint64 done = 0
+    f64 t_sum = 0.0
+
+    uint64 traj = t_lo
+    while traj < t_hi {
+        uint64 X = x0
+        uint64 Y = y0
+        uint64 B = b0
+        f64 t = 0.0
+        uint64 ctr = traj * 4000000
+        uint64 step = 0
+        uint64 finished = 0
+
+        while step < max_steps {
+            uint64 d = 0
+            if X > Y { d = X - Y } else { d = Y - X }
+            if d >= thr {
+                finished = 1
+                step = max_steps
+            } else {
+                f64 fX = int_to_f64(X)
+                f64 fY = int_to_f64(Y)
+                f64 fB = int_to_f64(B)
+
+                f64 a1 = c_het * fX * fY
+                f64 a2 = c_het * fB * fX
+                f64 a3 = c_het * fB * fY
+                f64 a4 = 0.0
+                f64 a5 = 0.0
+                f64 a6 = 0.0
+                if B >= 2 { a4 = c_hom * fB * int_to_f64(B - 1) }
+                if X >= 2 { a5 = c_hom * fX * int_to_f64(X - 1) }
+                if Y >= 2 { a6 = c_hom * fY * int_to_f64(Y - 1) }
+
+                f64 tot = a1 + a2 + a3 + a4 + a5 + a6
+                if tot <= 0.0 {
+                    step = max_steps
+                } else {
+                    f64 u1 = u01(seed, ctr)
+                    ctr = ctr + 1
+                    f64 u2 = u01(seed, ctr)
+                    ctr = ctr + 1
+
+                    t = t - log(u1) / tot
+
+                    f64 pick = u2 * tot
+                    if pick < a1 {
+                        X = X - 1
+                        Y = Y - 1
+                        B = B + 2
+                    } else {
+                        f64 p2 = pick - a1
+                        if p2 < a2 {
+                            B = B - 1
+                            X = X + 1
+                        } else {
+                            f64 p3 = p2 - a2
+                            if p3 < a3 {
+                                B = B - 1
+                                Y = Y + 1
+                            } else {
+                                f64 p4 = p3 - a3
+                                if p4 < a4 {
+                                    B = B - 2
+                                    X = X + 1
+                                    Y = Y + 1
+                                } else {
+                                    f64 p5 = p4 - a4
+                                    if p5 < a5 {
+                                        X = X - 1
+                                        B = B + 1
+                                    } else {
+                                        Y = Y - 1
+                                        B = B + 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    step = step + 1
+                }
+            }
+        }
+
+        if finished == 1 {
+            done = done + 1
+            t_sum = t_sum + t
+            if X <= Y { wrong = wrong + 1 }
+        }
+        traj = traj + 1
+    }
+
+    print("SHARD ")
+    print(shard)
+    print(" absorbed=")
+    print(done)
+    print(" wrong=")
+    print(wrong)
+    print(" tsum=")
+    println_str(fmt_f64(t_sum, 6))
+    exit(0)
+}

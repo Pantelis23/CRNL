@@ -711,6 +711,41 @@ Also note §24's own full cell reached only 0.7026 against a measured 0.6325, so
 `(theta, delta)` is not the whole state of the fuel system and 0.0701 of exponent lies
 outside both coordinates -- that gap is untouched by this test.
 
+**T13 -> §24.1b: §24's arms are NAIVE discarding, not correct reduction, and the
+difference is a generalized force that resists closed form.** Prompted by the
+coarse-graining literature (Zwanzig projection, arXiv:2512.03706): a rigorous
+reduction returns a generalized force and a state-dependent diffusion, whereas §24
+zeroes a noise component and leaves the drift alone. So §24-§25 measure what NAIVE
+discarding costs -- what a practitioner does -- and not what a correct reduction
+achieves. The scoping note is now in §24.
+
+**Measured, not derived.** Running full and `delta-only` from an identical state and
+differencing the mean delta-increment gives the missing force directly: **+0.0483 at
+gamma = 0.05, -0.0015 at 0.30, -0.0041 at 0.45**, i.e. positive and large exactly
+where §24.1a's residual is large (+13.2%) and ~0 where it vanishes (+0.4%). It also
+BUILDS with the averaging window (+0.018 at 0.5, +0.048 at 2.0), which is a memory
+term's signature. And it cannot be diffusion: `delta-only` preserves `a - b` exactly,
+so delta's own diffusion is untouched. **The Zwanzig reading is confirmed in kind --
+the cost of naive discarding is a DRIFT term.**
+
+**Both closed forms fail, and rule 16 caught them.** The curvature term
+`1/2 d2(b_delta)/ds2 Var(s)` is **identically zero**: `b_delta` is exactly linear in
+`s` (second derivative 4.4e-16; a sweep across s+-3 is perfectly straight), because the
+AM drift is bilinear in (delta, s). The `+force` arm came out bit-identical to
+`delta-only`, which is how it was found. The cross-correlation term
+`db_delta/ds * D_ds / lam_s` is **wrong in SIGN at gamma = 0.05** (-0.085 predicted vs
++0.048 measured) and **11x-140x too large** at 0.30 and 0.45. Fitting a coefficient
+would have made it look successful at two of three gammas.
+
+**T13-a, open: is the correct reduction non-Markovian here?** The measured force grows
+with the correlation window, which no Markovian drift correction reproduces. **How to
+kill:** measure the force as a function of window length out to several `1/lam_s` and
+check whether it SATURATES. If it saturates, a Markovian generalized force exists and
+neither candidate above is it; if it keeps growing, a correct reduction needs the full
+memory kernel and this project's machinery cannot construct one. Note in advance that
+none of this touches the CATEGORICAL failure -- no generalized force on a
+deterministic coordinate produces barrier crossings.
+
 **T11-REFINED-c -> §24.1a: the strongest competing explanation, tested and SPLIT.**
 An independent review named an account I had not written down: `s` is a fast STABLE
 variable (`lambda_sym = -(1+2g) = -1.60` against `lambda_antisym = +0.133` at

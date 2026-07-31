@@ -3324,6 +3324,79 @@ and an exact reference, and more sharply there than in §23 — categorical rath
 7×. §21's measurements stand as printed; **"having noise at all" is superseded by
 "having the signal coordinate's noise, at its own amplitude."**
 
+> ⚠ **What the projection arms are, and are not — a scoping note added after reading
+> the coarse-graining literature.** These arms zero a noise component and leave the
+> drift untouched. That is **not** a valid reduced model in the Mori–Zwanzig sense.
+> The rigorous construction (Zwanzig projection; see
+> [arXiv:2512.03706](https://arxiv.org/abs/2512.03706), which derives it for
+> underdamped Langevin dynamics) returns a reduced system with a **generalized force**
+> and a **state-dependent diffusion** — the eliminated degrees of freedom come back as
+> modified drift and memory, not as deletion.
+>
+> So §24 and §25 measure **what naive discarding costs**, which is what a practitioner
+> actually does when they drop a fluctuation term. They do **not** measure what a
+> correctly reduced model achieves, and the two claims must not be conflated. §24.1b
+> tests the difference. This also corroborates, from a published direction, the
+> thermodynamic-consistency objection that led §25 to drop entropy production as
+> ill-posed for a projected CLE.
+
+### 24.1b The residual IS a generalized force — measured, but not in closed form — `zwanzig_correction.py`
+
+If §24's arms are naive discarding, the Zwanzig picture predicts the cost should be a
+**generalized force**: the eliminated pool comes back as modified drift. §24.1a's
+residual is the target — `δ-only` overshoots P(error) by +13.2% at γ = 0.05 falling
+monotonically to +0.4% at γ = 0.45.
+
+**It cannot be a diffusion correction, and that is settled by construction.** The
+`δ-only` projection preserves `a − b` exactly, so **δ's own diffusion is unchanged**.
+Whatever is missing must act on the drift.
+
+**Measured directly, rather than derived.** Running full and `δ-only` from an
+identical state over a window of a few pool-correlation times and differencing the
+mean δ-increment gives the missing force with no formula and no sign ambiguity:
+
+| γ | missing force (window 2.0) | §24.1a residual |
+|---|---|---|
+| 0.05 | **+0.0483** | +13.2% |
+| 0.30 | −0.0015 | +3.1% |
+| 0.45 | −0.0041 | +0.4% |
+
+It is **positive and large exactly where the residual is large**, and ~0 where the
+residual vanishes. It also *builds over ~1/λ_s* (+0.018 at window 0.5 → +0.048 at
+2.0), which is what a memory term does and a Markovian one does not.
+
+> **So the Zwanzig reading is confirmed in kind: what naive discarding costs is a
+> drift term, not a fluctuation term.** That is the useful half.
+
+**Both closed forms for it fail, and rule 16 is what caught them.**
+
+> **P1 refuted, structurally.** I predicted the curvature term
+> `½·∂²b_δ/∂s²·Var(s)`. It is **identically zero**: `b_δ` is *exactly linear in s* —
+> measured second derivative 4.4×10⁻¹⁶, and a sweep across s±3 is perfectly straight.
+> The AM drift is bilinear in (δ, s), so this term vanishes by the network's own
+> structure. The `+force` arm was bit-identical to `δ-only`, which is how it was
+> caught.
+>
+> **The cross-correlation term is worse.** `∂b_δ/∂s · D_δs/λ_s` is the natural next
+> candidate, and `D_δs = +2.25` is genuinely nonzero. Against the measured force it
+> is **wrong in sign at γ = 0.05 (−0.085 predicted, +0.048 measured)** and **11× to
+> 140× too large at γ = 0.30 and 0.45**. Had I fitted a coefficient instead of
+> computing the absolute prediction, it would have looked like a success at two of
+> three γ.
+
+**Where this leaves the naive-vs-correct question.** The direction is established —
+replace the deleted noise with a generalized force, not with nothing — but **I cannot
+supply that force in closed form**, and per rule 16 I am not going to fit one. That
+the measured force *grows with the correlation window* points at my own P4 fallback:
+a correct reduction here may need the full memory kernel rather than any Markovian
+drift correction, which this experiment cannot construct.
+
+> **Scope, stated because a positive result here would have been over-read.** None of
+> this touches the *categorical* failure. `s-only` deletes the noise in the coordinate
+> the observable is defined on, and no generalized force on a deterministic coordinate
+> produces barrier crossings. A proper projection may repair the few-percent residual;
+> nothing suggests it repairs an exact zero.
+
 ### 24.1a The competing explanation I failed to name, and what the γ sweep does to it
 
 An independent review of §24.1 raised an account of these results that is more

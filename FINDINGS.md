@@ -4264,3 +4264,58 @@ which is not evidence of anything.
 > from unmatched Ω grids is entirely plausible. **How to settle it:** re-run with Ω
 > chosen by one rule for every γ — same decade span and same P range — so the only
 > difference between cells is γ.
+
+### 28.2 Matched grids revive the mechanism §28.1 killed — T14-c-ii
+
+§28.1 concluded the residual was **scatter, not drift**, and that §28's
+1-D-reduction story was unsupported — on the strength of γ = 0.25 coming in at
+0.952, below 1, which no reduction-error account can produce. But §28.1 also flagged
+its own confound: each γ used a **different Ω list**, so cells were unmatched and each
+carried its own realised-ε rounding pattern.
+
+**One rule for every γ:** span the same probability window, 10⁻² → 10⁻⁶, with ln P
+equally spaced (hence Ω equally spaced), 12 cells each. Endpoints taken from §28.1's
+own measured slopes, so the grid is set by data rather than by hand. Same dynamic
+range, same cell count, same P window — the only difference between two γ is γ.
+
+| γ | sep | Ω range | decades | measured | ±se | predicted | **ratio** | R² |
+|---|---|---|---|---|---|---|---|---|
+| 0.15 | 5.57 | 46–184 | 4.28 | −0.068360 | 0.000281 | −0.077306 | **1.131** | 0.99988 |
+| 0.20 | 7.00 | 57–239 | 4.16 | −0.049833 | 0.000278 | −0.056682 | **1.137** | 0.99985 |
+| 0.25 | 9.00 | 80–300 | 3.75 | −0.036879 | 0.000150 | −0.039834 | **1.080** | 0.99990 |
+| 0.30 | 12.00 | 133–507 | 4.24 | −0.024775 | 0.000119 | −0.026132 | **1.055** | 0.99990 |
+| 0.35 | 17.00 | 229–860 | 4.21 | −0.015051 | 0.000054 | −0.015255 | **1.013** | 0.99989 |
+
+> **§28.1's central claim is withdrawn: the sign flip was a grid artifact.** With
+> matched grids **every ratio is above 1**, γ = 0.25 included, and the scatter falls
+> (sd 0.077 → 0.052). What is left is not scatter but a **monotone drift** — 1.131,
+> 1.137, 1.080, 1.055, 1.013, declining toward 1 as γ (and the timescale separation)
+> rises. The only break in monotonicity is a 0.006 tie between the first two points.
+>
+> **The drift is 11.7% against ratio uncertainties of ~0.48% — 24× the measurement
+> error.** It is real, and §28.1 could not see it because an unmatched grid had pushed
+> one point across 1.
+
+**So §28's 1-D-reduction story is back, and now on all five points:**
+
+```
+excess = 5.987 · sep^(−2.031)        R² = 0.887, nothing dropped
+```
+
+The reduction slaves the pool to its nullcline, and §24.1a independently measured that
+reduction's error shrinking with the timescale separation `3(1+2γ)/(1−2γ)`. Here the
+excess falls as roughly **sep⁻²** — and unlike §28.1's discarded fit, this one uses
+**all five points**, because with matched grids none has negative excess to drop.
+
+> **What this leaves standing.** §15's closed form predicts the collapse slope with no
+> free parameter to **1.3% at γ = 0.35** and within 14% everywhere, across ~4 decades
+> per γ. The residual is not a defect in `κδ*²` but in the **1-D reduction used to
+> evaluate it**, and it vanishes in the direction where that reduction is exact.
+> **§15 survives the absolute test.**
+
+> **Scope, and one honest caveat about R².** The power law's R² = 0.887 is carried by
+> five points spanning a factor of 3 in `sep`, and the exponent −2.03 should be read as
+> "roughly inverse-square", not as a measured constant. The first two γ are within
+> 0.006 of each other, which a genuine `sep⁻²` law would not produce (7.00/5.57 = 1.26,
+> so ~37% of excess is expected between them). Something beyond a clean power law is
+> present at small γ, and this run cannot say what.

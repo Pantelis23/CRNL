@@ -1515,3 +1515,33 @@ so the only difference between cells is gamma. If the scatter survives matched g
 it is physics and `kappa delta*^2` has a residual gamma-dependence; if it collapses,
 §15's closed form is exact to the precision of the test and the whole T14-c thread
 closes clean.
+
+**T14-c-ii -> §28.2: MATCHED GRIDS REVIVE THE MECHANISM, and §28.1's central claim is
+withdrawn.** One rule for every gamma -- same P window (1e-2 to 1e-6), ln P equally
+spaced, 12 cells -- gives ratios 1.131, 1.137, 1.080, 1.055, 1.013. **All above 1**,
+so §28.1's sign flip at gamma = 0.25 was a GRID ARTIFACT, not physics, and its
+conclusion ("scatter, not drift; the reduction story is unsupported") is withdrawn.
+
+What remains is a monotone DRIFT toward 1 as gamma rises, **11.7% against ratio
+uncertainties of ~0.48%, i.e. 24x the measurement error**. With all five points and
+nothing dropped: `excess = 5.987 * sep^(-2.031)`, R^2 = 0.887. §28's 1-D-reduction
+story is back, and it is now consistent with §24.1a's independent measurement that the
+reduction's error shrinks with the timescale separation.
+
+**So §15 SURVIVES the absolute test.** The closed form predicts the collapse slope
+with no free parameter to 1.3% at gamma = 0.35 and within 14% everywhere across ~4
+decades per gamma, and the residual lives in the 1-D REDUCTION used to evaluate it
+rather than in `kappa delta*^2` -- vanishing exactly where that reduction becomes
+exact.
+
+**Sequence worth remembering: §28 proposed the reduction story, §28.1 killed it on
+unmatched grids, §28.2 revived it on matched ones.** The killing step was wrong for a
+reason that had nothing to do with the hypothesis.
+
+**T14-c-iii, open: what is at small gamma that a power law does not capture?** The
+first two gammas differ by 0.006 in excess where `sep^-2` predicts ~37% between them
+(7.00/5.57 = 1.26). The exponent -2.03 should be read as "roughly inverse-square", not
+a measured constant, and R^2 = 0.887 over a factor of 3 in `sep` is not a strong test.
+**How to kill:** extend to gamma = 0.05 and 0.10, where `sep` falls to 3.7 and 4.5 and
+any real power law must predict a large excess. If the excess saturates instead of
+growing, the reduction error has a floor and the inverse-square reading is wrong.

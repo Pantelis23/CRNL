@@ -4018,6 +4018,44 @@ be diffed against.
 > its only purpose is to license deep-tail measurements that no exact reference can
 > reach, and each of those will still need its own scope stated.
 
+### 26.1 Threading: measured, and bit-exact — `mlrift/am_ssa_mt.mlr`
+
+`std/thread.mlr` initially segfaulted on this machine (its raw `clone`/`futex` path
+predates Linux 7); after Pantelis fixed it, the pool works and the estimate above can
+be replaced by a measurement. The estimate stands as printed, per rule 7.
+
+> **The acceptance test is bit-exactness, not statistical agreement.** Because the RNG
+> is counter-based on the *global* trajectory index, trajectory k draws the same
+> numbers whichever worker runs it. So a threaded run must reproduce the
+> single-threaded result exactly. At NW = 1, 4 and 12 on the same 200,000
+> trajectories: `wrong = 46490` and `mfpt = 13.42224` **identically at every thread
+> count**, matching the single-threaded reference. That is a stronger check than the
+> CME gate, which allows sampling slack.
+
+Fixed work of 1.2M trajectories at the gate cell (Ryzen 9 7900X, 12 physical cores /
+24 threads):
+
+| NW | wall | traj/sec | speedup | efficiency |
+|---|---|---|---|---|
+| 1 | 193.6 s | 6,198 | 1.00× | — |
+| 2 | 97.8 s | 12,274 | 1.98× | 99% |
+| 4 | 48.7 s | 24,620 | 3.97× | 99% |
+| 8 | 24.4 s | 49,241 | 7.94× | 99% |
+| 12 | 16.5 s | 72,816 | 11.75× | **98%** |
+| 16 | 13.5 s | 88,889 | 14.34× | 90% |
+| 24 | 9.7 s | 123,967 | 20.00× | 83% (SMT) |
+
+**98% efficiency to 12 physical cores** — the per-worker accumulator design has no
+contention, and NW = 1 reproduces the standalone single-threaded rate (6,198 vs
+6,211) so the pool adds no overhead. Against Python's 351 traj/sec this is **353×**,
+which puts 10⁸ trajectories at ~13 minutes.
+
+> **What this does and does not change.** §27 found the exact CME reaches 2.9×10⁻⁸
+> unaided, so this throughput is *not* what unlocks the two-species deep tail — that
+> claim in §26 was wrong and is corrected there. It matters where the exact state
+> space explodes: `~Ω^(n−1)/(n−1)!` in species count, i.e. multi-species networks and
+> large Ω.
+
 
 ## 27. The restoration collapse holds over 6.5 decades — exactly — T14-a
 

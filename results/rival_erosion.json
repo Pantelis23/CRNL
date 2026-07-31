@@ -1,0 +1,736 @@
+{
+  "gamma": 0.12133546089600239,
+  "width": 0.8771148037355969,
+  "u_identity": {
+    "0.1": {
+      "gamma": 0.020222576816000398,
+      "worst_rel": 1.3091311863179355e-15
+    },
+    "0.4": {
+      "gamma": 0.08089030726400159,
+      "worst_rel": 8.745060512958231e-16
+    },
+    "0.6": {
+      "gamma": 0.12133546089600239,
+      "worst_rel": 3.0771891424748615e-16
+    },
+    "0.9": {
+      "gamma": 0.18200319134400358,
+      "worst_rel": 4.865871657367074e-16
+    }
+  },
+  "rows": [
+    {
+      "omega": 90,
+      "eps_frac": 0.03,
+      "start": [
+        21,
+        20,
+        18,
+        31
+      ],
+      "thr": 63,
+      "realised_eps": 0.011111111111111112,
+      "G23_times_omega": 5.510587946847911,
+      "p_cme": 0.5974421794379219,
+      "full": {
+        "p": 0.599,
+        "n_ok": 40000,
+        "wrong": 23960,
+        "unfinished": 0,
+        "rejected": 30440,
+        "reject_frac": 0.0006956915075310434,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39968,
+        "flipped_champion": 37834,
+        "flipped_rival": 35432,
+        "flipped_per_pair": [
+          36684,
+          33022,
+          35432
+        ],
+        "closest_champion": -73.76112345664785,
+        "closest_rival": -36.72250847773013,
+        "median_closest_champion": -21.255265143270897,
+        "variance_kept_frac": 1.0
+      },
+      "bookkeeping-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 9035,
+        "reject_frac": 0.00012006588354563444,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 0,
+        "flipped_champion": 0,
+        "flipped_rival": 0,
+        "flipped_per_pair": [
+          0,
+          0,
+          0
+        ],
+        "closest_champion": 0.5759522750998821,
+        "closest_rival": 0.00022302834525200765,
+        "median_closest_champion": 1.0,
+        "variance_kept_frac": 0.8185079265374322
+      },
+      "rivals-only": {
+        "p": 0.9347,
+        "n_ok": 40000,
+        "wrong": 37388,
+        "unfinished": 0,
+        "rejected": 79993,
+        "reject_frac": 0.0013412284950820392,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 40000,
+        "flipped_champion": 40000,
+        "flipped_rival": 34737,
+        "flipped_per_pair": [
+          38757,
+          36830,
+          34737
+        ],
+        "closest_champion": -66.60353936771948,
+        "closest_rival": -34.067445373800076,
+        "median_closest_champion": -63.01880935424542,
+        "variance_kept_frac": 0.09634591182650543
+      }
+    },
+    {
+      "omega": 90,
+      "eps_frac": 0.05,
+      "start": [
+        23,
+        19,
+        17,
+        31
+      ],
+      "thr": 63,
+      "realised_eps": 0.044444444444444446,
+      "G23_times_omega": 3.753258868639916,
+      "p_cme": 0.47804034009368335,
+      "full": {
+        "p": 0.476125,
+        "n_ok": 40000,
+        "wrong": 19045,
+        "unfinished": 0,
+        "rejected": 30372,
+        "reject_frac": 0.0007126833466607528,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39837,
+        "flipped_champion": 31276,
+        "flipped_rival": 36269,
+        "flipped_per_pair": [
+          28970,
+          26140,
+          36269
+        ],
+        "closest_champion": -18.138807648479748,
+        "closest_rival": -37.45990889447525,
+        "median_closest_champion": -3.4945445191955864,
+        "variance_kept_frac": 1.0
+      },
+      "bookkeeping-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 6396,
+        "reject_frac": 0.00012892833042226629,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 0,
+        "flipped_champion": 0,
+        "flipped_rival": 0,
+        "flipped_per_pair": [
+          0,
+          0,
+          0
+        ],
+        "closest_champion": 0.6477099951528628,
+        "closest_rival": 0.0002785403621208271,
+        "median_closest_champion": 1.0,
+        "variance_kept_frac": 0.8163194871982878
+      },
+      "rivals-only": {
+        "p": 0.425675,
+        "n_ok": 40000,
+        "wrong": 17027,
+        "unfinished": 0,
+        "rejected": 84450,
+        "reject_frac": 0.0014252263236618605,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39998,
+        "flipped_champion": 28488,
+        "flipped_rival": 36008,
+        "flipped_per_pair": [
+          22762,
+          19224,
+          36008
+        ],
+        "closest_champion": -16.535193058903896,
+        "closest_rival": -34.04413102152602,
+        "median_closest_champion": -0.7290677182931953,
+        "variance_kept_frac": 0.08733602526499296
+      }
+    },
+    {
+      "omega": 90,
+      "eps_frac": 0.08,
+      "start": [
+        25,
+        18,
+        16,
+        31
+      ],
+      "thr": 63,
+      "realised_eps": 0.07777777777777778,
+      "G23_times_omega": 1.995929790431921,
+      "p_cme": 0.35510226687473634,
+      "full": {
+        "p": 0.35215,
+        "n_ok": 40000,
+        "wrong": 14086,
+        "unfinished": 0,
+        "rejected": 30152,
+        "reject_frac": 0.000750010758147151,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39614,
+        "flipped_champion": 23819,
+        "flipped_rival": 36966,
+        "flipped_per_pair": [
+          21425,
+          19254,
+          36966
+        ],
+        "closest_champion": -10.305576143040728,
+        "closest_rival": -35.947799817133266,
+        "median_closest_champion": -0.43382622059244014,
+        "variance_kept_frac": 1.0
+      },
+      "bookkeeping-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 6144,
+        "reject_frac": 0.00015904741368040736,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 0,
+        "flipped_champion": 0,
+        "flipped_rival": 0,
+        "flipped_per_pair": [
+          0,
+          0,
+          0
+        ],
+        "closest_champion": 0.7658722968531033,
+        "closest_rival": 0.00018744885533572564,
+        "median_closest_champion": 1.0,
+        "variance_kept_frac": 0.814372971773408
+      },
+      "rivals-only": {
+        "p": 0.109125,
+        "n_ok": 40000,
+        "wrong": 4365,
+        "unfinished": 0,
+        "rejected": 65672,
+        "reject_frac": 0.001403327744981039,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39812,
+        "flipped_champion": 7999,
+        "flipped_rival": 38004,
+        "flipped_per_pair": [
+          6430,
+          4760,
+          38004
+        ],
+        "closest_champion": -9.417260421440087,
+        "closest_rival": -34.083238423699974,
+        "median_closest_champion": 0.48860866021693306,
+        "variance_kept_frac": 0.0800574090711039
+      }
+    },
+    {
+      "omega": 90,
+      "eps_frac": 0.12,
+      "start": [
+        27,
+        17,
+        15,
+        31
+      ],
+      "thr": 63,
+      "realised_eps": 0.1111111111111111,
+      "G23_times_omega": 0.238600712223926,
+      "p_cme": 0.2414021981191543,
+      "full": {
+        "p": 0.237975,
+        "n_ok": 40000,
+        "wrong": 9519,
+        "unfinished": 0,
+        "rejected": 28526,
+        "reject_frac": 0.0007812500641889798,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39306,
+        "flipped_champion": 16433,
+        "flipped_rival": 37501,
+        "flipped_per_pair": [
+          14491,
+          12973,
+          37501
+        ],
+        "closest_champion": -7.300361881419599,
+        "closest_rival": -36.03878785456464,
+        "median_closest_champion": 0.2529815273670983,
+        "variance_kept_frac": 1.0
+      },
+      "bookkeeping-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 5547,
+        "reject_frac": 0.00017380500676232136,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 0,
+        "flipped_champion": 0,
+        "flipped_rival": 0,
+        "flipped_per_pair": [
+          0,
+          0,
+          0
+        ],
+        "closest_champion": 0.7138113633008493,
+        "closest_rival": 0.00015419076317035874,
+        "median_closest_champion": 1.0,
+        "variance_kept_frac": 0.8125786306999625
+      },
+      "rivals-only": {
+        "p": 0.011825,
+        "n_ok": 40000,
+        "wrong": 473,
+        "unfinished": 0,
+        "rejected": 48984,
+        "reject_frac": 0.001359055921139243,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39412,
+        "flipped_champion": 989,
+        "flipped_rival": 39120,
+        "flipped_per_pair": [
+          854,
+          472,
+          39120
+        ],
+        "closest_champion": -6.522641084032129,
+        "closest_rival": -33.839749449672304,
+        "median_closest_champion": 0.7513477227661995,
+        "variance_kept_frac": 0.07493098174797981
+      }
+    },
+    {
+      "omega": 90,
+      "eps_frac": 0.18,
+      "start": [
+        29,
+        16,
+        14,
+        31
+      ],
+      "thr": 63,
+      "realised_eps": 0.14444444444444443,
+      "G23_times_omega": -1.5187283659840691,
+      "p_cme": 0.1480640139841538,
+      "full": {
+        "p": 0.145475,
+        "n_ok": 40000,
+        "wrong": 5819,
+        "unfinished": 0,
+        "rejected": 28248,
+        "reject_frac": 0.0008690541145242145,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39028,
+        "flipped_champion": 10206,
+        "flipped_rival": 37958,
+        "flipped_per_pair": [
+          8817,
+          7915,
+          37958
+        ],
+        "closest_champion": -5.4944076015210435,
+        "closest_rival": -36.417865391057575,
+        "median_closest_champion": 0.5547505550112168,
+        "variance_kept_frac": 1.0
+      },
+      "bookkeeping-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 5744,
+        "reject_frac": 0.00021170987049356338,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 0,
+        "flipped_champion": 0,
+        "flipped_rival": 0,
+        "flipped_per_pair": [
+          0,
+          0,
+          0
+        ],
+        "closest_champion": 0.722048915142598,
+        "closest_rival": 0.00021697591734559651,
+        "median_closest_champion": 1.0,
+        "variance_kept_frac": 0.810713436820219
+      },
+      "rivals-only": {
+        "p": 0.0002,
+        "n_ok": 40000,
+        "wrong": 8,
+        "unfinished": 0,
+        "rejected": 43628,
+        "reject_frac": 0.0014879932742212873,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39160,
+        "flipped_champion": 14,
+        "flipped_rival": 39153,
+        "flipped_per_pair": [
+          14,
+          7,
+          39153
+        ],
+        "closest_champion": -4.902711003249384,
+        "closest_rival": -33.219964952323345,
+        "median_closest_champion": 0.859840432678854,
+        "variance_kept_frac": 0.07188706451618462
+      }
+    },
+    {
+      "omega": 90,
+      "eps_frac": 0.25,
+      "start": [
+        33,
+        14,
+        12,
+        31
+      ],
+      "thr": 63,
+      "realised_eps": 0.2111111111111111,
+      "G23_times_omega": -5.033386522400059,
+      "p_cme": 0.03877788313984043,
+      "full": {
+        "p": 0.0391,
+        "n_ok": 40000,
+        "wrong": 1564,
+        "unfinished": 0,
+        "rejected": 25350,
+        "reject_frac": 0.0010560738116857503,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 38455,
+        "flipped_champion": 2734,
+        "flipped_rival": 38170,
+        "flipped_per_pair": [
+          2298,
+          2089,
+          38170
+        ],
+        "closest_champion": -3.728557763138851,
+        "closest_rival": -35.59665551898803,
+        "median_closest_champion": 0.7925470870499758,
+        "variance_kept_frac": 1.0
+      },
+      "bookkeeping-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 6215,
+        "reject_frac": 0.00030205877232622583,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 0,
+        "flipped_champion": 0,
+        "flipped_rival": 0,
+        "flipped_per_pair": [
+          0,
+          0,
+          0
+        ],
+        "closest_champion": 0.8114497422754073,
+        "closest_rival": 0.000275294617176125,
+        "median_closest_champion": 1.0,
+        "variance_kept_frac": 0.8068755422338623
+      },
+      "rivals-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 37254,
+        "reject_frac": 0.001725861370627826,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 38756,
+        "flipped_champion": 0,
+        "flipped_rival": 38756,
+        "flipped_per_pair": [
+          0,
+          0,
+          38756
+        ],
+        "closest_champion": 0.5594450755331188,
+        "closest_rival": -12.657327407423814,
+        "median_closest_champion": 0.9451714394527944,
+        "variance_kept_frac": 0.06757102952533703
+      }
+    },
+    {
+      "omega": 60,
+      "eps_frac": 0.03,
+      "start": [
+        16,
+        13,
+        11,
+        20
+      ],
+      "thr": 42,
+      "realised_eps": 0.05,
+      "G23_times_omega": 1.209284399391945,
+      "p_cme": 0.4800345819690863,
+      "full": {
+        "p": 0.476575,
+        "n_ok": 40000,
+        "wrong": 19063,
+        "unfinished": 0,
+        "rejected": 88802,
+        "reject_frac": 0.0023083036624649816,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39789,
+        "flipped_champion": 31510,
+        "flipped_rival": 35458,
+        "flipped_per_pair": [
+          29515,
+          25844,
+          35458
+        ],
+        "closest_champion": -16.627871084018633,
+        "closest_rival": -24.446239417626565,
+        "median_closest_champion": -3.6036033096605387,
+        "variance_kept_frac": 1.0
+      },
+      "bookkeeping-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 25675,
+        "reject_frac": 0.0005694614682187159,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 0,
+        "flipped_champion": 0,
+        "flipped_rival": 0,
+        "flipped_per_pair": [
+          0,
+          0,
+          0
+        ],
+        "closest_champion": 0.4964095484915944,
+        "closest_rival": 3.067293301131646e-05,
+        "median_closest_champion": 1.0,
+        "variance_kept_frac": 0.8161182594380648
+      },
+      "rivals-only": {
+        "p": 0.42455,
+        "n_ok": 40000,
+        "wrong": 16982,
+        "unfinished": 0,
+        "rejected": 185141,
+        "reject_frac": 0.0033017499019458336,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 39999,
+        "flipped_champion": 28450,
+        "flipped_rival": 35348,
+        "flipped_per_pair": [
+          23510,
+          19549,
+          35348
+        ],
+        "closest_champion": -14.698492701424046,
+        "closest_rival": -22.71920236117679,
+        "median_closest_champion": -0.7122272265272891,
+        "variance_kept_frac": 0.08753942219110028
+      }
+    },
+    {
+      "omega": 60,
+      "eps_frac": 0.25,
+      "start": [
+        22,
+        10,
+        8,
+        20
+      ],
+      "thr": 42,
+      "realised_eps": 0.2,
+      "G23_times_omega": -4.062702835232041,
+      "p_cme": 0.09344869298204395,
+      "full": {
+        "p": 0.0919,
+        "n_ok": 40000,
+        "wrong": 3676,
+        "unfinished": 0,
+        "rejected": 78834,
+        "reject_frac": 0.0030726270918762038,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 38369,
+        "flipped_champion": 6545,
+        "flipped_rival": 37559,
+        "flipped_per_pair": [
+          5675,
+          4975,
+          37559
+        ],
+        "closest_champion": -4.104165464536574,
+        "closest_rival": -24.478344115400375,
+        "median_closest_champion": 0.6732277618916732,
+        "variance_kept_frac": 1.0
+      },
+      "bookkeeping-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 25042,
+        "reject_frac": 0.0011890339936851384,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 0,
+        "flipped_champion": 0,
+        "flipped_rival": 0,
+        "flipped_per_pair": [
+          0,
+          0,
+          0
+        ],
+        "closest_champion": 0.7013613445905696,
+        "closest_rival": 3.18245723049948e-05,
+        "median_closest_champion": 1.0,
+        "variance_kept_frac": 0.8079292972612478
+      },
+      "rivals-only": {
+        "p": 0.0,
+        "n_ok": 40000,
+        "wrong": 0,
+        "unfinished": 0,
+        "rejected": 96641,
+        "reject_frac": 0.004307202897776256,
+        "pairs": [
+          "1-2",
+          "1-3",
+          "2-3"
+        ],
+        "flipped_any": 38791,
+        "flipped_champion": 0,
+        "flipped_rival": 38791,
+        "flipped_per_pair": [
+          0,
+          0,
+          38791
+        ],
+        "closest_champion": 0.43331718695433885,
+        "closest_rival": -8.683859636180594,
+        "median_closest_champion": 0.9052551004174866,
+        "variance_kept_frac": 0.06828157513306028
+      }
+    }
+  ]
+}

@@ -183,3 +183,92 @@ def test_predicted_barrier_saturates_like_the_measurement():
     d = 0.10
     assert predicted_barrier(1024, d) == pytest.approx(d * d / 2, rel=0.002)
     assert predicted_barrier(64, d) / predicted_barrier(1024, d) < 1.02
+
+
+# -- the pairwise multiplicative identity (FINDINGS 30, T15-a) -------------
+
+def _pair_bracket(n, gamma, omega, counts, i, j):
+    others = counts[:n].sum() - counts[i] - counts[j]
+    return (counts[n] - others - gamma * (counts[i] + counts[j] - 1.0)) / omega
+
+
+@pytest.mark.parametrize("n", [2, 3, 4, 6])
+@pytest.mark.parametrize("gamma_frac", [0.1, 0.6, 0.9])
+def test_pairwise_drift_is_exactly_multiplicative(n, gamma_frac):
+    """d(n_i - n_j)/dt = (n_i - n_j) * [n_B - sum_{l!=i,j} n_l - gamma(n_i+n_j-1)]/Omega.
+
+    FINDINGS 30. This is why `bookkeeping-only` returns a categorical zero at every n
+    (24.2) and why `decision-only` froze tied rivals (24.2's Omega-parity trap): the
+    identity makes sign(n_i - n_j) a conserved quantity once that difference direction
+    carries no noise. It holds only because the reverse disagreement reaction
+    `2B -> X_i + X_j` reaches X_i and X_j through the same (n-1) pairs, so a change to
+    that reaction's stoichiometry or rate convention breaks the theorem silently --
+    the CLE arms would simply stop returning zero and nothing else would complain.
+    """
+    from crnl.approximations import propensities_batch
+    from crnl.vectorized import compile_network
+
+    gamma = gamma_frac * gamma_critical(n)
+    omega = 97
+    comp = compile_network(n_winner_reversible(n, gamma), float(omega))
+    rng = np.random.default_rng(4242 + n)
+    for _ in range(12):
+        cuts = np.sort(rng.integers(0, omega + 1, size=n))
+        counts = np.diff(np.concatenate([[0], cuts, [omega]])).astype(np.int64)
+        assert counts.sum() == omega
+        a = propensities_batch(comp, counts[None, :].astype(float))[0]
+        b = comp.S @ a
+        for i in range(n):
+            for j in range(i + 1, n):
+                d = float(counts[i] - counts[j])
+                rhs = d * _pair_bracket(n, gamma, omega, counts, i, j)
+                traffic = float(np.abs(comp.S[i] - comp.S[j]) @ a)
+                assert abs(float(b[i] - b[j]) - rhs) <= 1e-12 * max(traffic, 1.0)
+
+
+def test_tied_species_have_exactly_equal_drift():
+    """The n_i = n_j corner of the identity, where it forces b_i - b_j == 0.
+
+    This is the case that made 24.2's `decision-only` arm return 0: rivals that start
+    tied cannot be separated by drift, only by noise in their own difference.
+    """
+    from crnl.approximations import propensities_batch
+    from crnl.vectorized import compile_network
+
+    n, omega = 3, 90
+    gamma = 0.6 * gamma_critical(n)
+    comp = compile_network(n_winner_reversible(n, gamma), float(omega))
+    for tied in (5, 12, 20, 28):
+        counts = np.array([omega - 2 * tied - 10, tied, tied, 10], dtype=np.int64)
+        assert (counts > 0).all()
+        a = propensities_batch(comp, counts[None, :].astype(float))[0]
+        b = comp.S @ a
+        assert b[1] == pytest.approx(b[2], abs=1e-12)
+
+
+def test_champion_margin_is_eroded_quadratically_by_rival_spread():
+    """du/dt = u*Gbar - (1-gamma)*delta_23^2/(4 Omega) at n = 3 (FINDINGS 30.1).
+
+    The additive term is why `rivals-only` is NOT protected by a conservation law even
+    though it never failed in 440,000 trajectories: the champion's mean margin has no
+    noise but it does have a sink, quadratic in how far the rivals have spread.
+    """
+    from crnl.approximations import propensities_batch
+    from crnl.vectorized import compile_network
+
+    n, omega = 3, 97
+    for gamma_frac in (0.1, 0.6, 0.9):
+        gamma = gamma_frac * gamma_critical(n)
+        comp = compile_network(n_winner_reversible(n, gamma), float(omega))
+        rng = np.random.default_rng(909)
+        for _ in range(12):
+            cuts = np.sort(rng.integers(0, omega + 1, size=n))
+            c = np.diff(np.concatenate([[0], cuts, [omega]])).astype(np.int64)
+            a = propensities_batch(comp, c[None, :].astype(float))[0]
+            b = comp.S @ a
+            u = float(c[0]) - 0.5 * float(c[1] + c[2])
+            d23 = float(c[1] - c[2])
+            gbar = 0.5 * (_pair_bracket(n, gamma, omega, c, 0, 1)
+                          + _pair_bracket(n, gamma, omega, c, 0, 2))
+            rhs = u * gbar - (1.0 - gamma) * d23 ** 2 / (4.0 * omega)
+            assert float(b[0] - 0.5 * (b[1] + b[2])) == pytest.approx(rhs, abs=1e-11)

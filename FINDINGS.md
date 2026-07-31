@@ -4387,6 +4387,12 @@ this network's bilinear structure, not a general fact about coordinate roles.
 n = 3, which the same structure would explain — and if it does, §24.2's subspace
 result needs the same qualification as §24.1's.
 
+> **→ Answered in §30, and the guess about which arm was wrong.** The identity does
+> generalise — to every n, every γ, and every *pair* of committed species — and it
+> makes `bookkeeping-only`'s zero a theorem. But it does **not** cover `rivals-only`,
+> which starves no pairwise difference direction; that arm's zero is barrier height
+> (§30.2), and it is not categorical at all.
+
 ### 28.3 The ε axis confirms the attribution; the power law does not survive — T14-c-iii
 
 §28.2 attributed the residual to the 1-D slaved reduction and described it as
@@ -4439,3 +4445,216 @@ the "saturation" alternative is also dead — but not as `sep⁻²`:
 > excess at γ = 0.35 is consistent with zero and **its sign is not resolved**. So the
 > honest statement is that the excess declines monotonically from 0.16 at γ = 0.10 to
 > ~0 near γ = 0.35, and beyond that this instrument cannot say.
+
+### 30 The identity is general, and it sorts §24.2's arms — `pairwise_identity.py` — T15-a
+
+§29 found that §24.1's `s-only` zero at n = 2 is a theorem: AM's signal drift carries
+no additive term, so removing that coordinate's noise conserves sign(δ) exactly.
+**T15-a asked whether the same structure explains §24.2's zeros at n = 3.** It does,
+in a stronger form, and the general statement was derived by hand from the
+count-level propensities of `n_winner_reversible` before anything was run:
+
+> **For every n, every γ, and every pair (i, j) of committed species,**
+>
+> **d(nᵢ − nⱼ)/dt = (nᵢ − nⱼ) · (k/Ω) · [ n_B − Σ_{l≠i,j} n_l − γ·(nᵢ + nⱼ − 1) ]**
+
+Three cancellations produce it: the pair's own disagreement reaction consumes both
+equally; its reverse `2B → Xᵢ + Xⱼ` reaches Xᵢ and Xⱼ through the same (n−1) pairs, so
+the entire γ·n_B² term drops; and everything left is bilinear in (nᵢ − nⱼ). At n = 2
+the middle sum is empty and this collapses to §29's `b_δ = δ·[c_het·B − c_hom·(s−1)]`
+exactly.
+
+**Verified against the network's own stoichiometry and propensities** — not a
+hand-rolled copy of them, since the question is whether the shipped conventions
+satisfy it — at n = 2, 3, 4, 5, 6 × γ ∈ {0.10, 0.40, 0.60, 0.90}·γ_c(n), 40 random
+states per cell, 4,600 pairs in total:
+
+| measure | result |
+|---|---|
+| residual ÷ total absolute traffic that must cancel | worst **4.4×10⁻¹⁶** |
+| strict residual ÷ max(\|lhs\|, \|rhs\|), ties excluded | median **2.1×10⁻¹⁶**, worst 2.9×10⁻¹³ |
+| \|bᵢ − bⱼ\| at nᵢ = nⱼ, where the identity forces exactly 0 | worst 1.3×10⁻¹⁵ |
+| spread of bᵢⱼ/(nᵢ − nⱼ) as the split varies at fixed nᵢ + nⱼ | worst 5.7×10⁻¹⁴ |
+
+**Both normalisations are reported, not the flattering one.** The strict worst case of
+2.9×10⁻¹³ occurs where |nᵢ − nⱼ| = 1 *and* the bracket is near zero, so the left side
+is itself near zero and the denominator collapses; the median of 2.1×10⁻¹⁶ is one ulp.
+The `traffic` denominator is the honest one for a cancellation claim, and
+`max(|lhs|,|rhs|)` is degenerate at nᵢ = nⱼ where both sides vanish — the first pass of
+this test reported "P1 FAILS, relative residual 1.0" purely from that 0/0.
+
+**What the identity conserves is not "the signal coordinate" but sign(nᵢ − nⱼ) for
+every pair independently.** A projection is covered by the theorem exactly when it
+leaves some pairwise difference direction noise-free — and that sorts §24.2's arms,
+which had been read three different ways:
+
+| arm | pairwise directions starved | consequence |
+|---|---|---|
+| `s-only` (n = 2) | the only one | §29's theorem |
+| `bookkeeping-only` | **all C(n,2)** | the entire ordering is frozen; P = 0 is a theorem |
+| `decision-only` | d2 = (0,1,−1) only | sign(n₂ − n₃) frozen — **this is §24.2's Ω-parity trap** |
+| `rivals-only` | **none** | not covered; see §30.1 |
+
+Dynamical confirmation at n = 3, γ = 0.60·γ_c(3) = 0.1213, Ω = 30, ε = 0.25, skew = 2,
+40,000 trajectories per arm, all arms and the CME reference on an **identical start
+state** [12, 5, 3, 10] (rule 18). Champion-vs-rival flips and rival-vs-rival flips are
+counted **separately**, because pooling them makes the counter meaningless — only the
+first kind can make the observable wrong:
+
+| arm | var kept | P(error) | champ flips | rival flips | closest champ approach |
+|---|---|---|---|---|---|
+| exact CME | — | 0.12017 | — | — | — |
+| `full` | 1.000 | 0.12350 | 8419 | 36367 | −3.57 |
+| `bookkeeping-only` | 0.806 | **0** | **0** | **0** | **+0.4696** |
+| `rivals-only` | 0.066 | **0** | **0** | 38913 | **+0.5629** |
+| `decision-only` | 0.114 | 0.07310 | 6331 | **0** | −3.23 |
+
+> **P2 confirmed, in the form the theorem actually predicts.** §24.2 measured "no
+> trajectory finishes wrong". The stronger statement holds: under `bookkeeping-only`
+> **no pairwise sign flips at all**, and the closest any pair came to crossing was
+> **9.1×10⁻⁶ of its initial gap**. It approaches zero exponentially and cannot reach
+> it — which is a conservation law, not distance from the boundary.
+
+> **P2b: §24.2's parity trap is this theorem.** `decision-only` froze the rival pair
+> and only the rival pair — 0 rival flips against 6331 champion flips. §24.2
+> diagnosed the trap empirically and filed it with "the floor-division artifacts",
+> blaming integer rounding. **The rounding only chose the initial condition; the
+> conservation law is what made it fatal.** Rivals that start tied stay tied because
+> nothing can move sign(n₂ − n₃), not because 30 is even.
+
+> ⚠ **P3 FAILED, and it is the informative failure.** `rivals-only` keeps d2, which
+> has a nonzero component along *every* pairwise difference (δ₁₂ gets −h, δ₁₃ gets
+> +h, δ₂₃ gets 2h), so no sign is conserved and I predicted it would turn nonzero once
+> the trial count rose far above §24.2's 40,000. At **440,000 trajectories the
+> champion's margin never flipped once**, and never came closer than **0.51 of its
+> initial gap**. That is a barrier, not rarity. The prediction was wrong and the
+> mechanism is elsewhere — §30.1.
+
+**§24.2's stated reason for the `rivals-only` zero is also wrong**, and in a way worth
+recording: "with d1's noise removed, X1 versus the rival mean is deterministic and X1
+never loses" is a non-sequitur. X1 does not lose to the rival mean, it loses to the
+best rival, and δ₂₃ is exactly the direction being driven. The zero is real; that
+reason does not establish it.
+
+### 30.1 The champion's margin has a sink, quadratic in rival spread — `rival_erosion.py` — T15-a-i
+
+§30's P3 failed: `rivals-only` never flipped a champion-vs-rival sign in 440,000
+trajectories despite no sign being conserved. The mechanism follows from the same
+identity rather than from a guess. Under `rivals-only` the noise is (0, +h, −h, 0), so
+n₁, n₂+n₃ and n_B are all noise-free and so is the champion's **mean** margin
+u = n₁ − (n₂+n₃)/2. Differencing two brackets gives
+G₁₃ − G₁₂ = −(1−γ)·δ₂₃/Ω, and therefore
+
+> **du/dt = u·Ḡ − (1 − γ)·δ₂₃² / (4Ω)**, with Ḡ = (G₁₂ + G₁₃)/2
+
+**u carries an additive term, so it is not sign-conserved and the champion is not
+protected by a conservation law.** The term is negative for every γ < 1: rival spread
+erodes the champion's mean margin at a rate **quadratic in that spread**. This is
+§24.2's P7 order-statistic intuition — "the champion loses to the best rival, not to
+the rival mean" — as an exact identity. Verified to a worst relative residual of
+**1.3×10⁻¹⁵** at γ ∈ {0.10, 0.40, 0.60, 0.90}·γ_c(3), and pinned in the suite.
+
+By §30's identity δ₂₃ grows exactly when G₂₃ = (1/Ω)[n_B − n₁ − γ(n₂+n₃−1)] > 0, which
+is negative whenever the champion is well ahead of the blank pool — the case in every
+cell §24.2 and §30 happened to run. Sweeping ε at n = 3, γ = 0.1213, skew = 2, 40,000
+trajectories per arm, all arms paired on an identical start state per cell:
+
+| Ω | ε | start | G₂₃·Ω | CME | `full` | `bookkeeping` | `rivals` | `rivals`/`full` |
+|---|---|---|---|---|---|---|---|---|
+| 90 | 0.03 | [21, 20, 18, 31] | +5.51 | 0.59744 | 0.59900 | **0** | 0.93470 | 1.5604 |
+| 90 | 0.05 | [23, 19, 17, 31] | +3.75 | 0.47804 | 0.47613 | **0** | 0.42568 | 0.8940 |
+| 90 | 0.08 | [25, 18, 16, 31] | +2.00 | 0.35510 | 0.35215 | **0** | 0.10912 | 0.3099 |
+| 90 | 0.12 | [27, 17, 15, 31] | +0.24 | 0.24140 | 0.23797 | **0** | 0.01183 | 0.0497 |
+| 90 | 0.18 | [29, 16, 14, 31] | −1.52 | 0.14806 | 0.14547 | **0** | 0.00020 | 0.0014 |
+| 90 | 0.25 | [33, 14, 12, 31] | −5.03 | 0.03878 | 0.03910 | **0** | 0 | 0 |
+| 60 | 0.03 | [16, 13, 11, 20] | +1.21 | 0.48003 | 0.47658 | **0** | 0.42455 | 0.8908 |
+| 60 | 0.25 | [22, 10, 8, 20] | −4.06 | 0.09345 | 0.09190 | **0** | 0 | 0 |
+
+> **P2 confirmed in the strongest available form, and this is the durable result of
+> the section.** At Ω = 90, ε = 0.03 the champion leads by a **single count** (21
+> against 20), the exact CME error is **0.597**, and full noise fails 59.9% of the
+> time — and `bookkeeping-only` *still* returns exactly 0 with zero pairwise flips in
+> 40,000 trajectories. **A conservation law does not care how low the barrier is.**
+> §24.2's zero could have been barrier height; this one cannot be.
+
+> **P4 note, reported rather than clipped:** at that same cell `rivals-only` fails
+> *more* than full noise (0.935 against 0.599, ratio 1.56). Removing d1's noise removes
+> restoring fluctuations along with destroying ones, so an arm with 6.6% of the
+> variance can be **worse** than the full model, not merely degraded. `uniform-11pct`
+> in §24.1 was wrong by 17–770× in the same spirit, but always in the safe direction.
+
+> ⚠ **P3 was scored "FAILS as stated" and the honest reading is worse than that: the
+> sweep cannot decide the question at all.** The scoring is that 5/5 cells with
+> G₂₃ > 0 produced champion flips while 1/3 with G₂₃ < 0 did too (Ω = 90, ε = 0.18:
+> 14 flips at G₂₃ = −1.52, just barely negative, where the bracket is state-dependent
+> and can turn positive along the way). But **ε sets the champion's margin, which sets
+> both the barrier and G₂₃**, so the beautiful four-decade ordering by G₂₃ is equally
+> consistent with "`rivals-only` fails when failure is easy". That is rule 9, and I
+> read the ordering as support before noticing it.
+
+> **The one accidental matched-barrier pair already argues against the mechanism.**
+> Ω = 60/ε = 0.03 and Ω = 90/ε = 0.05 have barriers matched to **0.42%** (CME 0.48003
+> against 0.47804) while G₂₃ differs by **3.1×** (+1.21 against +3.75) — and the paired
+> ratio is **0.8908 against 0.8940**, a difference of 0.36%. If G₂₃ set the rate, three
+> times the bracket should not leave the ratio unchanged to a third of a percent. One
+> pair is not a test and it also varies Ω, so §30.2 separates the axes deliberately.
+
+### 30.2 The rival bracket does not gate `rivals-only` — `rival_bracket_scan.py` — T15-a-ii
+
+§30.1's mechanism predicted that `rivals-only` can only fail when G₂₃ > 0, and the ε
+sweep ordered it over four decades in exactly that sequence. But ε sets the champion's
+margin, which sets **both** the barrier and G₂₃, so that sweep cannot separate them.
+G₂₃ depends on n_B, which the champion's margin does not: holding the margin fixed at
+7 and the skew at 2, the start state is fixed by n_B alone through
+3R = Ω − n_B − m + skew, so raising n_B lowers R and drives G₂₃ across a range **four
+times wider than the whole ε sweep produced, with the margin never changing**. Ω = 90,
+γ = 0.1213, threshold 63, 40,000 trajectories per arm, paired within each start state.
+
+| n_B | start | G₂₃·Ω | CME | `full` | `bookkeeping` | `rivals` | `rivals`/`full` |
+|---|---|---|---|---|---|---|---|
+| 13 | [31, 24, 22, 13] | **−23.46** | 0.39641 | 0.38843 | **0** | **0.18222** | 0.4691 |
+| 22 | [28, 21, 19, 22] | −10.73 | 0.37678 | 0.37345 | **0** | 0.14427 | 0.3863 |
+| 31 | [25, 18, 16, 31] | +2.00 | 0.35510 | 0.35830 | **0** | 0.10500 | 0.2931 |
+| 40 | [22, 15, 13, 40] | +14.72 | 0.33118 | 0.32620 | **0** | 0.07185 | 0.2203 |
+| 49 | [19, 12, 10, 49] | +27.45 | 0.30484 | 0.29983 | **0** | 0.04530 | 0.1511 |
+| 58 | [16, 9, 7, 58] | **+40.18** | 0.27601 | 0.27535 | **0** | 0.02755 | 0.1001 |
+
+> ⚠ **§30.1's mechanism is WITHDRAWN. The rival bracket does not gate this arm, and
+> the ε sweep's four-decade ordering by G₂₃ was the barrier all along.** At
+> G₂₃·Ω = −23.46 — deeply negative, where §30.1 said δ₂₃ cannot grow and `rivals-only`
+> cannot fail — the arm fails **18.2%** of the time. Across the scan
+> **corr(ratio, G₂₃) = −0.9957**: not merely absent, but near-perfectly *opposite* to
+> the prediction, while corr(ratio, CME) = +0.9870.
+
+> **What breaks the confound is that the two sweeps confound it in opposite
+> directions.** In the ε sweep G₂₃ rises *with* the barrier; in the n_B scan it falls
+> *against* it. The paired ratio tracks the barrier in both, so the barrier is the
+> consistent explanator and G₂₃ is not. Neither sweep alone could have shown this —
+> which is the whole content of rule 9.
+
+> **The decisive single number.** Interpolating the ε sweep's ratio-vs-barrier curve
+> to n_B = 13's barrier predicts 0.4424; the measured value is **0.4691**, a ratio of
+> **1.060** — while G₂₃ differs from the interpolating cells by **25.5 units**. Six
+> percent of residual for a quantity §30.1 claimed was gated by that bracket's *sign*.
+
+> **P3 confirmed again, and the control is now the load-bearing result.**
+> `bookkeeping-only` returned exactly 0 with zero pairwise flips in all six cells, over
+> a range of n_B that moves G₂₃ by 64 units and the barrier by 44%. The theorem does
+> not care about either.
+
+> **Two checks that make the table admissible.** *(i) Rule 12:* **zero unfinished
+> trajectories in every cell of every arm** — 40,000 of 40,000 absorbed — so no ratio
+> here is a conditional mean over a censored population. *(ii) Reproducibility:*
+> n_B = 31 and §30.1's ε = 0.08 are the **same start state** [25, 18, 16, 31] reached
+> by two different constructions with independent seeds, and they agree at **1.8σ**
+> (`full`) and **1.9σ** (`rivals-only`). Rejections held at 0.0014 of steps across the
+> scan and do not track the effect, so the harness is not producing it (rule 10).
+
+**What §30–§30.2 leave standing.** The pairwise identity is exact and general, and it
+makes `bookkeeping-only`'s categorical zero a theorem at every n — that is the result.
+The `du/dt` erosion identity is also exact and is pinned in the suite, but the physical
+reading built on it lasted one experiment. **Three mechanisms proposed in this arc,
+two withdrawn within the session that proposed them** (rule 17): the sign-conservation
+account of `rivals-only`, then the G₂₃ gate. The measurements survive; the stories
+about them keep not surviving, and the one that did survive is the one that was derived
+algebraically and checked to 4×10⁻¹⁶ rather than inferred from a monotone table.

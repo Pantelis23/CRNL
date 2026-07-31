@@ -1568,6 +1568,10 @@ AM, not about coarse-graining in general. The QUANTITATIVE half of §24.1 is unt
 `delta-only` at 11% of variance recovers to 2-18%, and `uniform 11%` is wrong by
 17-770x while retaining reduced delta-noise.
 
+~~**T15-a, open: does the identity hold at n >= 3?**~~ **CLOSED by §30 — yes, and in a
+stronger PAIRWISE form; but the arm named below was the wrong one.** See the T15-a
+block at the end of this file. The original question stands here as written:
+
 **T15-a, open: does the identity hold at n >= 3?** §24.2's `rivals-only` also returned
 categorical zeros, which the same structure would explain. **How to kill:** test
 whether the drift along each signal direction of `n_winner_reversible` is exactly
@@ -1606,3 +1610,62 @@ the excess goes reliably negative, the reduction error changes sign and no curre
 account explains that; if it flattens at zero, the linear description is wrong and the
 reduction error simply dies out. Note the Omega cap bites hardest here (shallow
 collapses need large Omega), so the sampler of §26 may be the only instrument.
+
+**T15-a -> §30/§30.1/§30.2: the identity is general, it is PAIRWISE, and it sorts
+§24.2's arms -- but not the one T15-a guessed.** Derived by hand from the count-level
+propensities, then verified against the network's own stoichiometry at n = 2..6 x four
+gamma each (4,600 pairs; worst residual 4.4e-16 against the traffic that must cancel,
+median 2.1e-16 strict, worst strict 2.9e-13 where |n_i - n_j| = 1 and the bracket is
+itself near zero):
+
+    d(n_i - n_j)/dt = (n_i - n_j) * (k/Omega) * [ n_B - sum_{l!=i,j} n_l
+                                                  - gamma*(n_i + n_j - 1) ]
+
+The conserved quantity is not "the signal coordinate" but **sign(n_i - n_j) for every
+pair independently**, so a projection is covered exactly when it starves some pairwise
+difference direction:
+
+  * `bookkeeping-only` starves all C(n,2) -> the whole ordering freezes -> P = 0 is a
+    THEOREM at every n. Demonstrated where it could not be barrier height: a champion
+    leading by ONE count, exact CME 0.597, full noise failing 59.9%, and the arm still
+    exactly 0 with zero flips in 40,000 trajectories. **§24.2's "subspace" result needs
+    the same qualification §29 forced on §24.1 -- for this arm.**
+  * `decision-only` starves d2 -> sign(n_2 - n_3) frozen. **This is §24.2's Omega-parity
+    trap, which was filed under "floor-division artifacts" and blamed on integer
+    rounding.** The rounding only chose the initial condition; the conservation law is
+    what made it fatal. Confirmed in-run: 0 rival flips against 6331 champion flips.
+  * `rivals-only` starves NONE of them, so the theorem does not cover it -- and its
+    zero turns out not to be categorical at all (§30.2).
+
+**Two mechanisms proposed and withdrawn in the same session, both about `rivals-only`
+(rule 17).** First: it should be a mere sampling zero, since no sign is conserved. It
+is not -- 440,000 trajectories, no champion flip, never closer than 0.51 of the initial
+gap. Second: the exact erosion identity `du/dt = u*Gbar - (1-gamma)*delta_23^2/(4*Omega)`
+(residual 1.3e-15, pinned in the suite) says the champion's noise-free mean margin has
+a sink quadratic in rival spread, gated by sign(G_23) -- and the eps sweep ordered the
+arm over four decades in exactly that sequence. **But eps sets the champion's margin,
+which sets BOTH the barrier and G_23**, and I read the ordering as support before
+noticing (rule 9). Holding the margin fixed and moving G_23 through n_B instead:
+corr(ratio, G_23) = **-0.9957**, near-perfectly OPPOSITE, with the arm failing 18.2% at
+G_23*Omega = -23.46 where the mechanism forbade failure. What breaks the confound is
+that **the two sweeps confound it in opposite directions** and the paired ratio tracks
+the barrier in both.
+
+**The lesson is rule 16's, one level over.** The identity survived because it was
+derived and checked in absolute terms to 4e-16; the mechanism died because it was
+inferred from a monotone table. A table that orders perfectly is not evidence for the
+quantity you happened to order it by.
+
+**T15-b, open: is "the drift is multiplicative in every signal coordinate" what makes a
+network restoring at all?** The identity says the deterministic flow can amplify or
+contract a lead but can never REVERSE one, so in this family every error is a
+fluctuation in a difference direction and never a drift. That is a candidate definition
+of a restoring element and the closest thing this project has to a statement of the
+digital abstraction: noise off the signal axis cannot flip a bit, whatever its
+amplitude. **How to kill:** construct a restoring network whose pairwise drift carries
+an additive term -- `am_asymmetric` and `am_fueled` are the two in the repo most likely
+to, since neither is symmetric under the exchange that produces the cancellation. §29
+predicts its `s-only` analogue would then be small but NONZERO. If every network that
+restores has the multiplicative form, the identity is constitutive rather than
+incidental; if one restores without it, the definition is too narrow and the general
+claim in §24 stays dead.

@@ -4207,3 +4207,60 @@ the degradation is real.
 > whether the discrepancy collapses against the separation. Two points fit anything;
 > five would make it a curve or kill it. If it does not collapse, the γ-dependence is
 > in `κδ*²` itself and §15's closed form does not survive the absolute test.
+
+### 28.1 The collapse test — and §28's drift was partly the instrument — T14-c-i
+
+§28 predicted the collapse slope from closed forms and found 4.1% agreement at
+γ = 0.30 but 24–36% at γ = 0.15, with the suspect being the 1-D slaved reduction
+whose error §24.1a showed shrinking with the timescale separation. Five γ, with
+criteria fixed before any ratio was computed: **≥ 2 decades**, **P ≥ 10⁻¹²**, and
+eps-controlled fits.
+
+> **The precision floor is the new criterion and it matters.** `p_cme` returns
+> `1 − split`, so a tail at 10⁻¹⁷ is pure cancellation noise in double precision.
+> §28's γ = 0.15 sweep ran to Ω = 500, which at that slope reaches ~10⁻¹⁷ — **below
+> where the reference means anything.** γ = 0.15 stays monotone to 2.0×10⁻¹³ when
+> checked, so the floor is set at 10⁻¹² — above where it was verified, not at it.
+
+| γ | sep | decades | P range | measured | predicted | **ratio** | R² |
+|---|---|---|---|---|---|---|---|
+| 0.15 | 5.57 | 9.91 | 1.5e-2 → 1.9e-12 | −0.066953 | −0.077306 | **1.155** | 0.99983 |
+| 0.20 | 7.00 | 8.94 | 2.4e-2 → 2.7e-11 | −0.050710 | −0.056682 | **1.118** | 0.99982 |
+| 0.25 | 9.00 | 7.77 | 5.3e-2 → 8.8e-10 | −0.041823 | −0.039834 | **0.952** | 0.99967 |
+| 0.30 | 12.00 | 7.10 | 9.8e-2 → 7.9e-9 | −0.024630 | −0.026132 | **1.061** | 0.99973 |
+| 0.35 | 17.00 | 5.47 | 1.6e-1 → 5.4e-7 | −0.014605 | −0.015255 | **1.044** | 0.99938 |
+
+**§15's closed form predicts the collapse slope to within ±15% at every γ, across
+5.5–9.9 decades each, with no free parameter.** Mean ratio 1.066, spread 0.952–1.155.
+
+> **§28's γ-drift was partly the instrument.** It reported γ = 0.15 at 1.240; with the
+> precision floor applied that becomes **1.155**, because §28's deepest cells were
+> below double-precision cancellation. §28's numbers stand as printed (rule 7) but its
+> "24–36% off" reading overstates the failure.
+
+> ⚠ **My own analysis script produced a false result and I am recording it rather
+> than the result.** It printed `excess = 1.069·sep^(−1.134), R² = 0.9966` and the
+> line "a clean power law supports P1". That fit uses **4 of 5 points**: γ = 0.25 has
+> ratio 0.952, so its excess is negative, so `log(excess)` is undefined, so the code
+> dropped it and fitted the rest. The dropped point is precisely the one contradicting
+> the pattern. **No power law is claimed.**
+
+**With all five points, P1 fails and P3 fails.** The excesses run +0.155, +0.118,
+**−0.048**, +0.061, +0.044 — **not monotone in γ**, and the sign flips at γ = 0.25,
+which no account here predicts (P3 said the prediction should be too steep
+everywhere). Spearman rank correlation with the separation is −0.70 on five points,
+which is not evidence of anything.
+
+> **So the honest position is better for §15 and worse for the mechanism than §28
+> suggested.** The closed form is good to ±15% across five γ and nine decades — that
+> is the parameter-free test of the project's central law, and it passes. But the
+> residual is **scatter, not drift**, so the 1-D-reduction story §28 proposed is
+> unsupported: a reduction error that tracks timescale separation cannot change sign
+> at γ = 0.25.
+>
+> **A confound I introduced and should have avoided:** each γ used a *different* Ω
+> list, so the cells are not matched across γ and each carries its own realised-eps
+> pattern. Since that wobble alone moved §27's raw local slopes by 40%, ±10% scatter
+> from unmatched Ω grids is entirely plausible. **How to settle it:** re-run with Ω
+> chosen by one rule for every γ — same decade span and same P range — so the only
+> difference between cells is γ.

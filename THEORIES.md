@@ -1488,3 +1488,30 @@ against separation. Two points fit anything; five make it a curve or kill it. **
 does not collapse, the gamma-dependence lives in `kappa delta*^2` itself and §15's
 closed form does not survive the absolute test** -- which would be the most consequential
 withdrawal in the project, since §15 corrected §12 and everything after leans on it.
+
+**T14-c-i -> §28.1: the excess does NOT collapse; it is scatter, not drift.** Five
+gammas with criteria fixed in advance (>=2 decades, P >= 1e-12, eps-controlled):
+ratios 1.155, 1.118, **0.952**, 1.061, 1.044. **§15's closed form predicts the
+collapse slope to +-15% at every gamma across 5.5-9.9 decades each, with no free
+parameter** -- the parameter-free test of the project's central law, and it passes.
+
+**Two corrections.** (i) §28's gamma-drift was partly the INSTRUMENT: `p_cme` returns
+`1 - split`, and §28's gamma=0.15 sweep reached ~1e-17, below double-precision
+cancellation. With a 1e-12 floor its ratio is 1.155, not 1.240. §28 stands as printed
+per rule 7 but its "24-36% off" overstates the failure. (ii) **My analysis script
+printed `excess = 1.069 sep^-1.134, R^2 = 0.9966` and called it a clean power law. It
+fitted 4 of 5 points** -- gamma=0.25's excess is negative so `log` dropped it, and the
+dropped point is the one contradicting the pattern. No power law is claimed.
+
+**The 1-D-reduction story is UNSUPPORTED.** The excess is not monotone in gamma and
+changes SIGN at gamma=0.25; a reduction error tracking timescale separation cannot do
+that. P1 and P3 both fail.
+
+**T14-c-ii, open: is the +-10% scatter physics or unmatched grids?** Each gamma used a
+DIFFERENT Omega list, so cells are unmatched and each carries its own realised-eps
+pattern -- and that wobble alone moved §27's raw local slopes 40%. **How to kill:**
+re-run with Omega chosen by ONE rule for every gamma (same decade span, same P range),
+so the only difference between cells is gamma. If the scatter survives matched grids
+it is physics and `kappa delta*^2` has a residual gamma-dependence; if it collapses,
+§15's closed form is exact to the precision of the test and the whole T14-c thread
+closes clean.

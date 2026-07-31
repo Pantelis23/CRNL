@@ -3397,6 +3397,72 @@ drift correction, which this experiment cannot construct.
 > produces barrier crossings. A proper projection may repair the few-percent residual;
 > nothing suggests it repairs an exact zero.
 
+### 24.1c Learning the closure — and what a training R² of 0.99 is worth in the tail — `learned_closure.py`
+
+§24.1b measured the missing force but could not write it down. So it was **learned**,
+following the coarse-graining literature's method (arXiv:2512.03706 fits reduced drift
+and diffusion with random features and shallow networks) — with the one thing that
+literature usually lacks: **an exact reference to score against.**
+
+The design exists to stop the network being tuned into looking right:
+
+- **Trained** on the local missing force, measured by paired full-vs-projected runs
+  under *common random numbers*, on 500 states sampled from real trajectories.
+- **Scored** on exact P(error) — a tail probability, **never in the loss**.
+- **Controls:** a linear model in (δ, s) alongside the MLP, plus the uncorrected
+  `δ-only` and `full` arms. γ = 0.05, Ω ∈ {40, 60, 80}, 40,000 trials.
+
+**At the longest window tested (τ = 4 ≈ 4.4 pool-correlation times):**
+
+| Ω | exact | full | δ-only | linear | **MLP** | MLP train R² |
+|---|---|---|---|---|---|---|
+| 40 | 0.027095 | +2.4% | +4.3% | +2.1% | **+1.6%** | — |
+| 60 | 0.016144 | +7.2% | +16.9% | +16.1% | **+9.5%** | 0.992 |
+| 80 | 0.009425 | +6.1% | +9.6% | +8.0% | **+4.0%** | 0.990 |
+
+> **A learned closure does beat naive deletion.** At Ω = 80 the MLP takes δ-only's
+> +9.6% down to +4.0%; averaged over all nine cells, δ-only is +14.1% and the MLP
+> +10.2%. So the §24.1b direction holds: replacing the deleted noise with a force
+> helps, and it helps more than either closed form did.
+>
+> **P4 refuted — the force is genuinely nonlinear.** I predicted linear would do as
+> well. It does not: MLP train R² is 0.98–0.99 while linear's swings from **0.064**
+> to 0.91, and averaged over cells linear (+22.2%) is *worse than doing nothing*
+> (+14.1%). Reporting only the MLP would have been dressing up a straight line; here
+> the straight line genuinely fails.
+>
+> **P3 confirmed, and it is the point of the section.** The MLP fits its training
+> target at **R² = 0.99** and still misses the tail by 4–10%. A closure that
+> reproduces the local force to one part in a hundred buys roughly *half* the
+> residual, not 99% of it. **Local accuracy is not tail accuracy** — which is rule 16
+> restated for universal approximators, and the reason the scoring target was fixed
+> in advance and kept out of the loss.
+
+**A′ — the Markovian consistency test, and it does not pass.** A well-defined
+Markovian closure must give the same answer whichever window it was estimated at:
+
+| | τ=1 | τ=2 | τ=4 |
+|---|---|---|---|
+| Ω=40, MLP | +18.1% | +13.2% | +1.6% |
+| Ω=60, MLP | +20.5% | +9.2% | +9.5% |
+| Ω=80, MLP | +7.2% | +9.0% | +4.0% |
+
+The fitted closure depends strongly on its window, improving monotonically toward
+τ = 4 in five of six model×Ω pairs. **T13-a is therefore not closed.** Two readings
+survive and this run cannot separate them: either no Markovian closure exists (the
+τ-dependence is real), or τ = 4 is simply the first adequately-converged window and
+shorter ones undersample an effect that needs several correlation times to develop.
+**τ = 8 was not run for the closure**, and that is the missing cell — the jump from
++35.4% to +2.1% between τ = 2 and τ = 4 at Ω = 40 is large for a quantity that is
+supposed to be converging.
+
+> **Sampling floor, stated because several comparisons here sit near it.** At 40,000
+> trials and p ≈ 0.0094, the relative standard error is ≈ 5%. So single-cell
+> differences of a few percent — including "MLP beats the full CLE" at Ω = 40 and 80
+> — are **not** individually significant. The arms share seeds, so their differences
+> are better determined than independent errors imply, but the claims above rest on
+> the *pattern across nine cells*, not on any one of them.
+
 ### 24.1a The competing explanation I failed to name, and what the γ sweep does to it
 
 An independent review of §24.1 raised an account of these results that is more

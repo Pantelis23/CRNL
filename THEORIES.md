@@ -737,7 +737,36 @@ AM drift is bilinear in (delta, s). The `+force` arm came out bit-identical to
 +0.048 measured) and **11x-140x too large** at 0.30 and 0.45. Fitting a coefficient
 would have made it look successful at two of three gammas.
 
-**T13-a, open: is the correct reduction non-Markovian here?** The measured force grows
+**T13-a, ATTEMPTED -> §24.1c, NOT closed.** The force §24.1b could not write down was
+LEARNED instead (MLP + linear control, trained on the local force under common random
+numbers, scored on exact P(error) which was never in the loss). Results:
+
+- **A learned closure beats naive deletion**: at Omega = 80 the MLP takes `delta-only`'s
+  +9.6% down to +4.0%; over nine cells, 14.1% -> 10.2%. The §24.1b direction holds.
+- **The force is NONLINEAR** (P4 refuted). MLP train R^2 = 0.98-0.99 while linear
+  swings 0.064-0.91, and averaged over cells linear (+22.2%) is WORSE than doing
+  nothing (+14.1%).
+- **Local accuracy is not tail accuracy** (P3 confirmed, and the point of the
+  section): R^2 = 0.99 on the force buys about HALF the residual, not 99% of it. Rule
+  16 restated for universal approximators -- which is why the scoring target was fixed
+  in advance and kept out of the loss.
+- **A' does not pass.** The fitted closure is window-dependent, improving monotonically
+  toward tau = 4 in five of six model x Omega pairs (Omega=40 MLP: +18.1%, +13.2%,
+  +1.6%). Either no Markovian closure exists, or tau = 4 is the first converged window
+  -- **this run cannot separate them, and tau = 8 was not run for the closure.** That
+  is the missing cell, and the +35.4% -> +2.1% jump between tau 2 and 4 is large for
+  something supposedly converging.
+
+Sampling floor: ~5% relative SE at p ~ 0.0094 and 40,000 trials, so single-cell
+differences of a few percent are not individually significant and the claims rest on
+the pattern across nine cells.
+
+**T13-a-i, open: does the closure converge in the window?** Run the tau sweep out to
+8 and 16 at fixed Omega. Saturation means a Markovian closure exists and the earlier
+windows were undersampled; continued drift means it does not. This is the one cell
+that decides between the two readings above.
+
+~~**T13-a as first posed: is the correct reduction non-Markovian here?**~~ The measured force grows
 with the correlation window, which no Markovian drift correction reproduces. **How to
 kill:** measure the force as a function of window length out to several `1/lam_s` and
 check whether it SATURATES. If it saturates, a Markovian generalized force exists and

@@ -774,6 +774,45 @@ DELTA. The race is the first observable here whose absorbing set is defined on a
 different coordinate -- which is what it took, and the limitation was the instrument,
 not the chemistry.
 
+**T12-RULE -> §25.3: the arc's one usable rule, stress-tested and standing.**
+
+> **The required subspace is the one the observable is a functional of.**
+
+P(error), MFPT and Var(T) are first-passage functionals of `delta` and need
+`span(delta)`; the race's pool target is a functional of `n_B` and needs `span(s)`.
+This is the practical payoff -- applicable by inspection, without running a
+projection.
+
+Attacked where it should break: the pool is `b* = g/(1+g)`, ~9 molecules at g = 0.30
+but ~2 at g = 0.05, where its relative fluctuation is order one and it gates every
+recruitment propensity. Predicted in advance that Var(T), a delta-functional, would
+be forced to require `span(s)` there. **It is not.** `s-only`'s share of Var(T) is
+0.140 at g = 0.05 against 0.160 at g = 0.30 -- unchanged -- and `delta-only` recovers
+Var(T) at EVERY gamma from 0.05 to 0.45. The rule is not an artifact of the one gamma
+it was found at.
+
+**T12-RULE-a, open: does the rule survive an AMBIGUOUS observable?** Every observable
+tested is transparently a functional of one coordinate. The rule has never been tried
+where that attribution is unclear -- e.g. an absorbing set defined on a mixed
+coordinate like `n_X` alone (which is `(s + delta)/2`, a genuine mixture), or on a
+ratio. **How to kill:** race a target defined on `n_X` against one on `n_Y`; if the
+required subspace is the mixture's own span the rule generalises to "the subspace the
+functional depends on", and if instead it collapses to `span(delta)` or `span(s)` the
+rule is really about the network's eigendirections and not about the observable at
+all -- which would be a much weaker statement and would partly restore the slaving
+reading §24.1a defeated.
+
+**T12-SIGN, open and unpredicted: `s-only`'s error on Var(T) changes SIGN with gamma.**
+It under-predicts by ~7x at g <= 0.30 and over-predicts by 2.4x at g = 0.45 (up to
+4.1x), crossing between. The full-CLE control recovers in all cells at every gamma, so
+this is not the instrument. *Suspect:* near `gamma_c` the landscape flattens, so with
+delta deterministic the drift to threshold is weak and slow and pool fluctuations
+modulating a weak drift produce enormous timing variance -- i.e. removing the signal's
+noise INFLATES jitter near criticality rather than deflating it. **How to kill:**
+measure the mean advance rate and its variance versus gamma under `s-only`; if the
+inflation tracks the flattening drift it is this, otherwise something else changes
+sign between 0.30 and 0.45.
+
 ~~**T12 remaining as first posed: the two-target race.**~~ Absorb on `|n_X - n_Y| >= thr` OR
 `n_B <= m`, tuned to ~50/50; `cme.splitting_probability` already supports it.
 **Caveat the review did not raise:** under `delta-only` the pool has no noise of its

@@ -3727,6 +3727,58 @@ the race 9–13%. Those are the two numbers no construction forces.
 > and which supports the §25.1 worry that the limitation was in the **instrument**
 > rather than the chemistry.
 
+### 25.3 Stress-testing the only usable rule the arc produced
+
+Across §25–§25.2 one predictive summary fits every result:
+
+> **The required subspace is the one the observable is a functional of.**
+
+P(error), MFPT and Var(T) are first-passage functionals of δ and all three need
+`span(δ)`; the race's pool target is a functional of `n_B` and needs `span(s)`. If
+that holds it is the arc's practical payoff — a simulation designer could apply it by
+inspection, without running a projection at all. So it is worth attacking.
+
+**Where it should break.** Every recruitment propensity carries `n_B`
+multiplicatively, and the pool is `b* = γ/(1+γ)`: ~9 molecules at γ = 0.30 but **~2 at
+γ = 0.05**. At two molecules the pool's relative fluctuation is order one and it gates
+the rate of advance directly, so a δ-functional like Var(T) might be forced to require
+`span(s)` — making the required subspace a function of the *parameters*, not just the
+observable's definition. Predicted in advance; measured across γ:
+
+| γ | pool at Ω=40 | `δ-only` on Var(T) | `s-only` share |
+|---|---|---|---|
+| 0.05 | ~2 | **1.160, 3/3 recovers** | 0.140 |
+| 0.15 | ~5 | **1.168, 3/3 recovers** | 0.129 |
+| 0.30 | ~9 | **1.183, 8/8 recovers** | 0.160 |
+| 0.45 | ~12 | **1.063, 3/3 recovers** | 2.362 |
+
+> **P5 refuted, and the rule survives its sharpest available stress.** Shrinking the
+> pool to two molecules does *not* make its noise necessary for a δ-functional:
+> `s-only`'s share of Var(T) is 0.140 at γ = 0.05 against 0.160 at γ = 0.30 —
+> unchanged, and if anything slightly lower. **`δ-only` recovers Var(T) at every γ
+> from 0.05 to 0.45.** The rule is not an artifact of the one γ it was found at.
+
+**An unpredicted finding worth more than the confirmation: `s-only`'s error changes
+SIGN with γ.** It *under*-predicts Var(T) by ~7× at γ ≤ 0.30 and *over*-predicts by
+2.4× on average at γ = 0.45 (up to 4.1× at Ω = 40), crossing somewhere between. The
+full-CLE control recovers in all cells at every γ, so this is not the instrument
+failing.
+
+> *Suspect, stated as one (rule 17).* Near γ_c = 0.5 the landscape flattens, so with
+> δ deterministic the drift to the threshold becomes weak and slow, and pool
+> fluctuations modulating a weak drift produce enormous timing variance — whereas the
+> true process has δ's own noise, which lets it cross sooner and more consistently. On
+> that reading, removing the signal's noise *inflates* timing jitter near the critical
+> point rather than deflating it. **How to kill:** measure the mean advance rate and
+> its variance as a function of γ under `s-only`; if the inflation tracks the
+> flattening of the drift it is this, and if it does not, something else changes sign
+> between γ = 0.30 and 0.45.
+
+**Scope.** One network, one family of observables, four γ. The rule is stated as a
+finding rather than a summary because it was tested where it was predicted to fail and
+did not — but it has never been tried on a system where the "coordinate the observable
+is a functional of" is ambiguous, which is the obvious next attack.
+
 
 ## Open questions
 

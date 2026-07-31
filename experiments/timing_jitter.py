@@ -56,6 +56,31 @@ PREDICTIONS, written before running:
       observables tested so far are saddle-dominated -- which per the review does
       NOT establish "one stiff direction", but does mean I have been asking the same
       question three ways.
+  P5  ADDED AFTER §25.2, and it attacks the only USABLE rule this arc has produced.
+      Across §25, §25.1 and §25.2 one predictive summary fits every result: **the
+      required subspace is the one the observable is a functional of.** P(error),
+      MFPT and Var(T) are first-passage functionals of `delta` and all three need
+      `span(delta)`; the race's pool target is a functional of `n_B` and needs
+      `span(s)`. If that rule holds it is the practical payoff of the whole arc -- a
+      simulation designer could apply it by inspection, without running a single
+      projection.
+
+      **The rule has a plausible failure mode and gamma is where to look for it.**
+      Every recruitment propensity carries `n_B` multiplicatively, and the pool size
+      is `b* = g/(1+g)`: about 9 molecules at g = 0.30 but **only ~2 at g = 0.05**.
+      At two molecules the pool's relative fluctuation is order one and it gates the
+      rate of advance directly, so mechanism (b) should be at its strongest exactly
+      there. **Prediction: at g = 0.05, `s-only`'s share of Var(T) rises well above
+      the 16% measured at g = 0.30, and `delta-only` may stop recovering** -- which
+      would make the required subspace a function of the PARAMETERS as well as the
+      observable's definition, and the tidy rule false as stated.
+
+      If instead the shares are unchanged at g = 0.05, the rule has survived the
+      sharpest stress available in this system and can be stated as a finding rather
+      than a summary. The full-CLE arm is the validity gate: the continuum
+      approximation on a two-molecule pool is doubtful, and if `full` fails the cell
+      is outside the instrument (§24.3's criterion) and reports nothing.
+
   P4  THE CONFOUND, again rule 12 and inherited from §25. The unconditional variance
       mixes correct and error paths, and error paths are slower, so part of it is
       bimodality rather than jitter. `s-only` has no error paths at all. Both are

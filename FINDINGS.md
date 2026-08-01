@@ -4739,3 +4739,95 @@ term*, not the amount of noise removed. **This is the first mechanism in this ar
 survive a test aimed at it** — §30's two did not — and it survived because it was
 derived algebraically and checked in absolute terms first, then given a knob that turns
 it off and on at fixed barrier. Rule 16, one level up.
+
+### 32 Concatenation works and is a waste — `concatenation.py` — T16
+
+FINDINGS 1's wall says a single AM stage has a fidelity ceiling; the threshold theorem
+says concatenation beats the ceiling for a restoring code. Nothing here had ever
+concatenated. **The construction is a physical POOL MERGE** — k independent AM tanks of
+size Ω run to commitment, their contents are combined into one tank of size kΩ, and
+that tank runs AM itself. The merged margin is the sum of the k committed margins,
+positive iff a majority answered correctly, and the combining stage carries its own
+noise because it *is* an AM tank. **No `sign()`, no free comparison** — the numpy-majority
+version would insert a noiseless infinitely-reliable gate, which is the class of error
+that has cost this project three withdrawn results (rule 10).
+
+Everything is exact — no Monte Carlo anywhere:
+`p₁ = Σⱼ C(k,j)·p₀ʲ·(1−p₀)^(k−j)·p_merge(j)`, with every term an exact CME solve.
+γ = 0.25, k = 3, θ = 0.80.
+
+**P4 first, because it is the substantive check and it passes.** The merged stage is
+reliable, so the vote is real and the merged tank has no error floor of its own:
+
+| j wrong of 3 | merged start | p_merge | weight |
+|---|---|---|---|
+| 0 | [93, 3, 24] | **0** | 0.739 |
+| 1 | [63, 33, 24] | 0.0030 | 0.235 |
+| 2 | [33, 63, 24] | 0.9970 | 0.0249 |
+| 3 | [3, 93, 24] | 1.0000 | 0.00088 |
+
+**P1 confirmed and flagged as near-definitional**, exactly as §24.2 flagged its own:
+`p₁ ~ p₀^1.85`, R² = 0.9997 (attractor readout) and `p₀^1.78`, R² = 0.9999 (threshold).
+Given p_merge ≈ 0 for j ≤ 1 and ≈ 1 for j ≥ 2, `p₁ = 3p₀² − 2p₀³` follows identically,
+so the exponent near 2 is a check on the machinery rather than a finding.
+
+**P2 is the result: voting loses to pooling, and by a margin that grows exponentially.**
+The control is the same kΩ molecules in ONE tank at the same relative margin:
+
+| Ω | p₀ | p₁ (vote) | p_pool | p₁/p_pool |
+|---|---|---|---|---|
+| 20 | 1.674×10⁻¹ | 8.39×10⁻² | 9.29×10⁻² | **0.90** |
+| 32 | 1.360×10⁻¹ | 5.56×10⁻² | 3.91×10⁻² | 1.42 |
+| 44 | 1.370×10⁻¹ | 5.17×10⁻² | 1.74×10⁻² | 2.97 |
+| 62 | 6.045×10⁻² | 1.09×10⁻² | 4.84×10⁻³ | 2.25 |
+| 74 | 6.130×10⁻² | 1.10×10⁻² | 2.28×10⁻³ | **4.83** |
+
+Voting beats pooling in **1 of 10 cells** — Ω = 20, at a ratio of 0.90, essentially a
+tie at the smallest tank where the asymptotic argument is weakest. Everywhere else the
+same molecules do better undivided.
+
+> **P3, and this is why the section is more than a trend.** The reason is an exponent
+> count that can be predicted in absolute terms: `p₀ ~ exp(−Ωc)`, so voting gives
+> `3p₀² ~ exp(−2Ωc)` while pooling gives `exp(−3Ωc)`. **Voting squares the error;
+> pooling cubes the exponent.** Hence `ln(p₁/p_pool)` must be linear in Ω with slope
+> **c — the collapse rate this project already measured independently.**
+>
+> | readout | ε-controlled slope | R² | `−2·V_exact` | ratio |
+> |---|---|---|---|---|
+> | attractor | 0.023059 | 0.975 | −0.021134 | **1.091** |
+> | threshold | 0.020844 | 0.970 | −0.021134 | **0.986** |
+>
+> The prediction comes from §15's closed forms with no free parameter, computed for an
+> entirely different purpose (§28's collapse slope), and it lands within **1.4%** on one
+> readout convention and **9.1%** on the other. That is rule 16's absolute test, passed.
+
+> **The raw fits were R² = 0.65–0.67 and are reported beside the controlled ones.** p₀
+> is non-monotone in Ω (0.167, 0.152, 0.136, 0.155, …) because realised ε wobbles
+> 0.206–0.261 on the integer lattice — §27's effect exactly, which it measured as
+> bouncing raw local slopes by 40%. ε-controlled fitting lifts R² to 0.97. The
+> correction is the established one here, and the uncorrected number stays visible.
+
+> **P5 (rule 13): the two readout conventions give 0.0231 and 0.0208 — a 10% spread
+> that brackets the prediction of 0.0211.** So the answer does not depend on the
+> convention, and the residual uncertainty in the slope is comparable to the convention
+> dependence itself. Neither number is quoted alone.
+
+> **A lattice artifact worth recording:** at Ω = 40 the nominal ε = 0.25 and ε = 0.30
+> produce the *identical* start state (both d₀ = 8 after the parity fix), so the ε sweep
+> has 5 distinct points, not 6, and the P1 fit contains a duplicated point.
+
+**What §32 settles, and what it does not.** The ceiling survives concatenation. Voting
+does suppress error — the merged stage is reliable and the exponent is right — but it
+is strictly the worse use of the same molecules, by a factor growing as exp(Ωc). **The
+structural difference from quantum error correction is now nameable: in QEC the physical
+error rate is fixed and cannot be lowered by using more of the same qubit, so
+concatenation is the only lever there. Here error falls exponentially in Ω, so a bigger
+tank is a lever, and a better one. Chemistry does not need the code because it has a
+cheaper knob.**
+
+⚠ **Scope, stated rather than left implicit.** This is *one-shot* voting: each tank runs
+once to commitment. It is not the time-extended error correction QEC actually performs,
+where fresh ancillas repeatedly remove errors that accumulate during storage. §12.1's
+depth ceiling is about a bit *held over time*, and the analogue there would refresh
+periodically. **T16-a, open: does periodic re-merging beat the single-tank hold?** That
+is the comparison where QEC's advantage genuinely lives, and §32 does not touch it.

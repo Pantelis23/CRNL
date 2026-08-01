@@ -1746,3 +1746,46 @@ appears, this project has an independent classical instance of the deepest theor
 fault-tolerant computing, in a model where the thermodynamic cost of every stage is
 already measured (9.1's affinity floor, 20's fuel lifetime) -- which the quantum
 version does not have.
+
+**T16 -> §32: CLOSED. The ceiling survives concatenation, and the reason is an exponent
+count that passes an absolute test.** The pool-merge construction was used, so no free
+`sign()` does the voting: k tanks of size Omega commit, their contents are physically
+combined into one k*Omega tank, and that tank runs AM itself. Everything exact, no Monte
+Carlo. The merged stage is reliable -- p_merge = 0 / 0.0030 / 0.9970 / 1.0000 for j = 0,
+1, 2, 3 wrong -- so the vote genuinely works and has no floor of its own, and
+p_1 ~ p_0^1.85 follows near-definitionally from that.
+
+**But voting loses to POOLING the same molecules, in 9 of 10 cells, by a factor that
+grows exponentially.** The reason is countable in advance: p_0 ~ exp(-Omega*c) gives
+3*p_0^2 ~ exp(-2*Omega*c) for the vote against exp(-3*Omega*c) for one k*Omega tank --
+**voting squares the error, pooling cubes the exponent** -- so ln(p_1/p_pool) must be
+linear in Omega with slope c, the collapse rate measured independently in §27/§28. The
+eps-controlled slope is 0.0231 (attractor readout) and 0.0208 (threshold), against
+-2*V_exact = 0.0211 from §15's closed forms with no free parameter: **within 1.4% and
+9.1%**, and the two conventions bracket the prediction. Rule 16's absolute test, passed
+on a quantity that has nothing obviously to do with the closed form it was predicted
+from.
+
+**The structural difference from quantum error correction is now nameable, and it is not
+that one restores and the other does not.** In QEC the physical error rate is FIXED --
+there is no operation that lowers it by using more of the same qubit -- so concatenation
+is the only lever. Here error falls exponentially in Omega, so a bigger tank is a lever
+and a better one. **Chemistry does not need the code because it has a cheaper knob.**
+That answers the question T16 was opened to ask, and it answers it against the QEC
+analogy rather than for it.
+
+**T16-a, open: does PERIODIC RE-MERGING beat the single-tank hold?** §32 is one-shot
+voting -- each tank runs once to commitment -- and that is not what QEC does. Real fault
+tolerance is time-extended: fresh ancillas repeatedly remove errors that accumulate
+during storage, and the threshold theorem is a statement about that repetition, not
+about a single vote. **§12.1's depth ceiling is the right target**, since it concerns a
+bit HELD over time, and the fair comparison is a k*Omega tank holding a bit against
+periodic re-merging of k smaller tanks at interval tau. **How to kill:** measure the bit
+lifetime under both at matched molecule count and matched total dissipation, sweeping
+tau. If re-merging wins at some tau, the exponent count in §32 is a one-shot artifact
+and concatenation does buy something over time. If the single tank still wins at every
+tau, the conclusion generalises and the cheaper-knob statement is about restoration in
+this family rather than about one protocol. **The dissipation match is what makes it
+honest** -- re-merging burns drive every cycle, and §9.1's affinity floor plus §20's
+fuel lifetime already price that, so this is a comparison the project can make and the
+quantum version cannot.

@@ -1789,3 +1789,53 @@ this family rather than about one protocol. **The dissipation match is what make
 honest** -- re-merging burns drive every cycle, and §9.1's affinity floor plus §20's
 fuel lifetime already price that, so this is a comparison the project can make and the
 quantum version cannot.
+
+**T16-a -> §33: CLOSED, and it CORRECTS §32.** Re-merging beats the single-tank hold on
+lifetime in 10 of 13 cells -- 5.0x longer at (k=3, Omega=8) while burning 29% LESS, and
+3.7x longer at (k=5, Omega=14). §32's one-shot conclusion did not generalise to the
+time-extended protocol, which is exactly what §32's own scope note flagged as untested.
+**§32's closing sentence, "chemistry does not need the code because it has a cheaper
+knob", was too strong; it is left standing in FINDINGS with the correction beside it.**
+
+**The model was validated before any lifetime was quoted.** The two-state renewal
+reduction is legal only if first passage is near-exponential, and `first_passage_moments`
+settles it exactly: std/mean = 0.9890 -> 1.0000 as the barrier deepens, which is Kramers.
+L_remerge ~ 1/tau holds to 0.6% at small tau. **P1 FAILED** -- ep_rate/N is not
+size-independent (10.8% over 4x in N) -- so dissipation was accounted explicitly rather
+than assumed, and the burn-rate ratio spans only 0.71-1.10 against lifetime ratios of 5x
+to 20x. Dissipation cannot explain a difference an order of magnitude larger than itself.
+
+**THE WIN IS CONDITIONAL ON CYCLE SPEED and that is the dominant sensitivity.** Since
+L_remerge ~ 1/tau exactly, the winning region tracks it: at tau = t_relax re-merge wins
+up to Omega = 18 (k=3), at 5 t_relax only to Omega = 8, and at tau >= 10 t_relax it
+never wins at any Omega tested. Quoting the win without the cycle time is quoting half
+the result.
+
+**P5 as it came out.** Predicted slope ratio k - ceil((k+1)/2) = 1 and 2; measured 1.0755
+(MATCH) and 2.3139 (**MISMATCH**, twice the tolerance fixed in advance). Both run high
+and in proportion, consistent with the Kramers power-law prefactor the pure-exponential
+ansatz omits. Comparing the two measured slopes to each other cancels that shared bias:
+2.1514 against a predicted 2.0000, 7.6%. So the integer structure across k is real and
+the absolute values are not clean enough to claim it exactly. Recorded as failed-as-
+stated with the diagnosis, not restated to fit.
+
+**THE CONTRAST WITH QEC IS SHARPER THAN §32 HAD IT, and this is the durable statement.**
+In QEC, below threshold, concatenation's advantage GROWS WITHOUT BOUND with level,
+because the physical error rate is fixed. Here re-merging's advantage occupies a BOUNDED
+WINDOW and then REVERSES, because the physical error rate itself falls exponentially in
+Omega -- growing the tank eventually outruns the code. **Chemistry has a knob QEC lacks,
+and the code wins only until that knob is turned far enough.** That is a statement about
+why the digital abstraction looks different in the two substrates, and it came out of a
+runnable experiment rather than an analogy.
+
+**T16-b, open: where does the crossover sit in the (Omega, tau, k) volume, and is there a
+closed form for it?** §33 has the crossover at Omega ~ 18 for k=3 at tau = t_relax and
+~14 for k=5, but only over the range the exact MFPT solve reaches -- N <= 72 before
+`first_passage_moments` stops being trustworthy, which is why k=7 could not be fitted at
+all. The exponent count predicts the crossover satisfies (k - m)*c*Omega = ln(T(Omega)^?
+/ tau) + const, so it should be extractable in closed form from c and t_relax alone.
+**How to kill:** derive the crossover from the exponent count, then test it in ABSOLUTE
+terms against measured crossovers at a gamma NOT used to fit it (rule 16 -- and §30.1 is
+the standing reminder that a formula matching one sweep proves nothing). The MFPT ceiling
+is the binding constraint, so §26's MLRift sampler is the likely instrument for the
+larger tanks, where an exact solve is unavailable but the lifetime is still measurable.

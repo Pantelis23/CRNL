@@ -4825,9 +4825,101 @@ concatenation is the only lever there. Here error falls exponentially in Ω, so 
 tank is a lever, and a better one. Chemistry does not need the code because it has a
 cheaper knob.**
 
+> ⚠ **That last sentence was too strong, and §33 corrects it. It is left standing as
+> written.** Time-extended re-merging *does* beat the single-tank hold — by up to 5×,
+> while burning 29% less — below a crossover in Ω and when cycling is fast. So "does not
+> need the code" holds only *above* that crossover. What survives untouched is the
+> exponent count and the asymptotic conclusion. The scope note immediately below named
+> this as untested, and naming it is what made the correction cheap.
+
 ⚠ **Scope, stated rather than left implicit.** This is *one-shot* voting: each tank runs
 once to commitment. It is not the time-extended error correction QEC actually performs,
 where fresh ancillas repeatedly remove errors that accumulate during storage. §12.1's
 depth ceiling is about a bit *held over time*, and the analogue there would refresh
 periodically. **T16-a, open: does periodic re-merging beat the single-tank hold?** That
 is the comparison where QEC's advantage genuinely lives, and §32 does not touch it.
+
+### 33 Re-merging wins, but only in a bounded window — `remerge_hold.py` — T16-a
+
+§32 compared one-shot voting against pooling and concluded the ceiling survives. But
+QEC is *time-extended* — the threshold theorem is about repetition, not a single vote —
+so T16-a asks the version §32 could not. **HOLD**: one tank of N = kΩ sits committed
+until it spontaneously crosses. **RE-MERGE**: k tanks of Ω, combined into one kΩ tank
+every τ and immediately re-split into k portions (mixing and aliquoting, both physical);
+a flipped minority is outvoted and the split hands every portion back the corrected
+state. Exact MFPTs throughout, γ = 0.30, θ = 0.80.
+
+**P2, the renewal model's own kill test, passes.** The two-state reduction is only legal
+if first passage is near-exponential, and `first_passage_moments` settles it exactly —
+for an exponential law std = mean:
+
+| N | 12 | 20 | 32 | 48 | 60 | 72 |
+|---|---|---|---|---|---|---|
+| std/mean | 0.9890 | 0.9891 | 0.9960 | 0.9994 | 0.9998 | 1.0000 |
+
+It is near-exponential everywhere and becomes *more* so as the barrier deepens, which
+is Kramers' prediction. **P3 also passes**: L_remerge ∝ 1/τ to 0.6% at small τ (×1.987
+against ×2, ×4.867 against ×5), deviating only at large τ where q is no longer small.
+
+> ⚠ **P6 FIRES, and it partly reverses §32.** Re-merge beats hold on lifetime in **10 of
+> 13 cells**. At (k = 3, Ω = 8) it lives **5.0× longer while burning 29% slower**; at
+> (k = 5, Ω = 14) it lives **3.7× longer**. §32's one-shot result did not generalise to
+> the time-extended protocol, which is exactly what §32's own scope note flagged as
+> untested.
+
+| k | Ω | N | L_hold | L_remerge | hold/remerge | burn-rate ratio |
+|---|---|---|---|---|---|---|
+| 3 | 8 | 24 | 2.20×10³ | 1.10×10⁴ | **0.200** | 0.706 |
+| 3 | 14 | 42 | 2.03×10⁴ | 4.21×10⁴ | **0.482** | 1.024 |
+| 3 | 18 | 54 | 9.02×10⁴ | 1.11×10⁵ | **0.809** | 1.087 |
+| 3 | 20 | 60 | 1.91×10⁵ | 1.81×10⁵ | 1.051 | 1.098 |
+| 3 | 24 | 72 | 8.54×10⁵ | 4.87×10⁵ | 1.752 | 1.101 |
+| 5 | 8 | 40 | 1.58×10⁴ | 3.30×10⁵ | **0.048** | 0.745 |
+| 5 | 14 | 70 | 6.65×10⁵ | 2.47×10⁶ | **0.269** | 1.062 |
+
+> **Dissipation is not what drives this, and that is measurable rather than assumed.**
+> **P1 FAILED** — `ep_rate/N` is *not* size-independent, running 0.02819 → 0.02534 over
+> a 4× range in N (10.8%). So dissipation is accounted explicitly instead of waved
+> through. The burn-rate ratio spans **0.71–1.10** across every cell, i.e. within ±30%,
+> against lifetime ratios of 5× to 20×. **Dissipation cannot explain a difference an
+> order of magnitude larger than itself**, and in the cells where re-merge wins biggest
+> it is also the *cheaper* protocol.
+
+> ⚠ **THE RESULT IS CONDITIONAL ON CYCLE SPEED, and this is the dominant sensitivity,
+> not a footnote.** Because L_remerge ∝ 1/τ exactly (P3), the winning region depends
+> entirely on how fast the merge can be repeated. Largest Ω at which re-merge still
+> wins:
+>
+> | τ / t_relax | 0.5 | 1 | 2 | 5 | 10 | 30 |
+> |---|---|---|---|---|---|---|
+> | k = 3 | 24 | 18 | 14 | 8 | **never** | **never** |
+> | k = 5 | 14 | 14 | 12 | never | **never** | **never** |
+>
+> Re-merge's advantage exists only if the tanks can be cycled within a few relaxation
+> times. At τ ≥ 10·t_relax it never wins at any Ω tested. Quoting the win without the
+> cycle time would be quoting half the result.
+
+> **P5, the integer test, as it came out.** Predicted slope ratio k − ⌈(k+1)/2⌉ = 1 at
+> k = 3 and 2 at k = 5. Measured **1.0755** (MATCH under the ±0.15 tolerance fixed in
+> advance) and **2.3139** (**MISMATCH** — 0.314 over, twice the tolerance). Both run
+> high, and *in proportion* — consistent with the Kramers power-law prefactor that the
+> pure-exponential ansatz omits and that a straight-line fit to ln T(N) partly absorbs.
+> **Comparing the two measured slopes to each other cancels that shared bias:
+> 0.285896/0.132891 = 2.1514 against a predicted 2.0000, agreeing to 7.6%.** So the
+> integer structure across k is real; the absolute values are not clean enough to claim
+> it exactly, and P5 is recorded as failed-as-stated with that diagnosis rather than
+> restated to fit.
+
+**What §33 settles, and the correction it forces on §32.** §32 closed with "chemistry
+does not need the code because it has a cheaper knob." **That was too strong and is
+corrected here:** below a crossover in Ω, and only when cycling is fast, the code *does*
+help — substantially. What survives is the asymptotic statement, and it survives with
+its exponent count intact: hold/remerge grows as exp((k−m)·c·Ω), so hold wins for large
+enough Ω at any fixed τ.
+
+**The sharp contrast with QEC is therefore not "concatenation fails here" but something
+better.** In QEC, below threshold, concatenation's advantage **grows without bound with
+level**, because the physical error rate is fixed. Here re-merging's advantage occupies
+a **bounded window** and then *reverses*, because the physical error rate itself falls
+exponentially with Ω — growing the tank eventually outruns the code. **Chemistry has a
+knob QEC lacks, and the code wins only until that knob is turned far enough.**

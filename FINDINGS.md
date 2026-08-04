@@ -5558,3 +5558,57 @@ second term would absorb. **How to kill:** fit `Σ = G·Ω·ln(gain) + A·Ω + B
 and check whether G stabilises and the intercept turns physical. §35.3 is the standing
 warning: if the added terms are collinear over the available range, G will swing without
 converging and the decomposition will be ill-posed rather than merely incomplete.
+
+### 39 The cost has a closed form good to ~6%, and the optimum is predictable — T-COST-b
+
+§38 left a 7–27% preparation-dependence with unphysical negative intercepts, and proposed
+a four-term fit. **Physics forbids it:** as ε → θ the start *is* the threshold, absorption
+is immediate and Σ → 0, so the constant and bare-Ω terms cannot exist. That also exposes
+`ln(θ/ε)` as an approximation — it is the traversal time only under pure exponential
+growth `δ̇ = λδ`, while the real drift saturates near the attractor. The unfitted
+prediction is the ep rate integrated along the actual path:
+
+> **Σ_pred = Ω · ∫ σ(δ)/μ(δ) dδ**, σ = Σ_r f_r ln(f_r/f_rev), both from the network's own
+> fluxes on the slaved manifold. **No fitted parameter of any kind.**
+
+**P1 FAILS, marginally.** Over 36 cells, pred/exact = 0.9050–1.1674, mean **1.0583**,
+sd 0.070 — against the 5% gate fixed in advance. **P2 FAILS**: the ε-spread is 7.4–10.0%,
+no better than §38's, so the traversal integral did *not* capture what `ln(θ/ε)` missed.
+
+> ⚠ **P3 fires, and it is the interesting failure.** The residual does **not** shrink
+> with Ω — mean |ratio−1| = 0.0784 / 0.0773 / 0.0771 at Ω = 150 / 300 / 450, flat over a
+> 3× range. So it is **not** a finite-size effect. And it is not an error in σ either: a
+> gate run afterwards against the CME's own `σ_local` shows my concentration-flux σ high
+> by 8.0% at Ω = 150 falling to **1.1% at Ω = 1200** — that error converges properly,
+> which the total residual does not. **There is a ~6% gap between the deterministic path
+> cost and the exact stochastic cost that survives Ω → ∞, and I do not have it.**
+
+> ⚠ **The gate against `σ_local` should have been run BEFORE the comparison, not after.**
+> §36 was found by exactly such a gate failing, and the lesson written there —
+> *gate every new instrument against the established one at a cell where they must
+> agree* — was available and not applied here. It happened to exonerate σ; it might not
+> have.
+
+**P4 HOLDS, and it is what survives.** Minimising the closed-form integral over γ, with
+**no CME solve at all**, puts the optimum at **γ = 0.240**, against §38's CME-measured
+**γ* ≈ 0.20**. Two computationally independent routes — a deterministic path integral and
+an exact master-equation solve with an entropy source — agree on the location of the
+optimal drive.
+
+| γ | 0.040 | 0.120 | 0.200 | 0.280 | 0.360 | 0.440 |
+|---|---|---|---|---|---|---|
+| ∫σ/μ (k_B/molecule) | 2.843 | 1.924 | 1.633 | 1.628 | 2.020 | 3.999 |
+
+**What §39 establishes.** The thermodynamic cost of a restoring stage is predictable in
+closed form to ~6% with no fitting, and **the optimal drive is predictable analytically**
+— confirming §38's γ* ≈ 0.20 from an independent direction. What it does not establish is
+an exact cost: the ~6% residual is flat in Ω, not attributable to σ, and unexplained.
+
+**T-COST-c, open: what is the flat ~6%?** It is not finite-size and not σ. Remaining
+candidates, none tested and none preferred (rule 17): (i) the mean first-passage time
+differs systematically from the deterministic traversal even as Ω → ∞, because absorption
+selects early-fluctuating trajectories; (ii) the exact path drifts off the slaved manifold
+under noise, so ∫ along the manifold is the wrong contour; (iii) E[σ(state)] ≠ σ(E[state])
+by a Jensen gap that does not close. **How to kill (i):** compare the exact MFPT to the
+threshold against `∫dδ/μ` directly — that isolates the time from the entropy, and it is
+one linear solve.

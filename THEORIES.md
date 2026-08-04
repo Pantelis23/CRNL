@@ -2122,3 +2122,36 @@ Sigma = G*Omega*ln(gain) + A*Omega + B*ln(gain) + C and check whether G stabilis
 intercept turns physical. **§35.3 is the standing warning** -- if the extra terms are
 collinear over the available range, G will swing without converging and the decomposition
 will be ill-posed rather than incomplete, exactly as the prefactor exponent was.
+
+
+**T-COST-b -> §39: the cost has a CLOSED FORM good to ~6%, and the OPTIMUM is predictable
+analytically.** Physics forbade §38's proposed four-term fit -- Sigma -> 0 as eps -> theta
+kills the constant and bare-Omega terms -- and exposed ln(theta/eps) as the pure-
+exponential approximation to the traversal. The unfitted prediction is
+Sigma_pred = Omega * int sigma(d)/mu(d) dd from the network's own fluxes.
+
+**P1 and P2 both FAIL**: pred/exact = 0.9050..1.1674, mean 1.0583 against a 5% gate, and
+the eps-spread is 7.4-10.0%, no better than §38's. **P3 fires and is the interesting
+part: the residual is FLAT in Omega** (0.0784/0.0773/0.0771 over a 3x range), so it is not
+finite-size -- and a gate against the CME's own sigma_local shows my sigma's error DOES
+converge (8.0% at Omega=150 -> 1.1% at 1200), so it is not sigma either. **A ~6% gap
+between the deterministic path cost and the exact stochastic cost survives Omega -> infinity
+and is unexplained.**
+
+**Process failure worth recording: that gate was run AFTER the comparison, not before.**
+§36 was found by exactly such a gate failing, and its stated lesson -- gate every new
+instrument against the established one where they must agree -- was available and not
+applied. It happened to exonerate sigma; it might not have.
+
+**P4 HOLDS and is what survives.** Minimising the closed form over gamma with NO CME solve
+puts the optimum at gamma = 0.240 against §38's measured gamma* ~ 0.20. Two computationally
+independent routes agree on the optimal drive, which upgrades §38's design principle from a
+measurement to a prediction.
+
+**T-COST-c, open: what is the flat ~6%?** Not finite-size, not sigma. Untested candidates,
+none preferred (rule 17): (i) the MFPT differs systematically from the deterministic
+traversal because absorption selects early-fluctuating trajectories; (ii) the exact path
+leaves the slaved manifold under noise, making the manifold the wrong contour;
+(iii) a Jensen gap E[sigma(state)] != sigma(E[state]) that does not close. **How to kill
+(i):** compare the exact MFPT to threshold against int d(delta)/mu directly -- one linear
+solve, and it separates the time from the entropy.

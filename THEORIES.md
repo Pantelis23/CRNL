@@ -1947,7 +1947,26 @@ longer does: the excess does not cross zero because it was never as small as the
 window made it look.** gamma = 0.35 is UNRESOLVED by the 3% ansatz-spread criterion
 fixed in advance (4.99%, the shortest lever at 8.79 decades) and is reported so.
 
-**T14-d, open: is the prefactor exponent -1/2, and why is it gamma-dependent?**
+**T14-d -> §35.2: NOT CLOSED. Both dependencies survive, and that is the answer for
+now.** Matched-decade sweeps do not collapse the gamma-spread (at the one genuinely
+matched target, 21 decades with a 7.5% span, b still runs -0.4519/-0.4352/-0.4172
+monotone in gamma), AND b moves 6.9-12.0% with window length at fixed gamma. Neither is
+eliminated. **P4 failed informatively:** adding a `d/Omega` term was meant to stabilise b
+if the ansatz were merely incomplete, and instead scattered it from +0.0624 to -0.7362,
+because 1/Omega and ln Omega are collinear over these windows. By P4's own terms that
+makes the missing-term reading unsafe too. My own decade-matching tolerance (0.35 x
+target) was too loose and left three of four targets uninterpretable -- disclosed rather
+than dropped. **Present statement: b ~ -0.45 +- 0.05, consistent with WKB's -1/2, with
+neither dependence eliminated.**
+
+**THE POINT OF RUNNING IT, AND IT SUCCEEDED: §35 does not depend on b.** The rate c is
+stable to **0.12-0.19%** across every window and ansatz while b moves up to 12%, so
+§35's closed-form disagreement moves only in the fourth decimal (1.1540-1.1561 against
+the quoted 1.1553 at gamma = 0.20). **§35's 7.5-15.5% asymptotic disagreement and the
+withdrawal of §28.3's zero crossing stand independently of the prefactor being
+unresolved** -- rule 14, a withdrawal verified as carefully as an assertion.
+
+**Superseded, kept for the record:** **T14-d, open: is the prefactor exponent -1/2, and why is it gamma-dependent?**
 Measured -0.4484 / -0.4394 / -0.4089 / -0.3964 at gamma = 0.20/0.25/0.30/0.35, i.e.
 drifting with gamma AND with lever-arm length, which are confounded here because deeper
 gamma gives more decades at the same Omega cap. **How to kill:** break that confound the

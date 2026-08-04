@@ -5151,3 +5151,74 @@ regime is now directly and exactly computable, limited only by the Ω²/2 state 
 double-precision underflow near 1e-308. And the first thing the unlock showed is that a
 published headline was an artifact of the window it was measured in. Both halves of that
 are the point.
+
+### 35.2 The prefactor exponent is UNRESOLVED — and the rate does not care — `prefactor_exponent.py` — T14-d
+
+§35 measured b = −0.4484 / −0.4394 / −0.4089 / −0.3964 at γ = 0.20…0.35 and flagged
+that b's γ-dependence and its lever-arm dependence were confounded. **The confound was
+tighter than "two things move together":** §35 used the same Ω grid at every γ, so
+`decades = |slope|·ΔΩ/ln10` is a deterministic function of γ. They are one variable
+with two names, and no fit to that data could separate them. Breaking it needs a
+*different* Ω window per γ, sized to match decade counts — §30.2's method used in
+advance rather than in hindsight.
+
+**Sweep A — decades held fixed, γ varies.** Only one target achieved genuine matching:
+
+| target | achieved decade span | spread in b |
+|---|---|---|
+| 9 | **38.6%** | 13.03% |
+| 14 | **25.7%** | 5.20% |
+| **21** | **7.5%** | **7.99%** |
+| 29 | **36.9%** | 7.46% |
+
+> ⚠ **My own matching tolerance was too loose and three of four targets are not
+> interpretable.** `sub_window` takes the longest prefix under the target and the Ω grid
+> has 14 points, so achieved decades jump coarsely; the 0.35×target tolerance then let
+> a 19.55-decade cell count as "29 decades". Only the 21-decade target (7.5% span) is a
+> real matched comparison. There b runs **−0.4519 / −0.4352 / −0.4172** — still
+> monotone in γ, on three points.
+
+**Sweep B — γ held fixed, decades vary.** b moves **10.76% / 6.88% / 11.95%** across
+window length at γ = 0.20 / 0.25 / 0.30, lengthening toward more negative values.
+
+> **So BOTH dependencies survive and P1 is not confirmed.** b tracks γ at (the one)
+> matched decade count, and b tracks window at fixed γ. Neither is eliminated, so
+> T14-d's question — is the γ-dependence physics or lever arm? — **is not answered.**
+
+> ⚠ **P4 failed, and informatively.** Adding a `d/Ω` term was supposed to make b *more*
+> window-independent if the three-term ansatz was simply incomplete. It does the
+> opposite: b₄ ranges from **+0.0624 to −0.7362** across windows where b₃ spans only
+> −0.37 to −0.45. `1/Ω` and `ln Ω` are strongly collinear over these ranges, so the
+> four-term fit is ill-conditioned and the missing-term reading is **not** confirmed.
+> By P4's own stated terms, that also means P1's interpretation is not safe.
+
+**P3, reported for completeness and not leaned on:** extrapolating b against 1/decades
+gives limits −0.5049 / −0.4654 / −0.4525 (R² = 0.558 / 0.928 / 0.921), mean **−0.4743**,
+i.e. 94.9% of WKB's −1/2. Consistent with −1/2; not a demonstration of it, and the
+γ = 0.20 fit rests on three points with R² = 0.56.
+
+#### The result that matters: §35's conclusion does not depend on b
+
+The reason to run this was not curiosity about the prefactor — it was whether §35's
+headline survives b being unknown. It does, decisively:
+
+| γ | windows | c spread | b spread | §35's `pred/c` | range over all windows |
+|---|---|---|---|---|---|
+| 0.20 | 6 | **0.19%** | 10.76% | 1.1553 | 1.1540 – 1.1561 |
+| 0.25 | 8 | **0.17%** | 6.88% | 1.1331 | 1.1300 – 1.1320 |
+| 0.30 | 8 | **0.17%** | 11.95% | 1.1053 | 1.1034 – 1.1053 |
+| 0.35 | 2 | **0.12%** | 1.69% | 1.0747 | 1.0744 – 1.0757 |
+
+**The rate `c` is stable to 0.12–0.19% across every window and every ansatz, while the
+exponent it shares a fit with moves by up to 12%.** Propagated into §35's headline, the
+closed-form disagreement moves in the fourth decimal. **§35's 7.5–15.5% asymptotic
+disagreement, and the withdrawal of §28.3's zero crossing, stand independently of the
+prefactor being unresolved.** That is the check rule 14 asks for — a withdrawal verified
+as carefully as an assertion.
+
+**T14-d stays open, with what it would take.** Matching decades to a few percent needs a
+finer Ω grid than 14 points, and separating a γ-effect from a lever-arm effect needs
+longer arms at *matched* arm length — which at fixed cost means larger Ω, where the
+Ω²/2 state space bites (Ω = 2000 already costs ~500 s per γ for 14 points). The honest
+present statement is **b ≈ −0.45 ± 0.05, consistent with −1/2, with neither dependence
+eliminated.**

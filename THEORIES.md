@@ -2011,3 +2011,47 @@ opposite way (fixed gamma, varying window length). If the exponent tracks gamma 
 lever arm it is physics; if it tracks lever arm at fixed gamma it is the fit absorbing
 higher-order curvature and -1/2 stands. **Do not propose a mechanism before that
 sweep** -- §30.1 died for exactly this.
+
+**§36: THE 7.5-15.5% DISCREPANCY WAS AN INITIAL CONDITION. Fourteen sections
+misattributed it.** `V = int mu/D` integrates along the SLAVED MANIFOLD -- it describes
+delta evolving with the pool on its own nullcline. Every exact run since §12 has been
+started by `_setup`, which puts the pool at the ATTRACTOR's `gamma/(1+gamma)`. At
+gamma = 0.25 those differ by 36.6%; at gamma = 0.20 by 46.3%.
+
+Same network, same gamma, eps, threshold, Omega grid, solver and parameter-free
+prediction -- only the pool's start moves:
+
+    OFF the manifold (what §22-§35 compared): pred/meas = 1.0805..1.1678, mean 1.1201
+    ON  the manifold (like-for-like)        : pred/meas = 0.9822..1.0047, mean 0.9942
+
+a factor of **14.8**. And the mechanism is quantitative: the pool gap orders exactly
+with the excess across gamma (46.3% -> 16.8%, 20.0% -> 8.1%). **That is the
+gamma-dependence** §28.3 could only fit with a straight line and §35 re-measured
+asymptotically without explaining -- it was never a property of the closed form.
+
+**The honest framing is neither "§15 was wrong" nor "§15 was right".** Both starts are
+legitimate preparations; `_setup`'s is a modelling convention, not a law. The error was
+comparing a prediction about ONE against a measurement of the OTHER, for fourteen
+sections, while attributing the gap to successively more refined approximations -- the
+1-D reduction (§28.3), the finite-Omega window (§35), the Gaussian truncation (§35.4).
+
+**Every number in §22.4, §28-§28.3 and §35 stands. What they were measurements OF
+changes.** Untouched: §35's instrument unlock (which is how this was found), §35.1's
+drift, §35.3's ill-posedness proof, §35.4's elimination of the Gaussian truncation, and
+the §29-§31 identity arc.
+
+**How it was found, because the route is the lesson.** Not by looking for it. The
+`slaving_axis` experiment was built to test §28.3's attribution on a separation axis
+independent of gamma, and its **P0 gate FAILED** -- T = 1 disagreed with §35's published
+number. The gate existed to catch a broken instrument; it caught a fourteen-section
+misattribution instead. The sweep it was gating had R^2 = 0.29 and would have been the
+weakest result of the session. **Gate every new instrument against the established one
+at a cell where they must agree** -- that is the entire content of this finding.
+
+**T14-f, open: is the remaining 0.5-1.8% the 2-D minimum-action correction?** Right size,
+only candidate left -- but its sign FLIPS across gamma (0.9822, 0.9907, 0.9993, 1.0047)
+where a path-minimisation correction must be one-signed, since a minimum over paths
+cannot exceed the value along the slaved one. **How to kill:** compute the 2-D geometric
+minimum action with the full WKB Hamiltonian and test it absolutely against the
+on-manifold rates. One-signed and ~1% closes it; a residual that keeps flipping sign is
+numerical, and the closed form is exact to the precision of this test.

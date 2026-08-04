@@ -4435,6 +4435,11 @@ the "saturation" alternative is also dead — but not as `sep⁻²`:
 > zero at γ ≈ 0.357 — but that is six points and a two-parameter fit, and is offered
 > as a description rather than a law.
 
+> ⚠ **§36 supersedes the attribution below.** The residual is neither `κδ*²` nor the
+> *inaccuracy* of the slaved reduction — it is that the exact runs were started off the
+> slaved manifold entirely. The ε-independence measured here is consistent with that
+> (the effect is a manifold property), but the mechanism named below is wrong.
+
 > **What stands: the attribution, not the formula.** The residual is ε-independent to
 > 3% and γ-dependent by 16 points, which is exactly the signature of the slaved
 > reduction and not of `κδ*²`. §15's closed form survives the absolute test, and at
@@ -5123,6 +5128,14 @@ so the rate is robust to the prefactor's exact form.
 
 #### 35.2 The closed form's disagreement is larger than §28 measured, and much flatter in γ
 
+> ⚠ **§36 REINTERPRETS EVERYTHING BELOW.** The 7.5–15.5% is not a property of §15's
+> closed form. `V = ∫μ/D` integrates along the slaved manifold, while every exact run
+> here starts with the pool at the attractor's `γ/(1+γ)` — off the manifold by 20–46%.
+> Started on the manifold, the same parameter-free prediction agrees to **0.5–1.8%**
+> (mean 0.9942) at the same γ, ε, threshold and Ω grid. **The rates below are correct
+> measurements; they measure the cost of an off-manifold initial condition, not an
+> approximation error.**
+
 **P3 confirmed, in the uncomfortable direction predicted before the run.**
 
 | γ | §28.3 ratio (P = 10⁻²→10⁻⁶) | asymptotic ratio | §28.3 excess | asymptotic excess | factor |
@@ -5308,3 +5321,76 @@ widths at the dominant endpoints partially cancel, which is why the exponent nee
 That is the right target: predict the curve, not the coefficients. Measuring b would
 need 1/Ω decorrelated across ~100×, i.e. Ω ≈ 15,000 and ~10⁸ states — out of reach for
 the exact solver, and not worth reaching for when the analysis is available.
+
+### 36 The 7.5–15.5% discrepancy was an initial condition, not an approximation error
+
+§22.4, §28, §28.1, §28.2, §28.3 and §35 all measured §15's parameter-free closed form
+running too steep against the exact collapse — 4.1% at best, 7.5–15.5% asymptotically —
+and every attempt to explain it named an approximation: the 1-D slaved reduction
+(§28.3), the finite-Ω window (§35), the Gaussian truncation (§35.4, eliminated at
+<0.62%). **None of them was the cause. The prediction and the measurement were about
+different initial conditions.**
+
+`V = ∫μ/D` integrates along the **slaved manifold** — it describes δ evolving with the
+pool on its own nullcline. Every exact run since §12 has been started by `_setup`, which
+places the pool at the **attractor's** value `b = γ/(1+γ)`. Those are not the same point:
+
+| γ | pool at attractor | pool on nullcline at x₀ | gap | c (start OFF manifold) | c (start ON manifold) | pred/meas OFF | pred/meas ON |
+|---|---|---|---|---|---|---|---|
+| 0.20 | 0.16667 | 0.31045 | **46.3%** | −0.048838 | −0.057072 | 1.1678 | **0.9993** |
+| 0.25 | 0.20000 | 0.31560 | **36.6%** | −0.035191 | −0.040347 | 1.1358 | **0.9907** |
+| 0.30 | 0.23077 | 0.32004 | **27.9%** | −0.023880 | −0.026651 | 1.0962 | **0.9822** |
+| 0.35 | 0.25926 | 0.32392 | **20.0%** | −0.014128 | −0.015194 | 1.0805 | **1.0047** |
+
+**Same network, same γ, same ε, same threshold, same Ω grid, same exact solver, same
+parameter-free prediction. The only change is where the pool starts.** Off the manifold:
+pred/meas = 1.0805–1.1678, mean 1.1201. On it: **0.9822–1.0047, mean 0.9942.** The
+discrepancy shrinks by a factor of **14.8**.
+
+> **And the mechanism is quantitative, not just directional.** The pool gap orders
+> exactly with the excess across γ — 46.3% → 16.8%, 36.6% → 13.6%, 27.9% → 9.6%,
+> 20.0% → 8.1%. **That is the γ-dependence** which §28.3 could only describe with a
+> straight line (`excess = 0.2240 − 0.6276γ`) and which §35 re-measured asymptotically
+> without explaining. It was never a property of the closed form; it is the
+> γ-dependence of how far `γ/(1+γ)` sits from the nullcline.
+
+**The honest framing is not "§15 was wrong" and not "§15 was right".** Both starts are
+legitimate physical preparations — `_setup`'s choice is a modelling convention, not a
+law — and they pose different questions. The error was **comparing a prediction about
+one against a measurement of the other**, for fourteen sections, while attributing the
+gap to successively more refined approximations.
+
+> **What this reinterprets.** §22.4's "κδ² is stiffer than the exact barrier", §28's
+> 4.1%/24–36%, §28.1's ±15% scatter, §28.2's `sep⁻²·⁰³`, §28.3's zero crossing, and
+> §35's 7.5–15.5% asymptotic disagreement are all measurements of **the cost of starting
+> off the slow manifold**, reported as properties of the closed form. **Every number in
+> those sections stands; what they were measurements *of* changes.**
+
+> **What is untouched.** §35's instrument unlock (the direct rare-event solve, P = 6.35×10⁻³³,
+> validated componentwise) — that is how this was found at all. §35.1's drift and §35.3's
+> proof that the prefactor decomposition is ill-posed. §35.4's elimination of the
+> Gaussian truncation. §28.3's ε-independence, which is consistent with this reading
+> since the effect is a manifold property. And the §29–§31 identity arc, which never
+> touched this.
+
+> ⚠ **The residual is now 0.5–1.8% and is NOT one-signed** (0.9822, 0.9907, 0.9993,
+> 1.0047 — two below 1, two above). At this size it is within reach of the genuine 2-D
+> path correction, of the ε-lattice, and of the fit itself. **No mechanism is claimed
+> for it** (rule 17), and in particular the two-sided sign means it is not obviously the
+> one-sided minimum-action effect a 2-D correction would give.
+
+**How this was found, because the route matters.** Not by looking for it. The
+`slaving_axis` experiment was built to test §28.3's attribution on a separation axis
+independent of γ, and its **P0 gate failed** — the T = 1 cell disagreed with §35's
+published γ = 0.25 number. The gate was there to catch a broken instrument; what it
+caught was a fourteen-section misattribution. The sweep it was gating had R² = 0.29 and
+a non-monotone ratio, and would have been the weakest result of the session.
+
+**T14-f, open: is the residual 0.5–1.8% the 2-D minimum-action correction?** It is the
+right size and the only named candidate left, but its sign flips across γ where a
+path-minimisation correction should be one-signed (a minimum over paths cannot exceed
+the value along the slaved one, so the prediction should be uniformly ≥ the truth).
+**How to kill:** compute the 2-D geometric minimum action with the full WKB Hamiltonian
+and compare in absolute terms against the on-manifold rates above. If it is one-signed
+and ~1%, it closes. If the measured residual keeps flipping sign, it is numerical and
+the closed form is exact to the precision of this test.

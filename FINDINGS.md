@@ -5668,3 +5668,58 @@ threshold is crossed on the steep part of the drift. **How to kill (iv):** compa
 MFPT against `∫dδ/μ` for thresholds placed at different θ. If the gap tracks the local
 drift steepness at the threshold rather than the path as a whole, it is an absorption
 effect and the deterministic traversal is exact away from the boundary.
+
+### 39.2 The closed form is EXACT in the slaved limit — T-COST-d closed
+
+§39.1 reduced the cost residual to a time residual: `∫dδ/μ` overestimates the MFPT by
+2–18%, flat in Ω. Four candidates remained. **The cause is (ii), the slow-manifold lag,
+and the reasoning was available before the run:** the manifold is defined by `ds/dt = 0`
+*at fixed δ*, but as δ evolves the manifold moves and the pool lags behind it. That lag
+is O(1/sep), **not O(1/Ω)** — which is exactly why the gap survived Ω → ∞.
+
+Tested on §36's independent separation axis (scaling the pool pair X+Y↔2B, which has
+`U·S = 0`, at fixed γ = 0.20):
+
+| sep | 7.00 | 12.48 | 22.54 | 63.64 | 208.04 | 620.73 |
+|---|---|---|---|---|---|---|
+| T_det/MFPT − 1 | +0.0914 | +0.0553 | +0.0285 | +0.0096 | +0.0063 | **+0.0002** |
+
+> **The gap closes: intercept at 1/sep → 0 is 1.00089, R² = 0.9977.** And it is not
+> finite-count — mean |ratio(Ω=400) − ratio(Ω=800)| = **0.0048** across the whole sweep.
+> **The deterministic traversal along the slaved manifold is exact in the slaved limit.**
+
+**So the cost of restoration has a closed form that is exact where the reduction is:**
+
+> **Σ = Ω · ∫ σ(δ)/μ(δ) dδ**, with the entropy rate exact (§39.1) and the traversal exact
+> as sep → ∞ (here), the leading correction being the slow-manifold lag.
+
+**The correction scales as 1/sep, and its coefficient does NOT transfer between axes.**
+Along the T axis `(T_det/MFPT − 1)·sep = 0.6465 ± 0.0285`, constant to **12.3%** over a
+9× range in sep (the two largest sep points are excluded and reported: their gaps are
+below 0.008 and at the numerical resolution). Carried to the γ axis it predicts 16.2% at
+γ = 0.07 against 16% measured — but **5.4% at γ = 0.30 against 8% measured, 33% off**.
+
+> ⚠ **Rule 9, and I checked rather than assumed.** The T axis and the γ axis both raise
+> sep, and a law calibrated on one need not carry to the other, because scaling the pool
+> pair deforms the network as well as the separation. **The 1/sep *scaling* is
+> established on both; the coefficient 0.6465 is a T-axis value and is not universal.**
+> Quoting `T_det/MFPT = 1 + 0.65/sep` as a general law would be exactly §28.2's error.
+
+**What the cost arc now establishes, end to end.** §37 asked what reliability costs and
+found the question malformed. §38 reframed it as cost per e-fold of gain and located an
+optimal drive. §39 predicted the cost in closed form to ~6% and predicted the optimum
+analytically. §39.1 showed the whole residual was the clock, not the entropy. §39.2 shows
+the clock is exact in the slaved limit. **The result is that a restoring chemical stage
+has a closed-form thermodynamic cost, exact as sep → ∞, with a measured O(1/sep)
+correction — and an optimal drive at γ ≈ 0.20–0.24 confirmed independently by an exact
+CME solve and by minimising the closed form.**
+
+**Taken with §36, both halves of the founding question are now closed-form:**
+
+| | closed form | accuracy |
+|---|---|---|
+| reliability | `−ln P = 2Ω·V(x₀)`, `V = ∫μ/D` | 0.5–1.8% on-manifold (§36) |
+| cost | `Σ = Ω·∫σ/μ dδ` | exact as sep → ∞, ~9% at γ = 0.20 (§39.2) |
+
+Neither was true at the start of this session: the first was thought to be 7.5–15.5% off
+and the second did not exist.

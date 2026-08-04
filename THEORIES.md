@@ -2186,3 +2186,31 @@ need not vanish if the threshold sits on the steep part. **How to kill (iv):** c
 MFPT against int d(delta)/mu for thresholds at different theta. If the gap tracks the
 local drift steepness AT the threshold rather than the path as a whole, it is an
 absorption effect and the deterministic traversal is exact away from the boundary.
+
+
+**T-COST-d -> §39.2: CLOSED. The gap is the SLOW-MANIFOLD LAG and the closed form is
+EXACT in the slaved limit.** The manifold is defined by ds/dt = 0 AT FIXED delta, but as
+delta evolves the manifold moves and the pool lags -- an O(1/sep) error, not O(1/Omega),
+which is precisely why the gap survived Omega -> infinity. Tested on §36's independent
+separation axis: the gap runs +0.0914 -> +0.0002 as sep goes 7 -> 621, with intercept
+**1.00089 at 1/sep -> 0, R^2 = 0.9977**, and mean |ratio(400) - ratio(800)| = 0.0048 so
+it is not finite-count.
+
+**Sigma = Omega * int sigma/mu d(delta) is exact where the reduction is**, with the
+entropy rate exact (§39.1) and the traversal exact as sep -> infinity.
+
+**The coefficient does NOT transfer between axes, and I checked (rule 9).** Along the T
+axis (gap)*sep = 0.6465 +- 0.0285, constant to 12.3% over 9x in sep. Carried to the gamma
+axis it gives 16.2% at gamma=0.07 against 16% measured, but **5.4% at gamma=0.30 against
+8%, 33% off** -- because scaling the pool pair deforms the network as well as the
+separation. **The 1/sep SCALING is established on both axes; the coefficient 0.6465 is a
+T-axis value and is NOT universal.** Quoting "1 + 0.65/sep" as a general law would repeat
+§28.2 exactly.
+
+**BOTH HALVES OF THE FOUNDING QUESTION ARE NOW CLOSED-FORM:**
+
+    reliability   -ln P = 2 Omega V(x0),  V = int mu/D     0.5-1.8% on-manifold (§36)
+    cost          Sigma = Omega int sigma/mu d(delta)      exact as sep -> inf (§39.2)
+
+Neither held at the start of this session: the first was believed 7.5-15.5% wrong, and
+the second did not exist.

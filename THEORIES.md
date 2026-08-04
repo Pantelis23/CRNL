@@ -1947,7 +1947,42 @@ longer does: the excess does not cross zero because it was never as small as the
 window made it look.** gamma = 0.35 is UNRESOLVED by the 3% ansatz-spread criterion
 fixed in advance (4.99%, the shortest lever at 8.79 decades) and is reported so.
 
-**T14-d -> §35.2: NOT CLOSED. Both dependencies survive, and that is the answer for
+**T14-d -> §35.3: ILL-POSED, and it can be PROVED rather than asserted.** Read from the
+LOCAL SLOPE instead of ln P -- where s(Omega) = -c + b/Omega makes b a two-parameter
+line with the constant differentiated away -- the curvature is real (adding 1/Omega^2
+lifts R^2 from 0.94 to 0.99) but **b does not converge with model order**: -0.356 ->
+-0.643 -> -0.340 as linear -> quadratic -> cubic, with q flipping +44 -> -78. The reason
+is structural: over Omega = 150..1950 the reciprocal spans only 13x, and on that range
+corr(1/Om, 1/Om^2) = **+0.961**, corr(1/Om^2, 1/Om^3) = **+0.986**, with design
+condition numbers 6.7e2 -> 3.6e5 -> 2.8e8.
+
+**The FUNCTION is determined while the DECOMPOSITION is not** -- the three orders
+extrapolate to 1/Omega -> 0 within 0.69/0.85/1.46% and to Omega = 4000 within ~1%, while
+their coefficients differ by 2x. **The decades of P are irrelevant to this question**;
+only the range in 1/Omega matters, and no depth in P widens it. That retroactively
+explains the whole arc -- §35's b values, §35.2's failure to separate gamma from lever
+arm, §35.2's P4 scatter, the 40-139% sliding-window spreads -- as ONE ill-conditioned
+projection reported four ways. §35.2 concluded "the basis was wrong"; truer is that
+EVERY basis is wrong for this question over a bounded range.
+
+**§35.1's b values are withdrawn as measurements of anything, and nothing in this
+project currently constrains b, including whether it is -1/2.** What that buys is the
+opposite of a loss: §35's rate c is now verified across four bases and three model
+orders to **0.03-0.62%**, so the 7.5-15.5% asymptotic disagreement and the withdrawal of
+§28.3's zero crossing stand more firmly than when published -- the one quantity they
+depend on is the one this arc proved robust while everything around it was not.
+
+**T14-e, open: DERIVE b instead of measuring it.** The splitting probability is a ratio
+of scale-function integrals S(x) = int exp(2 Omega int mu/D), and Laplace asymptotics on
+that RATIO gives the algebraic prefactor in closed form -- the Gaussian widths at the
+dominant endpoints partially cancel, which is precisely why the exponent need not be
+-1/2 and why assuming it was, was never safe. **How to kill:** derive it, then test in
+absolute terms against the FUNCTION s(Omega), which §35.3 shows is pinned to ~1% even
+though its coefficients are not. Predict the curve, not the coefficients. Measuring b
+directly would need 1/Omega decorrelated over ~100x -- Omega ~ 15,000, ~1e8 states --
+out of reach for the exact solver and not worth reaching for when the analysis exists.
+
+**Superseded, kept for the record:** **T14-d -> §35.2: NOT CLOSED. Both dependencies survive, and that is the answer for
 now.** Matched-decade sweeps do not collapse the gamma-spread (at the one genuinely
 matched target, 21 decades with a 7.5% span, b still runs -0.4519/-0.4352/-0.4172
 monotone in gamma), AND b moves 6.9-12.0% with window length at fixed gamma. Neither is

@@ -5111,7 +5111,13 @@ is read that way deliberately.
 **The exponent sits near −0.4 and drifts toward −1/2 as the lever arm lengthens** (29
 decades → −0.4484; 8.8 decades → −0.3964), which is WKB's predicted Ω^(−1/2). But
 **fixing it at −1/2 costs a factor 2–6 in rms**, so it is not exactly the WKB value on
-this data, and **no mechanism is asserted for the difference** (rule 17). What matters
+this data, and **no mechanism is asserted for the difference** (rule 17).
+
+> ⚠ **§35.3 WITHDRAWS this reading.** The powers of 1/Ω are 90–99% correlated over any
+> bounded Ω range, so b is an ill-conditioned projection, not a measured exponent: it
+> swings −0.36 → −0.64 → −0.34 as the model order goes linear → quadratic → cubic. The
+> numbers above are what that fit returned; the "drift toward −1/2" was conditioning
+> noise read as convergence. **Nothing here constrains b.** What matters
 downstream is that `c` shifts by less than **1.3%** between the free and fixed exponent,
 so the rate is robust to the prefactor's exact form.
 
@@ -5222,3 +5228,83 @@ longer arms at *matched* arm length — which at fixed cost means larger Ω, whe
 Ω²/2 state space bites (Ω = 2000 already costs ~500 s per γ for 14 points). The honest
 present statement is **b ≈ −0.45 ± 0.05, consistent with −1/2, with neither dependence
 eliminated.**
+
+### 35.3 T14-d is ill-posed, and that can be proved — `local_slope_law.py`
+
+§35.2 reported a null and blamed my own design: shared window edges and a collinear
+basis. Both criticisms were correct and neither was the reason. Redone properly — the
+prefactor read from the **local slope**, where `s(Ω) = d(lnP)/dΩ = −c + b/Ω` makes b the
+slope of a two-parameter line with the constant differentiated away, ε-corrected before
+differencing (§27) — the answer is that **the question cannot be asked of this data at
+all.**
+
+**P1 failed: the local slope is not linear in 1/Ω.** Adding a 1/Ω² term lifts R² from
+0.942/0.950/0.947 to 0.993/0.988/0.991 and cuts the rms ~2.5–3×, at every γ. The
+curvature is real, and by P4's terms it is an upward 1/Ω² term — a further algebraic
+correction, `ln P = −cΩ + b·lnΩ − q/Ω + a`.
+
+**But b does not converge with model order:**
+
+| γ | b (linear) | b (quadratic) | b (cubic) | q (quad) | q (cubic) |
+|---|---|---|---|---|---|
+| 0.25 | −0.3560 | −0.6434 | −0.3404 | +44.2 | −77.7 |
+| 0.30 | −0.3428 | −0.5826 | −0.3351 | +36.9 | −62.7 |
+| 0.35 | −0.3261 | −0.5726 | −0.3068 | +37.9 | −69.0 |
+
+b swings by a factor of ~2 and q changes sign. **The diagnosis is proved rather than
+asserted:** over Ω = 150…1950 the reciprocal spans a factor of only 13, and on that
+range the asymptotic basis functions are near-parallel —
+
+| pair | correlation |
+|---|---|
+| 1/Ω vs 1/Ω² | **+0.961** |
+| 1/Ω² vs 1/Ω³ | **+0.986** |
+| 1/Ω vs 1/Ω³ | +0.905 |
+
+with design condition numbers **6.7×10² → 3.6×10⁵ → 2.8×10⁸** at orders 1, 2, 3.
+
+> **The function is determined; the decomposition is not.** Extrapolated to 1/Ω → 0 the
+> three orders agree to **0.69% / 0.85% / 1.46%**, and extrapolated past the data to
+> Ω = 4000 they agree to 0.49% / 0.60% / 1.03% — while the coefficients they are built
+> from disagree by a factor of two. That is the exact signature of an ill-posed
+> decomposition sitting inside a well-posed limit.
+
+> ⚠ **So T14-d is not open — it is ILL-POSED for any bounded-Ω instrument**, and the
+> decades of P are irrelevant to it. What matters is the range in 1/Ω, and no amount of
+> depth in P widens that. This retroactively explains the whole arc: §35's b values,
+> §35.2's inability to separate γ from lever arm, §35.2's P4 scatter, and the 40–139%
+> spreads across sliding windows are all **one ill-conditioned projection reported four
+> different ways.** §35.2 said "the basis was wrong"; the truer statement is that *every*
+> basis is wrong for this question over a bounded range.
+
+> ⚠ **§35.1's reading of b is WITHDRAWN.** It reported b = −0.4484 / −0.4394 / −0.4089 /
+> −0.3964 and said the exponent "sits near −0.4 and drifts toward −1/2 as the lever arm
+> lengthens". Those numbers stand as what that particular fit returned; **they are not a
+> measurement of an exponent**, and the drift toward −1/2 was reading conditioning noise
+> as convergence. Nothing in this project currently constrains b, including whether it
+> is −1/2.
+
+**What this buys, and it is the point.** §35's rate `c` is now verified across **four
+bases and three model orders**: the ln P fit, and the local-slope fits at linear,
+quadratic and cubic order, agreeing to **0.03–0.62%** against §35's published values.
+
+| γ | c (§35, ln P) | c (slope, lin) | c (slope, quad) | c (slope, cubic) | shift |
+|---|---|---|---|---|---|
+| 0.25 | 0.035156 | 0.035286 | 0.035045 | 0.035213 | −0.32% |
+| 0.30 | 0.023643 | 0.023837 | 0.023635 | 0.023773 | −0.03% |
+| 0.35 | 0.014195 | 0.014314 | 0.014107 | 0.014255 | −0.62% |
+
+**§35's 7.5–15.5% asymptotic disagreement with §15's closed form, and the withdrawal of
+§28.3's zero crossing, stand — and stand more firmly than when they were published**,
+because the one quantity they depend on is the one quantity this whole arc has proved
+robust while everything around it was not.
+
+**T14-e, open: derive b analytically instead of measuring it.** The splitting
+probability is a ratio of scale-function integrals, `S(x) = ∫exp(2Ω∫μ/D)`, and Laplace
+asymptotics on that ratio yields the algebraic prefactor in closed form — the Gaussian
+widths at the dominant endpoints partially cancel, which is why the exponent need not be
+−1/2. **How to kill:** derive it, then test it in absolute terms against the *function*
+`s(Ω)`, which §35.3 shows is determined to ~1% even though its coefficients are not.
+That is the right target: predict the curve, not the coefficients. Measuring b would
+need 1/Ω decorrelated across ~100×, i.e. Ω ≈ 15,000 and ~10⁸ states — out of reach for
+the exact solver, and not worth reaching for when the analysis is available.

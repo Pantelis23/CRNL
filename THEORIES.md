@@ -2055,3 +2055,33 @@ cannot exceed the value along the slaved one. **How to kill:** compute the 2-D g
 minimum action with the full WKB Hamiltonian and test it absolutely against the
 on-manifold rates. One-signed and ~1% closes it; a residual that keeps flipping sign is
 numerical, and the closed form is exact to the precision of this test.
+
+
+**T-COST -> §37: an optimal drive EXISTS and is protocol-robust; the cost per nat is NOT
+a constant.** R = Sigma/L, the k_B spent per nat of reliability, with both sides exact
+linear solves on the same generator (Q_tt Sigma = -sigma_local is the MFPT system with
+the local entropy rate as its source). R is Omega-independent to 0.25%, so it is a
+property of the chemistry. It diverges at both ends of the drive with an explicit
+mechanism -- s/ln(1/gamma) is constant at 0.77-0.80 while c saturates at ~0.19 and then
+collapses at gamma_c -- so **R ~ 0.79 ln(1/gamma)/c(gamma)** and the minimum is forced,
+not fitted.
+
+**The deciding test SPLIT.** gamma* moves only **1.6% across theta** -- which is exactly
+the failure mode that killed §9.2's "dissipation minimum near gamma ~ 0.3" -- and 26%
+non-monotonically across eps, a factor of 1.32 over the whole 3x3 grid. **But R* varies
+203%**, collapsing with eps, because eps sets how hard the decision is and a wide-margin
+decision is cheap per nat. **P4 is withdrawn: there is no universal cost per nat, and
+"transistor-grade reliability costs ~564 k_BT" is eps-specific (123 at eps = 0.50, 1548
+at eps = 0.25) and must not be quoted as a constant.**
+
+The optimum is BROAD: within 5% of minimum over gamma in [0.03, 0.08], a factor 2.7 in
+drive. Quoting gamma* to three digits would overstate what a minimum this flat locates.
+§9.2's withdrawal STANDS -- its optimum was at gamma ~ 0.3 and was a threshold artifact.
+
+**T-COST-a, open: is there a cost that IS margin-independent?** R divides by the
+reliability bought from a particular start, which is why eps drags it. The candidate
+invariant is Sigma for the FULL traverse, saddle to attractor, which has no free start
+point. **How to kill:** compute it and check whether Sigma/L is eps-free by construction.
+If it is, that is the founding question's number and §37's R is a projection of it. If it
+is not, the cost of reliability is preparation-dependent as a matter of physics rather
+than of protocol, which is itself worth stating clearly.

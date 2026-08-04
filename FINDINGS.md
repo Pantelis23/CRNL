@@ -5394,3 +5394,84 @@ the value along the slaved one, so the prediction should be uniformly ≥ the tr
 and compare in absolute terms against the on-manifold rates above. If it is one-signed
 and ~1%, it closes. If the measured residual keeps flipping sign, it is numerical and
 the closed form is exact to the precision of this test.
+
+### 37 An optimal drive exists and is protocol-robust; the cost per nat is not — T-COST
+
+The founding question asks what restoration costs. This project has a minimum affinity
+(§9.1), an error exponent (§1) and a fuel lifetime (§20), and no relation joining them.
+Both sides of the trade are exact linear solves on the same generator:
+
+    L(Ω)  = −ln P(error)                                  [nats of reliability]
+    Σ(Ω)  = E[entropy produced before absorption]          [k_B]
+
+`first_passage` solves `Q_tt T = −1`; the expected entropy production solves the same
+system with the local entropy rate as its source, `Q_tt Σ = −σ_local` with
+`σ_local(n) = Σ_j a_j(n)·ln[a_j(n)/a_rev(n+S_j)]`. So the cost of a decision is exact,
+not a rate times a time. **R = Σ/L is the k_B spent per nat of reliability bought**, and
+it needs §35's direct solve, §36's on-manifold start, and θ scaled with δ*.
+
+**Gate: R is Ω-independent** — both sides are extensive, and R flattens to 0.25% between
+Ω = 60 and 100. It is a property of the chemistry, not of the molecule count. The
+asymptotic value is `R∞ = s/c` from *separate* linear fits of Σ(Ω) and L(Ω), since both
+carry Ω-independent offsets (worst R² = 0.9992 over the reference grid).
+
+**R diverges at both ends of the drive, and the components say why:**
+
+| γ | 0.0025 | 0.01 | 0.04 | 0.16 | 0.32 |
+|---|---|---|---|---|---|
+| R∞ (k_B/nat) | 26.01 | 21.79 | **16.90** | 20.83 | 73.99 |
+| s/ln(1/γ) | 0.791 | 0.796 | 0.767 | 0.857 | 1.480 |
+| c | 0.1822 | 0.1682 | 0.1461 | 0.0754 | 0.0228 |
+
+`s/ln(1/γ)` is **essentially constant at 0.77–0.80** below γ ≈ 0.08 — the entropy per
+molecule tracks the cycle affinity A/3 — while `c` saturates near 0.19 as γ → 0 and
+collapses at γ_c. So **R ≈ 0.79·ln(1/γ)/c(γ)**: drive too hard and every cycle dissipates
+ln(1/γ) while the barrier has already saturated; drive too softly and the landscape
+shallows faster than the saving. **The minimum is forced by two divergences with an
+explicit mechanism, not fitted as a feature.**
+
+> **This project has claimed an optimal drive before and withdrawn it.** THEORIES §4:
+> *"Dissipation has a minimum near γ ≈ 0.3 — a clean U-shaped curve"*, killed because the
+> threshold was held fixed while δ*(γ) shrank. **That withdrawal stands** — the minimum
+> here is at γ ≈ 0.07, and §9.2's curve was an artifact. The coincidence of shape is
+> exactly why the harder test was run before believing it.
+
+**P2, the deciding test, SPLITS — and the split is the finding:**
+
+| | γ* | R* |
+|---|---|---|
+| across θ ∈ {0.70, 0.80, 0.90} | 0.07400 / 0.07283 / 0.07290 — **1.6%** | — |
+| across ε ∈ {0.25, 0.35, 0.50} | 0.08252 / 0.06327 / 0.07290 — 26.4%, non-monotone | — |
+| whole 3×3 grid | 0.0624–0.0826, **factor 1.32** | 3.57–47.77, **203%** |
+
+> **γ\* survives, and survives the specific way that matters.** §9.2 died because its
+> optimum tracked θ. Here θ moves γ* by **1.6%** — that exact failure mode is ruled out.
+> The ε variation is 26% and **non-monotone** (0.0825 → 0.0633 → 0.0729), consistent with
+> parabolic refinement noise on a shallow minimum rather than a trend.
+
+> ⚠ **R\* does NOT survive, and P4 is WITHDRAWN.** R* varies by 203% across the grid,
+> collapsing with ε — obviously so in hindsight, since ε sets how hard the decision is
+> and a decision from a wide margin is cheap per nat. **There is no universal cost per
+> nat of reliability.** The arithmetic consequence "transistor-grade reliability costs
+> R*·ln(10¹⁵) ≈ 564 k_BT per decision" is therefore **ε-specific and must not be quoted
+> as a constant** — at ε = 0.50 the same arithmetic gives 123 k_BT and at ε = 0.25 it
+> gives 1548. Reported here only to make the withdrawal concrete.
+
+> **The optimum is BROAD, not sharp.** At the reference protocol R runs 16.97 / 16.73 /
+> 16.40 / 17.83 across γ = 0.035 / 0.05 / 0.07 / 0.10 — within 5% of the minimum over
+> **γ ∈ [0.03, 0.08]**, a factor of ~2.7 in drive (A ∈ [7.6, 10.5]). Quoting γ* to three
+> digits would overstate what a minimum this flat can locate.
+
+**What §37 establishes.** A restoring chemical switch has an **optimal operating drive**,
+located at γ ≈ 0.07 (A ≈ 8) with a broad basin, robust against the protocol axis that
+destroyed the previous attempt. That is a design principle and it is new. **What it does
+not establish is a universal price for reliability** — the cost per nat depends on the
+margin the decision starts from, so the founding question's number remains
+preparation-dependent rather than fundamental.
+
+**T-COST-a, open: is there a cost that IS margin-independent?** R depends on ε because it
+divides by the reliability bought from a particular start. The candidate invariant is the
+cost per nat *at fixed margin-to-threshold ratio*, or the total Σ to traverse the whole
+landscape (saddle to attractor), which has no free start point. **How to kill:** compute
+Σ for the full traverse and check whether Σ/L is ε-free by construction; if it is, that
+is the founding question's number and §37's R is a projection of it.

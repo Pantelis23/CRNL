@@ -5462,6 +5462,12 @@ explicit mechanism, not fitted as a feature.**
 > **γ ∈ [0.03, 0.08]**, a factor of ~2.7 in drive (A ∈ [7.6, 10.5]). Quoting γ* to three
 > digits would overstate what a minimum this flat can locate.
 
+> ⚠ **§38 CORRECTS the optimum's location.** R = Σ/L is not a quantity at all — Σ falls
+> with the input margin while L rises, so R varies by a factor of 36 for a trivial
+> reason. Priced per **e-fold of gain** instead, the optimum sits at **γ ≈ 0.20**, not
+> 0.07. The θ-robustness measured below is real; what it located was the optimum of a
+> construction that conflates gain with margin.
+
 **What §37 establishes.** A restoring chemical switch has an **optimal operating drive**,
 located at γ ≈ 0.07 (A ≈ 8) with a broad basin, robust against the protocol axis that
 destroyed the previous attempt. That is a design principle and it is new. **What it does
@@ -5475,3 +5481,80 @@ cost per nat *at fixed margin-to-threshold ratio*, or the total Σ to traverse t
 landscape (saddle to attractor), which has no free start point. **How to kill:** compute
 Σ for the full traverse and check whether Σ/L is ε-free by construction; if it is, that
 is the founding question's number and §37's R is a projection of it.
+
+### 38 Restoration is priced per e-fold of GAIN, and that corrects §37 — T-COST-a
+
+§37 measured R = Σ/L, entropy per nat of reliability, and found it varying 203% with
+protocol. **That is structural, not a sensitivity.** At fixed γ and Ω, as the input
+margin ε rises:
+
+| ε | 0.20 | 0.30 | 0.40 | 0.50 | 0.60 |
+|---|---|---|---|---|---|
+| L (nats) | 15.0 | 29.7 | 50.5 | 74.7 | **101.7** |
+| Σ (k_B) | 1094 | 759 | 514 | 339 | **205** |
+| R = Σ/L | 72.8 | 25.5 | 10.2 | 4.5 | **2.0** |
+
+**Σ falls while L rises**, so R collapses by a factor of **36** for a trivial reason: a
+start nearer the threshold needs fewer reactions *and* is more reliable. **"Cost per nat
+of reliability" is not a quantity.** Reliability is bought with input margin, which is
+free. Dissipation buys something else.
+
+**It buys GAIN.** A restoring switch takes ε·δ* and delivers θ·δ* — it amplifies — and
+the entropy tracks the *logarithm* of that amplification, as an exponential amplifier
+should, since it traverses margin multiplicatively:
+
+> **G = Σ / (Ω · ln(θ/ε))   [k_B per molecule per e-fold of gain]**
+
+preparation-free by construction, since ε enters only through the gain it defines.
+Dividing rather than fitting leaves Σ's Ω-independent offset drifting through ln(gain),
+so G is estimated as the **slope** of Σ against `Ω·ln(θ/ε)` fitted jointly across ε and Ω.
+
+| γ | 0.02 | 0.04 | 0.07 | 0.12 | **0.20** | 0.30 | 0.40 |
+|---|---|---|---|---|---|---|---|
+| G | 3.788 | 3.125 | 2.645 | 2.264 | **1.986** | 2.113 | 3.271 |
+| R² | 0.9995 | 0.9988 | 0.9979 | 0.9963 | 0.9942 | 0.9940 | 0.9979 |
+
+**The improvement over R is the headline.** Naive spread across the ε×Ω grid falls from
+R's **3600%** to **7–27%**.
+
+> **An interior minimum, and it is θ-INVARIANT** — the test that killed §9.2 and that
+> §37 passed:
+>
+> | θ | 0.70 | 0.80 | 0.90 |
+> |---|---|---|---|
+> | γ* | **0.20** | **0.20** | **0.20** |
+> | G* | 2.0358 | 1.9927 | 1.9395 |
+>
+> γ* does not move at all (0.0%, i.e. within grid resolution) and G* spans **4.8%**,
+> against R*'s 203%. **G* ≈ 1.94–2.04 k_B per molecule per e-fold of gain.**
+
+> ⚠ **THIS CORRECTS §37, published the same session.** §37 located a design principle at
+> γ* ≈ 0.07 by minimising R — and R is not a quantity. **The optimal drive for the cost
+> of restoration is γ ≈ 0.20 (A ≈ 4.83), not 0.07.** §37's θ-robustness result stands as
+> measured; what it was robustly locating was the optimum of a construction that
+> conflates gain with margin.
+
+> ⚠ **P1's gate MARGINALLY FAILS and G is not an exact invariant.** The joint linear fit
+> gives R² = 0.9940–0.9995 against the 0.995 threshold fixed in advance, failing at
+> γ = 0.20 and 0.30 — and the fitted intercepts are *negative* (−13 to −28), which is
+> unphysical as Ω·ln(gain) → 0 and marks where the linear form gives out. Residual
+> margin-dependence is 7–27%. **G is a very good description of how restoration is
+> priced; it is not a universal constant, and the difference matters.**
+
+> **G* ≈ 1.99 sits close to 2, and that is left as an observation, not a claim** (rule 15,
+> and the P3 written before the run). The θ-trend is monotone — 2.036 → 1.993 → 1.939 —
+> so it is drifting through 2 rather than converging on it. §28.2's power law and §35.1's
+> −1/2 were both structure read into fitted quantities, and both were withdrawn.
+
+**What §38 establishes.** The founding question has a well-posed form at last: not *what
+does a bit cost* but **what does an e-fold of restoration gain cost**, and the answer is
+≈ 2 k_B per molecule, minimised at γ ≈ 0.20 with a θ-invariant optimum. What it does not
+establish is a universal constant — the residual 7–27% preparation-dependence is real and
+unexplained.
+
+**T-COST-b, open: what is the remaining 7–27%?** The negative intercepts say the linear
+form fails at small `Ω·ln(gain)`, so the leading candidate is a finite-size offset that a
+second term would absorb. **How to kill:** fit `Σ = G·Ω·ln(gain) + A·Ω + B·ln(gain) + C`
+and check whether G stabilises and the intercept turns physical. §35.3 is the standing
+warning: if the added terms are collinear over the available range, G will swing without
+converging and the decomposition will be ill-posed rather than merely incomplete.

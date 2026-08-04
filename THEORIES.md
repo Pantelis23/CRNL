@@ -2085,3 +2085,40 @@ point. **How to kill:** compute it and check whether Sigma/L is eps-free by cons
 If it is, that is the founding question's number and §37's R is a projection of it. If it
 is not, the cost of reliability is preparation-dependent as a matter of physics rather
 than of protocol, which is itself worth stating clearly.
+
+
+**T-COST-a -> §38: R WAS NOT A QUANTITY. Restoration is priced per E-FOLD OF GAIN, and
+that corrects §37's optimum.** Measured directly: as the input margin eps rises,
+Sigma FALLS (1094 -> 205 k_B) while L RISES (15.0 -> 101.7 nats), so R = Sigma/L collapses
+by a factor of **36** for a trivial reason -- a start nearer the threshold needs fewer
+reactions AND is more reliable. **Reliability is bought with input margin, which is free.
+Dissipation buys GAIN.**
+
+    G = Sigma / (Omega * ln(theta/eps))   [k_B per molecule per e-fold]
+
+preparation-free by construction. Naive spread across the eps x Omega grid falls from R's
+**3600% to 7-27%**. Estimated as the SLOPE of Sigma against Omega*ln(theta/eps) fitted
+jointly, since dividing leaves Sigma's offset drifting through ln(gain).
+
+**An interior minimum at gamma = 0.20 that is theta-INVARIANT** -- gamma* = 0.20 at
+theta = 0.70, 0.80 and 0.90, spread 0.0%, with G* spanning only 4.8% (2.0358 / 1.9927 /
+1.9395) against R*'s 203%. **G* ~ 1.94-2.04 k_B per molecule per e-fold of gain.**
+
+**§37 IS CORRECTED: the optimal drive is gamma ~ 0.20 (A ~ 4.83), not 0.07.** §37's
+theta-robustness stands as measured; what it robustly located was the optimum of a
+construction that conflates gain with margin.
+
+**Kept honest: the gate MARGINALLY FAILS.** Joint-fit R^2 = 0.9940-0.9995 against the
+0.995 threshold fixed in advance, failing at gamma = 0.20 and 0.30, and the fitted
+intercepts are NEGATIVE (-13 to -28), unphysical as Omega*ln(gain) -> 0 and marking where
+the linear form gives out. **G is a very good description of how restoration is priced; it
+is not a universal constant.** G* ~ 1.99 sitting near 2 is left as an observation and NOT
+claimed -- the theta-trend is monotone through 2 rather than converging on it, and
+§28.2's power law and §35.1's -1/2 were both structure read into fitted quantities.
+
+**T-COST-b, open: what is the residual 7-27%?** The negative intercepts point at a
+finite-size offset the linear form omits. **How to kill:** fit
+Sigma = G*Omega*ln(gain) + A*Omega + B*ln(gain) + C and check whether G stabilises and the
+intercept turns physical. **§35.3 is the standing warning** -- if the extra terms are
+collinear over the available range, G will swing without converging and the decomposition
+will be ill-posed rather than incomplete, exactly as the prefactor exponent was.

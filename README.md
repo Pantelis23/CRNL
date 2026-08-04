@@ -470,6 +470,92 @@ python -m experiments.approximation_hierarchy --omegas 40 70 100 --trials 2000
 python -m experiments.verify_base            # re-derives the published closed forms
 ```
 
+## Where noise has to be, and why the answer is a theorem
+
+§24 split AM's noise into the signal coordinate `δ = n_X − n_Y` and the bookkeeping
+pool, keeping the full drift in every arm and projecting only the noise. Deleting
+the *signal* noise while keeping **88% of the total variance** gives `P(error) = 0`
+in every cell — the ODE's own failure. Keeping 11% in the signal alone recovers the
+answer to 2–18%. Placement beats amplitude, and by a wide margin.
+
+**The zero turned out to be a theorem, not a measurement.** For every n, every γ,
+and every pair of committed species,
+
+    d(n_i − n_j)/dt = (n_i − n_j) · (k/Ω) · [ n_B − Σ_{l≠i,j} n_l − γ(n_i + n_j − 1) ]
+
+verified against the network's own stoichiometry at n = 2…6 over 4,600 pairs to a
+worst residual of **4.4×10⁻¹⁶**. The drift carries no additive term, so **sign(n_i −
+n_j) is conserved once that difference direction is starved of noise** — no number
+of trajectories could ever have found a crossing. Demonstrated where it cannot be
+barrier height: a champion ahead by a *single count*, exact error 0.597, full noise
+failing 59.9% of the time, and the arm still exactly 0 in 40,000 trajectories.
+
+That bounds what the result may claim, so it was tested where the structure breaks.
+`am_asymmetric` carries an additive term that vanishes identically at β = 0; at a
+barrier held to 7.1% and with the retained variance **constant at 0.891 to three
+decimals**, the categorical zero becomes 3.2%. Amplitude fixed, drift structure the
+only variable. [`FINDINGS.md`](FINDINGS.md) §24, §29–§31.
+
+## Restoration is not error correction, and the difference is nameable
+
+AM is a majority-vote restoring circuit; quantum error correction is redundancy plus
+syndrome extraction. Both restore. Running the comparison honestly required the
+voting to be *chemistry* — k tanks physically combined into one k·Ω tank that carries
+its own noise, never a `sign()` in the harness — and it produced a two-sided answer.
+
+One-shot, voting **loses to pooling** the same molecules, 9 cells in 10, by a factor
+growing exponentially: `p₀ ~ exp(−Ωc)` makes voting `3p₀² ~ exp(−2Ωc)` against
+pooling's `exp(−3Ωc)`. **Voting squares the error; pooling cubes the exponent.** The
+predicted slope of `ln(p_vote/p_pool)` is the collapse rate itself, and it lands
+within **1.4%** of `−2·V_exact` from §15's closed forms.
+
+Time-extended, the answer reverses in a bounded window: periodic re-merging beats a
+single tank by up to **5×** while burning 29% less — but only below a crossover in Ω
+and only when cycling is fast, and the crossover has a closed form predictable from
+two numbers measured on the *hold* protocol alone (k-independent to 3–4%, and
+accurate to 0.12% once the Kramers prefactor is included).
+
+**So the contrast with QEC is not that concatenation fails here.** In QEC the
+physical error rate is fixed, so concatenation's advantage grows without bound below
+threshold. Here the error rate itself falls exponentially in Ω, so re-merging's
+advantage occupies a finite window and then reverses — **chemistry has a knob QEC
+lacks, and the code wins only until that knob is turned far enough.**
+[`FINDINGS.md`](FINDINGS.md) §32–§34.
+
+## Reaching the founding regime
+
+The project is about a switch that errs at 1e-15. Every number it could measure sat
+between 1e-1 and 1e-2, and `THEORIES.md` named that as the binding constraint:
+*large Ω and small probability is reachable by neither instrument.*
+
+**The probability half of that was an implementation artifact.** The error was
+computed as `1 − split` — a difference of two numbers near 1 — which dies to
+catastrophic cancellation near 1e-12. Naming the *wrong* outcome as the favoured set
+solves for the small number directly, with no subtraction anywhere:
+
+    P(error) = 6.354802e-33   at Ω = 2000, exact, in 115 s
+
+Twenty-five orders below anything previously measured here, through the founding
+claim's own regime. Validated three ways: identical to the old route to 7–8 digits
+across the whole overlap; a **componentwise** correction of 1.0×10⁻¹³ at h = 6.35×10⁻³³
+(a norm residual is dominated by the large components and would not notice a garbage
+small one); and it is the M-matrix property — the LU solve carries no subtractive
+cancellation, so relative accuracy survives to arbitrarily small values.
+
+**The first thing it showed was that a headline of ours was an artifact.** With 29
+decades instead of 6.5, the local slope visibly drifts, so `P ~ A(Ω)·exp(−cΩ)` and
+every collapse slope published here is a finite-Ω *effective* slope. Against §15's
+closed form the asymptotic disagreement is **7.5–15.5%**, not the 0.4–11% measured on
+a four-decade window — and the "closest agreement in the project", 0.4% at γ = 0.35,
+is an **18.7× understatement**. The agreement was most flattering exactly where the
+window was shallowest. [`FINDINGS.md`](FINDINGS.md) §35.
+
+```bash
+python -m experiments.deep_tail          # the collapse to 1e-33, with the accuracy audit
+python -m experiments.pairwise_identity  # the identity, and what it does and does not cover
+python -m experiments.concatenation      # voting against pooling, everything exact
+```
+
 ## Verifying the base
 
 `experiments/verify_base.py` re-derives 26 load-bearing closed forms from the
@@ -557,9 +643,20 @@ exactly.
 | `experiments/dissipation_cascade.py` | the price of a restoring stage vs a passive channel, reported under two control conventions |
 | `experiments/bit_cost.py` | k_BT per bit delivered to depth D — no control, no rail convention |
 | `experiments/channel_wall.py` | the crossover from restoration wall to channel floor, against a parameter-free prediction |
+| `experiments/approximation_hierarchy.py` | ODE / CLE / tau-leap / SSA against the exact CME — what a simulation may throw away (§21) |
+| `experiments/noise_placement.py` | noise projected onto the signal vs the pool: placement against amplitude (§24) |
+| `experiments/pairwise_identity.py` | the pairwise multiplicative identity, and which projections it does and does not cover (§30) |
+| `experiments/rival_erosion.py`, `experiments/rival_bracket_scan.py` | the champion-margin sink, and the sweep that broke its confound in the opposite direction (§30.1–§30.2) |
+| `experiments/additive_term.py` | a network whose drift carries an additive term — where the categorical zero breaks (§31) |
+| `experiments/concatenation.py` | pool-merge voting against pooling the same molecules, exact throughout (§32) |
+| `experiments/remerge_hold.py` | periodic re-merging against the single-tank hold, at matched molecules and accounted dissipation (§33) |
+| `experiments/crossover_law.py` | closed form for the crossover, tested against data that never entered the fit (§34) |
+| `experiments/deep_tail.py` | the collapse solved directly to 1e-33, with the componentwise accuracy audit (§35) |
+| `experiments/collapse_slope_absolute.py`, `collapse_slope_grid.py` | the closed form tested in absolute terms, on self-calibrating matched grids (§28) |
+| `mlrift/` | exact SSA and projected-noise CLE in MLRift — native code, gated against the exact CME, 18x/core (§26) |
 | `results/` | raw JSON behind every figure and table in FINDINGS.md |
 | `FINDINGS.md` | all measured results, with caveats |
-| `THEORIES.md` | live conjectures with falsifiable predictions, open questions, and a record of four confident wrong results |
+| `THEORIES.md` | live conjectures with falsifiable predictions, open questions with their kill tests, and the catalogue of confident wrong results kept with what killed each one |
 | `tests/test_engine.py` | the verification suite |
 | `tests/test_n_winner.py` | n-winner network construction and stoichiometry checks |
 | `tests/test_radix_experiments.py` | radix_wall / radix_discovery helper and fit checks |

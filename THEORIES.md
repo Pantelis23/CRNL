@@ -1839,3 +1839,68 @@ terms against measured crossovers at a gamma NOT used to fit it (rule 16 -- and 
 the standing reminder that a formula matching one sweep proves nothing). The MFPT ceiling
 is the binding constraint, so §26's MLRift sampler is the likely instrument for the
 larger tanks, where an exact solve is unavailable but the lifetime is still measurable.
+
+**T16-b -> §34: CLOSED. §33's crossover is a consequence of the exponent count, not an
+empirical boundary.** With m = ceil((k+1)/2) and ln T(N) = c*N + a,
+
+    Omega_x = [ (m-1)(a - ln tau) - ln C(k,m) ] / [ c (k-m) ]
+
+and because m-1 = k-m = (k-1)/2 for EVERY odd k, this is (a - ln tau)/c minus a small
+combinatorial term -- **the leading term contains no k**. `c` and `a` come from a
+straight-line fit to the HOLD protocol's own MFPTs; no crossover measurement enters the
+prediction anywhere, which is what makes it an absolute test in §28's and §32's sense
+rather than a fit to the thing it explains (§30.1 being the standing reminder).
+
+**P1, the structurally surprising prediction, CONFIRMED:** the crossover is nearly
+k-independent -- spread 3.00%/3.61%/4.39% across k = 3,5,7 -- while the win MARGIN at
+fixed Omega differs by more than 2x between k=3 and k=5. Margins differ, crossings
+coincide. No fit to crossover data would have suggested that.
+
+**P2 at tau = t_relax: within 3.3% across three gamma**, over a 1.9x range in Omega_x
+and a 2.6x range in c. **But P2 as stated FAILED over the full grid** (0.9191 +- 0.0976,
+range 0.685-1.033, well outside the +-10% predicted), and the failure tracks the
+derivation's own tau << T assumption: correlation with tau/T is -0.696. Solving the
+crossover condition EXACTLY -- same c and a, still no crossover data -- moves the mean
+from 0.9191 to 0.9864 and doubles the within-2% count, so the linearization was the bias
+and the exponent count under it is sound. **Scatter falls only 1.14x and residual
+disagreement persists at large tau and small Omega_x, where the crossover lands near
+Omega ~ 7 and both renewal assumptions are marginal. That residual is NOT explained and
+no cause is named for it** (rule 17).
+
+**P3: d(Omega_x)/d(ln tau) = -1/c exactly**, no k, no combinatorics -- measured 0.78 /
+0.87 / 0.996 of that across gamma = 0.25/0.30/0.35, the agreement improving as the
+reachable range widens, and exact to 0.4% at gamma = 0.35.
+
+**P5's DIRECTION WAS BACKWARDS and the reason is instructive.** I predicted the high-
+gamma end would run out of reach first, since shallower barriers give smaller c and
+larger Omega_x -- true (15.5 -> 28.2 from gamma 0.25 to 0.35) but the wrong effect. The
+MFPT validity ceiling moves FASTER than Omega_x does, because a shallow barrier makes
+T(N) grow slowly and keeps exact solves trustworthy to N = 126 at gamma = 0.35 against
+N = 72 at 0.30. So gamma = 0.35 gave 10 reachable cells and gamma = 0.15 gave 2. **When
+the instrument's reach and the physics move along the same axis, predict the
+instrument's reach explicitly** -- it decided which cells existed, and I had it exactly
+inverted.
+
+**T16-c -> §34.1: CLOSED, and instrumentally -- it is the Kramers prefactor.** Refitting
+the hold data as ln T = c*N + b*ln N + a (still hold-only, no crossover data) and
+re-running the identical test moves the mean from 0.9864 to **0.9988** and cuts the
+scatter **3.86x**, from sd 0.0854 to 0.0221, with 22 of 31 cells inside 2%. Candidates
+(i) and (ii) are not needed and are withdrawn rather than left standing. The fitted b is
+gamma-dependent -- -0.653, -0.459, -0.285, -0.069, +0.074 across gamma 0.15..0.35,
+crossing zero near gamma ~ 0.32 -- and **no mechanism is proposed for that** (rule 17);
+it is the obvious next thing to explain. Killing the instrumental candidate first cost
+one refit and settled the question outright.
+
+**Superseded, kept for the record:** **T16-c, open: what is the residual scatter at large tau?** Removing the linearization
+fixed the mean but left the spread (0.773-1.196), concentrated where Omega_x ~ 7 and
+tau/T > 0.05. Three candidates, none tested and none preferred: (i) the committed state
+is not meaningful at ~7 molecules, so T(Omega) itself is the wrong object there;
+(ii) tau is no longer long against t_relax, so merged portions do not re-amplify before
+the next merge and the two-state reduction loses its justification even though
+std/mean still reads ~1; (iii) ln T(N) curvature -- the Kramers prefactor -- which a
+straight-line fit absorbs into `a` and which would bias small-Omega extrapolations
+most. **How to kill:** (iii) is separable without new machinery by fitting
+ln T = c*N + b*ln N + a and re-running the same absolute test; if the spread collapses,
+the prefactor is the cause and (i)-(ii) are not needed. Do that BEFORE proposing a
+physical mechanism -- the cheap instrumental explanation has to be eliminated first,
+which is the §28.1/§28.2 lesson.

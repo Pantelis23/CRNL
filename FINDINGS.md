@@ -4923,3 +4923,122 @@ level**, because the physical error rate is fixed. Here re-merging's advantage o
 a **bounded window** and then *reverses*, because the physical error rate itself falls
 exponentially with Ω — growing the tank eventually outruns the code. **Chemistry has a
 knob QEC lacks, and the code wins only until that knob is turned far enough.**
+
+### 34 A closed form for §33's crossover — `crossover_law.py` — T16-b
+
+§33 located the re-merge/hold crossover empirically. The exponent count it validated
+determines it. With `m = ⌈(k+1)/2⌉` and `ln T(N) = c·N + a`, setting
+`T(kΩ) = T(Ω)^m / (C(k,m)·τ^(m−1))` gives
+
+> **Ω× = [ (m−1)(a − ln τ) − ln C(k,m) ] / [ c·(k−m) ]**
+
+**For every odd k, m−1 = k−m = (k−1)/2 exactly**, so the ratio is 1 and
+
+> **Ω× = (a − ln τ)/c − ln C(k,m)/(c·(k−1)/2)** — the leading term contains no k.
+
+`c` and `a` come from a straight-line fit to `ln T(N)` on the **hold protocol alone**.
+**No crossover measurement enters the prediction anywhere.** The crossover is measured
+as the *continuous* zero of `ln(L_hold/L_remerge)`, never as the largest integer Ω that
+still wins — that quantised form is failure pattern 2 in §4, and §33's own table
+reports exactly that quantised version.
+
+**P1 CONFIRMED, and it is the structurally surprising one.** The predicted crossover is
+nearly k-independent — spread across k = 3, 5, 7 is **3.00% / 3.61% / 4.39%** at
+γ = 0.25 / 0.30 / 0.35 — *even though the win margin at fixed Ω differs by more than 2×
+between k = 3 and k = 5* (§33: 0.482 against 0.269 at Ω = 14). The margins differ; the
+crossings nearly coincide, because k cancels out of the leading term.
+
+**P2, the absolute test, at the protocol's natural cycle time τ = t_relax:**
+
+| γ | c (hold-only) | a | predicted Ω× | measured Ω× | pred/meas |
+|---|---|---|---|---|---|
+| 0.25 | 0.189509 | 4.97194 | 15.47 | 14.98 | **1.0326** |
+| 0.30 | 0.123526 | 4.74104 | 19.76 | 19.62 | **1.0070** |
+| 0.35 | 0.071578 | 4.63967 | 28.18 | 29.15 | **0.9668** |
+
+Across three γ, a 1.9× range in Ω× and a 2.6× range in c, the closed form lands within
+**3.3%** with nothing about crossovers ever fitted.
+
+> ⚠ **P2 as stated FAILED over the full grid**, and the failure is patterned. Over all
+> 31 reachable cells the linearized form gives pred/meas **0.9191 ± 0.0976**, range
+> 0.685–1.033 — well outside the ±10% predicted. The deviation **tracks the
+> derivation's own assumption**: correlation with τ/T(Ω×) is **−0.696**, and splitting
+> at τ/T = 0.02 gives 0.961 below against 0.880 above. The form was derived for τ ≪ T
+> and I did not state that domain in the predictions.
+
+> **Solving the crossover condition EXACTLY — same c and a, still no crossover data —
+> removes the systematic:** mean **0.9191 → 0.9864** (8.1% low → 1.4% low), cells within
+> 2% go **7 → 11 of 31**. So the linearization was the bias and the exponent count
+> underneath it is sound. **Scatter is only reduced 1.14×** and the range widens to
+> 0.773–1.196: residual disagreement persists at large τ and small Ω×, where the
+> crossover lands near Ω ≈ 7 and both renewal assumptions are marginal — a tank of
+> seven molecules, and τ no longer short against T. **I have not isolated that residual
+> and am not naming a cause for it** (rule 17).
+
+> **P2's predicted bias direction was also wrong.** I predicted a consistent-sign bias
+> from the Kramers prefactor, as §33 saw. 26 of 31 cells fall below 1, but not all, so
+> "consistent in sign" fails literally — and the dominant systematic turned out to be
+> the small-τ linearization, not the prefactor.
+
+**P3: d(Ω×)/d(ln τ) = −1/c exactly**, with no k and no combinatorics. Measured against
+`−1/c` from the same hold-only fit: **0.78 (γ = 0.25), 0.87 (γ = 0.30), 0.996
+(γ = 0.35)**. The agreement improves with γ because the low-γ τ-sweeps are dominated by
+the large-τ cells where the linearization fails; at γ = 0.35, where the reachable range
+is widest, it is exact to **0.4%**.
+
+**P4 holds everywhere used:** std/mean over the fitted sizes stays in 0.950–1.033, so
+the renewal reduction is legal at every cell quoted.
+
+> ⚠ **P5's direction was BACKWARDS and it is worth recording why.** I predicted the
+> high-γ end would fall out of reach first, reasoning that shallower barriers give
+> smaller c and hence larger Ω×. That is true — Ω× runs 15.5 → 28.2 from γ = 0.25 to
+> 0.35 — but it is the wrong effect. **The MFPT validity ceiling moves faster than Ω×
+> does**: a shallower barrier makes T(N) grow slowly, so exact solves stay trustworthy
+> to N = 126 at γ = 0.35 against N = 72 at γ = 0.30 and far less at γ = 0.15. Result:
+> γ = 0.35 had **10** reachable cells and γ = 0.15 only **2**. The instrument's reach
+> and the physics move the same way and the instrument wins.
+
+**What §34 settles.** §33's crossover is not an empirical boundary but a consequence of
+the exponent count, predictable from two numbers measured on the hold protocol alone —
+to 3.3% at the natural cycle time, and to 1.4% on average across the whole grid once
+the linearization is removed. The k-independence is the load-bearing check, because it
+is a structural prediction that could easily have failed and that no fit to the
+crossover data would have suggested.
+
+### 34.1 The residual is the Kramers prefactor — T16-c
+
+§34 left scatter of ±8.5% after the linearization was removed, concentrated where
+Ω× ≈ 7 and τ/T > 0.05, with three candidate causes and none preferred: (i) the
+committed state is meaningless at ~7 molecules, (ii) τ no longer long against t_relax
+so portions do not re-amplify, (iii) curvature in `ln T(N)` — the Kramers prefactor —
+which a straight-line fit absorbs into `a`. THEORIES named (iii) as the one to kill
+first, because it needs no new machinery and **the cheap instrumental explanation has
+to be eliminated before a physical mechanism is proposed** (the §28.1/§28.2 lesson).
+
+Refitting the hold data as `ln T = c·N + b·ln N + a` — still hold-only, still no
+crossover measurement anywhere — and re-running the identical absolute test:
+
+| ansatz | mean pred/meas | sd | range | within 2% |
+|---|---|---|---|---|
+| `ln T = c·N + a` | 0.9864 | 0.0854 | 0.773–1.196 | 11/31 |
+| `ln T = c·N + b·ln N + a` | **0.9988** | **0.0221** | 0.951–1.052 | **22/31** |
+
+**Scatter falls 3.86× and the mean lands within 0.12% of unity.** (iii) is the cause;
+(i) and (ii) are not needed and are withdrawn as candidates rather than left standing.
+
+| γ | 0.15 | 0.20 | 0.25 | 0.30 | 0.35 |
+|---|---|---|---|---|---|
+| b | −0.653 | −0.459 | −0.285 | −0.069 | +0.074 |
+| R² | 0.999995 | 0.999989 | 0.999983 | 0.999991 | 0.999968 |
+
+**The prefactor exponent is γ-dependent and crosses zero near γ ≈ 0.32.** That is
+recorded as measured and **no mechanism is proposed for it** (rule 17) — it is the
+obvious next thing to explain and explaining it is not this section's job.
+
+> **What this is and is not.** It is 31 cells across 5 γ, 3 k and a range of τ,
+> predicted to **0.12% mean with 2.2% scatter, with nothing about crossovers ever
+> fitted** — the broadest absolute test in the project. It is **not** parameter-free in
+> §28.3's sense: that section's 0.4% came from closed forms with no fitted quantity at
+> all, whereas this uses three parameters fitted to the *hold* protocol and then
+> extrapolated to a different protocol. Weaker in kind, broader in reach, and the two
+> should not be quoted as if they were the same claim.

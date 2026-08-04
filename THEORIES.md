@@ -2155,3 +2155,34 @@ leaves the slaved manifold under noise, making the manifold the wrong contour;
 (iii) a Jensen gap E[sigma(state)] != sigma(E[state]) that does not close. **How to kill
 (i):** compare the exact MFPT to threshold against int d(delta)/mu directly -- one linear
 solve, and it separates the time from the entropy.
+
+
+**T-COST-c -> §39.1: CLOSED. The cost residual is entirely a TIME residual.** Candidate
+(i) was named as the one to kill first because it separates time from entropy in one
+solve, and it is (i). Comparing T_det = int d(delta)/mu against the exact MFPT:
+T_det/MFPT = 1.0209..1.1764 (mean 1.1069) against Sigma_pred/Sigma_exact =
+0.9367..1.1683 (mean 1.0796), **correlation +0.9513**, with the difference shrinking
+monotonically with Omega in EVERY cell (0.0897 -> 0.0207, 0.0843 -> 0.0236, ...) to
+0.7-2.4% at Omega = 700.
+
+**The entropy RATE along the path is right; the CLOCK is wrong.** int sigma/mu
+overestimates the cost by exactly the factor by which int d(delta)/mu overestimates the
+first-passage time. **Candidates (ii) (the path leaving the slaved manifold) and (iii)
+(a Jensen gap in sigma) are withdrawn as explanations of the COST**, though either may
+still explain the time.
+
+**Sigma = Omega * sigma_bar * T with sigma_bar right and T wrong** means the cost and the
+first-passage time are now ONE problem, not two -- any improvement to the MFPT carries
+straight through. It also explains why §39's optimum survived while its magnitude did
+not: a smooth multiplicative factor varying 1.16 -> 1.08 across gamma moves a minimum's
+location far less than its value.
+
+**T-COST-d, open: why is the MFPT persistently BELOW the deterministic traversal?** The
+gap converges to a nonzero limit (~1.16 at gamma=0.07, ~1.08 at 0.30) and grows with
+landscape depth, so it is not a finite-count effect. Live candidates: (ii), (iii), and
+new (iv) -- absorption at a threshold selects the leading edge of the packet, putting
+first passage below mean arrival by an amount set by packet width against drift, which
+need not vanish if the threshold sits on the steep part. **How to kill (iv):** compare
+MFPT against int d(delta)/mu for thresholds at different theta. If the gap tracks the
+local drift steepness AT the threshold rather than the path as a whole, it is an
+absorption effect and the deterministic traversal is exact away from the boundary.

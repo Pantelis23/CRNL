@@ -5612,3 +5612,59 @@ under noise, so ∫ along the manifold is the wrong contour; (iii) E[σ(state)] 
 by a Jensen gap that does not close. **How to kill (i):** compare the exact MFPT to the
 threshold against `∫dδ/μ` directly — that isolates the time from the entropy, and it is
 one linear solve.
+
+### 39.1 The cost residual is entirely a TIME residual — T-COST-c closed
+
+§39 left a ~6% gap between the closed-form cost `Σ_pred = Ω∫σ/μ dδ` and the exact CME
+cost, flat in Ω, not attributable to σ, with three untested candidates. Candidate (i) —
+that the mean first-passage time differs from the deterministic traversal — was named as
+the one to kill first, because it isolates the time from the entropy in a single solve.
+
+**It is (i), and the test is decisive.** Comparing `T_det = ∫dδ/μ` against the exact MFPT
+to `|δ| ≥ thr`, and both ratios against each other:
+
+| | range | mean |
+|---|---|---|
+| `T_det / MFPT` | 1.0209 – 1.1764 | 1.1069 |
+| `Σ_pred / Σ_exact` | 0.9367 – 1.1683 | 1.0796 |
+
+**correlation +0.9513**, and their difference **shrinks monotonically with Ω in every
+cell**:
+
+| γ, ε | Ω=150 | Ω=300 | Ω=450 | Ω=700 |
+|---|---|---|---|---|
+| 0.07, 0.30 | 0.0346 | 0.0217 | 0.0148 | **0.0119** |
+| 0.20, 0.50 | 0.0421 | 0.0207 | 0.0131 | **0.0073** |
+| 0.30, 0.30 | 0.0843 | 0.0461 | 0.0344 | **0.0236** |
+| 0.30, 0.50 | 0.0897 | 0.0422 | 0.0321 | **0.0207** |
+
+> **The entire thermodynamic residual is kinematic.** The entropy *rate* along the path
+> is right; the *clock* is wrong. `∫σ/μ dδ` overestimates the cost by exactly the factor
+> by which `∫dδ/μ` overestimates the first-passage time. **Candidates (ii) — the path
+> leaving the slaved manifold — and (iii) — a Jensen gap in σ — are not needed** and are
+> withdrawn as explanations of the cost. Either may still explain the *time* gap, which
+> is now a separate and cleaner question.
+
+> **The time gap does not vanish with Ω**, converging to ~1.16 at γ = 0.07, ~1.11 at
+> γ = 0.20, ~1.08 at γ = 0.30 rather than to 1. So the exact MFPT to an absorbing
+> threshold is persistently **shorter** than the deterministic arrival along the slaved
+> manifold — a first-passage effect, not a finite-count one, and larger where the
+> landscape is deeper.
+
+**What this buys.** §39's closed form is correct in its thermodynamics and wrong only in
+its kinematics: `Σ = Ω · σ̄ · T`, with σ̄ right and `T` the deterministic traversal instead
+of the MFPT. So **any improvement to the first-passage time carries straight through to
+the cost** — the two are now one problem rather than two, which is why the optimum
+survived (§39's P4: γ = 0.240 analytic against §38's γ* ≈ 0.20 measured) even though the
+magnitude did not: a smooth multiplicative factor varying 1.16 → 1.08 across γ moves the
+minimum's location far less than its value.
+
+**T-COST-d, open: why is the MFPT persistently below the deterministic traversal?** The
+gap converges to a nonzero limit and grows with landscape depth. §39's candidates (ii)
+and (iii) remain live *for the time*, joined by (iv): absorption at a threshold selects
+the leading edge of the packet, so the first-passage time sits below the mean arrival by
+an amount set by the packet width relative to the drift — which need not vanish when the
+threshold is crossed on the steep part of the drift. **How to kill (iv):** compare the
+MFPT against `∫dδ/μ` for thresholds placed at different θ. If the gap tracks the local
+drift steepness at the threshold rather than the path as a whole, it is an absorption
+effect and the deterministic traversal is exact away from the boundary.

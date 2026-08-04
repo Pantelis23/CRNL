@@ -4441,6 +4441,15 @@ the "saturation" alternative is also dead — but not as `sep⁻²`:
 > γ = 0.35, ε = 0.35 the parameter-free prediction is within **0.4%** — the closest
 > agreement anywhere in this project.
 
+> ⚠ **§35 QUALIFIES THIS, and the 0.4% is withdrawn as an asymptotic claim.** Every
+> slope above is an *effective* slope on the P = 10⁻² → 10⁻⁶ window. §35 solves the
+> collapse to 10⁻³³ and finds the local slope drifts, so the asymptotic rate differs:
+> at γ = 0.35 the excess is **7.5%, not 0.4%** — an 18.7× correction — and across
+> γ = 0.20–0.35 the asymptotic excess falls only 0.155 → 0.075 rather than 0.110 →
+> 0.004. **The numbers here stand as measured and as effective slopes; what is withdrawn
+> is reading them as the asymptotic rate.** P2's ε-independence is untouched, being a
+> comparison at fixed window.
+
 > **One ratio sits below 1** (γ = 0.35, ε = 0.50: 0.975). With the ε-spread at 3%, the
 > excess at γ = 0.35 is consistent with zero and **its sign is not resolved**. So the
 > honest statement is that the excess declines monotonically from 0.16 at γ = 0.10 to
@@ -5042,3 +5051,103 @@ obvious next thing to explain and explaining it is not this section's job.
 > all, whereas this uses three parameters fitted to the *hold* protocol and then
 > extrapolated to a different protocol. Weaker in kind, broader in reach, and the two
 > should not be quoted as if they were the same claim.
+
+### 35 The probability floor was an artifact, and the collapse slope is a window property — `deep_tail.py` — T14
+
+THEORIES T14 has said since §21 that the binding constraint is instrumental: *"the
+founding claim concerns a switch that errs at 1e-15 while every measured number sits
+between 1e-1 and 1e-2 … Large Ω AND small probability is reachable by neither."*
+**The probability half of that was an implementation artifact.**
+
+`p_cme` computes the error as `1 − split` — a difference of two numbers near 1 — so it
+dies to catastrophic cancellation near 1e-12, and §28 lost its γ = 0.15 cells to exactly
+that. But `splitting_probability` takes the favoured-set predicate, so **naming the
+wrong outcome as favoured solves for the small number directly, with no subtraction
+anywhere.**
+
+| Ω | states | P(error), direct | sec |
+|---|---|---|---|
+| 400 | 80,601 | 6.663482×10⁻⁸ | 3.0 |
+| 1000 | 501,501 | 1.960333×10⁻¹⁷ | 22.3 |
+| 1500 | 1,127,251 | 5.600480×10⁻³¹ | 45.5 |
+| 2000 | 2,003,001 | **6.354802×10⁻³³** | 115.1 |
+
+**Twenty-five orders of magnitude below anything this project had measured, and through
+the founding claim's own regime.** Validated three ways:
+
+1. **Against the established route** — identical to `1 − split` to 7–8 digits across the
+   entire overlap (1e-2 down to 1e-11).
+2. **Componentwise, not by a norm.** A norm residual is dominated by the large
+   components and would not notice a garbage small one. Each row of the transient
+   generator has ≤ 7 nonzeros, so the true residual is computable by exact summation per
+   row; one refinement step gives the componentwise relative correction. At Ω = 2000,
+   h = 6.35×10⁻³³ with **|δ/h| = 1.0×10⁻¹³ at the start state and 1.2×10⁻¹³ as the
+   maximum over every positive component**.
+3. **There is a reason.** The transient generator is an M-matrix, so its LU solve
+   carries no subtractive cancellation and relative accuracy survives to arbitrarily
+   small values. The floor was never in the physics or the linear algebra — only in the
+   subtraction.
+
+#### 35.1 Every collapse slope published here is a finite-Ω effective slope
+
+**P2 confirmed.** The local slope is not constant. At γ = 0.20, ε-controlled, it drifts
+monotonically −0.051603 → −0.049895 over 29.21 decades. So `P ~ A(Ω)·exp(−c·Ω)` with an
+algebraic prefactor, and a straight-line fit returns a `c` contaminated by `A`.
+
+Three ansätze, all fitted, all reported (rule 15):
+
+| γ | decades | pure `c` | rms | prefactor `c` | exponent | rms | inverse `c` | rms | spread |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.20 | **29.21** | −0.049730 | 0.0805 | −0.049064 | −0.4484 | **0.0016** | −0.049468 | 0.0133 | 1.35% |
+| 0.25 | 21.20 | −0.035964 | 0.0730 | −0.035156 | −0.4394 | **0.0021** | −0.035588 | 0.0172 | 2.27% |
+| 0.30 | 14.30 | −0.024311 | 0.0865 | −0.023643 | −0.4089 | **0.0091** | −0.023952 | 0.0186 | 2.79% |
+| 0.35 | 8.79 | −0.014920 | 0.0769 | −0.014195 | −0.3964 | **0.0033** | −0.014523 | 0.0171 | **4.99%** |
+
+The prefactor form beats the pure exponential by **10–45× in rms** for one extra
+parameter. §5.1's lesson was that a three-parameter fit beating a two-parameter one by
+3% is evidence *against* the extra parameter; a factor of 10–45 is the opposite case and
+is read that way deliberately.
+
+**The exponent sits near −0.4 and drifts toward −1/2 as the lever arm lengthens** (29
+decades → −0.4484; 8.8 decades → −0.3964), which is WKB's predicted Ω^(−1/2). But
+**fixing it at −1/2 costs a factor 2–6 in rms**, so it is not exactly the WKB value on
+this data, and **no mechanism is asserted for the difference** (rule 17). What matters
+downstream is that `c` shifts by less than **1.3%** between the free and fixed exponent,
+so the rate is robust to the prefactor's exact form.
+
+#### 35.2 The closed form's disagreement is larger than §28 measured, and much flatter in γ
+
+**P3 confirmed, in the uncomfortable direction predicted before the run.**
+
+| γ | §28.3 ratio (P = 10⁻²→10⁻⁶) | asymptotic ratio | §28.3 excess | asymptotic excess | factor |
+|---|---|---|---|---|---|
+| 0.20 | 1.110 | **1.1553** | 0.110 | 0.1553 | 1.4× |
+| 0.25 | 1.063 | **1.1331** | 0.063 | 0.1331 | 2.1× |
+| 0.30 | 1.034 | **1.1053** | 0.034 | 0.1053 | 3.1× |
+| 0.35 | 1.004 | **1.0747** | 0.004 | 0.0747 | **18.7×** |
+
+> ⚠ **§28.3's zero crossing is WITHDRAWN as a statement about the asymptotic rate.**
+> §28.3 fitted `excess = 0.2240 − 0.6276·γ` crossing zero near γ ≈ 0.357 and reported
+> the parameter-free prediction as within **0.4%** at γ = 0.35 — "the closest agreement
+> in the project". Asymptotically that cell is **7.5%** off, and the excess declines by
+> only a factor of 2 across the γ range rather than a factor of 27. **The near-perfect
+> agreement at γ = 0.35 was almost entirely finite-Ω contamination**, and it was
+> flattering precisely where the window was shallowest.
+
+> **What §28.3 got right, and what it was.** Its numbers stand as measured — they are
+> correct *effective slopes on the P = 10⁻² → 10⁻⁶ window*, and §28.3's P2 (the
+> ε-independence that attributed the residual to the slaved reduction) is untouched,
+> since that was a comparison at fixed window. What is withdrawn is reading those
+> effective slopes as the asymptotic rate. **This also answers T14-c-iv without needing
+> γ = 0.38–0.44 at all:** the excess does not cross zero, because it was never as small
+> as the shallow window made it look.
+
+> **γ = 0.35 is UNRESOLVED by the criterion fixed in advance.** Its ansatz spread is
+> 4.99% against the 3% threshold, because 8.79 decades is the shortest lever here. Three
+> of four γ resolve; that one is reported as unresolved rather than quoted.
+
+**What §35 settles.** T14's probability floor is gone — the founding claim's 1e-15
+regime is now directly and exactly computable, limited only by the Ω²/2 state space and
+double-precision underflow near 1e-308. And the first thing the unlock showed is that a
+published headline was an artifact of the window it was measured in. Both halves of that
+are the point.

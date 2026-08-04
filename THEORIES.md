@@ -1904,3 +1904,56 @@ ln T = c*N + b*ln N + a and re-running the same absolute test; if the spread col
 the prefactor is the cause and (i)-(ii) are not needed. Do that BEFORE proposing a
 physical mechanism -- the cheap instrumental explanation has to be eliminated first,
 which is the §28.1/§28.2 lesson.
+
+**T14 -> §35: THE PROBABILITY FLOOR WAS AN IMPLEMENTATION ARTIFACT. It is gone.**
+T14 has said since §21 that "large Omega AND small probability is reachable by neither
+instrument". The probability half was never physics: `p_cme` returns `1 - split`, an
+error probability computed as a difference of two numbers near 1, so it dies to
+cancellation near 1e-12 -- which is what cost §28 its gamma = 0.15 cells. Naming the
+WRONG outcome as the favoured set in `splitting_probability` solves for the small number
+DIRECTLY, with no subtraction anywhere: **P = 6.35e-33 at Omega = 2000 in 115 s**, 25
+orders below anything previously measured and through the founding claim's own regime.
+
+Validated three ways, because a result this convenient is exactly what this project has
+been burned by: identical to the subtractive route to 7-8 digits across the whole
+overlap; componentwise relative correction of **1.0e-13 at h = 6.35e-33** (exact
+per-row summation plus one refinement step -- a NORM residual would not have noticed a
+garbage small component); and it is the M-matrix property, so the LU solve carries no
+subtractive cancellation and relative accuracy survives to arbitrarily small values.
+**The remaining limit is the Omega^2/2 state space and double-precision underflow near
+1e-308, not the probability.**
+
+**T14-a/T14-c-iv -> ANSWERED as a side effect, and the answer costs a headline.** Every
+collapse slope this project has published is a finite-Omega EFFECTIVE slope. The local
+slope drifts monotonically (-0.051603 -> -0.049895 over 29.21 decades at gamma = 0.20,
+eps-controlled), so P ~ A(Omega) exp(-c Omega) with an algebraic prefactor, and a
+straight-line fit returns a contaminated c. Three ansaetze all reported (rule 15); the
+prefactor form beats the pure exponential by **10-45x in rms** for one extra parameter,
+which is §5.1's test run in the opposite direction and read that way deliberately. The
+prefactor exponent sits at -0.45..-0.40, drifting toward WKB's -1/2 as the lever arm
+lengthens, but **fixing it at -1/2 costs 2-6x in rms so it is not exactly that, and no
+mechanism is asserted** (rule 17); c shifts under 1.3% either way, so the rate is robust
+to the prefactor's form.
+
+**Against §15's closed form the asymptotic disagreement is 7.5-15.5%, not §28.3's
+0.4-11%**, and much flatter in gamma: the asymptotic excess falls 0.155 -> 0.075 across
+gamma = 0.20-0.35 where §28.3 measured 0.110 -> 0.004. **§28.3's zero crossing near
+gamma ~ 0.357 is withdrawn as an asymptotic statement** -- an 18.7x correction at
+gamma = 0.35, where its "closest agreement in the project, 0.4%" was almost entirely
+finite-Omega contamination and was flattering precisely where the window was shallowest.
+§28.3's numbers stand as measured effective slopes and its P2 eps-independence is
+untouched, being a fixed-window comparison. **T14-c-iv needed gamma = 0.38-0.44 and no
+longer does: the excess does not cross zero because it was never as small as the shallow
+window made it look.** gamma = 0.35 is UNRESOLVED by the 3% ansatz-spread criterion
+fixed in advance (4.99%, the shortest lever at 8.79 decades) and is reported so.
+
+**T14-d, open: is the prefactor exponent -1/2, and why is it gamma-dependent?**
+Measured -0.4484 / -0.4394 / -0.4089 / -0.3964 at gamma = 0.20/0.25/0.30/0.35, i.e.
+drifting with gamma AND with lever-arm length, which are confounded here because deeper
+gamma gives more decades at the same Omega cap. **How to kill:** break that confound the
+§30.2 way -- hold the decade count fixed across gamma by capping the fit window rather
+than the Omega grid, so lever arm is constant while gamma varies, then sweep the
+opposite way (fixed gamma, varying window length). If the exponent tracks gamma at fixed
+lever arm it is physics; if it tracks lever arm at fixed gamma it is the fit absorbing
+higher-order curvature and -1/2 stands. **Do not propose a mechanism before that
+sweep** -- §30.1 died for exactly this.

@@ -5723,3 +5723,65 @@ CME solve and by minimising the closed form.**
 
 Neither was true at the start of this session: the first was thought to be 7.5–15.5% off
 and the second did not exist.
+
+### 36.1 T14-f refuted, and its premise was my own error — `manifold_residual.py`
+
+§36 left a 0.5–1.8% residual and named T14-f — the 2-D minimum action — as the only
+candidate, arguing the residual should be **one-signed and ≥ 1** because *a minimum over
+all paths cannot exceed the value along the slaved one*. Two candidates were eliminated
+first:
+
+* **The pool wobble.** Realised `b` varies on the integer lattice exactly as ε does, and
+  §36 showed the rate is far more sensitive to `b` than to ε — the obvious suspect.
+  Measured: the wobble is **0.00–0.53%**, and adding a `b` regressor moves the rates by
+  **under 0.03%**. Dead.
+* **The fitting window.** Over six Ω windows spanning 200–1200 at 7 points, pred/meas
+  ranges by **1.30–2.29%** per γ — *larger than the residual being explained*. At short
+  windows the residual is entirely instrument.
+
+Redone at §35 grade (Ω to 1800, 11 points, on-manifold start, ε **and** b controlled,
+with a half-split precision check):
+
+| γ | sep | decades | measured | WKB pred | pred/meas | half-split |
+|---|---|---|---|---|---|---|
+| 0.20 | 7.00 | 41.5 | −0.057243 | −0.057031 | 0.9963 | 0.42% |
+| 0.25 | 9.00 | 29.7 | −0.040072 | −0.039970 | 0.9975 | 1.39% |
+| 0.30 | 12.00 | 19.7 | −0.026387 | −0.026177 | 0.9921 | 1.27% |
+| 0.35 | 17.00 | 11.6 | −0.015545 | −0.015266 | **0.9820** | **0.06%** |
+
+> ⚠ **T14-f is REFUTED twice over.** The residual is one-signed **below** 1 — 0/4 above —
+> which the minimum-action argument forbids outright. And the P4 ordering is **backwards**:
+> the residual *grows* with separation (−0.37% at sep 7 → −1.80% at sep 17) where a
+> deviation from the slaved manifold must *shrink* as the manifold becomes more strongly
+> attracting.
+
+> ⚠⚠ **The premise was wrong, and it was mine.** I argued the 1-D slaved result bounds
+> the 2-D action from above because "a minimum over paths cannot exceed the value along
+> the slaved one". **That is a category error.** The 1-D reduction is not the action along
+> a particular 2-D path — it is the exact WKB action of a *different process*, a
+> birth–death chain built from rates projected onto the manifold, whose momentum is
+> conjugate to δ alone rather than to both coordinates. **No variational inequality
+> relates them**, so a residual below 1 was never forbidden and the sign test I built the
+> experiment around had no content. The measurement is fine; the reasoning that gave it
+> meaning was not.
+
+> **Precision, stated against the claim.** Half-split disagreement runs 0.06–1.39%.
+> At γ = 0.25 and 0.30 the residuals (−0.25%, −0.79%) sit **at or below** their own
+> precision and are not resolved. **Only γ = 0.35 is clearly resolved** (−1.80% against
+> 0.06%) — and it is the cell with the fewest decades (11.6), which is exactly where a
+> systematic would be most suspect.
+
+**What stands.** §36's central finding is untouched and is if anything strengthened: the
+on-manifold comparison gives **0.9820–0.9975, mean 0.9920**, against the off-manifold
+1.0805–1.1678. §15's closed form agrees with the exact collapse to **within 2%, one-signed,
+like-for-like** — the 14.8× improvement is not in question. What is withdrawn is the
+*explanation* offered for the last percent, and the argument that made it seem necessary.
+
+**T14-f is closed as refuted. T14-g, open: what is the ~1% one-signed deficit?** It grows
+with sep and with γ, i.e. it is largest where the landscape is shallowest and the fit
+shortest — so the leading candidate is now **instrumental, not physical**: the rate at
+γ = 0.35 is extracted from 11.6 decades against 41.5 at γ = 0.20. **How to kill:** hold
+the decade count fixed across γ by choosing per-γ Ω ranges (§35.2's matched-decade
+construction, which is already written) and re-measure. If the deficit flattens, it is
+lever-arm; if it survives at matched decades, it is physics and needs a mechanism that is
+not the 2-D action.

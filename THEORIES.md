@@ -2214,3 +2214,38 @@ T-axis value and is NOT universal.** Quoting "1 + 0.65/sep" as a general law wou
 
 Neither held at the start of this session: the first was believed 7.5-15.5% wrong, and
 the second did not exist.
+
+
+**T14-f -> §36.1: REFUTED, and its premise was my own reasoning error.** Two candidates
+eliminated first: the realised pool wobble (0.00-0.53%, adding a b regressor moves rates
+under 0.03%) and the fitting window (six Omega windows give a 1.30-2.29% spread, LARGER
+than the 0.5-1.8% residual -- at short windows the residual is entirely instrument).
+
+Redone at §35 grade (Omega to 1800, 11 points, on-manifold, eps AND b controlled, with a
+half-split precision check): ratios 0.9963 / 0.9975 / 0.9921 / 0.9820, **0 of 4 above 1**,
+and the residual GROWS with separation (-0.37% at sep 7 -> -1.80% at sep 17) where a
+deviation from the slaved manifold must SHRINK.
+
+**The premise was a category error and it was mine.** I argued the 1-D slaved result
+bounds the 2-D action from above because a minimum over paths cannot exceed the value
+along the slaved one. **The 1-D reduction is not the action along a 2-D path** -- it is
+the exact WKB action of a DIFFERENT process, a birth-death chain from rates projected
+onto the manifold, with momentum conjugate to delta alone rather than to both coordinates.
+No variational inequality relates them, so a residual below 1 was never forbidden and the
+sign test the experiment was built around had no content.
+
+**Precision against the claim:** half-split 0.06-1.39%, so gamma = 0.25 and 0.30
+(-0.25%, -0.79%) are NOT resolved. Only gamma = 0.35 is clearly resolved (-1.80% against
+0.06%) and it has the fewest decades (11.6 against 41.5), exactly where a systematic is
+most suspect.
+
+**§36 STANDS and is strengthened:** on-manifold 0.9820-0.9975 mean 0.9920 against
+off-manifold 1.0805-1.1678. §15's closed form is right to within 2% like-for-like. Only
+the EXPLANATION of the last percent is withdrawn.
+
+**T14-g, open: what is the ~1% one-signed deficit?** It grows with sep and gamma, i.e. it
+is largest where the landscape is shallowest and the fit shortest, so the leading
+candidate is now INSTRUMENTAL: 11.6 decades at gamma = 0.35 against 41.5 at 0.20. **How
+to kill:** hold the decade count fixed across gamma using §35.2's matched-decade
+construction (already written) and re-measure. Flattens -> lever arm. Survives -> physics,
+and it needs a mechanism that is not the 2-D action.

@@ -2249,3 +2249,37 @@ candidate is now INSTRUMENTAL: 11.6 decades at gamma = 0.35 against 41.5 at 0.20
 to kill:** hold the decade count fixed across gamma using §35.2's matched-decade
 construction (already written) and re-measure. Flattens -> lever arm. Survives -> physics,
 and it needs a mechanism that is not the 2-D action.
+
+
+**§40: THE FIRST EXTERNAL STANDARD. AM sits ~5x from the thermodynamic bound.** Every
+cost number in §37-§39 was a measurement with no external reference. The first-passage
+TUR supplies one -- Var(T)/<T>^2 >= 2/<Sigma>, so Q = (Var(T)/<T>^2)*<Sigma>/2 >= 1 -- and
+both sides were already exact and already built (`first_passage_moments` for Var(T),
+§37's Q_tt Sigma = -sigma_local for <Sigma>, same generator and absorbing set).
+
+**The bound HOLDS at all 32 cells**, Q in [5.39, 180.9]. That is genuine external
+validation of the §37-§39 apparatus: an independent inequality the exact entropy solve
+and the exact first-passage moments had to satisfy together, and did.
+
+**AM is not near it.** Closest approach Q = 5.39 -- roughly 5.4x more dissipation than the
+thermodynamic minimum for the timing precision achieved. Not a thermodynamically optimal
+decision element; its ubiquity is presumably about robustness, simplicity or speed.
+
+**The TUR optimum and the COST optimum are DIFFERENT.** Q falls monotonically toward small
+gamma with its minimum at the grid EDGE (0.05, unbounded below), where §38's cost per
+e-fold has an INTERIOR minimum at 0.20. Two objectives, two optima: harder drive makes the
+decision more deterministic (timing variance falls faster than Sigma rises) which the TUR
+rewards without limit, while gain-per-dissipation pays a ln(1/gamma) penalty that
+eventually dominates. **§38's optimum is real and is NOT the thermodynamic one.**
+
+**Kept honest:** Q's Omega-spread is 1.7-4.7% for gamma <= 0.20 but 16.6-35.6% for
+gamma >= 0.25, so the shallow-landscape cells are NOT converged and are indicative only.
+The small-gamma end, where the conclusion lives, is converged.
+
+**T-TUR-a, open: is the two-sided bound tighter?** The 5.4x gap rests on a ONE-SIDED
+inequality applied to our TWO-SIDED absorbing set (|delta| >= thr). The bound HOLDING is
+robust to that -- applicability could only matter if it were violated -- but reading 5.4
+as the distance from optimal assumes the form is tight here. **How to kill:** re-run with
+a one-sided absorbing condition (delta <= -thr only) so the standard TUR applies verbatim,
+and compare Q. If Q drops toward 1 the gap was the boundary convention, and AM is far
+closer to thermodynamically optimal than §40 reports.

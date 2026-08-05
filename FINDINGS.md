@@ -5785,3 +5785,65 @@ the decade count fixed across γ by choosing per-γ Ω ranges (§35.2's matched-
 construction, which is already written) and re-measure. If the deficit flattens, it is
 lever-arm; if it survives at matched decades, it is physics and needs a mechanism that is
 not the 2-D action.
+
+### 40 The first external standard: AM sits ~5× from the thermodynamic bound
+
+Every cost number in §37–§39 is a measurement with no external reference — nothing said
+whether AM is a *good* decision element or merely a measurable one. A thermodynamic
+uncertainty relation supplies one, because it is a **bound rather than a fit**. The
+first-passage TUR bounds a decision's timing precision by its dissipation,
+`Var(T)/⟨T⟩² ≥ 2/⟨Σ⟩`, so
+
+> **Q = (Var(T)/⟨T⟩²) · ⟨Σ⟩ / 2 ≥ 1**, with Q = 1 at saturation.
+
+Both sides were already exact and already built: `first_passage_moments` solves
+`Q_tt m₂ = −2T` for Var(T) (added this session, cross-checked against the SSA), and §37's
+`Q_tt Σ = −σ_local` gives ⟨Σ⟩. Same generator, same absorbing set, on-manifold start
+(§36), θ scaled with δ*.
+
+**P3: the bound HOLDS at all 32 cells**, Q ∈ [5.39, 180.9]. That is a genuine external
+validation of the whole §37–§39 apparatus — an independent inequality that the exact
+entropy solve and the exact first-passage moments had to satisfy together, and did.
+
+> **P5: AM is not near the bound.** The closest approach is **Q = 5.39**, i.e. AM
+> dissipates roughly **5.4× more than the thermodynamic minimum** for the timing
+> precision it achieves. It is not a thermodynamically optimal decision element, and its
+> ubiquity is presumably about something else — robustness, simplicity, or speed.
+
+| γ | 0.05 | 0.10 | 0.15 | 0.20 | 0.25 | 0.30 | 0.35 | 0.40 |
+|---|---|---|---|---|---|---|---|---|
+| Q | **5.43** | 5.74 | 6.76 | 8.79 | 12.48 | 20.79 | 44.01 | 152.6 |
+
+> ⚠ **P4: the TUR optimum and the cost optimum are DIFFERENT, and that is informative.**
+> Q falls monotonically toward small γ with its minimum **at the grid edge** (γ = 0.05,
+> not bounded below), where §38's cost per e-fold has an **interior** minimum at
+> γ ≈ 0.20. **They are two objectives with two optima**: driving harder makes the
+> decision more deterministic (timing variance falls faster than Σ rises), which the TUR
+> rewards without limit, while gain-per-dissipation pays a ln(1/γ) penalty that
+> eventually dominates. §38's optimum is real and is *not* the thermodynamic one.
+
+> ⚠ **P2 FAILS at large γ and the cells are flagged.** Q's spread across Ω is 1.7–4.7%
+> for γ ≤ 0.20 but rises to 16.6 / 30.8 / 35.6 / 22.7% at γ = 0.25–0.40. Q should be
+> Ω-independent (Var/⟨T⟩² ~ 1/Ω against Σ ~ Ω), so **the shallow-landscape cells are not
+> converged** and their Q values are indicative only. The small-γ end, where the
+> conclusion lives, is converged.
+
+> **What the margin does and does not establish.** The bound holding at Q ≥ 5.4 is robust
+> — applicability concerns could only matter if it were *violated*. But reading 5.4 as
+> "5.4× from optimal" assumes this TUR form is **tight** for our setting, and ours has a
+> **two-sided** absorbing set (|δ| ≥ thr) where the standard statement is one-sided.
+> **If the correct bound for two-sided absorption is tighter, AM is closer to optimal
+> than 5.4× suggests.** That is not established here and the factor should be read as an
+> upper bound on the gap, not a measurement of it.
+
+**What §40 settles.** The cost framework passes its first external check. AM is within an
+order of magnitude of the thermodynamic limit on decision precision but does not
+approach it, and the drive that minimises cost per e-fold of gain is **not** the drive
+that comes closest to the bound — so §38's design principle is about amplification
+economics, not thermodynamic optimality.
+
+**T-TUR-a, open: is the two-sided bound tighter?** The gap of 5.4× rests on a one-sided
+inequality applied to a two-sided absorbing set. **How to kill:** re-run with a one-sided
+absorbing condition (`δ ≤ −thr` only, the error boundary) so the standard TUR applies
+verbatim, and compare Q. If Q drops toward 1, the gap was the boundary convention and AM
+is far closer to optimal than §40 reports.

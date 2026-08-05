@@ -2283,3 +2283,99 @@ as the distance from optimal assumes the form is tight here. **How to kill:** re
 a one-sided absorbing condition (delta <= -thr only) so the standard TUR applies verbatim,
 and compare Q. If Q drops toward 1 the gap was the boundary convention, and AM is far
 closer to thermodynamically optimal than §40 reports.
+
+
+---
+
+## 5. Where this sits in the literature
+
+The project has run without citations. That is a defect, not a style: several results
+here have known counterparts, and three open questions have published frameworks that
+are better routes than anything attempted so far. Recorded with what each bears on.
+
+### The network itself
+
+**Approximate Majority is not ours and is well studied.** Angluin, Aspnes & Eisenstat
+(2008) introduced it as a population protocol and proved O(log n) convergence with
+correctness for an initial gap omega(sqrt(n) log n); Condon et al. (UBC) give a
+tri-molecular analysis improving this to Omega(sqrt(n) log n). Cardelli &
+Csikasz-Nagy (Sci. Rep. **2**, 656, 2012) showed the eukaryotic cell-cycle G2/M switch
+computes AM, and Dodd et al. (2007) show the histone M/U/A epigenetic switch is
+structurally identical to it.
+
+**What this means for CRNL's scope.** That literature analyses CONVERGENCE TIME and
+CORRECTNESS PROBABILITY. **It does not price the switch thermodynamically** -- there is
+no affinity floor, no cost per e-fold, no dissipation-reliability trade in it. §9.1,
+§20, §37-§40 are therefore complementary rather than duplicative. **But note the regime
+mismatch:** their guarantees are for a gap ~ sqrt(n) log n, i.e. eps ~ log(Omega)/sqrt(Omega)
+-> 0, whereas every CRNL result uses FIXED eps. Claims should not be transported between
+the two without saying so.
+
+### T14-e (the prefactor) -- the framework exists and numerics provably cannot substitute
+
+§35.3 proved the algebraic prefactor is unextractable numerically: the asymptotic basis
+functions are 90-99% correlated over any bounded Omega range. **Assaf & Meerson**
+(J. Phys. A **50**, 263001, 2017 -- review; Phys. Rev. E **81**, 021116, 2010) develop
+exactly the dissipative-WKB machinery for master equations and explicitly "yields both
+entropic barriers to extinction AND PRE-EXPONENTIAL FACTORS, and holds for a general set
+of multistep processes WHEN DETAILED BALANCE IS BROKEN" -- our case precisely (gamma < 1).
+**This is the route for T14-e**, and it is analysis, not fitting.
+
+### T14-g / §39.2 (the slow-manifold gap) -- it has a name, and it is a known phenomenon
+
+**Borner, Deeley, Romer, Grafke, Lucarini & Feudel (arXiv:2311.10231), "Saddle avoidance
+of noise-induced transitions in multiscale systems":** noise-induced transitions in
+NON-GRADIENT systems with FAST AND SLOW degrees of freedom "may deviate significantly
+from the FW instanton even for noise so weak that transitions become extremely rare",
+and they "highlight the link between saddle avoidance and timescale separation".
+
+**That is our situation exactly** -- gamma < 1 breaks detailed balance (non-gradient),
+the pool is fast against the signal (multiscale), and §39.2 measured a deviation that
+persists as Omega -> infinity and closes as 1/sep. **Our O(1/sep) law is very likely an
+instance of saddle avoidance**, which would explain why it is not a finite-count effect.
+**Berglund & Gentz** (J. Diff. Eq. **191**, 1-54, 2003) give the rigorous slow-manifold
+concentration results that would make the correction derivable rather than fitted.
+
+### T-TUR-a (the two-sided bound) -- partially CLOSED, and a sharper test exists
+
+Two results bear on it:
+
+  * **Pal, Reuveni & Rahav (arXiv:2103.16578)** derive an FPT TUR valid for arbitrary
+    initial conditions AND absorbing states: CV^2 >= 1/(Sigma/2 + 1). §40's `2/Sigma` is
+    its large-Sigma limit; measured, the refinement moves Q by 0.13-0.22% (§40.1).
+    **So §40's bound choice is justified and its conclusion robust.**
+  * **Neri (SciPost Phys. 12, 139, 2022)** derives bounds for first passage of a current
+    with TWO thresholds -- our geometry -- expressing uncertainty via the SPLITTING
+    PROBABILITY rather than the variance. Crucially the bounds become **EQUALITIES when
+    the thresholded current is the stochastic entropy production**, via the martingale
+    property of exp(-S), giving **p_- = exp(-l_-)** independent of everything else.
+
+**T-TUR-b, open: does the martingale equality hold here?** CRNL computes splitting
+probabilities exactly and to 1e-33 (§35), so p_- = exp(-l_-) is directly checkable -- an
+EXACT parameter-free identity of a kind this project has never tested. **The obstacle is
+construction, not precision:** the threshold must be on the accumulated ENTROPY
+PRODUCTION, not on delta, which requires an augmented chain (state x accumulated S). That
+is a real build. **How to kill:** construct it at small Omega where the augmented state
+space is affordable and check p_- against exp(-l_-). Agreement would validate the entropy
+solve against an exact external identity; disagreement at small l_- is expected since the
+result is asymptotic in the thresholds.
+
+### §37-§39 (the cost) -- the logarithmic divergence is a known general result
+
+**Ouldridge, Govern & ten Wolde (Phys. Rev. X 7, 021004, 2017)** show a canonical
+biochemical readout network faces an accuracy-dissipation trade-off strictly worse than
+the thermodynamic bound, with "the thermodynamic cost diverging LOGARITHMICALLY as
+accuracy approaches 100%". **§37's R diverging and §38's ln(gain) structure are instances
+of this**, which is reassuring for the measurements and deflating for their novelty --
+what is new here is the OPTIMAL DRIVE (§38, gamma ~ 0.20-0.24), not the divergence.
+Rao & Peliti (JSTAT P06001, 2015) and Sartori & Pigolotti (PRL 110, 188101, 2013) give
+the kinetic-vs-energetic discrimination framework that §38's gain/margin split resembles.
+
+### The methodological point
+
+**Three of the open questions had published frameworks and one had a published
+phenomenon, and the project found none of them because it never looked.** The measurements
+stand on their own -- that is what the discipline bought -- but §35.3 spent a session
+proving numerically that a prefactor is unextractable when Assaf & Meerson had published
+how to derive it, and §39.2's 1/sep law was measured without knowing it likely has a name.
+**Search the literature when a question is NAMED, not when it is finished.**

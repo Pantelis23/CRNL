@@ -5847,3 +5847,37 @@ inequality applied to a two-sided absorbing set. **How to kill:** re-run with a 
 absorbing condition (`δ ≤ −thr` only, the error boundary) so the standard TUR applies
 verbatim, and compare Q. If Q drops toward 1, the gap was the boundary convention and AM
 is far closer to optimal than §40 reports.
+
+### 40.1 The bound choice is robust, and AM is ribosome-grade
+
+§40 used `CV² ≥ 2/⟨Σ⟩` and flagged the form as an assumption. Two literature results settle it.
+
+**The bound form.** A first-passage TUR valid for **arbitrary initial conditions and
+systems with absorbing states** (Pal, Reuveni & Rahav, arXiv:2103.16578) gives
+`CV² ≥ 1/(Σ/2 + 1) = 2/(Σ+2)` — precisely our setting, where the standard steady-state
+derivation does not apply. §40's form is its large-Σ limit, and with Σ ~ 900–1600 the
+refinement moves Q by **0.13–0.22%**:
+
+| γ | 0.05 | 0.20 | 0.35 |
+|---|---|---|---|
+| Q (§40's form) | 5.4251 | 8.7880 | 44.0074 |
+| Q (absorbing-state form) | 5.4329 | 8.8072 | 44.0839 |
+
+**§40's conclusion is unaffected: Q_min = 5.39 → 5.40.**
+
+> **The calibration, which changes how §40 should be read.** Song & Hyeon
+> (Phys. Rev. E **101**, 022415) measured the TUR distance for two real enzymes: **T7 DNA
+> polymerase operates close to the bound, while the E. coli ribosome operates ~5× from
+> it.** AM at **Q = 5.39** therefore sits **where the ribosome sits** — not "far from
+> optimal", as §40 phrased it, but at the same distance from the thermodynamic limit as
+> one of the most heavily optimised machines in biology.
+
+> ⚠ **The comparison is suggestive, not exact.** Their Q is a steady-state KPR cycle
+> quantity; ours is a first-passage decision. Both are dimensionless TUR distances, but
+> they are not the same observable, and no claim of numerical equivalence is made. What
+> the anchor establishes is the **scale**: a factor of ~5 is where real, selected
+> biochemistry lives, so §40's number is unremarkable rather than damning.
+
+**§40's wording is corrected**: "AM is not a thermodynamically optimal decision element"
+stands; "its ubiquity is presumably about something else" does not follow, since the
+comparison class it is being measured against also sits at ~5×.

@@ -2412,3 +2412,30 @@ motivated now: §41 shows the entropy bookkeeping is correct, so the remaining q
 about first-passage geometry rather than conventions. **How to kill:** build the augmented
 chain at small Omega and check p_- against exp(-l_-), expecting agreement only
 asymptotically in l_-.
+
+
+**T14-g -> §36.2: CLOSED. The 1-D reduction is ~1% shallow and it is REAL.** Three sweeps,
+because each held a different thing fixed. §36.1's "instrumental" reading is WITHDRAWN:
+the deficit SURVIVES at matched decades (spread 1.64 vs §36.1's 1.55), and the two sweeps
+confound oppositely -- one fixes the Omega window and varies decades, the other fixes
+decades and varies the Omega-ratio -- with the deficit tracking gamma in both.
+
+**But both shared the window's lower edge at Omega = 150**, where -lnP is 8.6 at
+gamma = 0.20 and only 2.3 at gamma = 0.35 (P ~ 0.10, not a tail). Every large-gamma fit
+reached into a region where the Laplace/WKB asymptotic has not taken hold. Starting every
+window at P ~ 1e-4 instead HALVES the spread, 1.64 -> 0.78 points. **Half the apparent
+gamma-dependence was asymptotic validity and it took a third sweep to see it.**
+
+**Result: §15's 1-D closed form runs 0.9911 +- 0.0039 against the exact 2-D collapse --
+one-signed, ~1% shallow**, resolved above half-split precision at 3 of 4 cells. A negative
+deficit is PERMITTED for the reason §36.1 established: the projected-rate chain is a
+different process, not a constrained path, so no variational inequality forces >= 1.
+
+**§36 is strengthened:** on-manifold 0.9911 +- 0.0039 on properly matched windows against
+1.0805-1.1678 off-manifold. Like-for-like agreement is ~1% where fourteen sections read
+7.5-15.5%.
+
+**Methodological, and it cost three runs:** "lever arm" was TWO hidden variables -- span
+and starting depth -- and matching the first left the second free. Rule 9 says measure
+along an axis you did not choose; this says count how many axes you did not choose,
+because a matched-looking comparison can still share an unexamined edge.

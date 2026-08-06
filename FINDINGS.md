@@ -5938,3 +5938,51 @@ thresholding on accumulated entropy production rather than on δ — an augmente
 (state × accumulated S) — and is now better motivated, since the identity above shows the
 entropy bookkeeping is correct and the remaining question is genuinely about the
 first-passage geometry rather than about conventions.
+
+### 36.2 The 1-D reduction is ~1% shallow, and it is real — T14-g closed
+
+§36.1 left a ~1% one-signed deficit and concluded "the leading candidate is now
+instrumental", naming the matched-decade construction as the kill test. **Three sweeps
+were needed because each one held a different thing fixed**, and the first two agreed only
+by accident.
+
+| sweep | held fixed | varies | γ=0.20 | 0.25 | 0.30 | 0.35 | spread |
+|---|---|---|---|---|---|---|---|
+| **B** (§36.1) | Ω window 150–1800 | decades 41.5→11.6 | 0.9963 | 0.9975 | 0.9921 | 0.9820 | 1.55 |
+| **A** | decades ≈ 12 | Ω-ratio 4.1→12.4 | 1.0003 | 0.9999 | 0.9953 | 0.9839 | 1.64 |
+| **C** | start depth **and** span | — | 0.9937 | 0.9949 | 0.9888 | 0.9871 | **0.78** |
+
+> ⚠ **§36.1's "instrumental" reading is WITHDRAWN.** The deficit survives at matched
+> decades (sweep A, spread 1.64 against B's 1.55), so it is not lever-arm. B and A
+> confound oppositely — B fixes the Ω-window and varies decades, A fixes decades and
+> varies the Ω-ratio — and the deficit tracks **γ** in both. Neither explains it.
+
+> **But both silently shared the window's lower edge at Ω = 150**, where −ln P is 8.6 at
+> γ = 0.20 and only **2.3** at γ = 0.35 — P ≈ 0.10, not a tail at all. Every large-γ fit
+> was reaching into a region where the Laplace/WKB asymptotic has not taken hold, and
+> matching *decades* constrains the span, not the starting depth. **Sweep C starts every
+> window at P ≈ 10⁻⁴ and halves the spread, 1.64 → 0.78 points.** So half the apparent
+> γ-dependence was asymptotic validity, and it took a third sweep to see it.
+
+**What survives is a genuine result:** with all four γ compared in the regime where the
+prediction is supposed to apply, **§15's 1-D closed form runs 0.9911 ± 0.0039 against the
+exact 2-D collapse — one-signed, ~1% shallow.** Half-split precisions are 0.23 / 0.78 /
+0.44 / 0.65%, so the deficit is resolved at **three of four** cells (γ = 0.25 is not).
+
+> **A negative deficit is permitted, and §36.1 is why.** The 1-D reduction is not the
+> action along a constrained 2-D path — it is the exact WKB action of a *different*
+> process, a birth–death chain built from projected rates, so no variational inequality
+> forces pred/meas ≥ 1. That correction was made when the sign test failed; here it is
+> what licenses the result.
+
+**T14-g closes.** The 1-D slaved reduction is shallow by ~1%, consistently and for real,
+with a residual γ-dependence of 0.78 points now at the edge of resolution. **§36's
+headline is strengthened, not weakened:** the on-manifold comparison is now 0.9911 ± 0.0039
+on properly matched windows against 1.0805–1.1678 off-manifold — a like-for-like agreement
+of **~1%** where fourteen sections read 7.5–15.5%.
+
+> **Methodological, and it cost three runs.** "Lever arm" turned out to be *two* hidden
+> variables — the span and the starting depth — and matching the first left the second
+> free. Rule 9 says measure along an axis you did not choose; this says check how many
+> axes you did not choose, because a matched-looking comparison can still share an
+> unexamined edge.

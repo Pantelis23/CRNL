@@ -5881,3 +5881,60 @@ refinement moves Q by **0.13–0.22%**:
 **§40's wording is corrected**: "AM is not a thermodynamically optimal decision element"
 stands; "its ubiquity is presumably about something else" does not follow, since the
 comparison class it is being measured against also sits at ~5×.
+
+### 41 An exact identity validates the entropy machinery — T-TUR-b
+
+§37–§40 all rest on one object: `σ_local(n) = Σ_j a_j ln[a_j/a_rev]`, the reverse pairing
+that defines it, and its sign convention. **Nothing had ever checked that object against
+anything external.** §40 checked an *inequality*, which an entropy wrong by a constant
+factor would still satisfy.
+
+THEORIES §5 recorded Neri's martingale result and suggested testing `p₋ = exp(−ℓ₋)`, which
+needs an augmented chain. **The same physics has a cheaper form:** the integral
+fluctuation theorem `⟨e^(−S_tot)⟩ = 1` holds at *any* stopping time, including the
+absorption this project already uses. And it is a linear solve, because tilting each
+transition by its own entropy weight collapses:
+
+> **a_j(n)·e^(−Δs_j) = a_j(n)·a_rev(n')/a_j(n) = a_rev(n')**
+
+so the tilted generator is built from **reverse propensities**, at the same cost as every
+other solve here. With `e^(−S_tot) = e^(−S_med)·π(n_T)/π(n₀)`, two solves differing only
+in their absorbing boundary give the medium and total forms.
+
+**P1 confirmed — the medium term alone comes nowhere near 1**, spanning
+**3.7×10⁻¹¹ to 0.92** across the grid. Quoting it as though it satisfied the IFT is the
+error this experiment exists to exclude.
+
+**P2: the identity holds.** Over 36 cells (γ × Ω × ε × θ):
+
+| | value |
+|---|---|
+| best cell (γ=0.30, Ω=40, ε=0.50) | **\|dev\| = 5.5×10⁻¹⁴** |
+| median over all 36 cells | **1.33×10⁻⁹** |
+| solve residual throughout | ~10⁻¹⁵ |
+
+**σ_local, the reverse pairing and the sign convention are validated together against an
+exact identity** — the first equality, as opposed to inequality, that this project's
+entropy machinery has faced.
+
+> ⚠ **It fails at γ = 0.10, and the failure is conditioning, not physics.** Deviation by
+> γ runs **1.3×10⁻¹² (0.30) → 1.5×10⁻⁹ (0.20) → 4.2×10⁻³ (0.10)**, and one γ = 0.10 cell
+> overflows to 5.9×10²⁸⁰. That tracks the dynamic range exactly: `E[e^(−S_med)]` runs
+> 0.92 → 2.3×10⁻⁴ → 3.7×10⁻¹¹ over the same γ, and π spans correspondingly more decades
+> as the barrier deepens. **The tilted solve carries the full range of π, so a deep
+> landscape destroys it.** Reported, not dropped; the identity is verified where the
+> arithmetic can represent it.
+
+> **The test has teeth, demonstrated by catching me.** The first pass coded the boundary
+> as `π(n₀)/π(n)` — the reciprocal of the correct `π(n)/π(n₀)`. The identity returned
+> **0.0008 instead of 1**, a 1000× deviation, with a solve residual of 10⁻¹⁵ proving the
+> linear algebra was exact and the *convention* was wrong. A sign error in the entropy
+> convention is precisely the failure mode §37–§40 were exposed to, and this test finds
+> it immediately.
+
+**T-TUR-b closes.** The tight martingale route is available in this cheaper form and the
+machinery passes it. **T-TUR-c, open: does `p₋ = exp(−ℓ₋)` hold?** That still requires
+thresholding on accumulated entropy production rather than on δ — an augmented chain
+(state × accumulated S) — and is now better motivated, since the identity above shows the
+entropy bookkeeping is correct and the remaining question is genuinely about the
+first-passage geometry rather than about conventions.

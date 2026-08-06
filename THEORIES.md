@@ -2379,3 +2379,36 @@ stand on their own -- that is what the discipline bought -- but §35.3 spent a s
 proving numerically that a prefactor is unextractable when Assaf & Meerson had published
 how to derive it, and §39.2's 1/sep law was measured without knowing it likely has a name.
 **Search the literature when a question is NAMED, not when it is finished.**
+
+
+**T-TUR-b -> §41: CLOSED. An exact identity validates the entropy machinery.** §37-§40
+all rest on sigma_local, the reverse pairing and the sign convention, and nothing had
+checked that object externally -- §40 tested an INEQUALITY, which an entropy wrong by a
+constant factor would still satisfy.
+
+The integral fluctuation theorem <exp(-S_tot)> = 1 holds at ANY stopping time, including
+the absorption already used, and needs no augmented chain: tilting each transition by its
+entropy weight collapses to a_j exp(-Delta s_j) = a_rev(n'), so the tilted generator is
+built from REVERSE propensities at the same cost as every other solve.
+
+**Verified to 5.5e-14 at the best-conditioned cell, median 1.33e-9 over 36 cells**, with
+solve residuals ~1e-15. The medium term alone spans 3.7e-11 to 0.92, nowhere near 1 (P1).
+**sigma_local, the pairing and the sign convention are validated together against an exact
+identity** -- the first equality, as opposed to inequality, the entropy machinery has met.
+
+**Fails at gamma = 0.10 as CONDITIONING, not physics:** deviation by gamma runs 1.3e-12 ->
+1.5e-9 -> 4.2e-3 as gamma falls 0.30 -> 0.10, with one cell overflowing to 5.9e+280,
+tracking the dynamic range of E[exp(-S_med)] (0.92 -> 3.7e-11) exactly. The tilted solve
+carries the full range of pi, so a deep landscape destroys it.
+
+**The test caught a real convention error -- mine.** The first pass used the boundary
+pi(n_0)/pi(n) instead of pi(n)/pi(n_0) and returned 0.0008 instead of 1, a 1000x
+deviation, with a 1e-15 solve residual proving the algebra exact and the CONVENTION wrong.
+That is exactly the failure mode §37-§40 were exposed to and never tested for.
+
+**T-TUR-c, open: does p_- = exp(-l_-) hold?** Still needs thresholding on accumulated
+entropy production rather than delta -- an augmented chain (state x accumulated S). Better
+motivated now: §41 shows the entropy bookkeeping is correct, so the remaining question is
+about first-passage geometry rather than conventions. **How to kill:** build the augmented
+chain at small Omega and check p_- against exp(-l_-), expecting agreement only
+asymptotically in l_-.

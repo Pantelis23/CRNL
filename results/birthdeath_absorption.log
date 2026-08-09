@@ -1,0 +1,38 @@
+=== P1 GATE: is bd_coeff Omega-independent (exponent 1 on the cheap instrument)?
+ gamma   rho    Om=300    Om=500    Om=700   Om=1000   Om=2000   spread
+  0.07   1.0     0.483     0.500     0.538     0.545     0.546    12.2%
+  0.20   0.5     0.219     1.015     1.283     1.536     1.857   138.6%
+  0.20   1.0     0.679     0.925     0.942     1.019     1.133    48.2%
+  0.20  32.0     0.354     0.381     0.436     0.447     0.450    23.0%
+  0.35   1.0    -3.587    -0.403     0.738     1.686     2.842  2517.8%
+  worst spread 2517.8%  -> P1 FAILS
+
+=== P2/P3/P4/P5: the 1-D chain against the 2-D CME measurement
+ gamma   rho  bd_coeff  cme@1000   bd/cme   K/cme       status
+  0.07   1.0     0.546     3.653    0.150  -0.072   PRE-ASYMPT
+  0.20   0.5     1.857     9.278    0.200   0.314   PRE-ASYMPT
+  0.20   1.0     1.133     4.210    0.269   0.333   asymptotic
+  0.20  32.0     0.450     2.076    0.217   0.293   asymptotic
+  0.35   1.0     2.842    10.258    0.277   0.576   PRE-ASYMPT
+
+=== P2/P3: the asymptotic cells -- does the 1-D chain supply the whole thing?
+  gamma=0.20 rho=1.0   bd/cme = 0.269   (bulk term K alone: 0.333)
+  gamma=0.20 rho=32.0  bd/cme = 0.217   (bulk term K alone: 0.293)
+  bd/cme 0.217..0.269 mean 0.243   vs K/cme mean 0.313
+  -> P3 FAILS, no better than K
+  -> P2 FAILS: a residual remains
+
+=== P4: the sign repair at gamma = 0.07
+  bulk K = -0.263 (wrong sign); bd_coeff = 0.546; measured 3.653  -> REPAIRED
+
+=== P5: pre-asymptotic cells -- bd_coeff should EXCEED the rising measurement
+  gamma=0.07 rho=1.0   bd = 0.546  vs cme@1000 = 3.653 (still rising)  -> BELOW it, contrary to P5
+  gamma=0.20 rho=0.5   bd = 1.857  vs cme@1000 = 9.278 (still rising)  -> BELOW it, contrary to P5
+  gamma=0.35 rho=1.0   bd = 2.842  vs cme@1000 = 10.258 (still rising)  -> BELOW it, contrary to P5
+
+=== P6: verdict
+  bd/cme = 0.243: a +76% residual survives a
+  COMPLETE 1-D account, so it is genuinely 2-D -- pool noise feeding the
+  signal, the stochastic counterpart of §47's deterministic lag.
+
+(18s) wrote results/birthdeath_absorption.json

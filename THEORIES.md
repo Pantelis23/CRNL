@@ -1895,6 +1895,45 @@ to 0.843, not 1. Exponents span 0.20..0.82 from four points with two parameters.
 intercept is robust, the exponent is not**, and convergence to exactly 1 is established only
 under a free exponent.
 
+**T-COST-j -> §49: the exponent is DERIVED as 1, not 1/2 and not fitted.** The Laplace
+expansion of the first-passage integral, with D0 = (up+dn)/2 read straight off `updown`,
+gives `T_det/MFPT - 1 = <eps>_time + K/Omega`. Confirmed where testable: (gap - pred)*Omega
+is constant to 6% (rho=32) and 17% (gamma=0.20). **§48's fitted 0.20..0.82 was averaging
+asymptotic cells together with pre-asymptotic ones** -- the pre-asymptotic ones being mostly,
+though not entirely, the longest-traversal cells (that ordering FAILED at gamma = 0.07 and
+§49 says so).
+
+**T-COST-k -> §50: a COMPLETE 1-D account supplies only ~21%. The rest is 2-D.** The 1-D
+slaved birth-death chain contains bulk, boundary layer and jump discreteness at once and is
+one tridiagonal solve. In the two cells converged by Omega = 2000 it gives bd/cme = 0.213
+and 0.217, **agreeing to 2%**. So ~79% of the absorption coefficient is not one-dimensional
+at all.
+
+  * **§49's K is withdrawn by §50.** At the same cell the bulk term alone gives 0.293 while
+    the complete account gives 0.217 -- a whole smaller than one of its parts. K is an
+    asymptotic expansion resting on a near-cancelling integral (g' changes sign mid-path,
+    and the cancellation flips K NEGATIVE at gamma = 0.07); bd_coeff is exact. §49's
+    surviving contribution is the exponent, which does not depend on K.
+  * **Rule 11 fired twice in three sections, in the same experiment family.** §50's first
+    pass integrated T_det over unrounded limits while the chain ran between rounded lattice
+    points -- an O(1/Omega) mismatch in delta which, times Omega, is exactly the size of the
+    effect. It gave sign-flipping coefficients spreading 3029%. Matching the endpoints
+    removed every oscillation.
+  * **§50's cell selection is POST-HOC and it says so** -- the convergence criterion was
+    chosen after seeing which cells converged, unlike §47's pre-registered delta* >= 0.40.
+    Provisional pending larger Omega.
+
+**T-COST-l, open: is the missing ~79% the pool-fluctuation Jensen term?** The pool b
+fluctuates about its slaved value, so delta feels E[mu(delta,b)] rather than mu(delta,b*) --
+an O(1/Omega) term no 1-D reduction can carry. **This is §39.1's candidate (iii)**, withdrawn
+there as an explanation of the COST while explicitly left live for the TIME: "Either may
+still explain the time gap, which is now a separate and cleaner question." Nine sections
+later it is the leading explanation of exactly that gap. **How to kill:** compute
+E[mu(delta,b)] - mu(delta,b*) with the pool variance from the linear-noise approximation
+about the manifold -- one 2x2 Lyapunov solve per delta -- and test the coefficient in
+ABSOLUTE terms against the missing 79% (rule 16, not a fit). The SIGN is forced: absorption
+shortens the MFPT, so the term must be positive.
+
 **T-COST-j, open: what sets the absorption exponent?** The shortfall decays as Omega^-p with
 p measured at 0.20..0.82 across five cells -- not the 0.5 a naive packet-width argument
 gives, and not constant. **How to kill:** a packet-width account predicts the coefficient

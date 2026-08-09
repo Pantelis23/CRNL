@@ -6649,3 +6649,167 @@ live for the time and which nothing had measured until now.
 terms it spans 0.002–0.010 at Ω = 1000 while the gap spans 0.012–0.143 — so its ratio to the
 gap necessarily grows as the gap shrinks. That is the "wrong direction" §47 observed, and
 §47 was right to refuse to attribute it to higher-order QSS.
+
+---
+
+### 49 The absorption exponent is 1, derived — the coefficient is not the bulk term
+
+§48 closed T-COST-i but left the decay law unresolved, fitting per-cell exponents of
+0.20–0.82 and declining to claim the tidy 1/√Ω that appeared after averaging. Fitting an
+exponent is what rule 16 says never settles anything, so this derives it.
+
+On the slaved manifold δ jumps by ±1 with total fluxes `up` and `dn`, both already computed
+by `updown`, so in concentration units μ = up − dn and **D₀ = (up+dn)/2**. Writing
+g = μ/D₀ so that ψ′ = Ω·g, the Laplace expansion of the first-passage integral gives
+
+> **T_det/MFPT − 1 = ⟨ε⟩_time + K/Ω**,  **K = −(1/T_det)∫ g′/(μg²) dδ**
+
+**The exponent is 1, not 1/2, and K is fully computable with no fit.**
+
+**The exponent is confirmed where it is testable.** `(gap − pred)·Ω` over Ω = 300…1000:
+
+| cell | T_det | 300 | 500 | 700 | 1000 | |
+|---|---|---|---|---|---|---|
+| γ=0.20, ρ=32 | 3.06 | 1.95 | 1.98 | 2.00 | 2.08 | **constant to 6%** |
+| γ=0.20, ρ=1 | 6.65 | 3.58 | 4.11 | 3.90 | 4.21 | **constant to 17%** |
+| γ=0.07 | 4.89 | 2.61 | 2.49 | 2.60 | 3.65 | constant to 4% for Ω ≤ 700 |
+| γ=0.20, ρ=0.5 | 13.57 | 6.55 | 7.31 | 8.62 | 9.28 | rising 42% |
+| γ=0.35 | 12.91 | 4.33 | 7.00 | 9.13 | 10.26 | rising 137% |
+
+**§48's fitted 0.20–0.82 was averaging asymptotic cells together with pre-asymptotic ones.**
+The exponent is 1 where the expansion applies; the cells where it does not are still
+approaching it.
+
+**But P2 fails: K is not the coefficient.** In the two cleanly asymptotic cells, K/measured
+is **0.333 and 0.293** — mean 0.313 with a spread of only **12.9%**, so the bulk term has
+the right shape and scale but is short by a factor of about 3. That crosses the "off by more
+than 3×" bar fixed in advance, so **the bulk diffusion term is refuted as a complete
+account** even though it is clearly a real component.
+
+**And at γ = 0.07 the sign is wrong — K = −0.263 against a measured +3.65.** No
+multiplicative factor repairs a sign.
+
+> ⚠ **§50 withdraws the 31%.** An *exact* tridiagonal solve of the same 1-D process — bulk,
+> boundary layer and discreteness together — gives 0.217 at γ = 0.20, ρ = 32, against the
+> 0.293 the bulk term alone gives here. A complete account cannot be smaller than one of its
+> parts, so K is wrong, for the reason recorded just below: it is a near-cancellation. **The
+> exponent, which does not depend on K, stands.**
+
+> **The reason K is fragile, found by inspecting it rather than by fitting around it.**
+> g rises then falls across the traversal — sign pattern `+ + + + + − − − −` at γ = 0.07,
+> `+ + + + − − − − −` at γ = 0.20 and 0.35 — so **K is a near-cancellation between two
+> comparable halves.** A quantity that is the small difference of larger pieces is the
+> *least* robust member of an O(1/Ω) budget, not the most, and at γ = 0.07 the rising half
+> simply wins. This is why the 31% deficit should not be read as "the bulk term times a
+> constant".
+
+**Two same-order terms are missing by construction, one of which was not named in advance.**
+The derivation extends the inner integral to −∞, so it is the bulk term only and omits the
+absorbing boundary layer of width D/μ — that was P4. The one I did not account for: **the
+CME is a jump process, and its diffusion approximation is itself wrong at O(1/Ω)**, so the
+Kramers–Moyal truncation contributes at exactly the same order as everything else here.
+
+> **The tempting constant is declined (rule 9).** 1/0.313 = 3.19, and π = 3.14159. The two
+> cells individually give 3.00 and 3.41. **Two cells cannot distinguish π from 3 from 3.2**,
+> and naming one would be precisely the move this project keeps having to undo.
+
+> ⚠ **The T_det ordering proposed in the design scan does NOT survive.** It predicted the
+> longest-traversal cells would be the pre-asymptotic ones, which holds for ρ=0.5 (13.57) and
+> γ=0.35 (12.91) — but γ=0.07 has T_det = 4.89, *shorter* than the asymptotic γ=0.20 (6.65),
+> and is still flagged. Its flag rests entirely on the Ω=1000 point, where the residual has
+> fallen to 0.0037 and stopped decaying between Ω = 700 and 1000 — the signature of a
+> numerical floor, not of physics. **Reported as a failed ordering, not quietly dropped.**
+
+**What §49 settles and what it leaves.** Settled: the absorption correction is **O(1/Ω)**,
+derived rather than fitted, and confirmed to 6% and 17% in the two cells where the expansion
+applies. Open: its coefficient. The bulk diffusion term supplies ~31% of it with a
+consistent offset, and the remainder must come from the boundary layer and the
+Kramers–Moyal truncation, neither of which is computed here.
+
+**T-COST-k, open: what supplies the other ~69%?** Both missing terms are O(1/Ω) and both are
+computable. **How to kill:** the Kramers–Moyal term is the cheaper of the two — it is the
+difference between the exact jump-process MFPT and its diffusion approximation on the *same*
+1-D slaved chain, which is one tridiagonal solve against one quadrature and needs no CME at
+all. If that difference alone closes the gap to the measured coefficient, the boundary layer
+is negligible and the budget is complete.
+
+---
+
+### 50 A complete 1-D account supplies only ~21% — the absorption correction is mostly 2-D
+
+§49 left T-COST-k: the bulk diffusion term K supplies ~31% of the absorption coefficient
+and has the wrong sign at γ = 0.07, with two same-order terms missing — the absorbing
+boundary layer and the Kramers–Moyal truncation. **Computing them separately is
+unnecessary: the 1-D slaved birth–death chain contains all three at once.** δ hops ±1 with
+rates Ω·up and Ω·dn, both already returned by `updown`, so its exact MFPT is a tridiagonal
+solve — no expansion, no CME, no fitted parameter.
+
+**P1 fails as pre-registered, and the first pass failed for a reason §48 had already
+taught me.** `T_det` integrated the unrounded limits while the chain ran between the
+*rounded* lattice points m₀/Ω and thr/Ω. That mismatch is O(1/Ω) in δ — which, multiplied
+by Ω, is **exactly the size of the effect being measured**. It produced sign-flipping
+garbage:
+
+| γ, ρ | Ω=300 | 500 | 700 | 1000 | 2000 | spread |
+|---|---|---|---|---|---|---|
+| 0.35, 1 — **before** | −3.587 | 0.920 | −0.583 | 0.363 | 4.167 | **3029%** |
+| 0.35, 1 — after | −3.587 | −0.403 | 0.738 | 1.686 | 2.842 | 2518% |
+| 0.07, 1 — after | 0.483 | 0.500 | 0.538 | **0.545** | **0.546** | 12.2% |
+| 0.20, 32 — after | 0.354 | 0.381 | 0.436 | **0.447** | **0.450** | 23.0% |
+
+Matching the endpoints removed every sign oscillation and made all five series monotone.
+**Rule 11, twice in three sections, in the same experiment family.**
+
+**The gate still fails**: three of five cells have not converged by Ω = 2000. Restricting
+to the two whose last two Ω agree within 1%:
+
+| cell | bd_coeff | cme_coeff | **bd/cme** |
+|---|---|---|---|
+| γ = 0.07, ρ = 1 | 0.546 | 2.568 | **0.213** |
+| γ = 0.20, ρ = 32 | 0.450 | 2.076 | **0.217** |
+
+**The two agree to 2%.** A *complete* one-dimensional account — bulk, boundary layer and
+jump discreteness together, computed exactly — supplies **~21%** of the measured
+correction.
+
+> **That selection is post-hoc and it weakens the claim.** The convergence criterion was
+> chosen after seeing which cells converged, unlike §47's δ\* ≥ 0.40 which was fixed in
+> advance. The three unconverged cells give 0.200, 0.269 and 0.277, and their bd_coeff is
+> still rising, so those are lower bounds. The result is provisional pending a run at larger
+> Ω.
+
+**P4 holds and is diagnostic.** At γ = 0.07 the bulk term K = −0.263 against a measured
++3.65 — a sign error no factor could repair. The complete chain gives **+0.546**. So §49's
+sign failure was the near-cancellation in K, exactly as diagnosed, and not something
+structural in the slaved reduction.
+
+**P2, P3, P5 all fail.** The 1-D chain is not better than K (0.243 mean vs 0.313), does not
+supply the whole correction, and does not exceed the still-rising measurements in the
+pre-asymptotic cells.
+
+> **~79% is genuinely two-dimensional, and the suspect was named nine sections ago
+> (rule 17).** The pool `b` fluctuates about its slaved value, so the effective drift felt
+> by δ is E[μ(δ, b)] rather than μ(δ, b\*) — a Jensen term, O(1/Ω), that no one-dimensional
+> reduction can carry. **That is §39.1's candidate (iii)**, which §39.1 withdrew as an
+> explanation of the *cost* while explicitly recording that it "may still explain the *time*
+> gap, which is now a separate and cleaner question." It is now the leading explanation of
+> precisely that gap. **How to kill:** compute E[μ(δ,b)] − μ(δ,b\*) with the pool variance
+> from the linear-noise approximation about the manifold — one 2×2 Lyapunov solve per δ —
+> and test the resulting coefficient absolutely against the missing 79%. It must also
+> reproduce the *sign*, which is fixed: absorption makes the MFPT shorter, so the term must
+> be positive.
+
+> ⚠ **§49's 31% and §50's 21% are inconsistent, and §50's supersedes it.** At the *same*
+> cell (γ = 0.20, ρ = 32) the bulk term alone gives 0.293 while the *complete* 1-D account
+> gives 0.217 — **a whole that is smaller than one of its parts.** Since the boundary-layer
+> and discreteness terms have no reason to be negative, one of the two is wrong, and it is
+> K: K is an asymptotic expansion resting on a near-cancelling integral (§49 showed g′
+> changes sign mid-path and that the cancellation flips K negative at γ = 0.07), while
+> bd_coeff is an *exact* tridiagonal solve of the actual one-dimensional process. **§49's
+> "the bulk term supplies 31%" is withdrawn; the exact 1-D chain supplies ~21% and
+> supersedes it.** §49's surviving contribution is the *exponent*, which is independent of K.
+
+**Where the cost budget stands.** `T_det/MFPT − 1 = ⟨ε⟩_time + C/Ω`, with ⟨ε⟩ the
+deterministic lag (§47, exact as Ω → ∞ by §48) and the exponent on C derived and confirmed
+(§49). Of C, an exact one-dimensional account supplies **~21%**; **the remaining ~79% is
+2-D pool noise, unmeasured, and is the only piece of the cost arc still without a number.**

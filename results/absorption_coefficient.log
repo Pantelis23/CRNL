@@ -1,0 +1,37 @@
+=== P1 GATE (rule 13): is K converged in its quadrature?
+   nodes           K   rel change
+     101     1.40596          nan
+     201     1.40547     3.50e-04
+     401     1.40534     8.76e-05
+     801     1.40531     2.19e-05
+  -> P1 HOLDS
+
+=== P2/P3: K against the measured (gap - pred)*Omega, per cell
+ gamma   rho   T_det        K  meas@300  meas@500  meas@700 meas@1000  K/meas(max Om)        status
+  0.07   1.0    4.89   -0.263      2.61      2.49      2.60      3.65          -0.072    PRE-ASYMPT
+  0.20   0.5   13.57    2.918      6.55      7.31      8.62      9.28           0.314    PRE-ASYMPT
+  0.20   1.0    6.65    1.403      3.58      4.11      3.90      4.21           0.333    asymptotic
+  0.20  32.0    3.06    0.608      1.95      1.98      2.00      2.08           0.293    asymptotic
+  0.35   1.0   12.91    5.911      4.33      7.00      9.13     10.26           0.576    PRE-ASYMPT
+
+=== P2: the absolute test in the 2 asymptotic cells
+  gamma=0.20 rho=1.0   K=1.403  measured=4.210  K/meas=0.333
+  gamma=0.20 rho=32.0  K=0.608  measured=2.076  K/meas=0.293
+  K/meas: 0.293..0.333, mean 0.313, spread 12.9%
+  -> P2/P5: REFUTED, off by more than 3x
+
+=== P3: the pre-asymptotic cells -- K must EXCEED a still-rising measurement
+  gamma=0.07 rho=1.0   T_det=4.9  measured 2.61 -> 3.65 (rising)  K=-0.263  -> K is BELOW it, contrary to P3
+  gamma=0.20 rho=0.5   T_det=13.6  measured 6.55 -> 9.28 (rising)  K=2.918  -> K is BELOW it, contrary to P3
+  gamma=0.35 rho=1.0   T_det=12.9  measured 4.33 -> 10.26 (rising)  K=5.911  -> K is BELOW it, contrary to P3
+
+=== P4: is K/meas a consistent offset (missing boundary term) or scattered?
+  spread across asymptotic cells 12.9%
+  -> CONSISTENT offset of 0.313. The bulk form is right and the
+     boundary-layer term, same order 1/Omega, is what is missing.
+
+=== P6: verdict on the exponent
+  §48 fitted 0.20..0.82 and declined to claim 1/2. Here the exponent is
+  DERIVED as 1, and (gap-pred)*Omega is constant in 2/5 cells -- the other 3 being the longest-traversal cells, T_det = 4.9, 13.6, 12.9 against 6.7, 3.1.
+
+(3s) wrote results/absorption_coefficient.json

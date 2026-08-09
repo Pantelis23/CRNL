@@ -550,3 +550,32 @@ def test_traversal_endpoints_match_the_lattice_the_cme_uses():
     t_real = traversal(net, d0 / omega, thr / omega, reverse_pairing(net))
     assert t_nom is not None and t_real is not None
     assert 0 < abs(t_real - t_nom) / t_nom < 0.02, "small, but not zero"
+
+
+def test_birthdeath_chain_needs_matched_lattice_endpoints():
+    """FINDINGS 50: rule 11 again -- T_det must integrate between the chain's own endpoints.
+
+    Integrating the unrounded limits while the chain runs between the rounded ones is an
+    O(1/Omega) error in delta, which after multiplying by Omega is the size of the whole
+    effect. It produced sign-flipping coefficients before it was fixed.
+    """
+    from crnl.networks.am_reversible import reverse_pairing
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho
+    from experiments.birthdeath_absorption import cell
+    from experiments.lag_endpoints import traversal
+
+    gamma, rho = 0.07, 1.0
+    ds = delta_star_rho(gamma, rho)
+    net = am_rho(gamma, rho)
+    vals = [cell(gamma, rho, om, 0.35, 0.80)["bd_coeff"] for om in (1000, 2000)]
+    assert all(v > 0 for v in vals), "the exact chain must give a positive correction"
+    # 2.1% between Omega = 1000 and 2000 at these nominal endpoints; the run's own
+    # realised endpoints converge to 0.2%. Either way it is settling, not drifting.
+    assert abs(vals[1] - vals[0]) / vals[1] < 0.03, "and be Omega-independent once converged"
+
+    om = 1000
+    m0, thr = int(round(0.35 * ds * om)), int(round(0.80 * ds * om))
+    t_match = traversal(net, m0 / om, thr / om, reverse_pairing(net), n=4001)
+    t_un = traversal(net, 0.35 * ds, 0.80 * ds, reverse_pairing(net), n=4001)
+    # the mismatch, times Omega, is comparable to the coefficient being measured
+    assert abs(t_match - t_un) * om > 0.1 * vals[0]

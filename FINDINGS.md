@@ -6560,6 +6560,14 @@ the scatter into its constant and reported agreement.** That is the whole conten
 16: the fit cannot tell you your instrument is broken, because it has a free parameter to
 hide the breakage in.
 
+> ⚠ **§48 resolves this: the shortfall is finite-Ω absorption bias and it extrapolates
+> away.** Every one of five cells, with endpoints matched to the lattice, converges
+> monotonically upward in Ω and extrapolates to pred/gap = **1.00 ± 0.02**. §47's refusal to
+> attribute the shortfall to higher-order QSS was correct, and the "wrong direction" puzzle
+> below is explained: the shortfall is not proportional to the gap (absolute 0.002–0.010
+> while the gap spans 0.012–0.143), so its *fraction* grows as the gap shrinks. **The lag
+> model is exact as Ω → ∞.**
+
 > **Suspect, and it does NOT fit (rule 17).** The 8% systematic shortfall was predicted in
 > advance as the expected size of the next-order quasi-steady-state correction, which is
 > O(gap) in the same small parameter. **But it does not behave like one.** A higher-order
@@ -6569,3 +6577,75 @@ hide the breakage in.
 > QSS, and attributing it there would be exactly the move this project keeps having to undo.
 > **How to kill:** the γ = 0.35 cell is also the one nearest the resolution floor, so
 > re-measure the shortfall against the gap at Ω = 700+ before treating its sign as real.
+
+---
+
+### 48 The shortfall extrapolates away — the lag model is exact as Ω → ∞
+
+§47 predicted the `T_det/MFPT` gap with no fitted constant and landed 8% short, then
+declined to attribute the shortfall to next-order quasi-steady state because it ran the
+wrong way: pred/gap was 0.936 where the gap was 0.150 and 0.780 where it was 0.051. Two
+instrument candidates, both measured before predictions were written: **(a)** `T_det`
+integrates the *nominal* [εδ\*, θδ\*] while the CME first-passage runs between the *lattice*
+endpoints d₀/Ω and thr/Ω — rule 11, literally — and **(b)** the absolute shortfall clustered
+near +0.003 across cells whose gaps differed 7×.
+
+**P2 is refuted. The endpoints are not the cause.** Matching them moves `T_det` by
+**−0.09% to +1.02%** against a shortfall of 10–25%, and the per-cell prediction failed
+outright: γ = 0.35, which had the largest overshoot and the worst ratio, got **worse** by
+0.043, while γ = 0.07 improved by only 0.006.
+
+**But matching them turned noise into a signal, and that is what mattered.** Nominal
+endpoints give erratic series; matched endpoints give monotone ones — in **all five cells**:
+
+| cell | Ω=300 | Ω=500 | Ω=700 | Ω=1000 |
+|---|---|---|---|---|
+| γ=0.07 nominal | 0.936 | 1.052 | 1.000 | 0.991 |
+| γ=0.07 **matched** | 0.9415 | 0.9655 | 0.9741 | **0.9745** |
+| γ=0.20 nominal | 0.969 | 0.937 | 0.983 | 0.941 |
+| γ=0.20 **matched** | 0.8836 | 0.9172 | 0.9421 | **0.9558** |
+| γ=0.35 **matched** | 0.7369 | 0.7397 | 0.7541 | **0.7959** |
+| ρ=0.5 **matched** | 0.7226 | 0.7950 | 0.8214 | **0.8594** |
+| ρ=32 **matched** | 0.6065 | 0.7159 | 0.7776 | **0.8281** |
+
+The lattice rounding varies erratically with Ω, so the nominal ratios bounce and no
+convergence can be read off them at all. **The endpoint fix bought monotonicity, not
+accuracy** — and monotonicity is what makes P3 and P4 testable.
+
+**P4 holds, and its sign was forced in advance.** Absorption at a threshold selects the
+leading edge of the packet, so the MFPT sits *below* the mean arrival, the measured gap
+*exceeds* the pure lag, and pred/gap must approach 1 **from below**. Every cell is below 1
+and every cell rises with Ω: means 0.778 → 0.827 → 0.854 → 0.883.
+
+**P3/P6 — it extrapolates to 1.** Per cell, fitting `1 − pred/gap = c·Ω^(−p)`:
+
+| γ | ρ | Ω=300 | Ω=1000 | exponent | intercept (1/√Ω) | intercept (free p) |
+|---|---|---|---|---|---|---|
+| 0.07 | 1 | 0.0585 | 0.0255 | 0.72 | 1.0212 | **1.0038** |
+| 0.20 | 0.5 | 0.2774 | 0.1406 | 0.55 | 1.0206 | **0.9995** |
+| 0.20 | 1 | 0.1164 | 0.0442 | 0.82 | 1.0460 | **0.9982** |
+| 0.20 | 32 | 0.3935 | 0.1719 | 0.69 | 1.0980 | **0.9968** |
+| 0.35 | 1 | 0.2631 | 0.2041 | 0.20 | 0.8427 | **0.9838** |
+
+**All five extrapolate to pred/gap = 1.00, spanning 0.984–1.004, mean 0.996.** The lag
+model — `T_det/MFPT − 1 = ⟨ε⟩_time`, no fitted parameter — is **exact in the Ω → ∞ limit**,
+and §47's 8% shortfall is finite-Ω absorption bias: §39.1's candidate (iv), which §39.2 left
+live for the time and which nothing had measured until now.
+
+> **Rule 15: the two ansätze disagree, so the decay LAW is unresolved.** Free-p gives
+> 0.984–1.004; a fixed 1/√Ω gives **0.843–1.098**, and at γ = 0.35 it extrapolates to 0.843,
+> not 1. The exponents span **0.20–0.82** (median 0.69) and are fitted from four points with
+> two parameters, so they are weakly determined. **The intercept is robust; the exponent is
+> not.** Convergence to exactly 1 is established only under a free exponent.
+
+> ⚠ **Rule 18, caught in the act.** Averaged across cells, the shortfall looks like a clean
+> law: `(1 − mean ratio)·√Ω` = 3.842, 3.876, 3.866, 3.708 — **constant to 4% over a 3.3×
+> range in Ω**, which would have been reported as a discovered 1/√Ω absorption law. Per
+> cell, the same coefficient spans **0.7 to 6.5**. The mean is an artifact of averaging cells
+> with different coefficients, and the clean law is not claimed. This is precisely §23.5's
+> failure — a fit across an axis averaging a localised effect into something tidy.
+
+**§47's puzzle is resolved.** The shortfall is *not* proportional to the gap — in absolute
+terms it spans 0.002–0.010 at Ω = 1000 while the gap spans 0.012–0.143 — so its ratio to the
+gap necessarily grows as the gap shrinks. That is the "wrong direction" §47 observed, and
+§47 was right to refuse to attribute it to higher-order QSS.

@@ -1868,6 +1868,41 @@ conventions) and never to the measurement. A FITTED model would have absorbed th
 into its constant and reported agreement; only a prediction with no free parameter could
 say "your data is wrong". That is rule 16's actual content.
 
+~~**T-COST-i, open: what is the 8% systematic shortfall?**~~ **CLOSED by §48: it is
+finite-Omega absorption bias and it extrapolates away. The lag model is EXACT as
+Omega -> infinity.** Five cells, endpoints matched to the lattice, all converge
+monotonically upward in Omega and extrapolate to pred/gap = 1.00 (0.984..1.004, mean 0.996).
+That identifies §39.1's candidate (iv) -- absorption selecting the leading edge of the
+packet -- which §39.2 left live for the time and which nothing had measured.
+
+**Two things in §48 are worth more than the closure.**
+
+  * **The endpoint fix bought MONOTONICITY, not accuracy.** Matching `T_det`'s limits to the
+    lattice endpoints the CME actually uses (rule 11) moves T_det by under 1% and does NOT
+    reduce the shortfall -- the pre-registered per-cell prediction failed outright. But the
+    nominal series BOUNCE with Omega (0.936, 1.052, 1.000, 0.991) while the matched ones are
+    monotone in all five cells. Without that, no convergence could be read off at all, and
+    P3/P4 were untestable.
+  * **Rule 18 caught in the act.** Averaged over cells, the shortfall looks like a clean law:
+    (1 - mean ratio)*sqrt(Omega) = 3.842, 3.876, 3.866, 3.708 -- constant to 4% over 3.3x in
+    Omega, and it would have been reported as a discovered 1/sqrt(Omega) absorption law. Per
+    cell the same coefficient spans 0.7 to 6.5. **The mean is an averaging artifact and the
+    law is not claimed.**
+
+**Rule 15 applies to the closure itself: the DECAY LAW is unresolved.** Free-exponent fits
+give intercepts 0.984..1.004; a fixed 1/sqrt(Omega) gives 0.843..1.098 and sends gamma = 0.35
+to 0.843, not 1. Exponents span 0.20..0.82 from four points with two parameters. **The
+intercept is robust, the exponent is not**, and convergence to exactly 1 is established only
+under a free exponent.
+
+**T-COST-j, open: what sets the absorption exponent?** The shortfall decays as Omega^-p with
+p measured at 0.20..0.82 across five cells -- not the 0.5 a naive packet-width argument
+gives, and not constant. **How to kill:** a packet-width account predicts the coefficient
+scales with the local drift steepness at the threshold and the diffusion there, both of which
+are computable exactly on the slaved manifold; compute them and test the coefficient in
+ABSOLUTE terms (rule 16), not by fitting p. gamma = 0.35, the slowest converger at p = 0.20,
+is the discriminating cell.
+
 **T-COST-i, open: what is the 8% systematic shortfall?** pred/gap ~ 0.92 on both axes. It
 was predicted in advance as next-order quasi-steady-state, which is O(gap) in the same small
 parameter -- **but it does not behave like one.** A higher-order term must shrink where the

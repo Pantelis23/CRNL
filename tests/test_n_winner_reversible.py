@@ -521,3 +521,32 @@ def test_lag_prediction_explains_the_fitted_constant():
         vals.append(p * sep_of(net)[0])
     assert 0.50 < min(vals) and max(vals) < 0.75
     assert 0.55 < float(np.mean(vals)) < 0.70
+
+
+def test_traversal_endpoints_match_the_lattice_the_cme_uses():
+    """FINDINGS 48: rule 11 -- the control must share its endpoints with its arm.
+
+    T_det integrated over the NOMINAL range differs from the realised lattice range the
+    first-passage solve actually runs between. The offset is small (<1% in T_det) but it
+    is what made the nominal ratios bounce with Omega instead of converging.
+    """
+    from crnl.networks.am_reversible import reverse_pairing
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho
+    from experiments.lag_endpoints import traversal
+    from experiments.slaving_axis import slaved
+
+    gamma, omega = 0.35, 300
+    ds = delta_star_rho(gamma, 1.0)
+    net = am_rho(gamma, 1.0)
+    st = slaved(net, 0.35 * ds)
+    nb = int(round(st[2] * omega))
+    d0 = max(1, int(round(0.35 * ds * omega)))
+    if (omega - nb - d0) % 2:
+        d0 -= 1
+    thr = max(2, int(round(0.80 * ds * omega)))
+
+    assert abs(d0 / omega / ds - 0.35) > 1e-3, "this cell must actually be off-lattice"
+    t_nom = traversal(net, 0.35 * ds, 0.80 * ds, reverse_pairing(net))
+    t_real = traversal(net, d0 / omega, thr / omega, reverse_pairing(net))
+    assert t_nom is not None and t_real is not None
+    assert 0 < abs(t_real - t_nom) / t_nom < 0.02, "small, but not zero"

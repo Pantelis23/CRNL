@@ -447,3 +447,37 @@ def test_sep_is_non_monotone_in_rho():
     assert 0 < i < len(seps) - 1, "sep must have an INTERIOR minimum in rho"
     assert seps[i] < seps[0] and seps[i] < seps[-1]
     assert seps[-1] > 5 * seps[i], "sep must still grow strongly at large rho"
+
+
+def test_slow_eigenvalue_crosses_zero_mid_path():
+    """FINDINGS 46: why only a HARMONIC path average of sep is defined.
+
+    The slow eigenvalue changes sign near delta/delta* ~ 0.57, where the drift peaks, so
+    sep(delta) diverges there. An arithmetic mean of sep is meaningless; <1/sep> is not.
+    """
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho
+    from experiments.path_separation import eigs_at
+
+    net, ds = am_rho(0.20, 1.0), delta_star_rho(0.20, 1.0)
+    slow = [eigs_at(net, f * ds)[1] for f in (0.35, 0.45, 0.55, 0.65, 0.75)]
+    assert slow[0] > 0 and slow[-1] < 0, "the slow eigenvalue must change sign on the path"
+    assert all(a > b for a, b in zip(slow, slow[1:])), "and do so monotonically"
+
+
+def test_rho_scales_both_eigenvalues_together():
+    """FINDINGS 46: the structural reason no ratio can explain the residual.
+
+    rho = 0.5 -> 4 moves fast and slow by nearly the SAME factor, so the ratio barely
+    changes -- which is why the matched pair stayed matched under every convention.
+    """
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho
+    from experiments.path_separation import eigs_at
+
+    f = []
+    for rho in (0.5, 4.0):
+        ds = delta_star_rho(0.20, rho)
+        f.append(eigs_at(am_rho(0.20, rho), 0.35 * ds))
+    fast_ratio = f[1][0] / f[0][0]
+    slow_ratio = f[1][1] / f[0][1]
+    assert 3.0 < fast_ratio < 4.5 and 3.0 < slow_ratio < 4.5
+    assert abs(fast_ratio - slow_ratio) / fast_ratio < 0.15, "they scale together"

@@ -6338,6 +6338,17 @@ variable.**
 > residual changes sign along γ" is a reading the data does not support at this resolution,
 > and it is recorded here as unresolved rather than as a finding.
 
+> ⚠ **§46 corrects the framing of this section in two places. The numbers stand; two
+> readings do not.** (i) The closing paragraphs below hand the residual back to "T-COST-c's
+> remaining candidates" — but **T-COST-c was closed by §39.1**, which showed the whole cost
+> residual is a *time* residual and explicitly withdrew the off-manifold path and the Jensen
+> gap as explanations of the cost. There were no remaining candidates to hand it to.
+> (ii) The two-knob split reported as evidence *against* sep is **§39.2's published finding
+> under rule 9** — that the 1/sep coefficient does not transfer between axes — arriving on a
+> third axis. It is a confirmation read as a refutation. And this section tests
+> `Σ_pred/Σ_exact` where §39.1/§39.2 test `T_det/MFPT`; they correlate at 0.95, not 1.
+> **§46 re-runs the right quantity and finds something sharper.**
+
 **Verdict. T-COST-f survives in its weak form and is refuted in its quantitative form.**
 ρ does act partly through the timescale separation — the non-monotone signature is
 unambiguous and the residual closes to 0.7% at large sep. But sep alone does not determine
@@ -6352,3 +6363,104 @@ the residual, so "ρ works by deepening slaving" is *incomplete*, not establishe
 > P3 and P4 against it. If the 8× matched pair then agrees and the two knobs collapse, the
 > governing variable was the path separation all along. If they still split, slaving is not
 > the mechanism and §44.2's lever keeps its measurement and loses its account.
+
+---
+
+### 46 The 1/sep scaling is axis-dependent too — a third axis breaks §39.2's law
+
+§45 named the path separation as T-COST-f's successor: `sep_of` measures the eigenvalue
+ratio at the *symmetric point*, while the traversal happens away from it. This tests it —
+and on the way it corrects §45's framing, which was wrong about what was being asked.
+
+**The averaging convention is forced, not chosen.** The slow eigenvalue crosses zero near
+δ/δ\* ≈ 0.57, where the drift μ peaks, so sep(δ) *diverges mid-path*:
+
+| δ/δ\* | 0.35 | 0.45 | 0.55 | 0.65 | 0.75 | 0.80 |
+|---|---|---|---|---|---|---|
+| sep (ρ=0.5) | 18.8 | 31.3 | **188.2** | 37.0 | 15.3 | 11.5 |
+
+The arithmetic mean of sep is therefore meaningless and only a **harmonic** mean is
+defined — which is also what the physics wants, since 1/sep corrections add along the path.
+Three weightings computed, all reported (rule 15): uniform in δ, time-weighted (dδ/μ), and
+cost-weighted (σ/μ dδ), with **cost nominated as primary in advance**.
+
+**P1 gate passes — the distinction is real.** At γ = 0.20, ρ = 1 the path separations are
+16.59 / 15.76 / 17.56 against a point value of 7.000, differing by **125–151%**. So the
+experiment has content.
+
+**And all three conventions fail, exactly as predicted (P5).**
+
+| convention | ρ=0.5 vs ρ=4 sep | matched? | ρ slope | γ slope | collapse? |
+|---|---|---|---|---|---|
+| point | 11.70 vs 10.56 (1.11×) | yes | 0.441 | 1.147 | 2.60× split |
+| path | 28.60 vs 26.46 (1.08×) | yes | 0.952 | 2.657 | 2.79× split |
+| time | 27.27 vs 25.21 (1.08×) | yes | 0.901 | 2.515 | 2.79× split |
+| cost | 29.61 vs 27.82 (1.06×) | yes | 1.007 | 2.909 | 2.89× split |
+
+The 8× matched pair has residuals **3.11× apart** and no convention separates their
+separations by more than 1.11×. The path conventions are marginally *worse* than the point
+one. **The path separation is not the missing variable.**
+
+**The reason is structural and was visible before the run.** Over ρ = 0.5 → 4 the fast
+eigenvalue goes −1.13 → −3.83 (3.4×) and the slow one 0.060 → 0.221 (3.7×) — **both scale
+together**, which is exactly why the point ratio matched. §44's P1a proved Σ is *exactly*
+invariant under a uniform rate rescale, so under a perfectly uniform one the residual could
+not move at all. No ratio, at a point or along a path, can manufacture a 3× from an 8%
+departure from uniformity.
+
+### 46.1 The correction — and the sharper result underneath it
+
+**Reading §39.1 and §39.2 before writing §45 up showed the question was mis-posed.**
+
+* **T-COST-c is closed.** §39.1 established that the entire cost residual *is* a time
+  residual (correlation +0.9513) and **withdrew** the off-manifold path and the Jensen gap
+  as explanations of the cost. §45's closing text hands the residual back to "remaining
+  candidates" that do not exist.
+* **§39.2 already recorded coefficient non-transfer, under rule 9 and in as many words:**
+  the T-axis value 0.6465 predicts 16.2% at γ = 0.07 against 16% measured, but 5.4% at
+  γ = 0.30 against 8% measured, 33% off. **So "the two knobs give different slopes" is that
+  published finding on a third axis — a confirmation read as a refutation.**
+* **The quantity was wrong.** §39.1/§39.2 test `T_det/MFPT`. §45 tested `Σ_pred/Σ_exact`.
+
+So the corrected question is not whether the axes share a coefficient — §39.2 says they do
+not — but **whether the 1/sep scaling itself holds along ρ, with its own coefficient.**
+
+**P7 gate.** §39.2 publishes `T_det/MFPT − 1 = +0.0914` at γ = 0.20, sep = 7.00. This run
+gives **+0.0805 (Ω=200) and +0.0938 (Ω=300)** — bracketing it. Reproduced.
+
+**P8/P10 — and this is the result.** `(T_det/MFPT − 1)·sep`, the quantity §39.2 found
+constant to 12.3% on the T axis, with §39.2's own resolution cut (gap < 0.008 excluded and
+reported):
+
+| ρ | 0.5 | 0.75 | 1.0 | 1.5 | 2.0 | 3.0 | 4.0 | 6.0 | 8.0 | 16 | 32 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| gap | .0808 | .0886 | .0805 | .1029 | .0771 | .0623 | .0674 | .0519 | .0423 | .0251 | .0160 |
+| gap·sep | **0.946** | 0.712 | 0.563 | 0.692 | 0.555 | **0.544** | 0.712 | 0.750 | 0.781 | 0.874 | **1.082** |
+
+| axis | coefficient | spread | verdict |
+|---|---|---|---|
+| T (§39.2) | 0.6465 | **12.3%** | scaling holds |
+| γ (here, 4 cells + 1 excluded) | 0.5963 | **22.2%** | scaling holds |
+| **ρ (here, 11 cells)** | 0.7465 | **72.1%** | **scaling FAILS** |
+
+**§39.2's 1/sep law holds on the T axis, holds on the γ axis, and breaks on the ρ axis.**
+And it does not break by drifting — `gap·sep` is **U-shaped in ρ**, bottoming near 0.545 at
+ρ = 2–3 and rising to 0.946 and 1.082 at the ends. That is a different *functional form*,
+not a different constant.
+
+> **This qualifies §39.2's central claim.** §39.2 established the 1/sep *scaling* on two
+> axes and was careful to say the *coefficient* is not universal. **The scaling is not
+> universal either.** §39.2's headline — that the closed form is exact in the slaved limit
+> with an O(1/sep) correction — survives as a statement about the limit; the *rate* of
+> approach is axis-dependent, and on ρ it is not 1/sep at all.
+
+> **Suspect, with its kill test (rule 17).** The three axes move the two eigenvalues in
+> *opposite proportions*: ρ takes fast ×26 and slow ×4, while γ takes fast ×1.4 and slow
+> ÷3.3. A law in their ratio alone cannot capture both. The slow-manifold lag should
+> physically go as *manifold velocity over pool relaxation rate*,
+> `|db*/dδ · μ| / |λ_fast|` — dimensionally a different object from `|λ_slow|/|λ_fast|`,
+> and equal to it only when the manifold's motion is set by the slow eigenvalue.
+> **How to kill:** compute it on all three axes and check constancy. A partial check
+> discourages the simplest version — `gap·|λ_fast|` alone drifts **5×** across the ρ axis
+> (0.091 → 0.472) — so the `db*/dδ · μ` factor must carry the whole difference or the idea
+> is wrong.

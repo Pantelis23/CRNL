@@ -1812,6 +1812,45 @@ lever keeps its measurement while its account stays a suspect. §45 also decline
 the sign change the raw numbers suggest along gamma: it rests on one cell whose two Omega
 disagree by 8%.
 
+~~**T-COST-f2, open: is the governing variable the PATH separation rather than the point
+separation?**~~ **CLOSED NEGATIVE by §46 — and §45's framing was corrected in the process.**
+All three harmonic path conventions (uniform, time-weighted, cost-weighted) leave the 8x
+matched pair matched to within 1.11x against a 3.11x residual gap, and leave the two knobs
+split by 2.79-2.89x — marginally WORSE than the point convention. The structural reason was
+visible beforehand: over rho = 0.5 -> 4 both eigenvalues scale together (3.4x and 3.7x), so
+no ratio, at a point or along a path, can manufacture a 3x.
+
+**§45's framing was wrong in two ways and §46 says so.** T-COST-c was closed by §39.1, so
+there were no "remaining candidates" to hand the residual back to; and §39.2 had ALREADY
+recorded, under rule 9, that the 1/sep coefficient does not transfer between axes — so
+"the two knobs give different slopes" was that published finding on a third axis, a
+confirmation read as a refutation. §45 also tested the COST ratio where §39.1/§39.2 test
+the TIME ratio.
+
+**T-COST-f2 -> §46: the sharper result is that the 1/sep SCALING is axis-dependent, not
+just its coefficient.** On `(T_det/MFPT - 1)*sep`, with §39.2's own resolution cut:
+
+    T axis (§39.2)   0.6465   spread 12.3%   holds
+    gamma axis       0.5963   spread 22.2%   holds
+    rho axis         0.7465   spread 72.1%   FAILS
+
+and it fails by changing SHAPE, not drifting: gap*sep is U-shaped in rho, bottoming near
+0.545 at rho = 2-3 and rising to 0.946 and 1.082 at the ends. **§39.2's headline survives
+as a statement about the slaved LIMIT; the RATE of approach is axis-dependent and on rho it
+is not 1/sep at all.** The gate reproduced §39.2's published cell (+0.0914 at gamma = 0.20,
+sep = 7.00) with +0.0805 / +0.0938 bracketing it.
+
+**T-COST-h, open: is the lag set by manifold velocity over relaxation rate, not by the
+eigenvalue ratio?** The three axes move the two eigenvalues in OPPOSITE proportions — rho
+takes fast x26 and slow x4, gamma takes fast x1.4 and slow /3.3 — so a law in their ratio
+alone cannot capture both. The slow-manifold lag should physically go as
+`|db*/ddelta * mu| / |lambda_fast|`, which is dimensionally a different object from
+`|lambda_slow|/|lambda_fast|` and coincides with it only when the manifold's motion is set
+by the slow eigenvalue. **How to kill:** compute it on all three axes (T, gamma, rho) and
+check constancy against §39.2's 12.3% bar. A partial check already discourages the simplest
+version -- `gap*|lambda_fast|` alone drifts 5x across the rho axis -- so the
+`db*/ddelta * mu` factor must carry the whole difference or the idea is wrong.
+
 **T-COST-f2, open: is the governing variable the PATH separation rather than the
 point separation?** `sep_of` takes the eigenvalue ratio at the symmetric point (x = y,
 b = b*), but the traversal runs over delta in [eps*delta*, theta*delta*], away from it. A

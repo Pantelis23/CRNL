@@ -1,0 +1,57 @@
+{
+  "named": [
+    {
+      "network": "am_reversible",
+      "cons_laws": 1,
+      "divisibility": 0.0,
+      "divisible": true,
+      "ratio_spread": 1.199040866595167e-13,
+      "constant_ratio": true,
+      "note": "symmetric, pair degree 2"
+    },
+    {
+      "network": "am_cubic",
+      "cons_laws": 1,
+      "divisibility": 2.7694353145134456e-17,
+      "divisible": true,
+      "ratio_spread": 17.297297297297277,
+      "constant_ratio": false,
+      "note": "symmetric, pair degree 3"
+    },
+    {
+      "network": "am_asymmetric",
+      "cons_laws": 1,
+      "divisibility": 0.18561151079136695,
+      "divisible": false,
+      "ratio_spread": 83.9428571428571,
+      "constant_ratio": false,
+      "note": "asymmetric"
+    }
+  ],
+  "cubic_fit": {
+    "const": 0.43043209876543226,
+    "delta2": 3.086419753086411e-05,
+    "max_rel_resid": 1.5482251952460465e-15
+  },
+  "random": {
+    "symmetrised_worst": 3.0313296578994334e-17,
+    "symmetrised_n": 200,
+    "symmetrised_divisible": 200,
+    "plain_n": 200,
+    "plain_divisible": 2
+  },
+  "by_laws": {
+    "0": [
+      157,
+      157
+    ],
+    "1": [
+      36,
+      36
+    ],
+    "2": [
+      7,
+      7
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "tag": "A",
+    "network": "am_reversible",
+    "species": 3,
+    "cons_laws": 1,
+    "exchange": "symmetric",
+    "worst_spread": 1.7439175103994779e-13,
+    "holds": true,
+    "n_states": 28,
+    "bracket_min": -0.16388888888888892,
+    "bracket_max": 0.5166666666666666,
+    "note": "control: must HOLD"
+  },
+  {
+    "tag": "B",
+    "network": "cofactor D/E",
+    "species": 5,
+    "cons_laws": 2,
+    "exchange": "symmetric",
+    "worst_spread": 1.6350557271752318e-13,
+    "holds": true,
+    "n_states": 28,
+    "bracket_min": -0.18398148148148147,
+    "bracket_max": 0.6935802469135802,
+    "note": "THE TEST"
+  },
+  {
+    "tag": "C",
+    "network": "cofactor D/E + F/G",
+    "species": 7,
+    "cons_laws": 4,
+    "exchange": "symmetric",
+    "worst_spread": 4.524682515453463e-14,
+    "holds": true,
+    "n_states": 28,
+    "bracket_min": -0.1790432098765432,
+    "bracket_max": 0.4744135802469136,
+    "note": "THE TEST"
+  },
+  {
+    "tag": "D",
+    "network": "cofactor, beta=0.2 on Y",
+    "species": 5,
+    "cons_laws": 2,
+    "exchange": "RATE broken",
+    "worst_spread": 18.77369439071563,
+    "holds": false,
+    "n_states": 29,
+    "bracket_min": -0.19664197530864197,
+    "bracket_max": 0.36174382716049386,
+    "note": "same laws as B"
+  },
+  {
+    "tag": "E",
+    "network": "cofactor on X only",
+    "species": 5,
+    "cons_laws": 2,
+    "exchange": "STRUCT broken",
+    "worst_spread": 285.96214511041075,
+    "holds": false,
+    "n_states": 29,
+    "bracket_min": -0.1774074074074074,
+    "bracket_max": 0.5374228395061728,
+    "note": "same laws as B"
+  },
+  {
+    "tag": "F",
+    "network": "am_asymmetric",
+    "species": 3,
+    "cons_laws": 1,
+    "exchange": "RATE broken",
+    "worst_spread": 237.1999999999997,
+    "holds": false,
+    "n_states": 27,
+    "bracket_min": -0.16388888888888892,
+    "bracket_max": 0.8916666666666659,
+    "note": "control: must FAIL"
+  }
+]

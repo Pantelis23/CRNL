@@ -272,3 +272,76 @@ def test_champion_margin_is_eroded_quadratically_by_rival_spread():
                           + _pair_bracket(n, gamma, omega, c, 0, 2))
             rhs = u * gbar - (1.0 - gamma) * d23 ** 2 / (4.0 * omega)
             assert float(b[0] - 0.5 * (b[1] + b[2])) == pytest.approx(rhs, abs=1e-11)
+
+
+# --- FINDINGS 42/43: the identity needs exchange symmetry, not conservation laws ---
+
+
+def test_pairwise_identity_survives_extra_conservation_laws():
+    """FINDINGS 42: cofactor pairs add conservation laws and the identity is unmoved.
+
+    B (two laws) and C (four laws) keep the constant-ratio property; the conservation
+    structure is not what the identity depends on.
+    """
+    from experiments.conservation_identity import am_cofactor, split_spread
+
+    omega = 60
+    for net in (am_cofactor(0.25), am_cofactor(0.25, double=True)):
+        counts = [17, 23, 20] + [13, 47] * ((len(net.species) - 3) // 2)
+        spread, _ = split_spread(net, counts, omega)
+        assert spread < 1e-12
+
+
+def test_pairwise_identity_dies_when_only_a_rate_constant_breaks_symmetry():
+    """FINDINGS 42: D differs from B in ONE rate constant and the identity fails.
+
+    Same species, same reactions, same orders, same two conservation laws -- so nothing
+    structural is available as an alternative explanation for the failure.
+    """
+    from experiments.conservation_identity import am_cofactor, split_spread
+
+    omega = 60
+    counts = [17, 23, 20, 13, 47]
+    assert split_spread(am_cofactor(0.25, beta=0.0), counts, omega)[0] < 1e-12
+    assert split_spread(am_cofactor(0.25, beta=0.2), counts, omega)[0] > 1e-3
+
+
+def test_exchange_symmetry_forces_divisibility_by_the_lead():
+    """FINDINGS 43: an antisymmetric polynomial is divisible by the difference.
+
+    Symmetrised random networks -- including ones with NO conservation law at all --
+    have b_X - b_Y exactly zero at n_X = n_Y. Unsymmetrised ones generically do not.
+    """
+    from experiments.exchange_theorem import probe, random_network
+
+    rng = np.random.default_rng(4242)
+    omega, failures = 60, 0
+    for sym in (True, False):
+        rng = np.random.default_rng(4242)
+        for _ in range(40):
+            net = random_network(rng, n_extra=2, n_rx=5, max_order=4, symmetrise=sym)
+            counts = [int(rng.integers(6, omega)) for _ in net.species]
+            div = probe(net, counts, omega)[0]
+            if sym:
+                assert div < 1e-12
+            else:
+                failures += int(div > 1e-12)
+    assert failures > 20, "probe has no power if unsymmetrised networks pass too"
+
+
+def test_cubic_pair_term_separates_divisibility_from_the_constant_ratio():
+    """FINDINGS 43: am_cubic is divisible but its ratio is affine in delta^2.
+
+    The delta^2 coefficient is k/(4 Omega^2) EXACTLY, derived by hand -- an absolute
+    check, not a fit (rule 16).
+    """
+    from experiments.exchange_theorem import am_cubic, probe
+
+    omega = 60
+    div, spread, deltas, ratios = probe(am_cubic(0.25), [21, 19, 20], omega)
+    assert div < 1e-12
+    assert spread > 1e-3
+    A = np.vstack([np.ones_like(deltas), deltas ** 2]).T
+    coef, *_ = np.linalg.lstsq(A, ratios, rcond=None)
+    assert np.max(np.abs(A @ coef - ratios)) < 1e-12 * np.abs(ratios).max()
+    assert coef[1] == pytest.approx(1.0 / (4.0 * omega ** 2), rel=1e-9)

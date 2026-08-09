@@ -481,3 +481,43 @@ def test_rho_scales_both_eigenvalues_together():
     slow_ratio = f[1][1] / f[0][1]
     assert 3.0 < fast_ratio < 4.5 and 3.0 < slow_ratio < 4.5
     assert abs(fast_ratio - slow_ratio) / fast_ratio < 0.15, "they scale together"
+
+
+def test_lag_epsilon_is_parameter_free_and_h_converged():
+    """FINDINGS 47: the closed-form lag correction, with no fitted constant.
+
+    eps = (dmu/ds)(ds*/ddelta)/(dnu/ds) is built from three finite differences, so its
+    step h is a second axis (rule 13). It must be converged before any comparison.
+    """
+    from crnl.networks.am_reversible import reverse_pairing
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho
+    from experiments.lag_absolute import predict
+
+    net = am_rho(0.20, 1.0)
+    ds = delta_star_rho(0.20, 1.0)
+    vals = [predict(net, 0.35 * ds, 0.80 * ds, reverse_pairing(net), h)
+            for h in (4e-4, 1e-4, 2.5e-5)]
+    assert all(v is not None for v in vals)
+    assert abs(vals[-1] - vals[0]) / abs(vals[-1]) < 1e-6
+    assert vals[-1] == pytest.approx(0.090945, rel=1e-4)
+
+
+def test_lag_prediction_explains_the_fitted_constant():
+    """FINDINGS 47: <eps>*sep reproduces the C that §39.2 and §46 fitted separately.
+
+    §39.2 fitted 0.6465 on the T axis and §46 fitted 0.5963 on the gamma axis, and the
+    non-transfer was a published puzzle. The computed value lands between them.
+    """
+    from crnl.networks.am_reversible import reverse_pairing
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho
+    from experiments.lag_absolute import predict
+    from experiments.slaving_axis import sep_of
+
+    vals = []
+    for gamma in (0.07, 0.12, 0.20, 0.28):
+        net = am_rho(gamma, 1.0)
+        ds = delta_star_rho(gamma, 1.0)
+        p = predict(net, 0.35 * ds, 0.80 * ds, reverse_pairing(net), 1e-4)
+        vals.append(p * sep_of(net)[0])
+    assert 0.50 < min(vals) and max(vals) < 0.75
+    assert 0.55 < float(np.mean(vals)) < 0.70

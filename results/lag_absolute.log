@@ -1,0 +1,74 @@
+=== P1 GATE (rule 13): is eps converged in its own step h?
+         h    <eps>_time   rel change
+   4.0e-04      0.090945          nan
+   2.0e-04      0.090945     3.72e-08
+   1.0e-04      0.090945     9.31e-09
+   5.0e-05      0.090945     2.33e-09
+   2.5e-05      0.090945     5.85e-10
+  -> P1 HOLDS (last relative change 5.85e-10)
+
+=== P2/P3/P4: absolute prediction vs measurement -- rho axis (where 1/sep FAILED, 72.1%)
+    rho      sep       gap     <eps>   pred/gap   gap*sep
+   0.50   11.703    0.0722    0.0568      0.786    0.8453
+   0.75    8.036    0.0980    0.0804      0.820    0.7876
+   1.00    7.000    0.0938    0.0909      0.969    0.6569
+   1.50    6.730    0.1095    0.0938      0.857    0.7366
+   2.00    7.190    0.1037    0.0880      0.849    0.7453
+   3.00    8.733    0.0653    0.0734      1.123    0.5706
+   4.00   10.556    0.0649    0.0614      0.945    0.6850
+   6.00   14.454    0.0373    0.0454      1.219    0.5389
+   8.00   18.472    0.0390    0.0359      0.920    0.7200
+  16.00   34.823    0.0222    0.0193      0.870    0.7728
+  32.00   67.764    0.0129    0.0100      0.777    0.8714
+
+=== gamma axis (where 1/sep HELD, 22.2%)
+  gamma      sep       gap     <eps>   pred/gap   eps*sep
+   0.07    3.977    0.1495    0.1400      0.936    0.5566
+   0.12    4.895    0.1183    0.1212      1.025    0.5932
+   0.20    7.000    0.0938    0.0909      0.969    0.6366
+   0.28   10.636    0.0663    0.0626      0.944    0.6654
+   0.35   17.000    0.0514    0.0401      0.780    0.6819
+
+=== P2: is the absolute prediction right?
+     rho axis: pred/gap mean 0.921, range 0.777..1.219, spread 47.9%
+   gamma axis: pred/gap mean 0.931, range 0.780..1.025, spread 26.3%
+
+=== P3: the discriminating comparison -- constancy of pred/gap vs 1/sep's
+  1/sep gave: T axis 12.3%, gamma axis 22.2%, rho axis 72.1% (§46)
+     rho axis: pred/gap spread 47.9% against 1/sep's 72.1%  -> BETTER
+   gamma axis: pred/gap spread 26.3% against 1/sep's 22.2%  -> no better
+
+=== P4: does it reproduce the U-shape in rho, cell by cell?
+  measured gap*sep minimum at rho = 6.0   predicted <eps>*sep minimum at rho = 1.5  -> different cells
+  measured  gap*sep: 0.845 0.788 0.657 0.737 0.745 0.571 0.685 0.539 0.720 0.773 0.871
+  predicted eps*sep: 0.664 0.646 0.637 0.631 0.633 0.641 0.648 0.657 0.662 0.672 0.677
+
+=== P5: does it EXPLAIN §46's fitted gamma-axis constant 0.5963?
+  <eps>*sep on the gamma axis: 0.557..0.682, mean 0.627   against the fitted 0.5963
+
+=== P6: verdict
+  pred/gap within 22% of 1 everywhere -> the lag picture
+  is CONFIRMED in absolute terms, and §39.2's fitted C is explained.
+
+==============================================================================
+P7/P8/P9: is the measured gap converged in Omega? (§46 never checked)
+    rho      sep  gap*sep(Om=300)  gap*sep(Om=500)  gap*sep(Om=700)  predicted
+   0.50   11.703           0.8453           0.8709           0.7743     0.6642
+   1.50    6.730           0.7366           0.6236           0.6171     0.6312
+   3.00    8.733           0.5706           0.6463           0.6783     0.6408
+   6.00   14.454           0.5389           0.5671           0.7173     0.6569
+  32.00   67.764           0.8714           0.7116           0.6413     0.6772
+
+=== P7: does the scatter tighten with Omega?
+  Omega= 300: gap*sep spans 0.5389..0.8714   spread  46.7%   mean 0.7126
+  Omega= 500: gap*sep spans 0.5671..0.8709   spread  44.4%   mean 0.6839
+  Omega= 700: gap*sep spans 0.6171..0.7743   spread  22.9%   mean 0.6857
+  predicted: spans 0.6312..0.6772   spread   7.0%   mean 0.6541
+
+=== P8/P9: verdict on §46's rho-axis claim
+  spread at Omega=300: 46.7%   at Omega=700: 22.9%
+  -> P8: the scatter DISSOLVES with Omega. §46's 'the 1/sep scaling
+     fails on rho' is WITHDRAWN -- it was measured at insufficient
+     Omega. The absolute prediction predicted a measurement error.
+
+(236s) wrote results/lag_absolute.json

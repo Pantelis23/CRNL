@@ -6448,6 +6448,23 @@ And it does not break by drifting — `gap·sep` is **U-shaped in ρ**, bottomin
 ρ = 2–3 and rising to 0.946 and 1.082 at the ends. That is a different *functional form*,
 not a different constant.
 
+> ⚠⚠ **§46.1's headline is WITHDRAWN by §47. The instrument was not converged.** Every
+> number in this subsection was computed at **Ω = 200**, while §39.2's T-axis result was
+> established over Ω = 400–800 with convergence explicitly checked. §46 therefore compared
+> an unconverged measurement against a converged published one — rule 13, applied to the
+> model in §46 and not to the measurement. Re-run at Ω = 300/500/700, the ρ-axis spread
+> falls **46.7% → 44.4% → 22.9%**, stops being anomalous against the γ axis (22.2%) and the
+> T axis (12.3%), and heads toward the 7% band that §47's parameter-free prediction demands.
+> **The claim "the 1/sep scaling fails on ρ" does not survive.** It is not replaced by "the
+> scaling holds": several cells are still moving at Ω = 700 (ρ = 6 shifts 26% from Ω = 500),
+> so the ρ axis is *unresolved*, not settled. The γ-axis 22.2% quoted below is under the
+> same suspicion, having been measured at the same Ω = 200.
+>
+> **What survives §47 is §46's other half**: the path separation is not the missing
+> variable. That rests on the matched pair differing 3× consistently at *both* Ω, and on the
+> algebraic fact that ρ scales both eigenvalues together — neither of which is a convergence
+> question.
+
 > **This qualifies §39.2's central claim.** §39.2 established the 1/sep *scaling* on two
 > axes and was careful to say the *coefficient* is not universal. **The scaling is not
 > universal either.** §39.2's headline — that the closed form is exact in the slaved limit
@@ -6464,3 +6481,91 @@ not a different constant.
 > discourages the simplest version — `gap·|λ_fast|` alone drifts **5×** across the ρ axis
 > (0.091 → 0.472) — so the `db*/dδ · μ` factor must carry the whole difference or the idea
 > is wrong.
+
+---
+
+### 47 The lag, predicted absolutely — and the prediction caught the instrument, not the physics
+
+Three sections have now **fitted** the `T_det/MFPT` gap: §39.2 as C/sep with C = 0.6465 on
+the T axis, §46 as 0.5963 on the γ axis and a claimed failure on ρ. Rule 16 says a model
+that is only ever fitted is never tested.
+
+**Singular perturbation gives it in closed form and the fitted constant disappears.** In
+(δ, s) with s = x+y, writing μ = dδ/dt and ν = ds/dt, the manifold is ν(δ, s\*(δ)) = 0. As δ
+advances the manifold moves and the pool lags; in quasi-steady state
+(ds\*/dδ)·μ = (∂ν/∂s)·Δ, so Δ = (ds\*/dδ)μ/(∂ν/∂s). The lag shifts the signal drift by
+(∂μ/∂s)·Δ, and **μ cancels**:
+
+> **ε(δ) = (∂μ/∂s)·(ds\*/dδ) / (∂ν/∂s)**, and **T_det/MFPT − 1 ≈ ⟨ε⟩_time**
+
+a dimensionless property of the vector field alone, with **no constant and no fit**. Note
+this is *not* |λ_slow|/|λ_fast|: the reduced slow eigenvalue is
+λ_red = ∂μ/∂δ + (∂μ/∂s)(ds\*/dδ), so ε is λ_red − ∂μ/∂δ over the fast rate, and coincides
+with the eigenvalue ratio only when the manifold's motion happens to be set by the slow
+eigenvalue.
+
+**P1 gate.** ε is built from three finite differences, so its step h is a second axis
+(rule 13). ⟨ε⟩_time = 0.090945 at every h from 4×10⁻⁴ to 2.5×10⁻⁵, last relative change
+**5.9×10⁻¹⁰**. Converged to machine precision.
+
+**P2 — the absolute test.** `⟨ε⟩_time / (T_det/MFPT − 1)`:
+
+| axis | cells | mean | range |
+|---|---|---|---|
+| ρ (γ=0.20, ρ = 0.5…32) | 11 | **0.921** | 0.777 – 1.219 |
+| γ (ρ=1, γ = 0.07…0.35) | 5 | **0.931** | 0.780 – 1.025 |
+
+**A parameter-free prediction of a quantity three sections fitted, right to 8% on average.**
+
+**P5 — it explains the fitted constant.** On the γ axis ⟨ε⟩·sep spans 0.557–0.682, mean
+**0.627**, against §46's fitted **0.5963** and §39.2's T-axis **0.6465**. The constant that
+was measured on two axes and would not transfer is *computed* here, and it lands between
+the two fitted values.
+
+### 47.1 The prediction disagreed with §46, and §46 was wrong
+
+P4 failed in a way that pointed at the instrument rather than the model:
+
+| | across ρ = 0.5…32 |
+|---|---|
+| predicted ε·sep | 0.664 0.646 0.637 0.631 0.633 0.641 0.648 0.657 0.662 0.672 0.677 — **7% spread** |
+| measured gap·sep | 0.845 0.788 0.657 0.737 0.745 0.571 0.685 0.539 0.720 0.773 0.871 — **62% spread** |
+
+**The model says the 1/sep law should hold on ρ with C ≈ 0.65. §46 said it fails there.**
+Rule 13 says look at the instrument first — and §46 computed its spread at **Ω = 200**,
+never checking Ω-convergence of the *gap*, while §39.2's T-axis result was established over
+Ω = 400–800 with convergence checked. Re-running at Ω = 300/500/700:
+
+| | Ω=300 | Ω=500 | Ω=700 | predicted |
+|---|---|---|---|---|
+| gap·sep spread | 46.7% | 44.4% | **22.9%** | **7.0%** |
+| mean | 0.7126 | 0.6839 | 0.6857 | 0.6541 |
+
+**§46's "the 1/sep scaling fails on ρ" is withdrawn.** The spread halves, the mean settles
+near 0.686 against the predicted 0.654, and the ρ axis stops being anomalous against the γ
+axis (22.2%) and the T axis (12.3%).
+
+> **The withdrawal is not "the scaling holds", and rule 14 forbids treating it as one.**
+> Per cell, several are still moving at Ω = 700 — ρ = 6 shifts **26%** from Ω = 500 (0.0392
+> → 0.0496), and ρ = 32's gap has fallen to 0.0095, approaching §39.2's own 0.008 resolution
+> floor. So the ρ axis is **unresolved**, not settled. What is established is that §46's
+> claimed *failure* rested on an unconverged instrument. **§46's γ-axis 22.2% is under the
+> same suspicion**, having been measured at the same Ω = 200.
+
+**The methodological point, and it cost a commit.** §46 applied rule 13 to the model —
+checking three averaging conventions — and never applied it to the measurement. §47 applied
+it to the model again (h-convergence to 10⁻¹⁰) and only found the problem because a
+*parameter-free* prediction disagreed with the data. **A fitted model would have absorbed
+the scatter into its constant and reported agreement.** That is the whole content of rule
+16: the fit cannot tell you your instrument is broken, because it has a free parameter to
+hide the breakage in.
+
+> **Suspect, and it does NOT fit (rule 17).** The 8% systematic shortfall was predicted in
+> advance as the expected size of the next-order quasi-steady-state correction, which is
+> O(gap) in the same small parameter. **But it does not behave like one.** A higher-order
+> correction must shrink where the gap is small; measured, pred/gap is **0.936 at γ = 0.07
+> where the gap is 0.150, and 0.780 at γ = 0.35 where the gap is 0.051** — larger shortfall
+> at smaller gap, the wrong direction. So the shortfall is *not* explained by higher-order
+> QSS, and attributing it there would be exactly the move this project keeps having to undo.
+> **How to kill:** the γ = 0.35 cell is also the one nearest the resolution floor, so
+> re-measure the shortfall against the gap at Ω = 700+ before treating its sign as real.

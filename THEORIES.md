@@ -1840,6 +1840,43 @@ as a statement about the slaved LIMIT; the RATE of approach is axis-dependent an
 is not 1/sep at all.** The gate reproduced §39.2's published cell (+0.0914 at gamma = 0.20,
 sep = 7.00) with +0.0805 / +0.0938 bracketing it.
 
+**T-COST-h -> §47: YES, and the parameter-free form caught a broken instrument.** Singular
+perturbation gives the lag with no fitted constant at all:
+
+    eps(delta) = (dmu/ds)(ds*/ddelta)/(dnu/ds),   T_det/MFPT - 1 ~ <eps>_time
+
+Measured against the exact gap: pred/gap = 0.921 over 11 rho cells and 0.931 over 5 gamma
+cells -- **a parameter-free prediction of a quantity three sections had fitted, right to 8%
+on average.** And <eps>*sep on the gamma axis is 0.627 against the 0.5963 §46 fitted and the
+0.6465 §39.2 fitted on the T axis: the constant that would not transfer between axes is now
+COMPUTED, and it lands between the two fitted values.
+
+**Then it disagreed with §46 and §46 lost.** The prediction is flat in rho (7% spread) where
+§46 measured 62% scatter and declared the 1/sep scaling axis-dependent. §46 computed that at
+Omega = 200 without checking Omega-convergence of the gap, against a §39.2 result
+established over Omega = 400-800 with convergence checked. Re-run: spread 46.7% -> 44.4% ->
+22.9% over Omega = 300/500/700, mean settling at 0.686 against the predicted 0.654.
+**§46.1's headline is withdrawn.**
+
+**The withdrawal is not "the scaling holds" (rule 14).** Several cells still move at
+Omega = 700 -- rho = 6 shifts 26% from Omega = 500 -- and rho = 32's gap has fallen to 0.0095,
+near §39.2's 0.008 floor. The rho axis is UNRESOLVED. §46's gamma-axis 22.2% is under the
+same suspicion, same Omega.
+
+**Why the parameter-free form mattered.** §46 applied rule 13 to the model (three averaging
+conventions) and never to the measurement. A FITTED model would have absorbed the scatter
+into its constant and reported agreement; only a prediction with no free parameter could
+say "your data is wrong". That is rule 16's actual content.
+
+**T-COST-i, open: what is the 8% systematic shortfall?** pred/gap ~ 0.92 on both axes. It
+was predicted in advance as next-order quasi-steady-state, which is O(gap) in the same small
+parameter -- **but it does not behave like one.** A higher-order term must shrink where the
+gap is small; measured, pred/gap is 0.936 at gamma = 0.07 (gap 0.150) and 0.780 at
+gamma = 0.35 (gap 0.051), which is the wrong direction. **How to kill:** gamma = 0.35 is also
+the cell nearest the resolution floor, so re-measure shortfall-vs-gap at Omega = 700+ before
+treating the sign as real. If it survives, higher-order QSS is eliminated and the shortfall
+is something else.
+
 **T-COST-h, open: is the lag set by manifold velocity over relaxation rate, not by the
 eigenvalue ratio?** The three axes move the two eigenvalues in OPPOSITE proportions — rho
 takes fast x26 and slow x4, gamma takes fast x1.4 and slow /3.3 — so a law in their ratio

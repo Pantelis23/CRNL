@@ -1781,12 +1781,47 @@ independent of rho, so driving it fast pushes it onto its own local equilibrium 
 ln(a_f/a_r) -> 0 and it carries unbounded flux at bounded dissipation. **Flux is not
 dissipation.** The replacement account predicted G must asymptote, and it does.
 
+~~**T-COST-f, open: does rho act through the timescale separation?**~~ **PARTLY CLOSED by
+§45 -- it survives in its weak form and is REFUTED in its quantitative form.** The original
+statement is kept below.
+
 **T-COST-f, open: does rho act through the timescale separation?** rho raises reliability
 while delta* is frozen, which points at slaving -- a faster disagreement channel is a
 faster pool, which is §36's on-manifold condition and §39.2's 1/sep law. **How to kill:**
 compute sep(gamma, rho) and check whether §39.2's law predicts the L improvement
 QUANTITATIVELY, not just in sign. Absolute test, not a fit (rule 16). If it does not, the
 mechanism is wrong and only §44.2's measurement stands.
+
+**T-COST-f -> §45: sep matters, sep does not govern, and §39's 6% closes anyway.** The
+design scan supplied the control before any prediction was written: sep is NON-MONOTONE in
+rho with a minimum near rho ~ 1.5, while §44.2's cost is monotone, so "tracks sep" and
+"tracks rho" make opposite predictions.
+
+  * **The residual peaks at rho = 1.5, exactly where sep bottoms out.** Non-monotone in rho
+    while cost is monotone -- so it tracks sep, not rho. A monotone residual would have
+    looked like a confirmation and meant nothing.
+  * **It closes.** |residual| 0.083 at sep < 8 vs 0.0138 at sep > 20; at rho = 32 §39's
+    residual is 0.7%, down from 5.3%. **First thing that has ever moved T-COST-c**, and it
+    confirms §39.2's "exact in the slaved limit" by reaching that limit with a new knob.
+  * **But the sharp tests fail.** The 8x matched-sep pair disagrees 3x (0.022 vs 0.067 at
+    sep 11.7 vs 10.6); the two knobs give different curves in 1/sep (slopes 0.441 vs 1.147,
+    opposite intercepts); resid*sep drifts 4.5x. **sep is not the governing variable.**
+
+So "rho works by deepening slaving" is INCOMPLETE rather than established, and §44.2's
+lever keeps its measurement while its account stays a suspect. §45 also declines to claim
+the sign change the raw numbers suggest along gamma: it rests on one cell whose two Omega
+disagree by 8%.
+
+**T-COST-f2, open: is the governing variable the PATH separation rather than the
+point separation?** `sep_of` takes the eigenvalue ratio at the symmetric point (x = y,
+b = b*), but the traversal runs over delta in [eps*delta*, theta*delta*], away from it. A
+separation measured at one point need not represent the separation along the path, and the
+rho and gamma knobs deform the manifold differently -- which would explain BOTH the
+matched-pair failure and the two-curve split without abandoning slaving. **How to kill:**
+compute a path-averaged separation over the actual traversal and re-run §45's P3 and P4
+against it. If the 8x matched pair then agrees and the knobs collapse onto one curve, the
+governing variable was the path separation. If they still split, slaving is not the
+mechanism at all.
 
 **T-COST-g, open: is selective catalysis the real substrate criterion?** The question that
 prompted §44 was whether basing logic on atoms rather than molecules would be cheaper. §44

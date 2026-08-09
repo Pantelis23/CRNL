@@ -6267,3 +6267,88 @@ drop of **0.117 / 0.113 eV at 300 K**, against ATP hydrolysis at ~20 k_BT. This 
 arithmetic on §38 plus §16, not a new measurement. **It is not merged with §40's
 Q_min = 5.39** — two numbers near 5 arriving along axes chosen for other reasons is rule 9's
 trap, which has already sprung three times here.
+
+---
+
+### 45 ρ works partly through slaving — but sep is not the governing variable, and §39's 6% closes anyway
+
+§44.2 named a suspect for ρ's free lever: a faster disagreement channel is a faster pool,
+which is deeper slaving. This is its kill test, and it doubles as an attack on **T-COST-c**,
+the project's outstanding unexplained number — §39's closed form sits ~6% off the exact
+cost, flat in Ω over a 3× range and not attributable to σ.
+
+**The design scan supplied the control before any prediction was written.** At γ = 0.20,
+`sep` is **non-monotone in ρ**, with a minimum near ρ ≈ 1.5, while §44.2's cost G falls
+monotonically across the same range. So the residual tracking *sep* and the residual
+tracking *ρ* make opposite predictions, and the sweep can tell them apart.
+
+**P1a — the instrument is anchored.** `sep_of` reproduces the closed form 3(1+2γ)/(1−2γ)
+to **1.15×10⁻¹⁴** at ρ = 1 (3.976744186, 4.894736842, 7.000000000, 10.636363636,
+17.000000000). **P1b** — pred/exact at ρ = 1 gives mean **1.0487**, range 0.9158–1.1357,
+against §39's 1.0583 and 0.905–1.167. The closed form transplanted correctly.
+
+**P2 HOLDS, and it is the real evidence.** The ρ knob at γ = 0.20:
+
+| ρ | 0.5 | 0.75 | 1.0 | **1.5** | 2.0 | 3.0 | 4.0 | 6.0 | 8.0 | 16 | 32 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| sep | 11.70 | 8.04 | 7.00 | **6.73** | 7.19 | 8.73 | 10.56 | 14.45 | 18.47 | 34.82 | 67.76 |
+| \|residual\| | 0.025 | 0.052 | 0.053 | **0.091** | 0.079 | 0.060 | 0.072 | 0.047 | 0.044 | 0.021 | **0.007** |
+
+**The residual peaks at ρ = 1.5, exactly where sep bottoms out.** It is non-monotone in ρ
+while cost is monotone, so it is tracking sep and not ρ. A monotone residual would have
+looked like a confirmation and meant nothing; this is why the non-monotone design was worth
+having.
+
+**P6 survives: the residual closes.** |residual| averages **0.0826 at sep < 8** against
+**0.0138 at sep > 20**, corr(|residual|, 1/sep) = **+0.78** over 32 cells. At ρ = 32 the
+§39 residual is **0.7%**, down from 5.3% at ρ = 1 — a **7.9× reduction, and the first time
+anything has moved T-COST-c.** This independently confirms §39.2 ("the closed form is exact
+in the slaved limit") by reaching that limit with a different knob.
+
+### 45.1 But the quantitative form is refuted, three ways
+
+**P3 — matched pairs split, and the discriminating one fails.** The whole point was to move
+ρ far at nearly fixed sep:
+
+| pair | ρ ratio | sep difference | \|residual\| | verdict |
+|---|---|---|---|---|
+| ρ=1.0 (sep 7.00) vs ρ=2.0 (sep 7.19) | 2× | 2.7% | 0.041 vs 0.058 | agree |
+| **ρ=0.5 (sep 11.70) vs ρ=4.0 (sep 10.56)** | **8×** | **10.3%** | **0.022 vs 0.067** | **DIFFER 3×** |
+
+The 2× pair is a weak test and passes; the **8× pair is the one with power and it fails**.
+
+**P4 — the two knobs do not collapse.** Over the overlap sep ∈ [6.73, 17.0]:
+
+| knob | fit |
+|---|---|
+| ρ (γ = 0.20 fixed) | residual = **+0.441**/sep + 0.009 |
+| γ (ρ = 1 fixed) | residual = **+1.147**/sep − 0.106 |
+
+Slopes differ by **2.6×** and the intercepts have opposite signs. Two physically different
+levers producing the same sep produce different residuals. **sep is not the governing
+variable.**
+
+**P5 — residual×sep is not constant.** It spans +0.200…+0.892 on the ρ knob (4.5× over a
+10× range of sep). The 1/sep *form* is wrong even though the correlation is real.
+
+> ⚠ **What the γ knob does at high γ is NOT resolved, and I am not claiming a sign change.**
+> The γ-knob resid×sep range quoted by the run (−1.432…+0.540) is driven by one cell:
+> γ = 0.35, where Ω=200 and Ω=300 give 0.9158 and 0.9951 — an **8% disagreement between Ω**,
+> comparable to the residual being measured. §39's own range already straddled 1. So "the
+> residual changes sign along γ" is a reading the data does not support at this resolution,
+> and it is recorded here as unresolved rather than as a finding.
+
+**Verdict. T-COST-f survives in its weak form and is refuted in its quantitative form.**
+ρ does act partly through the timescale separation — the non-monotone signature is
+unambiguous and the residual closes to 0.7% at large sep. But sep alone does not determine
+the residual, so "ρ works by deepening slaving" is *incomplete*, not established.
+
+> **The next suspect, with its kill test (rule 17).** `sep_of` measures the eigenvalue ratio
+> at the **symmetric point** (x = y, b = b\*), but the traversal happens at δ ∈ [εδ\*, θδ\*],
+> away from it. A separation evaluated *at one point* need not represent the separation
+> *along the path*, and the ρ and γ knobs deform the manifold differently — which would
+> explain both the matched-pair failure and the two-curve split without abandoning slaving.
+> **How to kill:** compute a path-averaged separation over the actual traversal and re-run
+> P3 and P4 against it. If the 8× matched pair then agrees and the two knobs collapse, the
+> governing variable was the path separation all along. If they still split, slaving is not
+> the mechanism and §44.2's lever keeps its measurement and loses its account.

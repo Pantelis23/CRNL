@@ -1,0 +1,60 @@
+=== P1a GATE: sep_of vs the closed form 3(1+2g)/(1-2g) at rho = 1
+  gamma=0.07: sep_of = 3.976744186   closed = 3.976744186
+  gamma=0.12: sep_of = 4.894736842   closed = 4.894736842
+  gamma=0.20: sep_of = 7.000000000   closed = 7.000000000
+  gamma=0.28: sep_of = 10.636363636   closed = 10.636363636
+  gamma=0.35: sep_of = 17.000000000   closed = 17.000000000
+  -> P1a HOLDS  (worst rel 1.15e-14)
+
+=== rho knob at gamma = 0.2  (sep is NON-monotone here)
+    rho      sep   1/sep ratio(Om=200) ratio(Om=300)  resid*sep   delta*
+   0.50   11.703  0.0855        1.0216        1.0289      0.295   0.8108
+   0.75    8.036  0.1244        1.0336        1.0702      0.417   0.8149
+   1.00    7.000  0.1429        1.0409        1.0660      0.374   0.8165
+   1.50    6.730  0.1486        1.0846        1.0981      0.615   0.8178
+   2.00    7.190  0.1391        1.0581        1.1001      0.569   0.8184
+   3.00    8.733  0.1145        1.0510        1.0694      0.526   0.8189
+   4.00   10.556  0.0947        1.0670        1.0773      0.762   0.8192
+   6.00   14.454  0.0692        1.0518        1.0423      0.680   0.8194
+   8.00   18.472  0.0541        1.0403        1.0483      0.819   0.8195
+  16.00   34.823  0.0287        1.0165        1.0250      0.723   0.8197
+  32.00   67.764  0.0148        1.0030        1.0107      0.461   0.8198
+
+=== gamma knob at rho = 1  (the second, physically different lever)
+  gamma      sep   1/sep ratio(Om=200) ratio(Om=300)  resid*sep   delta*
+   0.07    3.977  0.2515        1.0998        1.1357      0.468   0.9339
+   0.12    4.895  0.2043        1.1077        1.0936      0.493   0.8893
+   0.20    7.000  0.1429        1.0409        1.0660      0.374   0.8165
+   0.28   10.636  0.0940        0.9971        1.0259      0.122   0.7321
+   0.35   17.000  0.0588        0.9158        0.9951     -0.758   0.6356
+
+=== P1b GATE: rho = 1 must reproduce §39 (mean 1.058, cells 0.905-1.167)
+  12 cells: mean 1.0487, range 0.9158..1.1357  -> HOLDS
+
+=== P2: is the residual NON-monotone in rho, as 1/sep requires?
+  rho          0.50     0.75     1.00     1.50     2.00     3.00     4.00     6.00     8.00    16.00    32.00
+  |resid|    0.0252   0.0519   0.0534   0.0913   0.0791   0.0602   0.0722   0.0470   0.0443   0.0208   0.0068
+  peak |residual| at rho = 1.50  (INTERIOR -> non-monotone, as 1/sep requires)
+
+=== P3: matched-sep pairs at very different rho (rule 9)
+  rho 0.5 (sep 11.70, |resid| 0.0216)  vs rho 4.0 (sep 10.56, |resid| 0.0670)
+    rho differs 8x, sep differs 10.3%, residuals differ by 0.0455  -> DIFFER, sep does NOT govern
+  rho 1.0 (sep 7.00, |resid| 0.0409)  vs rho 2.0 (sep 7.19, |resid| 0.0581)
+    rho differs 2x, sep differs 2.7%, residuals differ by 0.0172  -> AGREE, sep governs
+
+=== P4: do the two knobs collapse onto one curve in 1/sep?
+  overlap sep in [6.73, 17.00]
+    rho knob: 16 cells, resid = +0.4411/sep +0.0094
+  gamma knob: 6 cells, resid = +1.1471/sep -0.1063
+
+=== P5: is residual*sep constant (absolute check, not a fitted exponent)?
+    rho knob: resid*sep spans +0.200 .. +0.892  over sep 6.7..67.8 (10.1x)  -> NOT constant, the 1/sep FORM is wrong
+  gamma knob: resid*sep spans -1.432 .. +0.540  over sep 4.0..17.0 (4.3x)  -> NOT constant, the 1/sep FORM is wrong
+
+=== P6: does the residual shrink with sep at all?
+  corr(|residual|, 1/sep) = +0.7787 over 32 cells
+  |residual| at sep < 8:  mean 0.0826  (12 cells)
+  |residual| at sep > 20: mean 0.0138  (4 cells)
+  -> T-COST-f SURVIVES this test
+
+(92s) wrote results/slaving_residual_rho.json

@@ -415,3 +415,35 @@ def test_rho_leaves_the_cycle_affinity_at_three_ln_gamma():
             aff = np.log((by["f1"] * by["f2"] * by["f3"])
                          / (by["r1"] * by["r2"] * by["r3"]))
             assert aff == pytest.approx(-3.0 * np.log(gamma), abs=1e-12)
+
+
+def test_sep_of_matches_the_closed_form_at_rho_one():
+    """FINDINGS 45: sep_of is anchored to 3(1+2g)/(1-2g) before being used off rho = 1.
+
+    The whole of §45 reads a residual against sep on a network family where sep has no
+    published closed form, so the instrument is pinned where one exists.
+    """
+    from experiments.arrhenius_optimum import am_rho
+    from experiments.slaving_axis import sep_of
+
+    for gamma in (0.07, 0.12, 0.20, 0.28, 0.35):
+        sep, _ = sep_of(am_rho(gamma, 1.0))
+        assert sep == pytest.approx(3.0 * (1.0 + 2 * gamma) / (1.0 - 2 * gamma), rel=1e-12)
+
+
+def test_sep_is_non_monotone_in_rho():
+    """FINDINGS 45: the control that made the test discriminating.
+
+    sep dips near rho ~ 1.5 while §44.2's cost falls monotonically, so "residual tracks
+    sep" and "residual tracks rho" predict opposite shapes. If sep ever became monotone in
+    rho this test loses its power and §45's P2 would need rebuilding.
+    """
+    from experiments.arrhenius_optimum import am_rho
+    from experiments.slaving_axis import sep_of
+
+    rhos = [0.5, 1.0, 1.5, 2.0, 4.0, 8.0, 32.0]
+    seps = [sep_of(am_rho(0.20, r))[0] for r in rhos]
+    i = int(np.argmin(seps))
+    assert 0 < i < len(seps) - 1, "sep must have an INTERIOR minimum in rho"
+    assert seps[i] < seps[0] and seps[i] < seps[-1]
+    assert seps[-1] > 5 * seps[i], "sep must still grow strongly at large rho"

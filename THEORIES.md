@@ -1750,6 +1750,56 @@ end; if it depends on the rate constants in a way no combinatorial statement cap
 then the theorem covers the *cannot-reverse* half only and the *does-amplify* half stays
 a per-network measurement.
 
+**T-COST-e -> §44: temperature has TWO jobs, and the second one is a free lever.**
+`cooling.py` maps the drive to a temperature but puts T only in the reverse rates, and
+says so. §44 gave every rate an Arrhenius form. A *uniform* activation energy turns out
+to be provably inert -- Q -> lambda Q and sigma -> lambda sigma together, so Sigma is
+exactly invariant (measured: 4.6e-15 over a 1000x rescale) -- so the upgrade has content
+only through the RATIO of the two forward channels, rho = k_dis/k_rec. **Every result in
+FINDINGS before §44 is at rho = 1, and nothing had ever checked it.**
+
+Under the delta* >= 0.40 admissibility floor, T* splits by sign(dEa): -8.3%/-8.5% at
+dEa = +0.6 against +0.7%/+6.1% at -0.6. **Temperature does not act through gamma alone**,
+so cooling.py's minimal model is not sufficient to support an optimal-temperature claim.
+The pre-registered form of that test FAILED and its verdict is kept in §44.3; it failed
+because its argmin sat at delta* = 0.227 with the landscape 4% from death, which is §9.2's
+withdrawal pathology in a new guise.
+
+**The bigger finding is the one nobody was looking for.** rho is a lever that dominates
+gamma and costs nothing: from AM's rho = 1 to the asymptote, cost falls 43-50%, reliability
+DOUBLES (L: 17.2 -> 34.4 nats at gamma = 0.16), and mean time halves -- with delta* frozen
+to 0.16%, so it is not geometry. **gamma trades cost against reliability, which is what
+makes §38's optimum an optimum; rho does not trade.** And physically rho is what a
+CATALYST sets: a catalyst lowers an activation barrier without touching dG, so it is
+thermodynamically free, and it accelerates both directions equally, which is why gamma and
+the affinity 3ln(1/gamma) are untouched.
+
+**§44.1 is a refutation worth keeping.** The prediction was rho* < 1, on the reasoning that
+the disagreement reaction moves delta by exactly zero (§30's first cancellation) and so
+produces entropy without signal. The sign was backwards: a_f/a_r for that pair is
+independent of rho, so driving it fast pushes it onto its own local equilibrium where
+ln(a_f/a_r) -> 0 and it carries unbounded flux at bounded dissipation. **Flux is not
+dissipation.** The replacement account predicted G must asymptote, and it does.
+
+**T-COST-f, open: does rho act through the timescale separation?** rho raises reliability
+while delta* is frozen, which points at slaving -- a faster disagreement channel is a
+faster pool, which is §36's on-manifold condition and §39.2's 1/sep law. **How to kill:**
+compute sep(gamma, rho) and check whether §39.2's law predicts the L improvement
+QUANTITATIVELY, not just in sign. Absolute test, not a fit (rule 16). If it does not, the
+mechanism is wrong and only §44.2's measurement stands.
+
+**T-COST-g, open: is selective catalysis the real substrate criterion?** The question that
+prompted §44 was whether basing logic on atoms rather than molecules would be cheaper. §44
+says the dominant free lever is selective acceleration of the non-signal channel -- which
+requires a substrate with REACTION-SPECIFIC catalysts. Enzymes have that; electronic or
+nuclear transitions do not, since you cannot catalyse one atomic transition among many the
+way an enzyme picks one reaction among thousands. **This is a suspect, not a result**, and
+it is not tested by anything in §44. **How to kill:** it predicts that the achievable rho
+range, not the energy scale dE, is what separates substrates -- so a substrate comparison
+holding dE/kT matched and varying only the achievable rho should reproduce the whole
+effect. Until that is run, §44 supports only the claim that rho matters more than gamma,
+not any claim about atoms.
+
 **T16, open: does CONCATENATED AM show a threshold, or does the ceiling survive?**
 FINDINGS 1's wall and 12.1's depth ceiling say a single AM stage has a fidelity ceiling
 -- more molecules buy exponentially less, and past a point nothing. The threshold

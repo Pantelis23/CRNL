@@ -345,3 +345,73 @@ def test_cubic_pair_term_separates_divisibility_from_the_constant_ratio():
     coef, *_ = np.linalg.lstsq(A, ratios, rcond=None)
     assert np.max(np.abs(A @ coef - ratios)) < 1e-12 * np.abs(ratios).max()
     assert coef[1] == pytest.approx(1.0 / (4.0 * omega ** 2), rel=1e-9)
+
+
+# --- FINDINGS 44: Arrhenius kinetics and the rho lever ---
+
+
+def test_delta_star_rho_reduces_to_delta_star_at_rho_one():
+    """FINDINGS 44: the rho-generalised attractor separation must match the closed form."""
+    from crnl.networks.am_reversible import delta_star
+    from experiments.arrhenius_optimum import delta_star_rho
+
+    for gamma in (0.05, 0.10, 0.25, 0.40, 0.49):
+        assert delta_star_rho(gamma, 1.0) == pytest.approx(delta_star(gamma), abs=1e-14)
+
+
+def test_delta_star_rho_refuses_the_spurious_landscape_below_rho_c():
+    """FINDINGS 44: for rho < gamma the closed form returns a PLAUSIBLE positive value.
+
+    0.806 at (0.25, 0.05), and 6.37 and 11.4 near rho = gamma where delta* <= 1 is a hard
+    bound -- in a region where the ODE nullcline says there is no landscape at all. The
+    guard rho > rho_c must return exactly 0 there.
+    """
+    from experiments.arrhenius_optimum import delta_star_rho, rho_critical
+
+    for gamma in (0.25, 0.40):
+        rc = rho_critical(gamma)
+        assert rc > gamma, "rho_c > gamma is what lets one guard cover the double flip"
+        for rho in (0.01, 0.05, 0.15, gamma, rc * 0.999):
+            assert delta_star_rho(gamma, rho) == 0.0
+        assert 0.0 < delta_star_rho(gamma, rc * 1.2) < 1.0 / (1.0 + gamma)
+
+
+def test_delta_star_rho_matches_the_ode_nullcline():
+    """FINDINGS 44: the closed form is checked against the network's own fluxes."""
+    from scipy.optimize import brentq
+
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho, rho_critical
+
+    for gamma in (0.10, 0.25, 0.40):
+        for rho in (0.7, 1.0, 2.0, 5.0, 20.0):
+            if rho <= rho_critical(gamma):
+                continue
+            net = am_rho(gamma, rho)
+            S = net.stoichiometry_matrix()
+            b = gamma / (1.0 + gamma)
+            s = 1.0 - b
+
+            def f(d, net=net, S=S, b=b, s=s):
+                x, y = 0.5 * (s + d), 0.5 * (s - d)
+                return float((S @ net.fluxes(np.array([x, y, b])))[:2].sum())
+
+            assert f(1e-9) * f(s - 1e-9) < 0
+            root = brentq(f, 1e-9, s - 1e-9, xtol=1e-15)
+            assert delta_star_rho(gamma, rho) == pytest.approx(root, abs=1e-9)
+
+
+def test_rho_leaves_the_cycle_affinity_at_three_ln_gamma():
+    """FINDINGS 44: rho is a catalyst, so it must not touch the drive.
+
+    A catalyst accelerates both directions equally. §16 pins the affinity of the cycle
+    X+Y->2B, B+X->2X, B+Y->2Y at -3 ln gamma, and it must be rho-independent.
+    """
+    from experiments.arrhenius_optimum import am_rho
+
+    for gamma in (0.10, 0.25, 0.40):
+        for rho in (0.5, 1.0, 4.0):
+            net = am_rho(gamma, rho)
+            by = {r.name.split(":")[0]: r.k for r in net.reactions}
+            aff = np.log((by["f1"] * by["f2"] * by["f3"])
+                         / (by["r1"] * by["r2"] * by["r3"]))
+            assert aff == pytest.approx(-3.0 * np.log(gamma), abs=1e-12)

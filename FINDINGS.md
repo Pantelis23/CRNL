@@ -6110,3 +6110,160 @@ result. It would not — and the reason is now sharper than "it survives": conse
 structure was never what the result rested on. What it rests on is that the two competing
 species are each other's mirror image, which is a symmetry a particle model can keep or
 break deliberately.
+
+---
+
+### 44 Real Arrhenius kinetics, and a free lever nobody had turned — T-COST-e
+
+`crnl/cooling.py` maps the drive to a temperature, γ = exp(−ΔE/T), and its own docstring
+flags what it leaves out: *"the forward rates have no temperature dependence, so this is
+the minimal change that lets the balance move, not a thermochemistry."* Real forward rates
+are Arrhenius too. If T moves them as well as the balance, then the optimal *temperature*
+is not §38's optimal *drive* re-labelled, and the "which substrate should a restoring
+element be built from" reading of §38 is unearned.
+
+Writing k_r = A·exp(−E_r/T) splits T's job in two:
+
+* A **uniform** activation energy is a pure clock change — Q → λQ and σ → λσ together, so
+  Σ = Q⁻¹σ is exactly invariant. Temperature acting on all forward rates equally *cannot*
+  move the cost optimum. §5.1's uniform-order argument, one level up.
+* The channels need not share a barrier, and their ratio **ρ = k_dis/k_rec = exp(−ΔEa/T)**
+  is a landscape change, not a clock change. **Every result in this document is at ρ = 1**,
+  and nothing had ever checked that.
+
+**The geometry, derived by hand and checked before use.** b\* = γ/(1+γ) is untouched (§30's
+identity survives: ρ multiplies the disagreement channel, which cancels in the difference),
+giving
+
+    δ*(γ,ρ)² = (ρ − γ − 4ργ³) / [(1+γ)²(ρ − γ)]
+
+which reduces to `delta_star(γ)` at ρ = 1. **It has a trap and the trap was hit.** For
+ρ < γ both numerator and denominator are negative, so it returns a *plausible positive*
+value — 0.806 at (γ,ρ) = (0.25, 0.05), and 6.37 and 11.4 near ρ = γ where δ\* ≤ 1 is a hard
+bound — in a region where the ODE nullcline says the landscape is simply absent. The
+landscape exists iff ρ > ρ_c = γ/(1−4γ³), and ρ_c > γ always, so one guard covers it.
+Caught by checking the closed form against the nullcline at 30 (γ,ρ) pairs *before* using
+it anywhere. Rule 10, in the cheapest possible place.
+
+**P1a — clock invariance is exact.** Rescaling every rate by λ ∈ {0.1, 1, 7, 100} leaves
+Σ = 311.092663 unchanged to a worst relative deviation of **4.6×10⁻¹⁵**. A uniform Arrhenius
+factor therefore cannot move anything, as the algebra requires.
+
+**P1b — the instrument reproduces §38.** At ρ = 1, sweeping γ (Ω = 200 / 300):
+
+| γ | 0.08 | 0.12 | 0.16 | 0.20 | 0.24 | 0.28 | 0.32 | 0.36 | 0.40 |
+|---|---|---|---|---|---|---|---|---|---|
+| G (Ω=200) | 2.382 | 2.101 | 1.963 | 1.897 | **1.894** | 1.975 | 2.112 | 2.601 | 3.566 |
+| δ\* | 0.925 | 0.889 | 0.854 | 0.817 | 0.777 | 0.732 | 0.681 | 0.619 | 0.541 |
+
+γ\* = **0.2216** (Ω=200) and **0.2319** (Ω=300), sitting between §38's CME 0.20 and §39's
+closed-form 0.240.
+
+### 44.1 P3 was refuted, and in the opposite direction
+
+**Predicted: cost has an interior minimum in ρ at ρ\* < 1**, on the reasoning that the
+disagreement reaction moves δ by exactly zero — §30's first cancellation, it consumes both
+species equally — so it produces entropy and no signal, and should be suppressed.
+
+**Measured: G falls monotonically as ρ *rises*, at all three γ and both Ω, with no interior
+minimum anywhere on ρ ∈ [0.35, 100].** The prediction was not merely wrong, it had the sign
+backwards.
+
+**The reasoning conflated flux with dissipation.** For the disagreement pair,
+a_f/a_r = n_X n_Y/(γ n_B²) is *independent of ρ* — raising ρ scales both directions
+equally. Driving a reaction fast in both directions pushes it onto its own local
+equilibrium, where n_X n_Y → γ n_B² and ln(a_f/a_r) → 0, so the channel carries unbounded
+flux at *bounded* net entropy production. Making the non-signal channel fast makes it
+cheap, not expensive.
+
+### 44.2 ρ is a free lever — cost halves, reliability doubles, time halves
+
+At γ = 0.16, Ω = 200, sweeping ρ with everything else fixed:
+
+| ρ | 0.35 | 1.0 | 1.8 | 6.0 | 20 | 100 |
+|---|---|---|---|---|---|---|
+| G (k_B/molecule/e-fold) | 4.135 | 1.963 | 1.535 | 1.247 | 1.167 | **1.117** |
+| L (nats of reliability) | 7.67 | 17.18 | 22.65 | 29.03 | 32.14 | **34.38** |
+| mean time | 17.68 | 5.41 | 3.84 | 2.98 | 2.80 | **2.70** |
+| δ\* | 0.8490 | 0.8536 | 0.8543 | 0.8548 | 0.8549 | 0.8550 |
+
+**All three move the right way at once, and P5's control shows why that is not a geometry
+effect: δ\* moves by 0.16% while cost falls 43%.** Going from AM's ρ = 1 to the asymptote:
+
+| γ | ΔG | L ratio | Δtime | Δδ\* |
+|---|---|---|---|---|
+| 0.16 | **−43.1%** | **2.00×** | −50.1% | +0.16% |
+| 0.24 | **−46.9%** | **2.07×** | −54.0% | +0.93% |
+| 0.32 | **−50.5%** | **2.05×** | −57.4% | +3.7% |
+
+Cost halves, reliability doubles, time halves — consistently across γ.
+
+**And this makes ρ a different *kind* of knob from γ.** Over the γ-sweep L falls
+monotonically (32.1 → 13.2 → 1.7 as γ goes 0.036 → 0.209 → 0.449): **γ trades cost against
+reliability, which is what makes §38's optimum an optimum.** ρ does not trade — it is
+strictly dominating. The γ lever is worth ~21% in G from its worst reasonable setting;
+**the ρ lever is worth 43–50% and costs nothing.** Nothing in this project had turned it.
+
+**P9 confirmed — G asymptotes**, which is the signature the local-equilibration account
+requires. The last step (ρ = 50 → 100) moves G by 0.5–0.6% at γ = 0.24 and 0.32, against
+2.8% for the step before at γ = 0.16. The limit is the reduced model in which X+Y ⇌ 2B is
+equilibrated and recruitment carries the whole net current.
+
+> ⚠ **The last decade is at the resolution floor.** At ρ = 100 the Ω=200 and Ω=300 columns
+> disagree by 1.2% at γ = 0.16 *in the wrong direction*, and the γ=0.32 Ω=200 column is
+> non-monotone at the 1% level over ρ = 20…100. The generator's conditioning degrades as ρ
+> grows. The asymptote is ~1.0–1.1; its third digit is not resolved, and the two "interior"
+> ρ\* values the fitter reports (33.3 and 63.2) are **noise picking a point on a flat tail,
+> not optima** — reported as such rather than as a located optimum.
+
+> **Suspect, not result (rule 17).** ρ raises reliability while δ\* is frozen, which points
+> at the timescale separation: faster disagreement means a faster pool, which is deeper
+> slaving, which is §36's on-manifold condition and §39.2's 1/sep law. **Kill test:**
+> compute sep(γ,ρ) and check whether §39.2's law predicts the L improvement quantitatively.
+> If it does not, the mechanism is wrong and only the measurement stands.
+
+### 44.3 The pre-registered P4 failed; its argmin was inadmissible
+
+Sweeping T with γ(T) = exp(−ΔE/T) and ρ(T) = exp(−ΔEa/T), ΔE = 1, T_c = ΔE/ln2 = 1.4427:
+
+**P2 holds.** At ΔEa = 0, T\* = 0.6367 / 0.6458 against the predicted ΔE/ln(1/γ\*) =
+0.6636 / 0.6842 — ratios 0.96 and 0.94, the shortfall being parabolic interpolation on a
+nonlinearly transformed grid rather than physics. **T\*/T_c = 0.441 / 0.448: the optimum
+sits at ~44% of the temperature at which the landscape dies.**
+
+**P4, as pre-registered, FAILS** — T\* did not split by sign(ΔEa): +75% and +0.7% at Ω=200.
+**But its ΔEa = +0.6 argmin is not admissible.** It sits at T = 1.114, where δ\* = 0.227
+and ρ/ρ_c = 1.04 — the landscape is 4% from death and L has fallen to 1.31 nats. **§9.2 was
+withdrawn for exactly this**: G falls there not because the decision is cheap but because
+it is *small*, the threshold θ·δ\*·Ω having collapsed with δ\*.
+
+Under the admissibility floor δ\* ≥ 0.40 — fixed *before* the re-run, and chosen because the
+ρ=1 γ-sweep that P1b validates against §38 itself spans δ\* = 0.40…0.97, so that is the
+range where this instrument is known to agree with the established result:
+
+| criterion | Ω | T\*(ΔEa=0) | ΔEa=+0.6 | ΔEa=−0.6 | verdict |
+|---|---|---|---|---|---|
+| P4 pre-registered | 200 | 0.6367 | 1.1143 (**+75.0%**) | 0.6415 (+0.7%) | FAILS |
+| P4 pre-registered | 300 | 0.6458 | 1.1143 (**+72.5%**) | 0.6855 (+6.1%) | FAILS |
+| P8, δ\* ≥ 0.40 | 200 | 0.6367 | 0.5839 (**−8.3%**) | 0.6415 (+0.7%) | HOLDS |
+| P8, δ\* ≥ 0.40 | 300 | 0.6458 | 0.5910 (**−8.5%**) | 0.6855 (+6.1%) | HOLDS |
+
+**Both verdicts stand in the record.** P4's is what the pre-registered criterion returned;
+P8's is what the same data say once cells outside the instrument's validated range are
+excluded. The substance — **temperature does not act through γ alone** — rests on P8.
+
+> ⚠ **The split is carried by one arm, and read per cell it is asymmetric.** The +0.6 arm
+> moves T\* down by 8.3% and 8.5%, consistent across Ω. The −0.6 arm moves it up by 0.7%
+> and 6.1% — *not* resolved between Ω. So "opposite directions" is a one-sided result.
+> **It is also the expected one**, and that is a consistency check rather than an excuse:
+> §44.2 shows G falls steeply in ρ below ~5 and is flat above it. At ΔEa = −0.6, ρ ranges
+> 7.4 → 1.6 across the sweep, entirely in the flat region, so the ρ channel has almost
+> nothing to contribute; at ΔEa = +0.6, ρ ranges 0.135 → 0.58, entirely in the steep one.
+> The asymmetry is predicted by the ρ-sweep, not an artifact of it.
+
+**P6, arithmetic and labelled as such.** §16 pins the cycle affinity at A = 3 ln(1/γ) (it is
+in `verify_base`), so γ\* = 0.2216 / 0.2319 gives **A\* = 4.52 / 4.39 k_BT**, an optimal fuel
+drop of **0.117 / 0.113 eV at 300 K**, against ATP hydrolysis at ~20 k_BT. This is
+arithmetic on §38 plus §16, not a new measurement. **It is not merged with §40's
+Q_min = 5.39** — two numbers near 5 arriving along axes chosen for other reasons is rule 9's
+trap, which has already sprung three times here.

@@ -1740,6 +1740,38 @@ a statement about the deterministic drift only; the CME chain crosses delta = 0 
 which is exactly the "every reversal is a fluctuation" reading and nothing more. Both
 limits are recorded in §43 rather than left for a later retraction.
 
+~~**T15-e, open: is sign(P) > 0 characterisable, or is it just measured?**~~ **CLOSED by
+§53: NO, and the two halves of restoration turn out to have different PREVALENCE, not just
+different logical status.**
+
+  * **P is the symmetry-breaking eigenvalue.** Differentiating b_i - b_j = delta*P at
+    delta = 0 gives P(symmetric state) = d(b_i-b_j)/d(delta), which at a symmetric fixed
+    point is T7/§14's lambda. Verified to 5.8e-10 over 52 states. §43's P and T7's lambda
+    were the same object for twenty sections without anyone noticing.
+  * **Closed form: P(symmetric fixed point) = (1 - 2*gamma)/3**, worst deviation 8.9e-12
+    over 11 gammas from 0 to 0.9. Vanishes at gamma_c = 1/2 (the pitchfork), and at
+    gamma = 0 equals 1/3 = 1/(2n-1) at n = 2 -- T7/§14's lambda(n) exactly. Sits in fixed
+    ratio to §12's wall coefficient: P/kappa = (1+gamma)/4.5.
+  * **The attractors lie on P's zero set** (|P| < 8e-16 at delta*), necessarily, since
+    d(delta)/dt = delta*P. Not the separatrix -- §43 already made that delta = 0.
+  * **sign(P) is NOT combinatorial.** 17 of 188 random topologies flip it under rate
+    changes alone, spanning -38.26..+2.04 at one fixed state, and AM flips at gamma_c. One
+    counterexample suffices. The 91% that do not flip say topology carries a lot of
+    information without determining the answer.
+  * **THE SHARPEST NUMBER: divisibility 200/200, amplification 21/200 = 10.5%.** Almost
+    every exchange-symmetric network preserves the sign of a lead; almost none grows it.
+
+**The pre-registered verdict rule for the kill test was badly designed and §53 says so:** it
+demanded a MAJORITY of topologies flip before declaring non-combinatoriality, which is the
+wrong logic for a universality claim -- one counterexample refutes it. The criterion, not the
+data, is what changed.
+
+**What this means for the founding claim.** Restoration = divisibility + sign(P) > 0. The
+first is structural, universal, and needs no conservation law. The second is a rate-constant
+condition that is RARE. **A restoring element is a tuned object, not a topological one**, and
+"the transistor is a near-ideal restoring switch" is a statement about tuning rather than
+about circuit topology.
+
 **T15-e, open: is sign(P) > 0 characterisable, or is it just measured?** Divisibility is
 settled; restoration is divisibility plus a positive P over the relevant region, and
 nothing yet says which symmetric networks have one. **How to kill:** take the cofactor

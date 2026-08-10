@@ -6943,3 +6943,81 @@ two-dimensional" statement is on much firmer ground than it was in §50. What is
 established is the Ω-asymptotics of the coefficient itself outside the fast-pool limit.
 **Running this before proposing T-COST-m was the right order**: a third mechanism fitted
 against six non-asymptotic cells would have been fitted against a moving target.
+
+---
+
+### 53 The amplification half is NOT structural — and P has a closed form — T15-e
+
+§43 proved `b_i − b_j = (n_i − n_j)·P(n)` for every exchange-symmetric mass-action network,
+making δ = 0 an invariant manifold, and was explicit that this is only half of restoration:
+**divisibility gives no-reversal; amplification additionally needs P > 0, and only the first
+half is a theorem.** This closes the second half — negatively, with a closed form as
+consolation.
+
+**P is the symmetry-breaking eigenvalue, and §43 did not name it.** Differentiating
+b_i − b_j = δ·P at δ = 0 gives P(symmetric state) = d(b_i − b_j)/dδ, which at a symmetric
+*fixed point* is the Jacobian eigenvalue along (1,−1,0) — the quantity THEORIES **T7** and
+**§14** built the n-winner barrier on. Verified to **5.8×10⁻¹⁰** over 52 states on AM and on
+random symmetrised networks, and exactly at AM's symmetric fixed point.
+
+**And it has a closed form.** Measured at 11 values of γ from 0 to 0.9:
+
+> **P(symmetric fixed point) = (1 − 2γ)/3**, worst deviation **8.9×10⁻¹²**
+
+| γ | 0 | 0.20 | 0.35 | 0.49 | 0.55 | 0.90 |
+|---|---|---|---|---|---|---|
+| P | 0.333333 | 0.200000 | 0.100000 | 0.006667 | −0.033333 | −0.266667 |
+
+It vanishes at **γ_c = 1/2**, which is the pitchfork, and at γ = 0 it is **1/3 = 1/(2n−1)
+at n = 2 — exactly T7/§14's symmetry-breaking eigenvalue λ(n).** An absolute check (rule 16)
+linking two sections that had never been connected. It also sits in fixed ratio to §12's
+wall coefficient: **P/κ = (1+γ)/4.5** exactly, both carrying the same (1−2γ) zero.
+
+**P2 — the attractors lie on P's zero set.** |P| at δ\* is **7.5×10⁻¹⁶, 1.7×10⁻¹⁷,
+1.5×10⁻¹⁶, 2.4×10⁻¹⁶** across γ. Since dδ/dt = δ·P, an off-symmetric fixed point *must* have
+P = 0, and `delta_star(γ)` reaches the same points by an independent route. Note this is not
+the separatrix — §43's theorem already makes that δ = 0.
+
+**P5 — no interior sign flip.** P falls monotonically from the symmetric state to the
+attractor at every γ, so AM's amplifying region is exactly (0, δ\*) and "restoring" needs no
+region qualifier here.
+
+### 53.1 sign(P) is not combinatorial, and the two halves have different status
+
+**P3, the kill test: hold the topology fixed, vary only the rate constants.** Over 188
+random symmetrised topologies, **17 flip the sign of P** at a fixed state — examples
+spanning **−11.46…+17.20**, **−4.82…+3.11**, and **−38.26…+2.04**. AM itself flips at
+γ_c. **One counterexample suffices**, so:
+
+> **sign(P) is not determined by the stoichiometry.** §43's theorem covers the
+> cannot-reverse half structurally, and that is the whole of what is structural.
+> Amplification is a linear-stability condition on the rate constants.
+
+> ⚠ **The pre-registered verdict rule was badly designed and is reported as such.** It
+> declared "not combinatorial" only if *more than half* of topologies flipped; 17/188 = 9%
+> flip, so the script printed "sign(P) looks topology-determined". **That is the wrong
+> logic for a universality claim** — refuting "topology determines sign" needs one
+> counterexample, not a majority. The verdict above is the correct reading of the same data,
+> and the criterion, not the data, is what changed.
+
+The 91% that do *not* flip are informative in the other direction: **topology carries
+substantial information about sign(P) without determining it.**
+
+**P4 — and this is the sharpest thing here.** Over 200 random symmetrised networks, how many
+amplify at all?
+
+| property | fraction |
+|---|---|
+| divisibility (§43) — no-reversal | **200 / 200** |
+| P > 0 somewhere — amplification | **21 / 200 = 10.5%** |
+
+**Divisibility is generic; amplification is rare.** The two halves of restoration are not
+merely different in logical status — they are different in *prevalence*. Almost every
+exchange-symmetric network preserves the sign of a lead, and almost none of them grows it.
+
+**What T15-e settles.** Restoration = divisibility + sign(P) > 0. The first is a theorem
+about stoichiometry and symmetry, holds universally, and needs no conservation law (§43).
+The second is a rate-constant condition, equals the symmetry-breaking eigenvalue, has the
+closed form (1−2γ)/3 in AM, and is **rare** among symmetric networks. **A restoring element
+is not a structural accident — it is a tuned one**, and the project's founding claim about
+the transistor being a near-ideal restoring switch is a statement about tuning, not topology.

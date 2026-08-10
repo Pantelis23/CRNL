@@ -1,0 +1,40 @@
+=== P1 GATE: P at a symmetric state == the antisymmetric derivative
+  worst relative disagreement over 52 states: 5.839e-10   -> P1 HOLDS
+
+=== P1b: at AM's symmetric fixed point, P == the symmetry-breaking eigenvalue
+  gamma             P        lambda    sign
+   0.05    0.30000000    0.30000000       +
+   0.20    0.20000000    0.20000000       +
+   0.35    0.10000000    0.10000000       +
+   0.45    0.03333333    0.03333333       +
+   0.49    0.00666667    0.00666667       +
+   0.55   -0.03333333   -0.03333333       -
+   0.70   -0.13333333   -0.13333333       -
+
+  gamma_c = 0.5: P changes sign there, which is the pitchfork.
+
+=== P2: are AM's attractors on P's zero set?
+  gamma     delta*   P at attractor
+   0.05   0.952130        7.511e-16
+   0.20   0.816497       -1.701e-17
+   0.35   0.635551       -1.527e-16
+   0.45   0.400519       -2.382e-16
+
+=== P3 KILL TEST: fix the TOPOLOGY, vary only the rate constants
+  17/188 topologies show sign(P) FLIPPING under rate changes alone
+    example: P ranges -11.4634 .. +17.2036 at one fixed state
+    example: P ranges -4.8177 .. +3.1144 at one fixed state
+    example: P ranges -38.2569 .. +2.0432 at one fixed state
+  -> P3 sign(P) looks topology-determined
+
+=== P4: what fraction of random symmetric networks amplify at all?
+  21/200 = 10.5% have P > 0 somewhere
+
+=== P5: does P keep one sign from the symmetric state out to the attractor?
+  gamma        P(0)    P(0.5d*)       P(d*)  monotone?
+   0.05    0.300000    0.207742   7.511e-16        yes
+   0.20    0.200000    0.145017  -1.701e-17        yes
+   0.35    0.100000    0.074220  -1.527e-16        yes
+   0.45    0.033333    0.024938  -2.382e-16        yes
+
+wrote results/amplification_sign.json

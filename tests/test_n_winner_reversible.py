@@ -617,3 +617,45 @@ def test_pool_jensen_term_vanishes_identically():
         # ~2.0 to explain §50's missing 79%, so this is seven orders short of mattering.
         assert abs(J) < 1e-6, f"Jensen term must vanish, got {J}"
         assert abs(lo) < 1e-4 and abs(hi) < 1e-4, "d2mu/ds2 must be identically zero"
+
+
+def test_P_equals_the_symmetry_breaking_eigenvalue():
+    """FINDINGS 53: §43's P and T7/§14's lambda are the same object.
+
+    At a symmetric state P is the antisymmetric directional derivative of b_i - b_j; at a
+    symmetric FIXED point that is the Jacobian eigenvalue along (1,-1,0).
+    """
+    from crnl.networks.am_reversible import am_reversible
+    from experiments.amplification_sign import P_at, antisym_eig
+    from experiments.slaving_axis import slaved
+
+    for gamma in (0.05, 0.20, 0.35, 0.49):
+        net = am_reversible(gamma)
+        st = slaved(net, 0.0)
+        assert P_at(net, st) == pytest.approx(antisym_eig(net, st), rel=1e-8)
+
+
+def test_P_at_the_symmetric_point_is_one_minus_two_gamma_over_three():
+    """FINDINGS 53: P = (1-2*gamma)/3 exactly, and 1/3 = 1/(2n-1) at n = 2 (T7/§14)."""
+    from crnl.networks.am_reversible import am_reversible
+    from experiments.amplification_sign import P_at
+    from experiments.slaving_axis import slaved
+
+    for gamma in (0.0, 0.10, 0.20, 0.35, 0.49, 0.55, 0.90):
+        net = am_reversible(gamma)
+        st = slaved(net, 0.0)
+        assert P_at(net, st) == pytest.approx((1.0 - 2.0 * gamma) / 3.0, abs=1e-10)
+    assert P_at(am_reversible(1e-12), slaved(am_reversible(1e-12), 0.0)) == \
+        pytest.approx(1.0 / 3.0, abs=1e-9)
+
+
+def test_attractors_lie_on_P_zero_set():
+    """FINDINGS 53: d(delta)/dt = delta*P, so an off-symmetric fixed point forces P = 0."""
+    from crnl.networks.am_reversible import am_reversible, delta_star
+    from experiments.amplification_sign import P_at
+    from experiments.slaving_axis import slaved
+
+    for gamma in (0.05, 0.20, 0.35, 0.45):
+        net = am_reversible(gamma)
+        st = slaved(net, delta_star(gamma))
+        assert abs(P_at(net, st)) < 1e-13

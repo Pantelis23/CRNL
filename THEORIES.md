@@ -1772,6 +1772,44 @@ condition that is RARE. **A restoring element is a tuned object, not a topologic
 "the transistor is a near-ideal restoring switch" is a statement about tuning rather than
 about circuit topology.
 
+**T15-f -> §54: WHERE the combinatorics runs out.** §53 said sign(P) is not combinatorial;
+§54 says precisely where. Grouping reactions into mirror pairs and taking the X-heavy member,
+with d_r = S_X(r) - S_Y(r),
+
+    P = sum_pairs d_r * c_r * [ O_r (xy)^q sum_m x^m y^(p-q-1-m) ],   every bracket >= 0
+
+verified to 1.9e-14 on AM, am_cubic and 120 random networks. **sign(P) is a rate-weighted
+sum of INTEGERS with non-negative weights**, so:
+
+    all d_r <= 0         -> P <= 0 everywhere, whatever the rates  113 nets, 0 amplify, 0 violations
+    all d_r >= 0, some>0 -> P > 0 everywhere                         3 nets,            0 violations
+    mixed                -> the rates decide, and ONLY here        183 nets, 33 amplify
+
+**The cross-check against §53 is the sharp one.** §53 measured 17/188 topologies flipping
+sign(P) under rate changes, for a different purpose. §54 predicts only MIXED ones can:
+**0 of 168 unanimous topologies flipped, 24 of 132 mixed ones did (18%)** -- and 44% mixed x
+18% = 8% reconciles with §53's independently measured 9%.
+
+**d_r > 0 is NOT autocatalysis.** `B + X -> 2X` gives d = +1, but so does `2X + Y -> 2X + B`
+where S_X = 0 and S_Y = -1 -- X catalysing Y's DESTRUCTION amplifies a lead just as well. The
+governing notion is positive feedback on the DIFFERENCE.
+
+**AM decomposed, and what gamma_c is.** Recruitment `B+X->2X` has d = +1 at weight k; its
+reverse `2X->B+X` has d = -1 at weight gamma*k; the disagreement channel `X+Y->2B` is
+SELF-MIRROR and contributes exactly zero. Evaluating the brackets gives **P = k(b - gamma*s)
+-- §30's identity, recovered term by term.** So AM is a MIXED network, **gamma is literally
+the weight on the contracting term**, and **gamma_c = 1/2 is where the mixed sum changes
+sign.** §53's P = (1-2*gamma)/3 is that sum at the symmetric fixed point.
+
+**The self-mirror zero is one fact wearing three hats:** §30's first cancellation, §51's
+discovery that rho does not appear in mu, and §54's zero contribution. Three sections, one
+structural cause.
+
+**And it explains §53's "tuned, not topological" with a mechanism.** Of 11.3% amplifying,
+**11.0 points come from MIXED networks and 0.3 from topology-guaranteed ones** -- the
+guaranteed class is ~1%. Nearly all restoration in this family is rate-tuned rather than
+topology-forced.
+
 **T15-e, open: is sign(P) > 0 characterisable, or is it just measured?** Divisibility is
 settled; restoration is divisibility plus a positive P over the relevant region, and
 nothing yet says which symmetric networks have one. **How to kill:** take the cofactor

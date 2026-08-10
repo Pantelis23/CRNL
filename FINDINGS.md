@@ -7021,3 +7021,84 @@ The second is a rate-constant condition, equals the symmetry-breaking eigenvalue
 closed form (1−2γ)/3 in AM, and is **rare** among symmetric networks. **A restoring element
 is not a structural accident — it is a tuned one**, and the project's founding claim about
 the transistor being a near-ideal restoring switch is a statement about tuning, not topology.
+
+---
+
+### 54 Where the combinatorics runs out — P is a rate-weighted sum of integers — T15-f
+
+§53 closed T15-e negatively (sign(P) is not determined by stoichiometry) and left the
+obvious question unasked: **what do the amplifying 10.5% have in common?** They have a
+decomposition.
+
+Group an exchange-symmetric network's reactions into mirror pairs {r, r̄}, and let r be the
+X-heavy member (X-power p > Y-power q in its reactants). Symmetry forces
+S_X(r̄) = S_Y(r), so with **d_r = S_X(r) − S_Y(r)** the pair contributes
+d_r c_r O_r (x^p y^q − x^q y^p), and factoring x^p y^q − x^q y^p = (xy)^q (x−y) Σ_m x^m y^…
+gives
+
+> **P = Σ_pairs d_r · c_r · [ O_r (xy)^q Σ_m x^m y^(p−q−1−m) ]**, every bracket **≥ 0** on x,y ≥ 0
+
+A self-mirror reaction (p = q) forces S_X = S_Y and contributes **nothing**. **Verified to
+1.9×10⁻¹⁴** on AM, on `am_cubic`, and on 120 random symmetrised networks.
+
+**sign(P) is therefore a rate-weighted sum of integers with non-negative weights**, and
+three regimes follow — two of them purely combinatorial:
+
+| class | prediction | networks | amplify | violations |
+|---|---|---|---|---|
+| all d_r ≤ 0 | **P ≤ 0 everywhere**, whatever the rates | 113 | **0** | **0** |
+| all d_r ≥ 0, some > 0 | **P > 0 everywhere** | 3 | 1 | **0** |
+| mixed | rates decide, and only here | 183 | 33 | — |
+
+**P2 and P3 hold with zero violations.** Topology *can* rule restoration out, and *can*
+rule it in — it is silent only in the mixed case. (Two of the three all-≥0 networks read
+P ≈ 0 rather than P > 0 at the sampled states; their positive bracket falls below the 10⁻⁹
+threshold at small concentrations, which is a threshold artifact, not a sign violation.)
+
+**P4 — the cross-check, and it is the sharp one.** §53 measured, for a different purpose,
+that 17/188 topologies flip sign(P) under rate changes alone. The classification here
+predicts that **only mixed topologies can flip**:
+
+| class | networks | flipped |
+|---|---|---|
+| all ≤ 0 | 159 | **0** |
+| all ≥ 0 | 8 | **0** |
+| mixed | 132 | **24 (18%)** |
+
+**Zero of 168 unanimous topologies flipped.** And the rates reconcile: mixed are 44% of the
+sample and 18% of those flip, giving 8% overall against §53's independently measured 9%.
+
+**d_r > 0 is NOT autocatalysis, which is the obvious guess and is wrong.** `B + X → 2X`
+gives d = +1 (X makes more X), but so does **`2X + Y → 2X + B`, where S_X = 0 and
+S_Y = −1** — X catalysing *Y's destruction*. The governing notion is positive feedback on
+the **difference**, not on either species.
+
+### 54.1 AM decomposed, and what γ_c actually is
+
+| d_r | k | reaction |
+|---|---|---|
+| **+1** | 1.0 | `f2: B + X → 2X` (recruitment) |
+| **−1** | γ | `r2: 2X → B + X` (its reverse) |
+| — | — | `f1: X + Y → 2B` is **self-mirror → contributes 0** |
+
+Evaluating the brackets gives **P = k(b − γs)** — **§30's identity, recovered term by
+term.** So:
+
+* **AM is a *mixed* network**, which is why γ can flip its sign at all.
+* **γ is literally the weight on the contracting term**, and **γ_c = 1/2 is the point where
+  the mixed sum changes sign.** §53's closed form P = (1−2γ)/3 is that sum evaluated at the
+  symmetric fixed point.
+* **The disagreement channel is self-mirror and contributes exactly zero** — which is the
+  same fact as §30's first cancellation, and the same fact as §51's discovery that ρ does
+  not appear in μ at all. Three sections, one structural cause.
+
+**P5 — §53's 10.5% decomposed.** This draw gives 34/300 = 11.3% amplifying, of which
+**11.0 points come from mixed networks and 0.3 from guaranteed ones**. The
+topology-guaranteed class is ~1% of networks. **So nearly all restoration in this family is
+rate-tuned rather than topology-forced**, which is §53's "a restoring element is a tuned
+object" with a mechanism attached rather than an observation.
+
+**What T15-f settles.** §53 said sign(P) is not combinatorial. §54 says *precisely where*
+the combinatorics runs out: it decides the unanimous cases completely and the mixed case not
+at all. Restoration is impossible for 38% of these networks on stoichiometric grounds alone,
+guaranteed for 1%, and a matter of tuning for the remaining 61%.

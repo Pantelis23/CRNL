@@ -659,3 +659,58 @@ def test_attractors_lie_on_P_zero_set():
         net = am_reversible(gamma)
         st = slaved(net, delta_star(gamma))
         assert abs(P_at(net, st)) < 1e-13
+
+
+def test_P_decomposition_is_exact():
+    """FINDINGS 54: P = sum_pairs d_r * c_r * (non-negative bracket), exactly."""
+    from crnl.networks.am_reversible import am_reversible
+    from experiments.amplification_sign import P_at
+    from experiments.amplification_signature import P_decomposed
+    from experiments.exchange_theorem import am_cubic
+
+    for gamma in (0.05, 0.25, 0.55):
+        for net in (am_reversible(gamma), am_cubic(gamma)):
+            for s, d in ((0.4, 0.1), (0.7, 0.25), (0.9, 0.05)):
+                x = [(s + d) / 2, (s - d) / 2, 1 - s]
+                dec, brackets = P_decomposed(net, x)
+                assert dec == pytest.approx(P_at(net, x), rel=1e-11)
+                assert all(b >= 0 for b in brackets), "brackets must be non-negative"
+
+
+def test_am_decomposes_into_the_section_30_bracket():
+    """FINDINGS 54: AM is MIXED -- recruitment d=+1, its reverse d=-1 weighted by gamma.
+
+    The disagreement channel is self-mirror and contributes exactly zero, which is §30's
+    first cancellation and §51's rho-independence of mu, one structural cause.
+    """
+    from crnl.networks.am_reversible import am_reversible
+    from experiments.amplification_signature import classify, mirror_pairs
+
+    net = am_reversible(0.25)
+    pairs = mirror_pairs(net)
+    ds = sorted(d for d, _ in pairs)
+    assert ds == [-1, 1], f"AM must have exactly d = -1 and +1, got {ds}"
+    assert classify(net) == "mixed"
+    ks = {d: net.reactions[i].k for d, i in pairs}
+    assert ks[1] == pytest.approx(1.0) and ks[-1] == pytest.approx(0.25)
+
+
+def test_unanimous_topologies_cannot_flip_sign():
+    """FINDINGS 54: all d_r <= 0 forbids amplification whatever the rate constants."""
+    import numpy as _np
+
+    from experiments.amplification_sign import P_at
+    from experiments.amplification_signature import classify
+    from experiments.exchange_theorem import random_network
+
+    rng = _np.random.default_rng(31337)
+    checked = 0
+    for _ in range(120):
+        net = random_network(rng, n_extra=2, n_rx=5, max_order=3, symmetrise=True)
+        if net is None or classify(net) != "all<=0":
+            continue
+        checked += 1
+        for _ in range(8):
+            x = rng.uniform(0.05, 1.5, len(net.species))
+            assert P_at(net, x) <= 1e-9, "an all-d<=0 network amplified"
+    assert checked >= 5, "need some all<=0 networks for this test to have power"

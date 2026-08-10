@@ -579,3 +579,41 @@ def test_birthdeath_chain_needs_matched_lattice_endpoints():
     t_un = traversal(net, 0.35 * ds, 0.80 * ds, reverse_pairing(net), n=4001)
     # the mismatch, times Omega, is comparable to the coefficient being measured
     assert abs(t_match - t_un) * om > 0.1 * vals[0]
+
+
+def test_signal_drift_is_exactly_linear_in_the_pool():
+    """FINDINGS 51: mu = k*delta*(1 - (1+gamma)s), which is §30's bracket in concentrations.
+
+    This is why the pool-fluctuation Jensen term is identically zero: the drift has no
+    curvature in s. It is also rho-independent, because the disagreement channel moves
+    delta by exactly zero -- §30's first cancellation.
+    """
+    from experiments.arrhenius_optimum import am_rho
+    from experiments.lag_absolute import field
+
+    for gamma in (0.07, 0.20, 0.35):
+        for rho in (0.5, 1.0, 32.0):
+            net = am_rho(gamma, rho)
+            for d in (0.1, 0.3, 0.5):
+                for s in (0.55, 0.70, 0.85):
+                    if s <= d:
+                        continue
+                    mu = field(net, d, s)[0]
+                    assert mu == pytest.approx(d * (1.0 - (1.0 + gamma) * s), abs=1e-14)
+
+
+def test_pool_jensen_term_vanishes_identically():
+    """FINDINGS 51: J = 0 exactly, so §39.1's candidate (iii) is dead for the time too."""
+    from crnl.networks.am_reversible import reverse_pairing
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho
+    from experiments.pool_jensen import J_of
+
+    for gamma, rho in ((0.07, 1.0), (0.20, 1.0), (0.20, 32.0), (0.35, 1.0)):
+        ds = delta_star_rho(gamma, rho)
+        net = am_rho(gamma, rho)
+        J, lo, hi = J_of(net, 0.35 * ds, 0.80 * ds, reverse_pairing(net))
+        # The floor here is the second difference's own roundoff, eps/h^2 ~ 2e-6 in
+        # d2mu/ds2 at h = 1e-5, which propagates to ~1e-8 in J. J would have to be
+        # ~2.0 to explain §50's missing 79%, so this is seven orders short of mattering.
+        assert abs(J) < 1e-6, f"Jensen term must vanish, got {J}"
+        assert abs(lo) < 1e-4 and abs(hi) < 1e-4, "d2mu/ds2 must be identically zero"

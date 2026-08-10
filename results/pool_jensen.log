@@ -1,0 +1,38 @@
+=== P1 GATE (rule 13): convergence in the finite-difference step h
+         h           J   rel change
+   1.0e-04     0.00000          nan
+   5.0e-05     0.00000     8.10e-01
+   2.0e-05    -0.00000     1.04e+00
+   1.0e-05    -0.00000     8.30e-01
+  -> P1(h) FAILS
+
+=== P2: is the drift CONVEX in the pool coordinate? (the sign is forced)
+ gamma   rho   min d2mu/ds2   max d2mu/ds2         J      sign
+  0.07   1.0         -0.000          0.000    -0.000  NEGATIVE
+  0.20   0.5         -0.000          0.000    -0.000  NEGATIVE
+  0.20   1.0         -0.000          0.000     0.000         +
+  0.20  32.0         -0.000          0.000    -0.000  NEGATIVE
+  0.35   1.0         -0.000          0.000     0.000         +
+  -> P2 FAILS -- Jensen term has the wrong sign
+
+=== P3/P4: the absolute budget, in the two converged cells
+ gamma   rho      cme      bd        J     bd+J   (bd+J)/cme    J/bd
+  0.07   1.0    2.568   0.546   -0.000    0.546        0.213   -0.00   CONVERGED
+  0.20   0.5    9.278   1.857   -0.000    1.857        0.200   -0.00   pre-asympt
+  0.20   1.0    4.210   1.133    0.000    1.133        0.269    0.00   pre-asympt
+  0.20  32.0    2.076   0.450   -0.000    0.450        0.217   -0.00   CONVERGED
+  0.35   1.0   10.258   2.842    0.000    2.842        0.277    0.00   pre-asympt
+
+=== P3 verdict (converged cells only)
+  gamma=0.07 rho=1.0   (bd+J)/cme = 0.213   [1-D 21%, Jensen -0%]
+  gamma=0.20 rho=32.0  (bd+J)/cme = 0.217   [1-D 22%, Jensen -0%]
+  ratio 0.213..0.217, mean 0.215
+  -> P3 FAILS by -79%. Reported, not fitted.
+     spread across the two cells 1.8% -> a consistent offset, so one more same-order term
+
+=== P6: the pre-asymptotic cells carry no verdict
+  gamma=0.20 rho=0.5   (bd+J)/cme = 0.200   -- cme still rising, not a test
+  gamma=0.20 rho=1.0   (bd+J)/cme = 0.269   -- cme still rising, not a test
+  gamma=0.35 rho=1.0   (bd+J)/cme = 0.277   -- cme still rising, not a test
+
+(1s) wrote results/pool_jensen.json

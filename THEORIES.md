@@ -1923,6 +1923,36 @@ at all.
     chosen after seeing which cells converged, unlike §47's pre-registered delta* >= 0.40.
     Provisional pending larger Omega.
 
+~~**T-COST-l, open: is the missing ~79% the pool-fluctuation Jensen term?**~~ **REFUTED
+EXACTLY by §51, and by §30's identity.** mu = k*delta*(1 - (1+gamma)s), verified against the
+network's own fluxes to 9.8e-16 over 81 states x 3 gamma x 3 rho -- and that bracket IS §30's
+identity at n = 2, k(b - gamma*s), in concentrations. **The drift is exactly LINEAR in the
+pool coordinate**, so d2mu/ds2 = 0 identically and the Jensen term vanishes: J = 0 to
+machine precision in all five cells, (bd+J)/cme unchanged at 0.213 and 0.217. §39.1's
+candidate (iii) is now dead for the TIME as well as the cost. The theorem that opened this
+session is what closes the question.
+
+  * rho does not appear in mu at all -- the disagreement channel moves delta by exactly
+    zero, §30's first cancellation -- which is why the whole rho family shares one drift law.
+  * **§51's P1 gate "failed" as a division-by-zero artifact** and is reported as one: it
+    measured the RELATIVE convergence of an exact zero. P2's sign test never fired either;
+    d2mu/ds2 is neither positive nor negative.
+  * The NOISE is curved where the drift is not -- d2(up+dn)/ds2 = k(gamma-2) != 0 -- but a
+    Jensen term in the diffusion reaches the MFPT only through the correction itself, so it
+    is O(1/Omega^2) and cannot be the missing 79% either.
+
+**T-COST-m, open: is it noise-induced drift from the delta-s cross-correlation?** Adiabatic
+elimination produces an effective slow drift with a term set by <delta-fluct * s-fluct>,
+distinct from both the deterministic lag and the Jensen curvature. It survives here
+precisely because **dmu/ds = -k(1+gamma)*delta != 0 even though d2mu/ds2 = 0** -- the drift
+is linear in s, not independent of it. **How to kill:** solve the stationary 2x2 Lyapunov
+equation about the manifold, take the delta-s entry, and test (dmu/ds)*<delta s>/mu in
+ABSOLUTE terms against the missing 79% (rule 16). The sign is again forced positive.
+
+**Budget after §51:** of the absorption coefficient C, ~21% is exact 1-D discreteness (§50),
+**0% is Jensen (§51)**, ~79% unaccounted. Two named candidates eliminated rather than merely
+unfavoured.
+
 **T-COST-l, open: is the missing ~79% the pool-fluctuation Jensen term?** The pool b
 fluctuates about its slaved value, so delta feels E[mu(delta,b)] rather than mu(delta,b*) --
 an O(1/Omega) term no 1-D reduction can carry. **This is §39.1's candidate (iii)**, withdrawn
@@ -2718,3 +2748,68 @@ different process, not a constrained path, so no variational inequality forces >
 and starting depth -- and matching the first left the second free. Rule 9 says measure
 along an axis you did not choose; this says count how many axes you did not choose,
 because a matched-looking comparison can still share an unexamined edge.
+
+### Quantum mechanics -- where this project sits, and the one thing a quantum substrate buys
+
+Checked against the quantum-thermodynamics literature. Three findings matter, one of them
+placing the project's machinery precisely and one answering a question asked earlier in the
+session about basing logic on atoms.
+
+**1. CRNL is the INCOHERENT LIMIT of quantum stochastic thermodynamics, and that is exactly
+where the TUR §40 used is exact.** Nishiyama & Hasegawa, *Quantum thermodynamic uncertainty
+relations without quantum corrections: a coherent-incoherent correspondence approach*
+(arXiv:2505.09973, U. Tokyo). Quantum TURs generally need "quantum correction terms" because
+coherence can beat the classical bound. Their CIC framework maps a Lindblad system S with
+Hamiltonian H onto S-null with H set to zero, and shows entropy production and dynamical
+activity are INVARIANT under the map -- so in S-null the classical-form relations
+
+    Var[J]/E[J]^2 >= 2/Sigma        and        Var[J]/E[J]^2 >= 1/A
+
+hold with no correction at all. **A classical Markov jump process is realisable as exactly
+that H = 0 sector** (jump operators L_ij = sqrt(w_ij)|i><j|, coherences decaying
+independently, the diagonal obeying the CME). So the chemical master equation is the
+incoherent sector of a Lindblad equation, and §37-§41's entropy apparatus is the H = 0 case
+of quantum stochastic thermodynamics.
+
+**This retroactively justifies §40's choice of bound**, which §40/§40.1 flagged as the least
+secure part of that section (T-TUR-a, "partially CLOSED"): the uncorrected classical form is
+the right one here *because* there is no coherence, not by assumption. It is a placement,
+not a new result, and the embedding is not unique -- so it should not be read as "CRNL is
+secretly quantum".
+
+**2. Coherence can go BELOW the classical bound -- and that is the one thing a quantum
+substrate buys that chemistry provably cannot.** arXiv:2510.20873 (*Quantum Coherence as a
+Thermodynamic Resource Beyond the Classical Uncertainty Bound*), arXiv:2501.00627
+(*Violation of the TUR in quantum collisional models*), arXiv:2604.05747 (kinetic UR in
+collective dissipative many-body systems), arXiv:2607.12264 (*Heisenberg Scaling in
+Many-Body Kinetic Uncertainty Relation via Quantum Feedback*, U. Tokyo).
+
+**§40 measured Q_min = 5.39 -- AM sits about 5x above the classical floor Q >= 1.** The
+literature says a coherent element can go under Q = 1 entirely. So the honest answer to
+"would atoms be better" gains a third term beyond §44's: not the energy scale (§44 says
+that is not the lever), not selective catalysis (§44's suspect, which chemistry WINS on),
+but **coherence, which removes the floor AM is being measured against.** That is a real
+asymmetry and it is the first thing in this session that a chemical substrate cannot match
+even in principle. **It is also entirely outside this rig** -- nothing here can test it, and
+saying so is the point.
+
+**3. The closest external analogue to §12/§35 is a cat qubit.** arXiv:2507.18714,
+*Non-perturbative switching rates in bistable open quantum systems: from driven Kerr
+oscillators to dissipative cat qubits* (Alice & Bob et al.) computes switching rates in a
+bistable open quantum system by path integral -- **the same WKB-with-a-prefactor problem as
+T14-e**, in a system engineered for exactly the property this project measures: a
+restoring element whose bit-flip rate is exponentially suppressed in a size parameter.
+Worth reading against §35.3, which proved the prefactor decomposition ill-posed
+numerically; if their path-integral route gives the prefactor analytically, it is the
+method §35.3 said numerics could not substitute for.
+
+Also noted, not yet used: Zurek, *Decoherence, einselection, and the quantum origins of the
+classical* (quant-ph/0105127) -- einselection is a restoration mechanism in this project's
+sense, the environment destroying off-basis components and leaving a discrete pointer set,
+which is "why discrete" one level below chemistry. And arXiv:2512.03770, *Quantum
+Simulations of Opinion Dynamics*, builds exactly-solvable quantum consensus models -- the
+nearest thing to a quantum AM.
+
+**Nothing here changes a measurement in FINDINGS.** It places §37-§41 in a named framework,
+retroactively secures §40's bound choice, and identifies the single quantum advantage that
+is real and that this rig cannot reach.

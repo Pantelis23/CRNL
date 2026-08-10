@@ -6813,3 +6813,60 @@ pre-asymptotic cells.
 deterministic lag (§47, exact as Ω → ∞ by §48) and the exponent on C derived and confirmed
 (§49). Of C, an exact one-dimensional account supplies **~21%**; **the remaining ~79% is
 2-D pool noise, unmeasured, and is the only piece of the cost arc still without a number.**
+
+---
+
+### 51 The Jensen term is exactly zero — killed by §30's identity
+
+§50 left ~79% of the absorption coefficient unaccounted and named the suspect: the pool
+fluctuates about the manifold, so δ feels E[μ(δ,s)] rather than μ(δ,s\*), a Jensen term that
+no 1-D reduction can carry. **This is §39.1's candidate (iii)**, withdrawn there as an
+explanation of the *cost* while explicitly left live for the *time*. It is now dead for both.
+
+Expanding at fixed δ, the first-order term E[s] − s\* is the deterministic lag — already
+§47's ε. The new piece is second order: with the pool fast, s holds a quasi-stationary
+Gaussian of variance `Var(s) = D_s/|∂ν/∂s|`, giving
+
+    ε_J(δ) = (1/2μ)·(∂²μ/∂s²)·Var(s),   J = Ω·⟨ε_J⟩_time
+
+**Measured: J = 0 to machine precision in all five cells.** Not small — zero. And the
+reason is exact:
+
+> **μ = k·δ·(1 − (1+γ)s)**, verified against the network's own fluxes to **9.8×10⁻¹⁶** over
+> 81 states × 3 γ × 3 ρ.
+
+**That bracket is §30's identity at n = 2**, `k(b − γs)`, written in concentrations. The
+drift is **exactly linear in the pool coordinate**, so ∂²μ/∂s² ≡ 0 and the Jensen term
+vanishes identically. `(bd+J)/cme` is unchanged at **0.213 and 0.217** — the same 21% §50
+reported, with the Jensen term contributing nothing at all.
+
+**Note also that ρ does not appear in μ.** The disagreement channel moves δ by exactly
+zero — §30's first cancellation — which is why the whole ρ family shares one drift law. The
+theorem that opened this session is what closes this question.
+
+> **P1's "failure" is a gate artifact and is reported as one.** The h-convergence gate
+> measured the *relative* change of a quantity that is exactly zero, so it divided by zero
+> and reported 8×10⁻¹ to 1.04. The absolute values were 0.00000 at every h. The gate was
+> written for a nonzero quantity and does not apply; it is not evidence against anything.
+
+> **P2's sign test was the cheap way to be wrong, and it was not the way this failed.** The
+> prediction was that ∂²μ/∂s² > 0 was *required* for the Jensen term to have the right sign.
+> It is neither positive nor negative — it is zero — so the sign test never got to fire.
+
+**What survives as a suspect (rule 17).** The *noise* is curved even though the drift is not:
+`up + dn = k·b·s + γk(s²+δ²)/2`, so **∂²(up+dn)/∂s² = k(γ−2) ≠ 0**. But a Jensen term in the
+*diffusion* enters the MFPT only through the correction itself, making it O(1/Ω²) — second
+order, and so almost certainly not the missing 79% either.
+
+**The surviving candidate is noise-induced drift from the δ–s cross-correlation.** Adiabatic
+elimination of a fast variable produces an effective slow drift with a term set by
+⟨δ-fluctuation · s-fluctuation⟩, distinct from both the deterministic lag and the Jensen
+curvature. It survives here precisely because **∂μ/∂s = −k(1+γ)δ ≠ 0 even though
+∂²μ/∂s² = 0** — the drift is linear in s, not independent of it. **How to kill:** compute the
+stationary 2×2 covariance from the Lyapunov equation about the manifold, take the δs entry,
+and test `(∂μ/∂s)·⟨δs⟩/μ` absolutely against the missing 79%, with the sign again forced
+positive.
+
+**The budget after §51.** `T_det/MFPT − 1 = ⟨ε⟩_time + C/Ω`, lag exact as Ω → ∞ (§47/§48),
+exponent derived (§49), and of C: **~21% exact 1-D discreteness (§50), 0% Jensen (§51), ~79%
+still unaccounted.** Two named candidates are now eliminated rather than merely unfavoured.

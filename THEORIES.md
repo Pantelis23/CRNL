@@ -1941,6 +1941,32 @@ session is what closes the question.
     Jensen term in the diffusion reaches the MFPT only through the correction itself, so it
     is O(1/Omega^2) and cannot be the missing 79% either.
 
+**§52: the 21% is now solid, the Omega-asymptotics is not.** Before proposing a third
+mechanism for the missing 79%, §52 verified the measurement it would be fitted against --
+§50's figure rested on two POST-HOC selected cells, one with a top point §49 had excused.
+Adding Omega = 1400 and three new cells: **gamma = 0.28, rho = 8 converges independently and
+gives bd/cme = 0.202** against rho=32's 0.214, mean 0.208, spread 6.1%, and **seven of eight
+cells give 0.194-0.239 regardless of convergence status.** So "~79% is two-dimensional" is on
+much firmer ground.
+
+**But only 2 of 8 cells are Omega-converged at Omega = 1400, and they are the two FASTEST
+POOLS.** Every slow-pool cell is still climbing. The coefficient is asymptotic in both Omega
+AND sep, and at moderate sep, Omega ~ 1000 is not asymptotic. Consequences, all recorded in
+place:
+
+  * **§49's "numerical floor" diagnosis of gamma = 0.07 is WITHDRAWN.** The series is 2.608,
+    2.494, 2.601, 3.653, 4.870 -- it genuinely rises, it is not a floor.
+  * **§49's exponent-1 confirmation holds at rho = 32** (0.1% last step, 6.7% total drift
+    over 4.7x in Omega) **and was premature at gamma = 0.20** (14.1% last step).
+  * **§48's extrapolations to pred/gap = 1 were fitted on non-asymptotic data** in six of
+    eight cells. The Omega -> infinity claim is established at rho = 32 and merely consistent
+    elsewhere.
+
+**Running this before T-COST-m was the right order:** a third mechanism fitted against six
+non-asymptotic cells would have been fitted against a moving target. T-COST-m stays open and
+should be tested at rho = 32 and gamma = 0.28/rho = 8 -- the two cells where the target holds
+still -- rather than on the axis-spanning grid.
+
 **T-COST-m, open: is it noise-induced drift from the delta-s cross-correlation?** Adiabatic
 elimination produces an effective slow drift with a term set by <delta-fluct * s-fluct>,
 distinct from both the deterministic lag and the Jensen curvature. It survives here

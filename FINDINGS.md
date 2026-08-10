@@ -6617,6 +6617,12 @@ leading edge of the packet, so the MFPT sits *below* the mean arrival, the measu
 *exceeds* the pure lag, and pred/gap must approach 1 **from below**. Every cell is below 1
 and every cell rises with Ω: means 0.778 → 0.827 → 0.854 → 0.883.
 
+> ⚠ **§52 qualifies this.** These fits use four points over Ω = 300–1000 with a free
+> exponent, on data now known to be non-asymptotic in six of eight cells — cme_coeff is still
+> rising at Ω = 1400 everywhere except the two fast-pool cells. **The Ω → ∞ conclusion is
+> properly established only at ρ = 32**, where the coefficient is flat and (gap − pred) ∝ 1/Ω
+> exactly as claimed. Elsewhere it is consistent with the data, not demonstrated by it.
+
 **P3/P6 — it extrapolates to 1.** Per cell, fitting `1 − pred/gap = c·Ω^(−p)`:
 
 | γ | ρ | Ω=300 | Ω=1000 | exponent | intercept (1/√Ω) | intercept (free p) |
@@ -6665,6 +6671,13 @@ g = μ/D₀ so that ψ′ = Ω·g, the Laplace expansion of the first-passage in
 > **T_det/MFPT − 1 = ⟨ε⟩_time + K/Ω**,  **K = −(1/T_det)∫ g′/(μg²) dδ**
 
 **The exponent is 1, not 1/2, and K is fully computable with no fit.**
+
+> ⚠ **§52 extends this to Ω = 1400 and the picture splits.** ρ=32 holds superbly (0.1% last
+> step, 6.7% total drift over 4.7× in Ω); **γ=0.20 does not** — it rises to 4.899, a 14.1%
+> last step. And γ=0.07's Ω=1000 point, excused below as "a numerical floor, not physics",
+> **is not a floor** — the trend keeps rising to 4.870 at Ω = 1400. That diagnosis is
+> withdrawn. The exponent-1 confirmation stands in the fast-pool cells and is premature
+> elsewhere.
 
 **The exponent is confirmed where it is testable.** `(gap − pred)·Ω` over Ω = 300…1000:
 
@@ -6870,3 +6883,63 @@ positive.
 **The budget after §51.** `T_det/MFPT − 1 = ⟨ε⟩_time + C/Ω`, lag exact as Ω → ∞ (§47/§48),
 exponent derived (§49), and of C: **~21% exact 1-D discreteness (§50), 0% Jensen (§51), ~79%
 still unaccounted.** Two named candidates are now eliminated rather than merely unfavoured.
+
+---
+
+### 52 The 21% survives on new cells — but §49's convergence claims do not
+
+§50's "a complete 1-D account supplies ~21%" rested on **two cells selected post-hoc**, one
+of them (γ = 0.07) with a top point §49 had excused as a numerical floor. §51 then
+eliminated two candidate mechanisms for the remaining 79% without touching that measurement.
+Rule 8 says verify before building further, so this adds Ω = 1400 and three new cells rather
+than a third mechanism.
+
+**P2 holds, and on a cell §50 never saw.** Applying §50's convergence criterion unchanged
+(last two Ω within 1%):
+
+| γ | ρ | bd | cme | **bd/cme** | cme converged? |
+|---|---|---|---|---|---|
+| 0.20 | 32 | 0.446 | 2.079 | **0.214** | **YES** (0.1%) |
+| **0.28** | **8** | 0.658 | 3.264 | **0.202** | **YES** (1.0%) |
+| 0.20 | 1 | 1.173 | 4.899 | 0.239 | no |
+| 0.35 | 1 | 2.450 | 10.930 | 0.224 | no |
+| 0.12 | 1 | 0.782 | 3.757 | 0.208 | no |
+| 0.20 | 4 | 0.658 | 3.191 | 0.206 | no |
+| 0.20 | 0.5 | 1.766 | 9.093 | 0.194 | no |
+| 0.07 | 1 | 0.557 | 4.870 | 0.114 | no |
+
+**γ = 0.28, ρ = 8 is a new cell on a new γ and a new ρ, it converged, and it gives 0.202**
+against ρ=32's 0.214 — mean 0.208, spread 6.1%. And **seven of eight cells give 0.194–0.239
+regardless of convergence status.** §50's headline is strengthened, not weakened: the
+one-dimensional share really is about a fifth.
+
+### 52.1 But only 2 of 8 cells are Ω-converged, and §49 was wrong about why
+
+**P3 resolves against §49.** γ = 0.07's series is **2.608, 2.494, 2.601, 3.653, 4.870** — the
+Ω = 1000 point that §49 attributed to "a numerical floor, not physics" is not a floor at all.
+**The trend genuinely rises**, and keeps rising at Ω = 1400. That diagnosis is withdrawn.
+
+> ⚠ **§49's exponent confirmation holds only in the fast-pool cells.** §49 reported
+> `(gap − pred)·Ω` "constant to 6% (ρ=32) and 17% (γ=0.20)" over Ω = 300–1000. Extended to
+> 1400: **ρ=32 holds superbly** — 1.948, 1.980, 1.996, 2.076, 2.079, a 0.1% last step and
+> only 6.7% total drift over a 4.7× range in Ω. **γ=0.20 does not** — it rises to 4.899, a
+> 14.1% last step. The claim was right for one cell and premature for the other.
+
+**The pattern is coherent and it is about sep, not Ω alone.** The two cells that converge are
+the two with the fastest pools — ρ = 32 (sep 67.8) and γ = 0.28 with ρ = 8. Every slow-pool
+cell is still climbing at Ω = 1400. **The absorption coefficient is asymptotic in both Ω and
+sep, and at moderate sep, Ω ~ 10³ is not yet in the asymptotic regime.**
+
+> ⚠ **This qualifies §48 as well.** §48's per-cell extrapolations to pred/gap = 1.00
+> (0.984–1.004) were fitted from four points over Ω = 300–1000 with a free exponent — on data
+> now known to be non-asymptotic in six of eight cells. **The "lag model is exact as Ω → ∞"
+> conclusion is properly established only where the data is asymptotic**, which is ρ = 32,
+> where cme_coeff is flat and therefore (gap − pred) ∝ 1/Ω → 0 exactly as claimed. Elsewhere
+> it is consistent with the data but not demonstrated by it.
+
+**What this leaves.** The 1-D share of the absorption coefficient is **~0.21, now measured on
+two independently converged cells and clustered across seven of eight** — so the "~79% is
+two-dimensional" statement is on much firmer ground than it was in §50. What is *not*
+established is the Ω-asymptotics of the coefficient itself outside the fast-pool limit.
+**Running this before proposing T-COST-m was the right order**: a third mechanism fitted
+against six non-asymptotic cells would have been fitted against a moving target.

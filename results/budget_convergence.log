@@ -1,0 +1,42 @@
+cme_coeff = (gap - <eps>)*Omega, the 2-D absorption coefficient
+ gamma   rho    Om=300    Om=500    Om=700   Om=1000   Om=1400  last-two  conv?
+  0.07   1.0     2.608     2.494     2.601     3.653     4.870     25.0%     no
+  0.20   1.0     3.581     4.113     3.896     4.210     4.899     14.1%     no
+  0.35   1.0     4.328     7.004     9.135    10.258    10.930      6.2%     no
+  0.20   0.5     6.551     7.308     8.619     9.278     9.093      2.0%     no
+  0.20  32.0     1.948     1.980     1.996     2.076     2.079      0.1%    YES
+  0.12   1.0     2.142     2.987     3.076     2.993     3.757     20.3%     no
+  0.20   4.0     2.508     2.556     2.579     2.767     3.191     13.3%     no
+  0.28   8.0     2.793     3.167     3.203     3.296     3.264      1.0%    YES
+
+=== the 1-D chain, and the budget
+ gamma   rho       bd      cme   bd/cme  cme conv?
+  0.07   1.0    0.557    4.870    0.114         no
+  0.20   1.0    1.173    4.899    0.239         no
+  0.35   1.0    2.450   10.930    0.224         no
+  0.20   0.5    1.766    9.093    0.194         no
+  0.20  32.0    0.446    2.079    0.214        YES
+  0.12   1.0    0.782    3.757    0.208         no
+  0.20   4.0    0.658    3.191    0.206         no
+  0.28   8.0    0.658    3.264    0.202        YES
+
+=== P1/P2: converged cells (criterion unchanged from §50)
+  2 of 8 cells converged, against 2 of 5 in §50
+  gamma=0.20 rho=32.0  bd/cme = 0.214
+  gamma=0.28 rho=8.0   bd/cme = 0.202
+  bd/cme 0.202..0.214, mean 0.208, spread 6.1%
+  -> P2 HOLDS, §50 21% survives
+
+=== P3: the gamma = 0.07 outlier
+  series: 2.61 2.49 2.60 3.65 4.87
+  Omega=1000 was 3.65 against a 2.5-2.6 trend; Omega=1400 gives 4.87  -> the trend genuinely rises, §49 was wrong
+
+=== unconverged cells, reported not hidden
+  gamma=0.07 rho=1.0   bd/cme = 0.114  (cme still moving)
+  gamma=0.20 rho=1.0   bd/cme = 0.239  (cme still moving)
+  gamma=0.35 rho=1.0   bd/cme = 0.224  (cme still moving)
+  gamma=0.20 rho=0.5   bd/cme = 0.194  (cme still moving)
+  gamma=0.12 rho=1.0   bd/cme = 0.208  (cme still moving)
+  gamma=0.20 rho=4.0   bd/cme = 0.206  (cme still moving)
+
+(1002s) wrote results/budget_convergence.json

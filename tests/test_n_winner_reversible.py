@@ -937,3 +937,43 @@ def test_Q_is_invariant_under_uniform_rate_rescale():
     for lam in (0.02, 50.0, 500.0):
         r, _ = evaluate(am, np.log(base * lam), 150)
         assert r["Q"] == pytest.approx(ref["Q"], rel=1e-9)
+
+
+def test_cls1_and_rec_are_the_same_reaction_set():
+    """FINDINGS 59: the 'networks' that beat AM are AM with the forward direction relabelled.
+
+    cls1 = {2X->B+X, 2Y->B+Y} has reverse B+X->2X, which IS recruitment. So {cls1, dis}
+    and {dis, rec} generate identical reactions -- different rate freedom, same chemistry.
+    """
+    from experiments.free_rate_optimum import build_free
+    from experiments.optimal_element import symmetric_classes
+
+    cls = symmetric_classes()
+    idx = {c[0]: i for i, c in enumerate(cls)}
+    dis = idx[(("X", "Y"), ("B", "B"))]
+    rec = idx[(("B", "X"), ("X", "X"))]
+    cls1 = next(i for i, c in enumerate(cls) if c[0] == (("X", "X"), ("B", "X")))
+
+    def rset(net):
+        return {(tuple(sorted(r.reactants.items())), tuple(sorted(r.products.items())))
+                for r in net.reactions}
+
+    assert rset(build_free([cls[dis], cls[rec]], [1, 0.1, 1, 0.1])) == \
+        rset(build_free([cls[dis], cls[cls1]], [1, 0.1, 1, 0.1]))
+
+
+def test_signal_carrying_class_count():
+    """FINDINGS 59: §54's d_r classification of the 16 conservative classes."""
+    from experiments.amplification_signature import mirror_pairs
+    from experiments.free_rate_optimum import build_free
+    from experiments.optimal_element import symmetric_classes
+
+    n_sig = 0
+    for c in symmetric_classes():
+        net = build_free([c], [1.0, 0.3])
+        pairs = mirror_pairs(net, "X", "Y")
+        if pairs and any(
+                d != 0 and net.reactions[i].reactants.get("X", 0)
+                != net.reactions[i].reactants.get("Y", 0) for d, i in pairs):
+            n_sig += 1
+    assert n_sig == 14, f"expected 14 signal-carrying classes, got {n_sig}"

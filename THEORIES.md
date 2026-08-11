@@ -1996,6 +1996,38 @@ Q - 1 ~ t^(-0.5). **How to kill:** fit per network family and check whether the 
 transfers. §39.2 and §46 both found coefficients that did not transfer between axes, so the
 prior is that it will not, and a shared exponent would be the surprise.
 
+**T-OPT-b -> §59: NO OTHER TOPOLOGY BEATS AM. The winners are AM re-parameterised.**
+§54 buys back the search dimensions -- classes with d_r = 0 contribute identically zero to
+the drift, so the search collapses to (rho_ns, gamma_ns, gamma_s) whatever m is. 14 of the 16
+conservative classes are signal-carrying.
+
+**My P2 test had an extrapolation flaw that inflated the result:** it scored networks against
+AM by np.interp, which returns the ENDPOINT outside the traced range, so anything slower than
+AM's slowest point automatically "beat" it. Restricted to AM's traced range, three of five
+candidates fall away.
+
+**The two survivors are AM.** cls1 = {2X->B+X, 2Y->B+Y} is AM's recruitment pair with the
+forward direction RELABELLED -- its reverse is B+X->2X, the recruitment itself -- and
+{cls1, dis} generates a reaction set IDENTICAL to {dis, rec} (checked, pinned by a test). So
+they are AM with the recruitment rates decoupled from the shared gamma, which is rate freedom
+§58 did not have. **Every candidate with genuinely different chemistry -- AM+revdis,
+AM+cls0, AM+cls2 -- is worse at every overlapping time, by 2x to 90x.**
+
+**§58's headline strengthens: from "AM is on its family's frontier" to "no other topology in
+the enumeration reaches it."** And §58's far end is corrected -- pooling every rate
+assignment of AM's reaction set reaches **Q = 1.115 at t = 3747**, not 1.253 at 783. Buying
+5.5x closer to the bound costs 950x in time.
+
+**THE FRONTIER EXPONENT DOES NOT TRANSFER -- A THIRD FAILURE.** Fitting Q - 1 = a*t^(-b):
+AM 0.584, AM+revdis 0.078, AM+cls0 0.300, {cls1,dis} 0.402, AM+cls2 0.493 -- **0.078..0.584,
+136% spread.** There is no universal time-cost law for approaching the bound; the approach
+rate is a property of the network, not of the bound. **P4 predicted this in advance so the
+confirming outcome would not be the flattering one.** §39.2's coefficient did not transfer
+between axes, §46's SCALING did not, and now §59's exponent does not. **Three attempts,
+three failures -- the prior is now explicit: in this system, exponents fitted on one axis do
+not carry to another, and any future claim of one needs a cross-axis test BEFORE it is
+written down.**
+
 **T15-e, open: is sign(P) > 0 characterisable, or is it just measured?** Divisibility is
 settled; restoration is divisibility plus a positive P over the relevant region, and
 nothing yet says which symmetric networks have one. **How to kill:** take the cofactor

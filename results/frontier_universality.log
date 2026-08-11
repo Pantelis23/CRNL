@@ -1,0 +1,54 @@
+§54 classification of the 16 classes: 14 signal-carrying, 2 not
+  DIS (X+Y->2B) signal-carrying? False   REC (B+X->2X)? True   REVDIS (2B->X+Y)? False
+
+AM  {dis, rec}: 64 cells, frontier of 5
+   (3.9,6.19)  (4.4,5.02)  (5.2,4.98)  (39.5,1.52)  (783.3,1.25)
+
+AM+revdis: 76 cells, frontier of 4
+   (5.2,4.98)  (74.3,3.79)  (79.8,3.52)  (1592.4,3.52)
+
+rec only: no valid cells
+
+AM+cls0: 28 cells, frontier of 6
+   (39.5,44.22)  (40.7,30.72)  (40.7,25.41)  (764.6,17.06)  (768.2,13.33)  (790.8,12.23)
+
+{cls0, dis}: no valid cells
+
+AM+cls1: 42 cells, frontier of 2
+   (40.8,1.80)  (781.5,1.20)
+
+{cls1, dis}: 16 cells, frontier of 4
+   (80.6,1.51)  (189.3,1.36)  (1593.7,1.14)  (3747.3,1.12)
+
+AM+cls2: 21 cells, frontier of 10
+   (47.3,139.82)  (47.9,127.34)  (48.5,95.40)  (49.1,94.02)  (680.0,53.77)  (772.5,38.88)  (777.4,34.23)  (780.0,22.18)  (793.7,21.51)
+
+{cls2, dis}: no valid cells
+
+=== P1 GATE: does AM's frontier reproduce §58's?
+  fast end: (3.93, 6.187)   §58 had (4.04, 5.400)
+  slow end: (783.30, 1.253)  §58 had (783.3, 1.253)
+  -> P1 HOLDS
+
+=== P2: does any network's frontier lie BELOW AM's?
+           network   best Q   at time   beats AM at same t?
+         AM+revdis    3.522    1592.4              0 of 4
+           AM+cls0   12.233     790.8              0 of 6
+           AM+cls1    1.196     781.5              1 of 2
+       {cls1, dis}    1.115    3747.3              3 of 4
+           AM+cls2   21.231     801.5              0 of 10
+  -> P2 SOME network beats AM somewhere -- §58 was a two-class statement
+
+=== P3/P4: fit Q - 1 = a * t^(-b) per network
+           network        b         a  points
+    AM  {dis, rec}    0.584     9.134       5
+         AM+revdis    0.078     4.095       4
+           AM+cls0    0.300    95.585       6
+       {cls1, dis}    0.402     2.938       4
+           AM+cls2    0.493   759.908      10
+  exponents span 0.078..0.584, spread 136%
+  -> NOT shared, as P4 predicted from §39.2 and §46
+
+=== P6: cells reading Q < 1: 0
+
+(418s) wrote results/frontier_universality.json

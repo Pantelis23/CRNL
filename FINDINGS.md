@@ -7454,6 +7454,12 @@ clean Pareto frontier:
 >
 > **Buying 4.3× closer to the thermodynamic bound costs 194× in decision time.**
 
+> ⚠ **§59 corrects the frontier's far end.** §58's parameterisation had too little rate
+> freedom: pooling every rate assignment of AM's own reaction set reaches **Q = 1.115 at
+> t = 3747**, not 1.253 at 783. The shape is unchanged and the trade-off sharpens —
+> **5.5× closer to the bound costs 950× in time.** §59 also shows no *different* topology
+> reaches AM's frontier at any speed.
+
 **This reframes §40 and corrects §57.** §40's "Q_min = 5.39, about 5× from the bound" is not
 a measure of AM's inefficiency — **it is the price of deciding in 4 time units instead of
 800.** And §57's "nothing beats AM by more than 9%" was true only on the slice: with free
@@ -7478,3 +7484,85 @@ which is close to Q − 1 ~ t^(−0.5). **How to kill:** fit the frontier per ne
 check whether the exponent transfers — §39.2 and §46 both found coefficients that did not
 transfer between axes, so the prior is that it will not, and a shared exponent would be the
 surprise.
+
+---
+
+### 59 No other topology beats AM — the winners are AM re-parameterised — T-OPT-b
+
+§58 named its own limit: §57's 696-network enumeration was never re-run with free rates, so
+"AM is Pareto-optimal" was a statement about AM's own two classes. This tests it.
+
+**§54 buys back the search dimensions.** A network with m classes has 2m rates. But §54
+classifies every class by d_r: those with d_r ≠ 0 carry signal, those with d_r = 0 contribute
+**identically zero** to the drift (§51, §54, §55 — one fact in three places) and act only
+through the pool and the noise. §58's optimum has exactly that shape, so the search collapses
+to (ρ_ns, γ_ns, γ_s) whatever m is. **Of the 16 classes, 14 are signal-carrying and 2 are
+not.**
+
+**P1 gate holds.** AM's frontier reproduces §58's slow end exactly — (783.30, 1.253) — and
+its fast end at (3.93, 6.19) against §58's (4.04, 5.40), the reduced parameterisation being
+coarser where §58's grid was fine.
+
+### 59.1 The networks that beat AM are AM
+
+Raw, five candidates beat AM somewhere. **Two survive an honest comparison, and both are AM.**
+
+> ⚠ **My P2 test had an extrapolation flaw and it inflated the result.** It scored each
+> network against AM by `np.interp` on AM's frontier, which returns the **endpoint value**
+> outside the traced range. AM's frontier stops at t = 783, so *any* network slower than that
+> automatically "beat" it. Restricting the comparison to AM's own traced range removes three
+> of the five.
+
+The two that survive are `AM+cls1` and `{cls1, dis}`, where
+
+> **cls1 = {2X → B+X, 2Y → B+Y}** — which is AM's recruitment pair with the *forward
+> direction relabelled*. Its reverse is `B+X → 2X`, the recruitment itself.
+
+Checked directly: `{cls1, dis}` and `{dis, rec}` generate **identical reaction sets**. So they
+are not different networks — they are AM with the recruitment pair's two rates decoupled from
+the shared γ, which is rate freedom §58's parameterisation did not have.
+
+> **P2's real answer: no structurally different topology beats AM at any speed.** Every
+> candidate with genuinely different chemistry — `AM+revdis`, `AM+cls0`, `AM+cls2` — is worse
+> at every overlapping time, by factors from 2× to 90×. **§58's headline strengthens from
+> "AM is on its family's frontier" to "no other topology in the enumeration reaches it."**
+
+**And it corrects §58's frontier**, which was traced with too little rate freedom. Pooling
+every parameterisation of AM's reaction set:
+
+| time | 3.9 | 4.4 | 39.5 | 80.6 | 189 | 782 | 1594 | 3747 |
+|---|---|---|---|---|---|---|---|---|
+| **Q** | 6.19 | 5.02 | 1.52 | 1.51 | 1.36 | 1.196 | 1.139 | **1.115** |
+
+**AM's reaction set reaches Q = 1.115**, not §58's 1.253 — closer to the thermodynamic floor
+of 1, and still by going slower: t = 3747 against 4.1 at the fast end. The trade-off §58
+identified is unchanged in shape and sharpened in extent: **buying 5.5× closer to the bound
+costs 950× in time.**
+
+### 59.2 The frontier exponent does not transfer — a third failure
+
+Fitting `Q − 1 = a·t^(−b)` per network:
+
+| network | AM | AM+revdis | AM+cls0 | {cls1,dis} | AM+cls2 |
+|---|---|---|---|---|---|
+| **b** | 0.584 | 0.078 | 0.300 | 0.402 | 0.493 |
+
+**0.078 to 0.584, a 136% spread.** There is no shared exponent, so **there is no universal
+time-cost law** for approaching the thermodynamic bound in this family — the approach rate is
+a property of the network, not of the bound.
+
+> **P4 predicted this, and said so to avoid the flattering reading.** §39.2 found a 1/sep
+> coefficient that did not transfer between axes; §46 found the *scaling* did not transfer
+> either. **This is the third attempt at a transferable exponent in this project and the
+> third failure.** At this point the prior should be explicit: in this system, exponents
+> fitted on one axis do not carry to another, and any future claim of one needs a
+> cross-axis test before it is written down, not after.
+
+**P6: 0 cells read Q < 1**, across every network and every rate combination tried. §40's
+instrument rule never had to fire, and §58 has since measured the suspect it was written for.
+
+**Where the founding question stands.** A chemical decision element can approach the
+thermodynamic bound to within **1.12×**, and AM's own chemistry is what does it. Nothing else
+in the enumerated family comes close at any speed. The 4× gap §40 measured is not
+inefficiency and not a better motif waiting to be found — **it is the price of deciding
+quickly**, and AM occupies the fast end of the only frontier there is.

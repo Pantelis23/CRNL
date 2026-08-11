@@ -7102,3 +7102,86 @@ object" with a mechanism attached rather than an observation.
 the combinatorics runs out: it decides the unanimous cases completely and the mixed case not
 at all. Restoration is impossible for 38% of these networks on stoichiometric grounds alone,
 guaranteed for 1%, and a matter of tuning for the remaining 61%.
+
+---
+
+### 55 The decomposition predicts γ_c(n) and λ(n) with no fit — T15-g
+
+§54 decomposed P into a rate-weighted sum of integers, but only at n = 2. §30 proved the
+pairwise identity for **every** n, so the decomposition should follow — and at n > 2 it makes
+predictions against two numbers this project published long ago, with nothing fitted.
+
+**Sorting `n_winner_reversible`'s reactions by the (i,j) swap:**
+
+| reaction | p, q | d_r | weight | bracket | count |
+|---|---|---|---|---|---|
+| `B + X_i → 2X_i` | 1, 0 | **+1** | k | b | 1 |
+| `2X_i → B + X_i` | 2, 0 | **−1** | γk | x_i + x_j | 1 |
+| `X_i + X_k → 2B`, k ∉ {i,j} | 1, 0 | **−1** | k | x_k | **n−2** |
+| `X_i + X_j → 2B` | 1, 1 | — | — | **self-mirror → 0** | 1 |
+| `2B → X_i + X_k` | 0, 0 | — | — | **p = q → cancels** | n−2 |
+
+Summing at a symmetric state (all x_l = x, b = 1 − nx) gives **P = k[b − γ·2x − (n−2)x]**,
+and §30's published bracket is `(k/Ω)[n_B − Σ_{l≠i,j} n_l − γ(n_i + n_j − 1)]` — **the same
+three terms, same order, same signs.**
+
+**P1** — the identity and the decomposition both survive n > 2, worst **3.8×10⁻¹⁰** over
+n = 2…6 at three γ each.
+
+**P2 — absolute, against T7/§14.** At γ = 0 the symmetric fixed point has x = 1/(2n−1), so
+b = (n−1)/(2n−1) and P = [(n−1) − (n−2)]/(2n−1) = **1/(2n−1)**:
+
+| n | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|
+| P measured | 0.3333333333 | 0.2000000000 | 0.1428571429 | 0.1111111111 | 0.0909090909 |
+| 1/(2n−1) | 0.3333333333 | 0.2000000000 | 0.1428571429 | 0.1111111111 | 0.0909090909 |
+
+Worst deviation **8.9×10⁻¹²**. **T7/§14's symmetry-breaking eigenvalue λ(n), recovered from
+a stoichiometric decomposition that knows nothing about it.**
+
+**P3 — absolute, and the sharper one.** P = 0 is the loss of amplification, so it must vanish
+at γ_c(n), which `gamma_critical(n)` finds by an entirely independent bracketed root-find:
+
+| n | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|
+| γ_c | 0.50000000 | 0.20222577 | 0.06807612 | 0.02613332 | 0.01219827 |
+| **P at γ_c** | **0.0** | 3.5×10⁻¹² | **0.0** | 8.7×10⁻¹³ | **0.0** |
+
+**The decomposition predicts γ_c(n) with no fitted parameter**, and γ_c(3) = 0.202226 against
+the published 0.2023.
+
+**P4 — and this explains why γ_c(n) falls.** Every n-winner pair is **mixed**, with the
+contributing terms counting as:
+
+| n | +1 | −1 | zero-bracket |
+|---|---|---|---|
+| 2 | 1 | 1 | 0 |
+| 3 | 1 | 2 | 1 |
+| 4 | 1 | 3 | 2 |
+| 5 | 1 | 4 | 3 |
+| 6 | 1 | 5 | 4 |
+
+**Exactly one amplifying term against n−1 contracting ones**, plus n−2 that vanish. γ_c(n)
+falls with n because the single d = +1 must outweigh one more contracting term at every step
+— which is the radix penalty of §3/§6.1 read off the stoichiometry.
+
+> ⚠ **The first pass of P4 reported the wrong counts, and the bug was mine.** It read
+> `1 / 2n−3 / 0` — three negatives at n = 3 where the derivation says two. The cause: a
+> p = q pair has an **empty** bracket sum and contributes exactly zero, but `mirror_pairs`
+> records its d as an arbitrary ±1, because "the X-heavy member" is undefined when p = q.
+> Counting raw d therefore reported n−2 phantom contracting terms. **P1–P3 were unaffected**,
+> since they use the decomposition itself, where the empty sum correctly gives zero — the
+> bug was in the *reporting*, not the *algebra*, and it was caught by the counts disagreeing
+> with a derivation written before the run.
+
+**P5 — two different routes to zero, and §54 saw only one.** At n = 4 the self-mirror
+reactions are `X1+X2→2B`, `X3+X4→2B`, `B+X3→2X3`, `B+X4→2X4` and their reverses; separately,
+the four `2B → X_i+X_k` reactions form genuine mirror *pairs* whose contributions cancel
+through p = q. **Self-mirroring and pairwise cancellation are distinct mechanisms**, and
+conflating them is what produced the P4 bug.
+
+**What §55 adds.** §54's decomposition is not an n = 2 curiosity: it reproduces §30's
+n-winner bracket term by term, recovers T7/§14's λ(n) = 1/(2n−1) exactly, and predicts
+γ_c(n) at five values of n with no free parameter. The radix penalty, the symmetry-breaking
+eigenvalue, and the critical drive are all **the same integer count** — one amplifying
+reaction against n−1 contracting ones — evaluated at different places.

@@ -1,0 +1,55 @@
+=== P1 GATE: does §53's identity and §54's decomposition survive n > 2?
+   n   gamma             P   antisym eig    decomposed     worst
+   2  0.0000   0.333333333   0.333333333   0.333333333   2.7e-11
+   2  0.2500   0.166666667   0.166666667   0.166666667   2.7e-11
+   2  0.4500   0.033333333   0.033333333   0.033333333   5.9e-12
+   3  0.0000   0.200000000   0.200000000   0.200000000   2.3e-11
+   3  0.1011   0.084466126   0.084466126   0.084466126   6.5e-12
+   3  0.1820   0.015728802   0.015728802   0.015728802   1.0e-10
+   4  0.0000   0.142857143   0.142857143   0.142857143   7.9e-12
+   4  0.0340   0.056391117   0.056391117   0.056391117   5.1e-12
+   4  0.0613   0.009987219   0.009987219   0.009987219   5.5e-11
+   5  0.0000   0.111111111   0.111111111   0.111111111   1.9e-12
+   5  0.0131   0.045251084   0.045251084   0.045251084   5.7e-11
+   5  0.0235   0.008038632   0.008038632   0.008038632   3.8e-10
+   6  0.0000   0.090909091   0.090909091   0.090909091   2.5e-11
+   6  0.0061   0.038432962   0.038432962   0.038432962   3.2e-11
+   6  0.0110   0.006929440   0.006929440   0.006929440   1.4e-10
+  -> P1 HOLDS  (worst 3.81e-10)
+
+=== P2 ABSOLUTE: P(symmetric, gamma=0) must equal T7/§14's lambda = 1/(2n-1)
+   n      P measured      1/(2n-1)        diff
+   2    0.3333333333  0.3333333333   -8.92e-12
+   3    0.2000000000  0.2000000000   -4.66e-12
+   4    0.1428571429  0.1428571429    1.13e-12
+   5    0.1111111111  0.1111111111    2.08e-13
+   6    0.0909090909  0.0909090909    2.30e-12
+  -> P2 HOLDS  (worst |diff| 8.92e-12)
+
+=== P3 ABSOLUTE: P must vanish at gamma = gamma_critical(n)
+   n       gamma_c    P at gamma_c    P(0.9 g_c)
+   2    0.50000000       0.000e+00      0.033333
+   3    0.20222577       3.469e-12      0.015729
+   4    0.06807612       0.000e+00      0.009987
+   5    0.02613332       8.674e-13      0.008039
+   6    0.01219827       0.000e+00      0.006929
+  -> P3 HOLDS -- the decomposition predicts gamma_c with no fit  (worst |P| 3.47e-12)
+  published gamma_c(3) = 0.2023;  computed 0.202226
+
+=== P4: classification and the term count
+   n     class   +1   -1  zero-bkt     gamma_c
+   2     mixed    1    1         0    0.500000
+   3     mixed    1    2         1    0.202226
+   4     mixed    1    3         2    0.068076
+   5     mixed    1    4         3    0.026133
+   6     mixed    1    5         4    0.012198
+  predicted: 1 contributing +1, n-1 contributing -1, n-2 zero-bracket
+  -> ONE amplifying term against n-1 contracting ones, which is why
+     gamma_c(n) falls with n: the single d=+1 must outweigh more each time.
+
+=== P5: the two DIFFERENT routes to a zero contribution
+  n=4 self-mirror reactions (map to themselves): ['dis:X1+X2->2B', 'dis:X3+X4->2B', 'rec:B+X3->2X3', 'rec:B+X4->2X4', 'rev-dis:2B->X1+X2', 'rev-dis:2B->X3+X4', 'rev-rec:2X3->B+X3', 'rev-rec:2X4->B+X4']
+  n=4 p=q pairs (distinct mirrors, contributions cancel): ['rev-dis:2B->X1+X3', 'rev-dis:2B->X1+X4', 'rev-dis:2B->X2+X3', 'rev-dis:2B->X2+X4']
+  -> two different mechanisms, both giving zero; §54 saw only the first.
+
+wrote results/amplification_n.json

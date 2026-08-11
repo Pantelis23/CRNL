@@ -1810,6 +1810,41 @@ structural cause.
 guaranteed class is ~1%. Nearly all restoration in this family is rate-tuned rather than
 topology-forced.
 
+**T15-g -> §55: the decomposition predicts gamma_c(n) AND T7's lambda(n), with no fit.**
+§54 worked only at n = 2; §30 proved the pairwise identity for every n, so the decomposition
+follows. Sorting `n_winner_reversible` by the (i,j) swap gives exactly one d = +1
+(recruitment, weight k, bracket b), one d = -1 (rev-recruitment, weight gamma*k), (n-2) more
+d = -1 (rival disagreements X_i + X_k -> 2B), one SELF-MIRROR zero (X_i + X_j -> 2B), and
+(n-2) p=q pairs that cancel. Summing at a symmetric state:
+
+    P = k[ b - gamma*2x - (n-2)x ]
+
+which is **§30's published n-winner bracket term by term**. Two absolute consequences:
+
+  * **P(symmetric, gamma=0) = 1/(2n-1)** at n = 2..6, worst 8.9e-12 -- T7/§14's
+    symmetry-breaking eigenvalue lambda(n), recovered from a stoichiometric decomposition
+    that knows nothing about it.
+  * **P vanishes exactly at gamma_critical(n)** (worst |P| 3.5e-12, three cells exactly 0),
+    which `gamma_critical` finds by an independent bracketed root-find. gamma_c(3) =
+    0.202226 against the published 0.2023.
+
+**And it explains the radix penalty combinatorially.** The contributing counts are
+**1 amplifying against n-1 contracting**, plus n-2 that vanish. gamma_c(n) falls with n
+because the single d = +1 must outweigh one more contracting term at each step. **The radix
+penalty (§3/§6.1), the symmetry-breaking eigenvalue (T7/§14) and the critical drive are the
+same integer count evaluated in three places.**
+
+**A reporting bug, mine, caught by a derivation written first.** P4's first pass read
+1 / 2n-3 / 0 against a predicted 1 / n-1 / n-2. A p = q pair has an EMPTY bracket sum and
+contributes zero, but `mirror_pairs` records its d as an arbitrary +-1 because "the X-heavy
+member" is undefined when p = q. P1-P3 were unaffected -- they use the decomposition, where
+the empty sum correctly gives zero. **The bug was in the reporting, not the algebra**, and
+§55 records both counts.
+
+**Two DIFFERENT routes to zero, and §54 saw only one:** self-mirroring (the reaction maps to
+itself) and pairwise cancellation through p = q (distinct mirrors, opposite d, identical
+propensity). Conflating them is what produced the bug.
+
 **T15-e, open: is sign(P) > 0 characterisable, or is it just measured?** Divisibility is
 settled; restoration is divisibility plus a positive P over the relevant region, and
 nothing yet says which symmetric networks have one. **How to kill:** take the cofactor

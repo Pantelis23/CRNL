@@ -714,3 +714,44 @@ def test_unanimous_topologies_cannot_flip_sign():
             x = rng.uniform(0.05, 1.5, len(net.species))
             assert P_at(net, x) <= 1e-9, "an all-d<=0 network amplified"
     assert checked >= 5, "need some all<=0 networks for this test to have power"
+
+
+def test_P_at_symmetric_point_is_one_over_2n_minus_1():
+    """FINDINGS 55: P(symmetric, gamma=0) = 1/(2n-1) = T7/§14's lambda(n), no fit."""
+    from experiments.amplification_n import P_symmetric
+
+    for n in (2, 3, 4, 5, 6):
+        p, _ = P_symmetric(n, 0.0)
+        assert p == pytest.approx(1.0 / (2 * n - 1), abs=1e-10)
+
+
+def test_P_vanishes_at_gamma_critical():
+    """FINDINGS 55: the decomposition predicts gamma_c(n) with no fitted parameter."""
+    from experiments.amplification_n import P_symmetric
+
+    for n in (2, 3, 4, 5, 6):
+        p, _ = P_symmetric(n, gamma_critical(n))
+        assert abs(p) < 1e-9, f"P should vanish at gamma_c(n={n}), got {p}"
+
+
+def test_n_winner_term_counts_are_one_against_n_minus_one():
+    """FINDINGS 55: exactly one amplifying term against n-1 contracting ones.
+
+    p == q pairs have an EMPTY bracket sum and contribute zero; mirror_pairs records
+    their d as an arbitrary +-1, which is what made §55's first pass miscount.
+    """
+    from experiments.amplification_signature import mirror_pairs
+
+    for n in (2, 3, 4, 5, 6):
+        net = n_winner_reversible(n, 0.5 * gamma_critical(n))
+        i, j = net.species[0], net.species[1]
+        pos = neg = zero = 0
+        for d, idx in mirror_pairs(net, i, j):
+            r = net.reactions[idx]
+            if r.reactants.get(i, 0) == r.reactants.get(j, 0):
+                zero += 1
+            elif d > 0:
+                pos += 1
+            else:
+                neg += 1
+        assert (pos, neg, zero) == (1, n - 1, n - 2), f"n={n} gave {(pos, neg, zero)}"

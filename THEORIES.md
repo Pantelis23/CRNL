@@ -2028,6 +2028,43 @@ three failures -- the prior is now explicit: in this system, exponents fitted on
 not carry to another, and any future claim of one needs a cross-axis test BEFORE it is
 written down.**
 
+**T-TUR-d -> §60: THE FLUCTUATION THEOREM FACTORISES OVER OUTCOMES, so it cannot bound the
+error.** §41 verified <e^(-S_tot)> = 1 at absorption to 5.5e-14 and never split it by
+outcome. Splitting it -- Phi_o = p_o * <e^(-S)|o>, computed with §41's tilted generator under
+§35's outcome-selective boundary -- was the founding question's sharpest form: if error paths
+carried exponentially little entropy, the identity would pin p_e to the dissipation.
+
+**The hypothesis Phi_e = p_c is REFUTED by three orders of magnitude** (Phi_e/p_c spans
+3.75e-4..0.205, drifting with every axis, so P4's constant-ratio fallback fails too).
+
+**What is true instead: <e^(-S_tot)|o> = 1 for EACH outcome separately** -- 2.8e-3 on the
+correct branch, 5.0e-2 on the error branch, with RANDOM SIGN, the signature of numerical
+error. So **Phi_o = p_o identically and the aggregate identity is p_c + p_e = 1 in disguise.
+The IFT carries no information about which outcome occurred and cannot bound the error
+probability.** Reliability is not dissipation in this exact sense -- dead, not unconfirmed.
+
+**The trap worth naming: the aggregate's exactness does NOT validate the split.**
+Phi_c + Phi_e = 1 with p_c + p_e = 1 forces p_c(dev_c) + p_e(dev_e) = 0 BY CONSTRUCTION, so
+§41's 5.5e-14 says nothing about the outcome-wise identity, which is established here only to
+~5% -- eleven orders worse.
+
+**Gate note:** the first grid failed with Phi_c ~ 1e279 at gamma = 0.10, Omega = 90 -- the
+conditioning failure §41 itself documented at exactly gamma = 0.10. Restricted to gamma >=
+0.20, Omega <= 60 the gate holds at 5.7e-9.
+
+**AND A PATTERN THAT NOW NEEDS ITS OWN RULE.** P6 declared "suspect a sign error in
+sigma_local" on a premise that was simply wrong -- error paths do NOT carry strongly negative
+total entropy production, because the two absorbing boundaries are exchange images and carry
+equal stationary weight, so the system term cancels. **The criterion was wrong, not the
+instrument.** That is the FOURTH badly-designed verdict rule this session: §53 demanded a
+MAJORITY of topologies flip before declaring non-combinatoriality (one counterexample
+suffices); §55 counted p=q pairs whose recorded d is arbitrary; §59 used np.interp, which
+extrapolates FLAT beyond the traced range so anything slower than AM automatically "beat" it;
+and this. In every case the measurement was sound and the SUMMARY RULE was not.
+**Pre-registering a prediction does not protect against pre-registering the wrong test of
+it**, and the rules in CLAUDE.md are all about the measurement -- none of them covers the
+verdict criterion.
+
 **T15-e, open: is sign(P) > 0 characterisable, or is it just measured?** Divisibility is
 settled; restoration is divisibility plus a positive P over the relevant region, and
 nothing yet says which symmetric networks have one. **How to kill:** take the cofactor

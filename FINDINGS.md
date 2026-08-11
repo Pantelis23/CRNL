@@ -7566,3 +7566,75 @@ thermodynamic bound to within **1.12×**, and AM's own chemistry is what does it
 in the enumerated family comes close at any speed. The 4× gap §40 measured is not
 inefficiency and not a better motif waiting to be found — **it is the price of deciding
 quickly**, and AM occupies the fast end of the only frontier there is.
+
+---
+
+### 60 The fluctuation theorem factorises over outcomes — so it cannot bound the error
+
+§41 verified `⟨e^(−S_tot)⟩ = 1` at the absorption time to 5.5×10⁻¹⁴ and **never split that 1
+by outcome**. The split is the founding question in its sharpest form: if error paths carry
+exponentially little entropy, the identity might pin the error probability to the
+dissipation. Writing Φ_o = p_o·⟨e^(−S_tot)|o⟩, the hypothesis was **Φ_e = p_c**, i.e.
+⟨e^(−S)|error⟩ = p_c/p_e — the odds of being right *are* the exponentiated error entropy.
+
+Computed with §41's tilted generator (built from reverse propensities) under §35's
+outcome-selective boundary. Two extra solves, no new machinery.
+
+**P1 gate, after one failure.** On the first grid it failed spectacularly — γ = 0.10, Ω = 90
+returned Φ_c ≈ 10²⁷⁹. That is **the conditioning failure §41 documented at exactly γ = 0.10**
+(*"it fails at γ = 0.10, and the failure is conditioning, not physics"*), reproduced here.
+Restricted to γ ≥ 0.20 and Ω ≤ 60, the gate holds: **|Φ_c + Φ_e − 1| ≤ 5.7×10⁻⁹, median
+6.6×10⁻¹³** over 32 cells — §41's identity rebuilt from two independent solves.
+
+**P2 is refuted by three orders of magnitude.** Φ_e/p_c spans **3.75×10⁻⁴ to 0.205**, never
+near 1, and drifts systematically with every axis swept (γ: 0.0057→0.105; Ω: 0.071→0.015;
+ε: 0.045→0.014), so P4's fallback — a constant ratio — fails too.
+
+**The actual structure was in a column the prediction did not name.**
+
+| | range | max deviation from 1 |
+|---|---|---|
+| ⟨e^(−S_tot) \| correct⟩ | 0.998567 – 1.002775 | **2.8×10⁻³** |
+| ⟨e^(−S_tot) \| error⟩ | 0.949877 – 1.034502 | **5.0×10⁻²** |
+
+> **⟨e^(−S_tot)⟩ = 1 holds for each outcome SEPARATELY**, not merely in aggregate — and the
+> deviations carry **random sign**, flipping between adjacent cells, which is the signature
+> of numerical error rather than a physical effect.
+
+### 60.1 Why that is a negative result, and a sharp one
+
+If ⟨e^(−S)|o⟩ = 1 for each outcome, then **Φ_o = p_o identically** and the aggregate identity
+is p_c + p_e = 1 wearing a disguise.
+
+> **The integral fluctuation theorem carries no information about which outcome occurred.**
+> It cannot bound the error probability, because it factorises over outcomes. **Reliability
+> is not dissipation in this exact sense**, and the hope that motivated this experiment is
+> dead rather than merely unconfirmed.
+
+> **The aggregate's exactness does not validate the split, and this is the trap worth
+> naming.** Φ_c + Φ_e = 1 and p_c + p_e = 1 together force
+> p_c(⟨e^(−S)|c⟩ − 1) + p_e(⟨e^(−S)|e⟩ − 1) = 0 **by construction**. The two deviations are
+> exactly anti-correlated whatever they are, so §41's 5.5×10⁻¹⁴ says nothing about whether
+> the outcome-wise identity holds. It is established here only to ~5% on the error branch —
+> eleven orders worse than the aggregate — because Φ_e is a small number extracted from a
+> tilted generator with an enormous dynamic range.
+
+> ⚠ **P6's verdict was a false alarm from my own criterion, and that is now a pattern.** I
+> wrote that ⟨e^(−S)|error⟩ *must* exceed 1 "for error paths", so anything below 1 would
+> "suspect a sign error in sigma_local". The premise was wrong: error paths do **not** carry
+> strongly negative total entropy production, because the two absorbing boundaries are
+> exchange images of one another and so carry equal stationary weight — the system term
+> cancels. Measured, ⟨e^(−S)|e⟩ ≈ 1. **The criterion was wrong, not the instrument.**
+>
+> **That is the fourth badly-designed verdict rule in this session**: §53's demand for a
+> *majority* of topologies to flip before declaring non-combinatoriality; §55's counting of
+> p = q pairs; §59's `np.interp` extrapolating flat beyond the traced range; and this. In
+> every case the measurement was sound and the *summary rule* was not. **Pre-registering a
+> prediction does not protect against pre-registering the wrong test of it**, and this
+> project's rules — which are all about the measurement — do not currently say so.
+
+**What survives.** §41's aggregate identity, reconfirmed through an independent decomposition
+(5.7×10⁻⁹). The outcome-wise identity, to ~5%, consistent with exact and not established as
+exact. And a closed door: **entropy production and decision outcome do not couple through the
+fluctuation theorem**, so the exact reliability–dissipation relation this project has been
+circling since §37 is not to be found there.

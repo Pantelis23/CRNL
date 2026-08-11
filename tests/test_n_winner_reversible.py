@@ -977,3 +977,22 @@ def test_signal_carrying_class_count():
                 != net.reactions[i].reactants.get("Y", 0) for d, i in pairs):
             n_sig += 1
     assert n_sig == 14, f"expected 14 signal-carrying classes, got {n_sig}"
+
+
+def test_fluctuation_theorem_factorises_over_outcomes():
+    """FINDINGS 60: <e^(-S_tot)|outcome> = 1 separately, so the IFT carries no outcome info.
+
+    Phi_o = p_o * <e^(-S)|o> reconstructs §41's aggregate 1, and Phi_o = p_o to the
+    precision of the tilted solve -- which means the identity cannot bound the error.
+    """
+    from experiments.outcome_split import cell
+
+    for gamma, omega, eps in ((0.30, 40, 0.35), (0.25, 50, 0.35)):
+        r = cell(gamma, omega, eps, 0.80)
+        assert r is not None
+        assert r["Phi_c"] + r["Phi_e"] == pytest.approx(1.0, abs=1e-7)
+        p_c = 1.0 - r["p_e"]
+        assert r["Phi_c"] / p_c == pytest.approx(1.0, abs=0.01)
+        assert r["Phi_e"] / r["p_e"] == pytest.approx(1.0, abs=0.08)
+        # and the hypothesis it refutes: Phi_e is nowhere near p_c
+        assert r["Phi_e"] / p_c < 0.3

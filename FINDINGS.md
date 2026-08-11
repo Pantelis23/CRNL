@@ -7364,6 +7364,14 @@ drive instead of its speed.
 > species. (iii) Ω = 200, where Q is converged to ~1.6% on AM (5.826 → 5.735 over
 > Ω = 150…600) but to only ~25% at γ = 0.30.
 
+> ⚠⚠ **§58 corrects this.** "Nothing beats AM by more than 9%" is true **on the slice
+> only**. With free per-class rates, Q reaches **1.25–1.33** against AM's 5.475 — a 4.3×
+> improvement §57's one-parameter curve could not see. But every network that beats AM does
+> so **by being slower**: the Q-optimum rides the bifurcation at γ_rec = 0.49 (γ_c = 0.50)
+> with a mean decision time of **783 against AM's 4.09**. On the (time, Q) Pareto frontier
+> **AM is the fastest point and sits on the frontier**, so §57's conclusion survives in a
+> stronger form: *AM is Pareto-optimal at its own speed*, not merely near-optimal on a slice.
+
 **So the claim is bounded and it is still the answer to the founding question.** Within the
 696-network family and a single-γ rate slice, **AM is within 9% of the best chemical decision
 element there is, and every network that matches or beats it contains AM.** The canonical
@@ -7378,3 +7386,95 @@ top networks, optimise Q over independent per-class rates rather than a shared �
 margin survives free rates, the optimality claim strengthens from "on a slice" to "in the
 family"; if some network overtakes it, the slice was hiding the answer, exactly as the
 screening bug above did.
+
+---
+
+### 58 AM is on the speed–optimality frontier — and §40's ruler had a factor of 10⁵⁷ in it
+
+§57 concluded "nothing beats AM by more than 9%" on a one-parameter rate slice, and opened
+T-OPT-a because §56 says that slice is a curve through a high-dimensional space. Optimising
+freely changes the answer, and checking the ruler changes it again.
+
+### 58.1 The one-sided setting is inapplicable, by a factor of 10⁵⁷
+
+§40 named its own leading suspect in advance: *"our absorbing set is TWO-SIDED, |δ| ≥ thr,
+where the standard statement is one-sided."* Every "how far is AM from the bound" number
+rests on that. **Nothing had measured it.**
+
+Measured now: one-sided absorption (at +thr only) makes the first passage **exponentially
+long**, because reaching the *correct* threshold alone requires waiting out excursions into
+the wrong basin — which need a barrier crossing back.
+
+| Ω | 10 | 14 | 18 | 22 |
+|---|---|---|---|---|
+| ⟨T⟩ two-sided | 4.47 | 4.77 | 4.92 | 5.00 |
+| ⟨T⟩ **one-sided** | 3.5×10⁵ | 4.9×10⁶ | 7.1×10⁷ | 1.1×10⁹ |
+
+> **ln(T_one/T_two) = 0.630·Ω + 5.06**, so at Ω = 200 the ratio is **e¹³¹ ≈ 10⁵⁷**.
+
+**The two-sided set is not a sloppy substitute for the one-sided one — the one-sided
+quantity diverges exponentially in Ω.** The TUR's standard form is a statement about a
+current reaching *one* threshold; a bistable decision element that has committed to the
+wrong answer does not wait 10⁵⁷ time units to spontaneously fix itself. **§40's Q = 5.39 is
+measured against a bound whose derivation assumes a setting this system exponentially cannot
+occupy**, and that is now quantified rather than flagged.
+
+### 58.2 My own optimiser failed, and a direct scan caught it
+
+Nelder-Mead over free log-rates (4 restarts, 120 iterations) reported AM's optimum at
+**ρ = 0.997, Q = 4.84** — i.e. that §44's ρ lever does not help Q. A direct scan says
+otherwise:
+
+| ρ | 1 | 2 | 4 | 8 | 20 |
+|---|---|---|---|---|---|
+| Q | 4.856 | 3.697 | 3.205 | 2.994 | **2.919** |
+
+**The optimiser missed a 40% improvement lying along a single axis.** Replaced with grid
+search. This is the third instrument failure in two sections — after §57's screening bug and
+§55's counting bug — and like both, it was caught only by checking against something
+independent.
+
+### 58.3 The frontier, which is the actual answer
+
+Grid search over (ρ, γ_dis, γ_rec), 274 cells across three refinements, drives Q down to
+**1.2531** — against the thermodynamic floor of 1, and against AM's 5.4750. But the optimum
+sits at **γ_rec = 0.49 with γ_c = 0.50**, riding the bifurcation, where δ\* has collapsed to
+0.67 and the mean decision time is **783**.
+
+**Q is dimensionless and therefore time-blind.** Plotting every cell as (time, Q) gives a
+clean Pareto frontier:
+
+| mean time | 4.04 | 5.91 | 9.88 | 18.80 | 45.51 | 112.7 | 241.0 | 783.3 |
+|---|---|---|---|---|---|---|---|---|
+| **Q** | **5.40** | 3.38 | 2.43 | 2.04 | 1.89 | 1.84 | 1.37 | **1.25** |
+
+> **AM sits ON that frontier, at its fast end.** AM at γ = 0.05 is (t = 4.09, Q = 5.475);
+> the frontier's fastest point is (4.04, 5.400). **AM is Pareto-optimal at its own operating
+> speed.**
+>
+> **Buying 4.3× closer to the thermodynamic bound costs 194× in decision time.**
+
+**This reframes §40 and corrects §57.** §40's "Q_min = 5.39, about 5× from the bound" is not
+a measure of AM's inefficiency — **it is the price of deciding in 4 time units instead of
+800.** And §57's "nothing beats AM by more than 9%" was true only on the slice: with free
+rates plenty of things beat AM *on Q*, but every one of them does it by being slower, and
+none of them beats AM at AM's speed.
+
+> **What Q is not.** §38 already found that "cost per nat of reliability" is not a quantity,
+> because reliability is bought with free input margin. §58 is the same lesson one level up:
+> **Q is not a design objective either, because it is blind to time.** A figure of merit that
+> a system can improve arbitrarily by slowing down is measuring a trade-off, not a quality.
+> The frontier is the quantity; Q alone is a coordinate on it.
+
+> **Limits.** Ω = 200 throughout, with the best cell checked at Ω = 150/200/300/450 giving
+> Q = 1.321 / 1.253 / 1.319 / 1.326 — non-monotone at the 5% level, so the best Q is
+> **1.25–1.33, not 1.25 exactly**. Both γ_dis → 0 and γ_rec → γ_c are at their grid edges,
+> so the frontier's far end is a bound, not a located optimum. The family is AM's two
+> classes with free rates; §57's 696-network enumeration was not re-run freely.
+
+**T-OPT-b, open: is the frontier's shape universal?** Q ~ 1 + a/t^b would say the approach
+to the bound has a rate; the measured points span Q = 5.40 at t = 4 to Q = 1.25 at t = 783,
+which is close to Q − 1 ~ t^(−0.5). **How to kill:** fit the frontier per network family and
+check whether the exponent transfers — §39.2 and §46 both found coefficients that did not
+transfer between axes, so the prior is that it will not, and a shared exponent would be the
+surprise.

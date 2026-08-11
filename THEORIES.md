@@ -1949,6 +1949,53 @@ mistake as the screening bug above. **How to kill:** optimise Q over independent
 rates for the top networks. If AM's margin survives, the claim strengthens from "on a slice"
 to "in the family"; if something overtakes it, the slice was hiding the answer.
 
+**T-OPT-a -> §58: AM IS ON THE SPEED-OPTIMALITY FRONTIER, and §40's ruler had a factor of
+1e57 in it.**
+
+**(1) The one-sided setting is inapplicable, quantified.** §40 flagged in advance that its
+absorbing set is TWO-SIDED where the TUR's standard statement is one-sided, and nothing had
+measured the cost. Measured: one-sided first passage requires waiting out excursions into the
+WRONG basin, which need a barrier crossing back, so it diverges exponentially --
+**ln(T_one/T_two) = 0.630*Omega + 5.06**, a factor of **1e57 at Omega = 200**. The two-sided
+set is not a sloppy substitute; the one-sided quantity is exponentially large and a committed
+bistable element never waits for it. §40's Q = 5.39 is measured against a bound whose
+derivation assumes a setting this system exponentially cannot occupy.
+
+**(2) My own optimiser failed, and a direct scan caught it.** Nelder-Mead over free log-rates
+reported AM's optimum at rho = 0.997, Q = 4.84 -- i.e. that §44's rho lever does not help Q.
+A direct scan: Q falls 4.856 -> 2.919 over rho = 1 -> 20. **A 40% improvement along a single
+axis, missed.** Third instrument failure in two sections (§55's counter, §57's screen, this),
+and like both, caught only by an independent check.
+
+**(3) THE FRONTIER, which is the answer.** Grid search over (rho, gamma_dis, gamma_rec), 274
+cells, drives Q to **1.25-1.33** against the floor of 1 and AM's 5.475. But the optimum rides
+the bifurcation (gamma_rec = 0.49, gamma_c = 0.50) with mean decision time **783 against AM's
+4.09**. Q is dimensionless and therefore TIME-BLIND. As (time, Q):
+
+    time   4.04  5.91  9.88  18.8  45.5  113   241   783
+    Q      5.40  3.38  2.43  2.04  1.89  1.84  1.37  1.25
+
+**AM sits ON this frontier at its fast end** -- AM is (4.09, 5.475), the frontier's fastest
+point is (4.04, 5.400). **AM is Pareto-optimal at its own operating speed.** Buying 4.3x
+closer to the bound costs **194x in time**.
+
+**This reframes §40 and corrects §57.** §40's "5x from the bound" is not slack -- it is the
+price of deciding in 4 time units instead of 800. §57's "nothing beats AM by 9%" was true
+only on the slice; with free rates plenty beats AM ON Q, all of it by being slower, and none
+of it at AM's speed. §57 is qualified in place, and its conclusion survives in a STRONGER
+form: Pareto-optimal, not merely near-optimal.
+
+**And the methodological lesson repeats §38's one level up: Q is not a design objective,
+because a system can improve it arbitrarily by slowing down.** §38 found "cost per nat of
+reliability" is not a quantity since reliability is bought with free input margin. **A figure
+of merit improvable by doing nothing faster measures a trade-off, not a quality.** The
+frontier is the quantity; Q alone is a coordinate on it.
+
+**T-OPT-b, open: is the frontier's shape universal?** The points are close to
+Q - 1 ~ t^(-0.5). **How to kill:** fit per network family and check whether the exponent
+transfers. §39.2 and §46 both found coefficients that did not transfer between axes, so the
+prior is that it will not, and a shared exponent would be the surprise.
+
 **T15-e, open: is sign(P) > 0 characterisable, or is it just measured?** Divisibility is
 settled; restoration is divisibility plus a positive P over the relevant region, and
 nothing yet says which symmetric networks have one. **How to kill:** take the cofactor

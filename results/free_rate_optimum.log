@@ -1,0 +1,42 @@
+=== P1 GATE (a): is Q invariant under a uniform rate rescale?
+   lambda           Q     rel dev
+     0.01    5.474990    1.93e-14
+     1.00    5.474990    0.00e+00
+    30.00    5.474990    1.93e-14
+  1000.00    5.474990    1.93e-14
+  -> P1a HOLDS
+
+=== P1 GATE (b): §57's AM slice point
+  AM at gamma=0.05, two-sided: Q = 5.4750   (§57 measured 5.4750)
+
+=== P2 CALIBRATION: one-sided vs two-sided absorption, AM
+  gamma   two-sided Q   one-sided Q    ratio    <T> 2s    <T> 1s
+
+=== P3/P4: free-rate optimisation (two-sided, comparable to §57)
+
+  AM: best Q = 4.8434
+    f:('X', 'Y')->('B', 'B')   k = 0.99737
+    f:('B', 'X')->('X', 'X')   k = 1.00000
+    f:('B', 'Y')->('Y', 'Y')   k = 1.00000
+    r:('B', 'B')->('X', 'Y')   k = 0.39354
+    r:('X', 'X')->('B', 'X')   k = 0.04724
+    r:('Y', 'Y')->('B', 'Y')   k = 0.04724
+    gamma per class (kr/kf): [np.float64(0.3946), np.float64(0.0472)]
+    rho = k_dis/k_rec = 0.9974
+
+  AM+revdis: best Q = 4.7022
+    f:('X', 'Y')->('B', 'B')   k = 1.00000
+    f:('B', 'X')->('X', 'X')   k = 0.89106
+    f:('B', 'Y')->('Y', 'Y')   k = 0.89106
+    f:('B', 'B')->('X', 'Y')   k = 0.94035
+    r:('X', 'X')->('B', 'X')   k = 0.03399
+    r:('Y', 'Y')->('B', 'Y')   k = 0.03399
+    gamma per class (kr/kf): [np.float64(0.0444), np.float64(0.0381), np.float64(0.0155)]
+    rho = k_dis/k_rec = 1.1223
+
+=== P3/P5/P6 verdict
+  best free-rate Q = 4.7022
+  §57 slice best   = 5.0045   AM on slice = 5.4750
+  free vs §57: 1.064x;  free vs AM: 1.164x
+
+(604s) wrote results/free_rate_optimum.json

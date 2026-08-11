@@ -887,3 +887,53 @@ def test_optimal_element_family_is_the_expected_size():
                  if c[0] == (("X", "Y"), ("B", "B")) or c[0] == (("B", "X"), ("X", "X"))],
                 0.2)
     assert len(net.reactions) == 6, "AM has 3 forward + 3 reverse"
+
+
+def test_one_sided_first_passage_diverges_exponentially():
+    """FINDINGS 58: §40's flagged caveat, quantified.
+
+    One-sided absorption requires waiting out excursions into the wrong basin, which need
+    a barrier crossing back, so <T> grows exponentially in Omega. The two-sided set is not
+    a substitute for the one-sided one -- they differ by e^(0.63 Omega).
+    """
+    from crnl.cme import first_passage_moments
+    from crnl.networks.am_reversible import am_reversible, delta_star
+    from experiments.slaving_axis import slaved
+
+    net, ds = am_reversible(0.05), delta_star(0.05)
+    ratios = []
+    for om in (10, 14, 18):
+        st = slaved(net, 0.35 * ds)
+        nb = int(round(st[2] * om))
+        d0 = max(1, int(round(0.35 * ds * om)))
+        if (om - nb - d0) % 2:
+            d0 -= 1
+        thr = max(2, int(round(0.80 * ds * om)))
+        n0 = np.array([(om - nb + d0) // 2, (om - nb - d0) // 2, nb], dtype=np.int64)
+        t2 = first_passage_moments(net, om, float(om), n0,
+                                   lambda s, t=thr: abs(int(s[0]) - int(s[1])) >= t)
+        t1 = first_passage_moments(net, om, float(om), n0,
+                                   lambda s, t=thr: int(s[0]) - int(s[1]) >= t)
+        ratios.append(np.log(t1["mean_time"] / t2["mean_time"]))
+    assert all(r > 10 for r in ratios), "one-sided must be astronomically longer"
+    assert ratios[-1] > ratios[0] + 3, "and must grow with Omega"
+
+
+def test_Q_is_invariant_under_uniform_rate_rescale():
+    """FINDINGS 58: Q is scale-free, which is what makes the rate search (2m-1)-dimensional.
+
+    Sigma is exactly invariant under a uniform rescale (§44 P1a) and the relative variance
+    is dimensionless, so their product must be too.
+    """
+    from experiments.free_rate_optimum import evaluate
+    from experiments.optimal_element import symmetric_classes
+
+    cls = symmetric_classes()
+    dis = next(i for i, c in enumerate(cls) if c[0] == (("X", "Y"), ("B", "B")))
+    rec = next(i for i, c in enumerate(cls) if c[0] == (("B", "X"), ("X", "X")))
+    am = [cls[dis], cls[rec]]
+    base = np.array([1.0, 0.05, 1.0, 0.05])
+    ref, _ = evaluate(am, np.log(base), 150)
+    for lam in (0.02, 50.0, 500.0):
+        r, _ = evaluate(am, np.log(base * lam), 150)
+        assert r["Q"] == pytest.approx(ref["Q"], rel=1e-9)

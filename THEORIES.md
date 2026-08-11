@@ -1904,6 +1904,51 @@ measured restoration boundaries. If they do, the trichotomy becomes constructive
 DESIGN a restoring network by choosing d_r and then solving a linear feasibility problem for
 the rates.
 
+**T-OPT -> §57: an exhaustive search REDISCOVERS AM, and the optimum is what §54
+predicted.** The founding question, with §56 making it tractable. On {X,Y,B} with X+Y+B
+conserved and bimolecular reactions there are 30 conservative reactions in 16
+exchange-symmetric classes; networks from 1-3 classes number 696, and AM is one of them.
+Every network parameterised as AM is: forward 1, reverse gamma. Figure of merit is §40's
+Q = (Var(T)/<T>^2)*<Sigma>/2, floor Q >= 1.
+
+**GATE: AM reads Q = 5.4750 at gamma = 0.05 against §40's published 5.39** -- 1.6% apart
+through separate code.
+
+**And the gate caught a screening bug that had discarded the answer.** `delta_star_of`
+brackets sign changes between fixed grid points, but `slaved` returns None as delta -> 1, so
+a large delta* falls in a dead zone: at gamma = 0.03 and 0.05 the closed form gives 0.971 and
+0.952 and it returns None. AM's Q minimum sits at gamma ~ 0.05, so **the first pass threw
+away exactly the best cells** and put AM's optimum at gamma = 0.10, Q = 5.79. Caught only
+because §40's published number disagreed. Fixed locally, gated to 2.1e-13; `delta_star_of`
+untouched since §36 and §39.2 rest on it. Scope limit stated: below gamma ~ 0.05 `slaved`
+itself dies, so the grid starts there -- which is also §40's grid.
+
+**THE ANSWER: nothing beats AM by more than 9%, and every one of the top ten CONTAINS AM.**
+Best Q = 5.0045 against AM's 5.4750. The search finds no alternative motif, only AM with a
+decoration. 0 of 39 cells read Q < 1, so §40's instrument warning never fired.
+
+**The winner is what §54 predicted.** It is AM plus `2B -> X+Y` as a separate forward class,
+which makes the disagreement channel **detailed-balanced** (both directions rate 1) while
+recruitment stays driven at gamma. §54: `X+Y -> 2B` is SELF-MIRROR, so d = 0 and it
+contributes identically zero to P. **A channel that carries no signal but carries a drive is
+spending entropy for nothing**; removing the drive buys the 9% without touching the drift.
+This converges with §44 from a different direction -- §44 found speeding that same channel a
+free lever worth 43-50%, for the same structural reason, and an exhaustive search told
+nothing about §44 arrives at the same channel.
+
+**Three real limits.** 39 valid cells from 696 networks -- most capable networks never form a
+landscape on this slice, which §56 EXPLAINS: capability is combinatorial, but realisation
+needs rates inside the complement of the non-restoring cone, and a single gamma traces a
+1-D curve through a high-dimensional rate space. The family is 1-3 classes, bimolecular,
+3 species. Omega = 200, where Q is converged to ~1.6% on AM but only ~25% at gamma = 0.30.
+
+**T-OPT-a, open: does the FULL rate space change the answer?** §56 characterises the
+restoring rates as the complement of a convex cone, so per-network rate optimisation is
+well-posed and this search did not do it -- it sampled one curve, which is the same class of
+mistake as the screening bug above. **How to kill:** optimise Q over independent per-class
+rates for the top networks. If AM's margin survives, the claim strengthens from "on a slice"
+to "in the family"; if something overtakes it, the slice was hiding the answer.
+
 **T15-e, open: is sign(P) > 0 characterisable, or is it just measured?** Divisibility is
 settled; restoration is divisibility plus a positive P over the relevant region, and
 nothing yet says which symmetric networks have one. **How to kill:** take the cofactor

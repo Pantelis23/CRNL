@@ -858,3 +858,32 @@ def test_classify_ignores_zero_bracket_pairs():
                   else "all>=0" if all(d >= 0 for d in contrib) else "mixed")
         assert classify(net) == expect
     assert found >= 5, "need networks with p==q pairs for this test to have power"
+
+
+def test_landscape_bracket_survives_large_delta_star():
+    """FINDINGS 57: the screening bug that discarded the best cells.
+
+    slaving_axis.delta_star_of returns None where delta* > ~0.95 because `slaved` dies as
+    delta -> 1. AM's Q minimum sits at gamma ~ 0.05 where delta* = 0.952, so the first
+    pass of §57's search threw away exactly the best cells.
+    """
+    from crnl.networks.am_reversible import am_reversible, delta_star
+    from experiments.optimal_element import landscape
+    from experiments.slaving_axis import delta_star_of
+
+    assert delta_star_of(am_reversible(0.05)) is None, "the bug this test pins"
+    for gamma in (0.05, 0.10, 0.20, 0.35, 0.45):
+        assert landscape(am_reversible(gamma)) == pytest.approx(delta_star(gamma), abs=1e-9)
+
+
+def test_optimal_element_family_is_the_expected_size():
+    """FINDINGS 57: 16 exchange-symmetric classes, and AM is built from two of them."""
+    from experiments.optimal_element import build, symmetric_classes
+
+    cls = symmetric_classes()
+    assert len(cls) == 16
+    assert sum(1 for c in cls if len(c) == 1) == 2
+    net = build([c for c in cls
+                 if c[0] == (("X", "Y"), ("B", "B")) or c[0] == (("B", "X"), ("X", "X"))],
+                0.2)
+    assert len(net.reactions) == 6, "AM has 3 forward + 3 reverse"

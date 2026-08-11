@@ -1,0 +1,44 @@
+16 symmetric classes -> 696 networks from 1..3
+
+=== P1 GATE: reproduce §40's AM Q_min ~ 5.39
+  AM gamma=0.05: Q = 5.4750   delta* = 0.9521
+  AM gamma=0.08: Q = 5.4803   delta* = 0.9249
+  AM gamma=0.12: Q = 6.1120   delta* = 0.8893
+  AM gamma=0.18: Q = 7.9362   delta* = 0.8353
+  AM gamma=0.25: Q = 13.3328   delta* = 0.7659
+  AM gamma=0.35: Q = 60.8831   delta* = 0.6356
+  AM best: Q = 5.4750 at gamma = 0.05   (§40 published Q_min = 5.39)
+  -> P1 HOLDS
+
+=== P2: screening 696 networks
+  capable under §56 (some d_r > 0): 227/696 = 32.6%
+  (network, gamma) cells with a landscape: 47
+
+=== P3: computing Q for every landscaped cell (Omega = 200)
+/home/pantelis/Desktop/Projects/Work/CRNL/crnl/cme.py:356: MatrixRankWarning: Matrix is exactly singular
+  T = spla.spsolve(Qtt, b)
+/home/pantelis/Desktop/Projects/Work/CRNL/crnl/cme.py:360: MatrixRankWarning: Matrix is exactly singular
+  m2 = spla.spsolve(Qtt, rhs2)
+  39 valid Q values from 47 cells
+
+=== the ten best decision elements found
+ rank         Q  gamma   delta*    class   reactions
+    1    5.0045   0.05   0.9474    mixed   X+Y->B+B; B+X->X+X; B+B->X+Y
+    2    5.4750   0.05   0.9521    mixed   X+Y->B+B; B+X->X+X
+    3    5.4803   0.08   0.9249    mixed   X+Y->B+B; B+X->X+X
+    4    5.7703   0.08   0.9130    mixed   X+Y->B+B; B+X->X+X; B+B->X+Y
+    5    6.1120   0.12   0.8893    mixed   X+Y->B+B; B+X->X+X
+    6    6.7621   0.05   0.9473    mixed   X+Y->B+X; X+Y->B+B; B+X->X+X
+    7    7.7402   0.12   0.8631    mixed   X+Y->B+B; B+X->X+X; B+B->X+Y
+    8    7.9362   0.18   0.8353    mixed   X+Y->B+B; B+X->X+X
+    9    7.9883   0.08   0.9127    mixed   X+Y->B+X; X+Y->B+B; B+X->X+X
+   10   11.2046   0.12   0.8624    mixed   X+Y->B+X; X+Y->B+B; B+X->X+X
+
+=== P3/P4 verdict
+  best Q = 5.0045 against AM's 5.4750  (1.09x better)
+  cells reading Q < 1: 0/39
+
+=== P6: does §56's class predict quality?
+     mixed:   39 cells, best 5.0045, median 60.8831
+
+(243s) wrote results/optimal_element.json

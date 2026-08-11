@@ -7282,3 +7282,99 @@ rather than a topological one. §56 splits that:
 So "the transistor is a near-ideal restoring switch" decomposes into a structural claim that
 is decidable and a tuning claim that is not — and 77% of the symmetric networks one might
 write down cannot be tuned into a switch at all.
+
+---
+
+### 57 An exhaustive search rediscovers AM — and the optimum is what §54 predicts
+
+The founding question, with every piece finally in place. §40 measured AM at **Q_min = 5.39**
+against the thermodynamic floor Q ≥ 1. §56 made the search *tractable*: a network can restore
+for some rates iff some d_r > 0, so the capable ones can be enumerated rather than stumbled
+on.
+
+**The family is finite.** On {X, Y, B} with X+Y+B conserved and bimolecular reactions there
+are exactly **30 conservative reactions**, in **16 exchange-symmetric classes** (2
+self-mirror, 14 mirror pairs). Networks from 1–3 classes number **696**, and **AM is one of
+them**. Every network is parameterised exactly as AM is: forward rate 1, reverse rate γ.
+
+**P1 GATE — and it earned its place.** AM's best in this pipeline is **Q = 5.4750 at
+γ = 0.05**, against §40's published **5.39** — 1.6% apart, on a quantity computed through
+entirely separate code.
+
+> ⚠ **The gate caught a screening bug that had silently discarded the answer.**
+> `slaving_axis.delta_star_of` brackets sign changes between fixed grid points, but `slaved`
+> returns None as δ → 1, so a large δ\* falls in a dead zone: at γ = 0.03 and 0.05 the closed
+> form gives 0.971 and 0.952 and `delta_star_of` returns **None**. Since AM's Q minimum sits
+> at γ ≈ 0.05, **the first pass threw away exactly the best cells** and reported AM's optimum
+> at γ = 0.10 with Q = 5.79. It was caught only because §40's published number disagreed.
+> Fixed with a local bracket over consecutive *finite* samples, gated against
+> `delta_star(γ)` to **2.1×10⁻¹³**. `delta_star_of` itself is left untouched — §36 and §39.2
+> rest on it.
+>
+> **Scope limit, stated rather than fought:** below γ ≈ 0.05 `slaved` itself dies, because
+> the attractor sits where the losing species is 4×10⁻⁵ of the tank. The γ grid starts at
+> 0.05, which is also §40's own grid.
+
+**P3 — the answer, and it is a small number.** Over 227 capable networks (32.6% of 696) and
+39 cells that produce both a landscape and a valid Q:
+
+| rank | Q | γ | reactions |
+|---|---|---|---|
+| **1** | **5.0045** | 0.05 | `X+Y→2B`; `B+X→2X`; **`2B→X+Y`** |
+| 2 | 5.4750 | 0.05 | `X+Y→2B`; `B+X→2X` — **this is AM** |
+| 3 | 5.4803 | 0.08 | `X+Y→2B`; `B+X→2X` |
+| 4 | 5.7703 | 0.08 | `X+Y→2B`; `B+X→2X`; `2B→X+Y` |
+| 5 | 6.1120 | 0.12 | `X+Y→2B`; `B+X→2X` |
+
+> **Nothing beats AM by more than 9%.** And **every one of the top ten contains AM's two
+> classes** — the search does not find an alternative motif, it finds AM with a decoration.
+
+**P4 holds: 0 of 39 cells read Q < 1**, so §40's pre-registered instrument warning never
+had to fire.
+
+### 57.1 The winner is what §54 predicted, not a surprise
+
+Written out, rank 1 is:
+
+| reaction | rate |
+|---|---|
+| `X + Y → 2B` | 1.0 |
+| `2B → X + Y` | **1.0** |
+| `B + X → 2X`, `B + Y → 2Y` | 1.0 |
+| `2X → B + X`, `2Y → B + Y` | γ = 0.05 |
+
+**The disagreement channel is at detailed balance; only recruitment is driven.**
+
+And §54 predicts exactly this. `X + Y → 2B` is **self-mirror**, so d = 0 and it contributes
+**identically zero** to P — the same fact as §30's first cancellation and §51's discovery
+that ρ never appears in μ. **A channel that contributes nothing to the signal but carries a
+thermodynamic drive is spending entropy for nothing.** Setting it to equilibrium removes that
+cost while leaving the drift untouched, and buys the 9%.
+
+This also converges with **§44** from a different direction: §44 found ρ — speeding the
+disagreement channel — a free lever worth 43–50%, for the same structural reason. Here an
+*exhaustive* search, told nothing about §44, arrives at the same channel and neutralises its
+drive instead of its speed.
+
+> **Three limits on the headline, all real.** (i) **39 valid cells from 696 networks.** Most
+> capable networks never form a landscape on this rate slice, which §56 explains rather than
+> excuses: capability is combinatorial but realisation needs rates inside the complement of
+> the non-restoring cone, and **a single γ traces a one-dimensional curve through a
+> high-dimensional rate space.** (ii) The search is over 1–3 classes, bimolecular, three
+> species. (iii) Ω = 200, where Q is converged to ~1.6% on AM (5.826 → 5.735 over
+> Ω = 150…600) but to only ~25% at γ = 0.30.
+
+**So the claim is bounded and it is still the answer to the founding question.** Within the
+696-network family and a single-γ rate slice, **AM is within 9% of the best chemical decision
+element there is, and every network that matches or beats it contains AM.** The canonical
+consensus motif is not merely one workable design among many — at this size it is
+essentially *the* design, and the only improvement available is to stop wasting drive on the
+channel that carries no signal.
+
+**T-OPT-a, open: does the full rate space change the answer?** §56 characterises the
+restoring rates as the complement of a convex cone, so per-network rate optimisation is a
+well-posed problem this search did not solve — it sampled one curve. **How to kill:** for the
+top networks, optimise Q over independent per-class rates rather than a shared γ. If AM's
+margin survives free rates, the optimality claim strengthens from "on a slice" to "in the
+family"; if some network overtakes it, the slice was hiding the answer, exactly as the
+screening bug above did.

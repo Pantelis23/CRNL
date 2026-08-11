@@ -1,0 +1,27 @@
+=== P1 GATE: is P exactly linear in the rate constants?
+  worst relative deviation: 2.725e-16   -> P1 HOLDS
+
+=== P2 THE CONE THEOREM: c1, c2 non-restoring => c1 + c2 non-restoring
+  20 networks with two non-restoring rate vectors found; 0 violations
+  -> P2 HOLDS -- the non-restoring set is closed under addition
+
+=== P3/P5: is CAPABILITY combinatorial? (load c on the positive-d reactions)
+     class  networks   capable   fraction   (§54 measured at SAMPLED rates)
+    all<=0       157         0       0.0%   <- §54 found 0/113
+    all>=0         2         2     100.0%
+     mixed        34        34     100.0%   <- §54 found 18% amplifying here
+   trivial         7         0       0.0%
+  -> P3/P5 HOLD: mixed means CAPABLE
+  -> P4 HOLDS: all<=0 is non-restoring for every c
+
+=== P6 SCOPE LIMIT: does capability survive on a COMPACT simplex?
+  mixed networks on the simplex: 35/35 = 100.0% capable   (orthant: 100.0%)
+  -> compactness does NOT bite -- capability survives
+
+=== AM as a worked case
+  gamma=0.2: d = [1, -1], class = mixed, restores = True
+  gamma=0.5: d = [1, -1], class = mixed, restores = True
+  gamma=0.8: d = [1, -1], class = mixed, restores = True
+  AM is mixed, hence CAPABLE; gamma decides whether it realises it.
+
+wrote results/restoration_cone.json

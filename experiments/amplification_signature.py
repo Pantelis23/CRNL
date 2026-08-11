@@ -118,10 +118,19 @@ def P_decomposed(net, x, i="X", j="Y"):
 
 
 def classify(net, i="X", j="Y"):
+    """Classify by the d_r of pairs that actually CONTRIBUTE.
+
+    A p == q pair has an empty bracket sum and contributes identically zero, but
+    `mirror_pairs` records its d as an arbitrary +-1 because "the X-heavy member" is
+    undefined there (§55). Counting those misclassifies genuinely all-d<=0 networks as
+    "mixed" -- 148 of 232 in the draw that caught it.
+    """
     pairs = mirror_pairs(net, i, j)
     if pairs is None:
         return None
-    ds = [d for d, _ in pairs]
+    ds = [d for d, idx in pairs
+          if net.reactions[idx].reactants.get(i, 0)
+          != net.reactions[idx].reactants.get(j, 0)]
     if not ds or all(d == 0 for d in ds):
         return "trivial"
     if all(d <= 0 for d in ds):

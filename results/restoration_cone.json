@@ -1,0 +1,29 @@
+{
+  "p1_worst": 2.724607526238674e-16,
+  "cone_tested": 20,
+  "cone_violations": 0,
+  "orthant": {
+    "mixed": [
+      34,
+      34
+    ],
+    "all<=0": [
+      157,
+      0
+    ],
+    "all>=0": [
+      2,
+      2
+    ],
+    "trivial": [
+      7,
+      0
+    ]
+  },
+  "simplex": {
+    "mixed": [
+      35,
+      35
+    ]
+  }
+}

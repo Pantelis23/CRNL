@@ -755,3 +755,106 @@ def test_n_winner_term_counts_are_one_against_n_minus_one():
             else:
                 neg += 1
         assert (pos, neg, zero) == (1, n - 1, n - 2), f"n={n} gave {(pos, neg, zero)}"
+
+
+def test_nonrestoring_rates_form_a_convex_cone():
+    """FINDINGS 56: P is linear in c, so {c : P <= 0 everywhere} is closed under addition.
+
+    c1, c2 both non-restoring must imply c1 + c2 non-restoring. One counterexample would
+    refute the theorem, not merely this test.
+    """
+    import numpy as _np
+
+    from experiments.amplification_signature import classify
+    from experiments.exchange_theorem import random_network
+    from experiments.restoration_cone import orthant_states, restores, v_of
+
+    rng = _np.random.default_rng(777)
+    checked = 0
+    for _ in range(150):
+        net = random_network(rng, n_extra=2, n_rx=5, max_order=3, symmetrise=True)
+        if net is None or classify(net) != "mixed":
+            continue
+        states = orthant_states(rng, len(net.species), 30)
+        v0, _ = v_of(net, states[0])
+        if v0 is None or v0.size == 0:
+            continue
+        bad = []
+        for _ in range(30):
+            c = _np.exp(rng.uniform(-4, 4, v0.size))
+            if restores(net, c, states) is False:
+                bad.append(c)
+            if len(bad) == 2:
+                break
+        if len(bad) < 2:
+            continue
+        checked += 1
+        assert not restores(net, bad[0] + bad[1], states), "cone theorem violated"
+    assert checked >= 3, "need some non-restoring pairs for this test to have power"
+
+
+def test_capability_is_combinatorial():
+    """FINDINGS 56: some d_r > 0 => restores for SOME c; all d_r <= 0 => never."""
+    import numpy as _np
+
+    from experiments.amplification_signature import classify, mirror_pairs
+    from experiments.exchange_theorem import random_network
+    from experiments.restoration_cone import orthant_states, restores, v_of
+
+    rng = _np.random.default_rng(4242)
+    seen = {"mixed": 0, "all<=0": 0}
+    for _ in range(150):
+        net = random_network(rng, n_extra=int(rng.integers(1, 4)),
+                             n_rx=int(rng.integers(3, 8)), max_order=4, symmetrise=True)
+        if net is None:
+            continue
+        cls = classify(net)
+        if cls not in seen:
+            continue
+        states = orthant_states(rng, len(net.species), 60)
+        v0, _ = v_of(net, states[0])
+        if v0 is None or v0.size == 0:
+            continue
+        ds = _np.array([d for d, _ in mirror_pairs(net)], dtype=float)
+        c = _np.where(ds > 0, 1e4, _np.where(ds < 0, 1e-4, 1.0))
+        got = bool(restores(net, c, states))
+        seen[cls] += 1
+        if cls == "mixed":
+            assert got, "a mixed network must be capable for some rates"
+        else:
+            assert not got, "an all-d<=0 network must never restore"
+    assert seen["mixed"] >= 3 and seen["all<=0"] >= 3
+
+
+def test_classify_ignores_zero_bracket_pairs():
+    """FINDINGS 56: p == q pairs contribute nothing and must not enter the classification.
+
+    Counting them misclassified 148 of 232 networks as 'mixed' when they are all-d<=0.
+    """
+    import numpy as _np
+
+    from experiments.amplification_signature import classify, mirror_pairs
+    from experiments.exchange_theorem import random_network
+
+    rng = _np.random.default_rng(20260812)
+    found = 0
+    for _ in range(200):
+        net = random_network(rng, n_extra=2, n_rx=5, max_order=4, symmetrise=True)
+        if net is None:
+            continue
+        pairs = mirror_pairs(net)
+        if pairs is None:
+            continue
+        raw = [d for d, _ in pairs]
+        contrib = [d for d, i in pairs
+                   if net.reactions[i].reactants.get("X", 0)
+                   != net.reactions[i].reactants.get("Y", 0)]
+        if len(raw) == len(contrib):
+            continue
+        found += 1
+        # the classification must depend only on the contributing pairs
+        expect = ("trivial" if not contrib or all(d == 0 for d in contrib)
+                  else "all<=0" if all(d <= 0 for d in contrib)
+                  else "all>=0" if all(d >= 0 for d in contrib) else "mixed")
+        assert classify(net) == expect
+    assert found >= 5, "need networks with p==q pairs for this test to have power"

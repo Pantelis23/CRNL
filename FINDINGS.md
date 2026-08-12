@@ -8116,3 +8116,89 @@ decomposition.
 is standard mean-field finite-size scaling (Curie–Weiss). §63's contribution is the *exact
 antisymmetric-sector instrument*, which gives the stochastic order parameter with no
 simulation and no first-passage definition — not the exponent it produced.
+
+---
+
+### 66 §60's closure was tested only where symmetry guarantees it — T-TUR-e
+
+§60 split §41's fluctuation-theorem identity by outcome, found `⟨e^(−S_tot)|o⟩ = 1` separately
+for each outcome, and concluded the identity cannot bound the error rate. That closed the
+founding question's sharpest form. **But §60's own explanation of *why* is a fact about
+β = 0:** it reasoned that the two absorbing boundaries are exchange images carrying equal
+stationary weight, so the system term cancels outcome by outcome. **For any tilted network —
+that is, for every real device, since an inverter drives toward one rail and not the other —
+the boundaries are not exchange images and the cancellation has no reason to occur.** §60
+stated a general closure and tested the one case whose symmetry guarantees the answer.
+
+Repeated on `am_asymmetric` at γ = 0.25, every cell strictly below β_c = 0.6365 (P4), with the
+start taken from the **separatrix** (§31's matched rule) rather than a symmetric point, and
+`b` on the slow manifold solved generically so no `am_reversible` closed form leaks in:
+
+| β | β/β_c | mean \|r_c − 1\| | mean \|r_e − 1\| | cells |
+|---|---|---|---|---|
+| 0.00 | 0.00 | 0.000468 | **0.001071** | 6 |
+| 0.10 | 0.16 | 0.002088 | 0.005204 | 5 |
+| 0.20 | 0.31 | 0.002030 | 0.006522 | 4 |
+| 0.30 | 0.47 | 0.010045 | 0.028819 | 3 |
+| 0.40 | 0.63 | 0.003916 | **0.042831** | 2 |
+
+**`|r_e − 1|` rises 40× with the tilt.** Whether that is the physics is *not* settled, and
+§66.1 is why.
+
+### 66.1 The instrument fails exactly where the effect should be largest
+
+**The confound here is the dangerous kind: the nuisance is caused by the variable under test.**
+Tilt is what makes the two boundaries' stationary weights differ — and that weight ratio `w` is
+precisely what breaks the solve, because §41's convention weights the boundary by π(n)/π(n₀).
+At β = 0.40, Ω = 90 the error boundary carries **ln w = −38.9**, i.e. e^−38.9 ≈ 10⁻¹⁷ of the
+correct boundary's weight — below double precision. So `Φ_all` itself comes back as 1.161 or
+0.813 instead of 1. **A deviation rising with β is predicted by both hypotheses.**
+
+A per-cell precision gate (`|Φ_all − 1| < 10⁻⁶`) was added and 37 cells survive with a maximum
+of 9.4e−7. Breaking the confound the way this project has broken confounds before — sweeping
+the nuisance *against* the cause, since |ln w| also rises with Ω at fixed β, so matched-|ln w|
+cells exist at different β:
+
+| \|ln w\| band | cells | β range | corr(β, \|r−1\|) |
+|---|---|---|---|
+| 0.0 – 4.4 | 7 | 0.05–0.10 | +0.440 |
+| 4.4 – 11.3 | 13 | 0.10–0.30 | +0.660 |
+| 11.3 – 20.4 | 13 | 0.15–0.40 | +0.637 |
+
+> **SUGGESTIVE ONLY, and stated as such.** Mean within-band correlation +0.579 on ~10 cells
+> per band is too weak to separate tilt from solve error. §60's mechanism fares no better:
+> corr(|ln w|, |r−1|) = +0.546, so the boundary-weight account remains a **suspect**, not a
+> result (rule 17).
+
+**The precision wall is itself part of the finding.** The accessible β range is bounded by
+arithmetic, and bounded *exactly where the predicted effect is largest*, because the tilt that
+would break the factorisation is the same tilt that makes the two boundary weights differ by
+more than 10¹⁷. This method cannot answer the question it was built for beyond β/β_c ≈ 0.6.
+
+> **What does NOT depend on resolving any of that: §60's scope.** It claimed a general closure
+> from a case whose symmetry guarantees the result, and offered a mechanism that cannot apply
+> once the symmetry is gone. **§60 is rescoped to exchange-symmetric elements.** For tilted
+> ones the factorisation is *untested*, not established — and the founding question's sharpest
+> form is **open where real devices live**, not closed.
+
+### 66.2 The verdict rule was unit-tested before the experiment ran, and it was broken
+
+§63 and §64 lost four verdict rules to defects a five-line test would have caught. Per that
+lesson this section's rule was written into `tests/test_outcome_split_tilted.py` **first**,
+with data engineered to trigger each branch. It failed two of them immediately:
+
+> ⚠ It printed **DEVIATION** on `[0.30, 0.31, 0.32]` with a β = 0 residual of 0.30 — a 6% rise
+> sitting entirely on its own baseline. And it could not distinguish a **physical baseline**
+> (the β = 0 residual: a signal inside it means *no effect*) from **instrument noise** (the Ω
+> scatter: a signal inside it means *not measurable*), so it would have printed "no deviation"
+> on data that was merely too noisy to read. Both were fixed before a single cell was solved.
+
+**This is the first section where no verdict rule had to be corrected after seeing results** —
+five sections in a row had one. The cost was about ten minutes.
+
+> ⚠ One thing the tests did not cover, caught only by reading the output: **P5's offset sweep
+> applied no precision gate.** Its first pass reported |r_e − 1| ≈ 0.988 at β = 0.40 across all
+> three offsets and concluded the effect "survives the offset sweep" — and all three of those
+> cells are the ln w = −38.9 precision failure. Gated, **all three are excluded and P5 has
+> nothing to say at β = 0.40.** A gate applied in one place and not another is the same class
+> of defect as a gate on the wrong quantity (§64), and it took reading the cells to see it.

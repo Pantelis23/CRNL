@@ -2152,6 +2152,25 @@ three failures -- the prior is now explicit: in this system, exponents fitted on
 not carry to another, and any future claim of one needs a cross-axis test BEFORE it is
 written down.**
 
+**T-TUR-d RESCOPED BY §66: the closure below is established for EXCHANGE-SYMMETRIC elements
+only.** §60's mechanism -- the two absorbing boundaries are exchange images with equal
+stationary weight, so the system term cancels outcome by outcome -- is a fact about beta = 0,
+and every real restoring device is tilted. Repeated on `am_asymmetric`, |r_e - 1| rises 40x
+from beta = 0 to beta = 0.40; whether that is the tilt or the solve is NOT settled, because the
+instrument's precision fails on the same variable (the error boundary carries e^-38.9 of the
+correct one's stationary weight, below double precision, so Phi_all itself returns 0.81). What
+does not depend on settling it: **§60 claimed a general closure from the one case whose
+symmetry guarantees it.** For tilted elements the factorisation is untested, not established,
+and the founding question's sharpest form is OPEN where real devices live. See §66.
+
+**T-TUR-f, open: does the outcome-wise factorisation survive a tilt?** §66 could not reach
+past beta/beta_c ~ 0.6 because the pi(n)/pi(n0) boundary convention exhausts double precision
+exactly where the predicted effect is largest. **How to kill:** redo the tilted generator in
+LOGS -- the boundary weight is a log-sum-exp, as §61's 1-D splitting probability already is --
+so the e^-38.9 ratio costs nothing. That is a rewrite of the boundary assembly in
+`outcome_split*.py`, not new physics, and it would open the whole beta < beta_c range. Until
+then no claim is made for tilted elements in either direction.
+
 **T-TUR-d -> §60: THE FLUCTUATION THEOREM FACTORISES OVER OUTCOMES, so it cannot bound the
 error.** §41 verified <e^(-S_tot)> = 1 at absorption to 5.5e-14 and never split it by
 outcome. Splitting it -- Phi_o = p_o * <e^(-S)|o>, computed with §41's tilted generator under

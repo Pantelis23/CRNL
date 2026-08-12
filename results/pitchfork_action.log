@@ -1,0 +1,28 @@
+=== P1 GATE (rule 13): has the LOCAL SLOPE A_eff converged IN Omega?
+  gamma            Omega used                      A_eff series   drift%  used
+  0.200    too few resolvable                                         --    no
+  0.240            40..90 (3)                 0.210685 0.211373     0.33   yes
+  0.280           40..120 (4)        0.150457 0.151060 0.151304     0.16   yes
+  0.320           40..200 (6)        0.101870 0.101986 0.102041     0.05   yes
+  0.350           40..320 (8)        0.071516 0.071558 0.071569     0.02   yes
+  0.380          40..500 (10)        0.046415 0.046437 0.046453     0.03   yes
+  0.410          40..500 (10)        0.026486 0.026531 0.026563     0.12   yes
+  0.430          40..500 (10)        0.016203 0.016202 0.016234     0.20   yes
+  0.450          40..500 (10)        0.008786 0.008559 0.008433     1.49   yes
+  0.460          40..500 (10)        0.006255 0.005918 0.005673     4.33    NO
+  -> P1: 8 of 9 gamma converged to 2%; 1 excluded and counted
+
+=== P2/P3: nu from ln A vs ln(1/2 - gamma), gamma_c held FIXED at 1/2
+                window   n        nu   amplitude
+ gamma in [0.20, 0.45]   8    1.9507      2.9065
+ gamma in [0.30, 0.45]   6    1.9465      2.8761
+ gamma in [0.38, 0.45]   4    1.9498      2.9017
+ gamma in [0.41, 0.45]   3    1.9517      2.9170
+         gamma >= 0.43   2   too few
+
+  nu across nested windows: 1.9507, 1.9465, 1.9498, 1.9517
+  scatter across windows 0.0052; net movement toward 2 +0.0010; distance of the mean from 2 0.0504 (9.7x scatter)
+  -> P2 nu is FLAT at 1.9496 +- 0.0026 and 2 is 9.7x the scatter away: **2 is EXCLUDED over this window**
+     1/nu = 0.5129, to be compared with §63's width exponent
+
+(106s) wrote results/pitchfork_action.json

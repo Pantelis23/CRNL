@@ -7810,3 +7810,122 @@ family the criterion is global and not merely local.
 steady state; 7.4% of draws had more than one and are outside the claim, since which fixed
 point decides is then undetermined. The dynamical test is mass-action, not CME — this is a
 statement about the deterministic restoring element, which is what §56's trichotomy was about.
+
+---
+
+### 63 How sharp is a restoring threshold made of Ω molecules? — T15-k
+
+§9.1 settled the deterministic picture: the AM landscape dies at γ_c = 1/2 and above it "no
+population size Ω can restore, because there is nothing to restore toward". §62 then made
+that boundary exact and free. **So the deterministic side has zero uncertainty, and anything
+measured against it is entirely the CME's** — the setup this project has wanted since §9.
+
+The device question §9.1 never asked: *below* γ_c, how many molecules does a switch need
+before its threshold is sharp? A transistor restores well because its threshold is abrupt.
+One made of Ω molecules cannot be.
+
+**The instrument is exact and was implied by §53 all along.** §53 defined P as the
+antisymmetric eigenvalue of the *Jacobian*. The CME generator has an antisymmetric sector
+too: exchange X↔Y commutes with Q for any exchange-symmetric network (§43's premise), so Q
+block-diagonalises, and on antisymmetric observables
+
+    Q_A[p,q] = Q[s_p, s_q] − Q[s_p, σ(s_q)]        over representatives with n_X > n_Y
+
+with the n_X = n_Y states dropping out identically. **λ_A, its leading eigenvalue, is the
+exact stochastic counterpart of §53's P** — no simulation, no threshold, no first-passage
+definition. Gate: spec(Q_A) ⊂ spec(Q) to **5.7e-13**; λ_A < 0 at every finite Ω, as ergodicity
+requires — **there is no sign change at finite size, and that is the point.**
+
+**The two sides meet (absolute, no fit).** Above γ_c the CME's antisymmetric relaxation must
+converge to §62's exact (1−2γ)/3:
+
+| γ | Ω=20 | 40 | 80 | 120 | approach |
+|---|---|---|---|---|---|
+| 0.60 | 1.1647 | 1.1289 | 1.0857 | 1.0643 | ~Ω^−0.52 |
+| 0.75 | 0.9290 | 0.9664 | 0.9838 | 0.9893 | ~Ω^−1.06 |
+
+Converging to 1 from both sides — and **the approach is twice as slow near γ_c**, which is
+the critical slowing this section goes on to measure.
+
+### 63.1 The width of the threshold goes as Ω^(−1/2)
+
+Metastability is measured as e-folds of excess, and the width as the **γ-interval between two
+fixed metastability levels** — a level *difference*, so it needs no "E ≈ 0" endpoint. Two
+instruments, one anchored to §62's exact deterministic rate and one mentioning no reference
+at all (D = ln|λ_A(2Ω)| − ln|λ_A(Ω)|, finite everywhere):
+
+| levels | with the exact reference | **with no reference** |
+|---|---|---|
+| 1→2 | −0.4744 | **−0.4934** |
+| 1→4 | −0.4856 | **−0.5069** |
+| 2→4 | −0.4915 | **−0.5133** |
+
+Stable across levels (3.5% spread, rule 13 satisfied *before* comparing across Ω), and
+**ρ-independent** across §44's lever (−0.5069, −0.4789, −0.4748; 6.6%), so the width belongs
+to the threshold and not to the timescale separation.
+
+> **w(Ω) ~ Ω^(−1/2).** The blur on a chemical switch's threshold falls as the square root of
+> its molecule count: **to halve the blur, use four times the molecules.**
+
+Per rule 15, the extrapolation is *not* resolved even though the exponent is: at Ω = 1000 the
+power law gives w = 0.0174, c/ln Ω + b gives 0.0141, and a/Ω + b gives 0.0336 — a 90% spread.
+The exponent over the measured decade stands; the value beyond it does not.
+
+### 63.2 The exponent is *nearly* the pitchfork — and 2 is excluded
+
+The exponent is not free. If the escape action vanishes as A ∝ (γ_c−γ)^ν then w ~ Ω^(−1/ν),
+so −1/2 says ν = 2 — and **ν = 2 is what §9.1 predicts**, since it identified the bifurcation
+as a pitchfork (δ\* ∝ √(γ_c−γ), 3 fixed points below and 1 above from 1830 starts) and a
+pitchfork's barrier goes as (γ_c−γ)². Fitting ln A against ln(1/2 − γ) with **γ_c held fixed
+at the value §62 proves exactly** — so this is a test, not a two-parameter fit:
+
+| window | n | ν |
+|---|---|---|
+| γ ∈ [0.20, 0.45] | 8 | 1.9507 |
+| γ ∈ [0.30, 0.45] | 6 | 1.9465 |
+| γ ∈ [0.38, 0.45] | 4 | 1.9498 |
+| γ ∈ [0.41, 0.45] | 3 | 1.9517 |
+
+> **ν = 1.9496 ± 0.0026, flat and non-monotone across nested windows, with 2 lying 9.7×
+> the scatter away. The pitchfork value is excluded over the accessible window.**
+
+**Scope, and it is the whole caveat.** The narrowest window still stops at γ = 0.45, and the
+γ = 0.46 point was excluded because its action had not converged in Ω (4.33% drift). So
+**whether ν → 2 in the last 10% of the approach to γ_c is not resolved here** — that needs
+Ω well beyond 500. What the data exclude is ν = 2 *over γ ∈ [0.20, 0.45]*, and they show no
+drift toward it.
+
+**The two measurements agree, and that agreement is NOT a second confirmation.** 1/ν = 0.5129
+against the reference-free width exponent 0.5133 at levels 2→4 — 0.1%. But both are readings
+of the same measured surface λ_A(γ, Ω), one along Ω and one along γ, related *by the scaling
+ansatz itself*. **So their agreement confirms the ansatz — that the width is set by the action
+alone — and does not measure ν twice.** This experiment's own P4 predicted that trap and it
+is honoured here rather than quietly enjoyed.
+
+### 63.3 Three verdict rules wrong in one section
+
+Rule 19 fired three times, on measurements that were all sound:
+
+> ⚠ **P1(c) printed FAILS on converging data.** It demanded |ratio−1| < 0.05 at Ω = 120 and
+> saw 1.0643. The series was 1.165 → 1.129 → 1.086 → 1.064 and 0.929 → 0.966 → 0.984 → 0.989 —
+> converging cleanly from both sides. *A fixed-Ω tolerance tests the size of a finite-Ω
+> correction, not whether it vanishes.* Replaced by monotone convergence with its exponent.
+>
+> ⚠ **P2's crossover statistic could not find a crossover.** γ\* = argmax|d ln|λ_A|/dγ|, chosen
+> because it is parameter-free "so it cannot be an artifact of a threshold". In the metastable
+> branch the slope is −ΩA′(γ), *largest deep inside that branch and smallest at the crossover* —
+> so the argmax runs to the low-γ edge of whatever window is swept, and it duly printed "max
+> slope at the EDGE" for every Ω. **Being free of a threshold does not make a statistic measure
+> the thing you named it after.** No data would have made it print a crossover.
+>
+> ⚠ **P3 read a 0.001 wobble as a trend.** It compared |ν−2| at the widest window against the
+> narrowest and printed **"P2 HOLDS: ν → 2"** because 0.0483 < 0.05. The values were 1.9507,
+> 1.9465, 1.9498, 1.9517 — flat, non-monotone, scatter 0.005. A rule that cannot tell a drift
+> from a constant is the only thing it was there to do. Replaced by comparing the trend against
+> the scatter, which prints the opposite verdict on the same numbers.
+
+And rule 13 caught the estimator before any of this: **A = −ln|λ_A|/Ω drifted 8–39% across
+Ω**, because dividing by Ω leaves the whole WKB prefactor as an O(ln Ω/Ω) contamination. The
+gate refused all 7 γ and reported no ν. The repair is the local slope in Ω, which cancels the
+constant exactly — and deliberately **not** a three-parameter fit, since §35.3 proved Ω and
+ln Ω collinear over any bounded window here and §35.1's b was withdrawn for exactly that.

@@ -1,0 +1,75 @@
+=== P1 GATE (a): spectrum of the antisymmetric block ⊂ spectrum of Q
+  Omega=  8: block   20 of   45 states, worst distance to the full spectrum 5.063e-14
+  Omega= 12: block   42 of   91 states, worst distance to the full spectrum 5.063e-14
+  Omega= 16: block   72 of  153 states, worst distance to the full spectrum 5.667e-13
+  -> P1(a) HOLDS
+
+=== P1 GATE (c): above gamma_c, lambda_A -> the exact (1 - 2 gamma)/3
+  gamma  Omega      lambda_A    (1-2g)/3     ratio
+   0.60     20   -0.07764512 -0.06666667   1.16468
+   0.60     40   -0.07525714 -0.06666667   1.12886
+   0.60     80   -0.07238196 -0.06666667   1.08573
+   0.60    120   -0.07095239 -0.06666667   1.06429
+   0.75     20   -0.15482923 -0.16666667   0.92898
+   0.75     40   -0.16107051 -0.16666667   0.96642
+   0.75     80   -0.16396363 -0.16666667   0.98378
+   0.75    120   -0.16488771 -0.16666667   0.98933
+  gamma=0.6: |ratio-1| 0.1647 -> 0.1289 -> 0.0857 -> 0.0643   monotone, ~Omega^-0.52
+  gamma=0.75: |ratio-1| 0.0710 -> 0.0336 -> 0.0162 -> 0.0107   monotone, ~Omega^-1.06
+  -> P1(c) HOLDS: the deviation vanishes with Omega, so the CME meets §62
+
+=== P2: ln|lambda_A| across gamma, per Omega
+  Omega=  30:  51 usable gamma in [0.300, 0.600], ln|lambda_A| from -7.73 to -2.57
+  Omega=  50:  51 usable gamma in [0.300, 0.600], ln|lambda_A| from -10.22 to -2.60
+  Omega=  80:  51 usable gamma in [0.300, 0.600], ln|lambda_A| from -13.96 to -2.63
+  Omega= 130:  51 usable gamma in [0.300, 0.600], ln|lambda_A| from -20.23 to -2.65
+  Omega= 210:  47 usable gamma in [0.324, 0.600], ln|lambda_A| from -24.42 to -2.67
+  -> P1(b) HOLDS: lambda_A < 0 everywhere
+  P6: 4 eigenvalues discarded below the 1e-11 precision floor
+
+=== P3: the excess E = L_det - ln|lambda_A|, and the width of {0 < E < k}
+  Omega     w[1,2]     w[1,4]     w[2,4]    g(E=1)    g(E=4)
+     30    0.03274    0.09510    0.06236   0.43908   0.34398
+     50    0.02596    0.07494    0.04897   0.45043   0.37550
+     80    0.02078    0.05967    0.03889   0.45950   0.39983
+    130    0.01646    0.04701    0.03055   0.46745   0.42045
+    210    0.01302    0.03701    0.02399   0.47393   0.43692
+
+=== P3/rule 13: is the exponent stable in the LEVELS before comparing across Omega?
+  levels     1,2: w ~ Omega^(-0.4744)   over Omega 30..210
+  levels     1,4: w ~ Omega^(-0.4856)   over Omega 30..210
+  levels     2,4: w ~ Omega^(-0.4915)   over Omega 30..210
+  spread in the exponent across levels: 3.5%
+  -> STABLE, so the exponent is a property of the width
+
+=== P4: every ansatz for w[1,4](Omega), not only the flattering one
+  w ~ Omega^a        a = -0.4856   -> w(1000) = 0.01743
+  w ~ c/ln(Omega) + b               -> w(1000) = 0.01410
+  w ~ a/Omega + b                   -> w(1000) = 0.03361
+  spread across ansaetze: 90%
+  -> the ansaetze DISAGREE: the width scaling is UNRESOLVED (rule 15)
+
+=== P7 (rule 10): the width again from D = ln|lam(2W)| - ln|lam(W)|,
+    which never mentions the deterministic rate and has no singularity
+  Omega     w[1,2]     w[1,4]     w[2,4]
+     30    0.05166         --         --
+     50    0.04050    0.08970    0.04920
+     80    0.03217    0.07086    0.03869
+    130    0.02528    0.05543    0.03015
+    210    0.01978    0.04333    0.02355
+  levels     1,2: w ~ Omega^(-0.4934)  [no reference]
+  levels     1,4: w ~ Omega^(-0.5069)  [no reference]
+  levels     2,4: w ~ Omega^(-0.5133)  [no reference]
+  P3 levels 1,4 (singular reference): -0.4856
+  P7 levels 1,4 (no reference):       -0.5069
+  -> P7 AGREE: the width is a property of the transition, not of the reference
+
+=== P5 (rule 9): the same exponent under rho, §44's lever
+    rho    exponent    n
+      1     -0.5069    4
+      4     -0.4789    5
+     16     -0.4748    5
+  exponent spread across rho: 6.6%
+  -> rho-INDEPENDENT: the width belongs to the threshold
+
+(1176s) wrote results/threshold_sharpness.json

@@ -1923,6 +1923,36 @@ restoring rate vectors **in AM's own two classes** whose sum does not restore
 (P = +5.5e-2, +6.98e-2, sum -2.14e-1; confirmed by the ODE at x6236, x5659, x1.1e-12).
 **Capability is a convex cone; realisation is not convex.**
 
+**T15-k -> §63: THE RESTORATION THRESHOLD HAS A WIDTH, AND IT GOES AS Omega^(-1/2).**
+The CME generator has an antisymmetric sector (exchange X<->Y commutes with Q whenever §43's
+premise holds), so lambda_A -- its leading eigenvalue -- is the EXACT stochastic counterpart
+of §53's Jacobian P, with no simulation and no first-passage definition. The chain is ergodic
+at every finite Omega, so lambda_A < 0 always: **restoration at finite size is not a sign
+change but a metastability, and the transition has a width.** Measured two ways, one anchored
+to §62's exact deterministic rate and one mentioning no reference at all, the width goes as
+**Omega^(-0.49 .. -0.51)**, stable across metastability levels and independent of rho.
+Device reading: **to halve the blur on a chemical switch's threshold, use four times the
+molecules.** The extrapolation beyond the measured decade is NOT resolved (three ansaetze
+spread 90% at Omega = 1000) -- the exponent stands, the value past the data does not.
+
+**T15-l -> §63.2: the exponent is nearly, but not exactly, §9.1's pitchfork.** w ~ Omega^(-1/nu)
+where A(gamma) ~ (gamma_c - gamma)^nu, so -1/2 says nu = 2 -- which is what §9.1's pitchfork
+predicts independently (barrier a^2/4b with a ~ gamma_c - gamma). Fitted with gamma_c held
+FIXED at the value §62 proves exactly, **nu = 1.9496 +- 0.0026, flat and non-monotone across
+nested windows, with 2 lying 9.7x the scatter away.** Note the agreement 1/nu = 0.5129 against
+the width's 0.5133 is NOT an independent confirmation -- both are readings of the same surface
+lambda_A(gamma, Omega) related by the scaling ansatz, so it confirms the ANSATZ, not nu.
+
+**T15-m, open: is nu = 2 recovered in the last 10% of the approach to gamma_c?** §63.2's
+narrowest window stops at gamma = 0.45 and the gamma = 0.46 point was excluded for a 4.33%
+drift in Omega. So 2 is excluded over [0.20, 0.45] with no drift toward it, which is not the
+same as excluding it asymptotically. **How to kill:** push the action measurement to
+gamma = 0.47-0.49, which needs Omega well beyond 500 for A_eff to converge -- the antisymmetric
+block is O(Omega^2/2) states and shift-invert was 7s at Omega = 640, so this is reachable
+rather than hypothetical. If nu stays at 1.95 the pitchfork normal form does not govern the
+escape action here and the reason is worth finding; if it climbs to 2, §63.1's exponent is
+exactly 1/2 and the 1.95 is a correction to scaling.
+
 **T15-j, open (replacing T15-i): which fixed point decides when the symmetric steady state is
 not unique?** 7.4% of drawn networks had more than one symmetric steady state and are outside
 §62's claim. **How to kill:** for those networks, evaluate the criterion at every symmetric

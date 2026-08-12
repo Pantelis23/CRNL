@@ -1120,3 +1120,34 @@ def test_criterion_agrees_with_the_ode_on_both_branches():
         assert dyn["verdict"] == pred, (g, p, dyn)
         seen.add(pred)
     assert seen == {"restore", "decay"}, "both branches must be exercised"
+
+
+def test_antisymmetric_block_spectrum_is_inside_the_full_generator():
+    """FINDINGS 63: exchange X<->Y commutes with Q, so spec(Q_A) subset spec(Q)."""
+    from crnl.cme import generator
+    from crnl.networks.am_reversible import am_reversible
+    from experiments.threshold_sharpness import antisym_block
+
+    for om in (8, 12):
+        net = am_reversible(0.30)
+        M, n = antisym_block(net, om)
+        full = np.linalg.eigvals(generator(net, om, float(om)).toarray())
+        for e in np.linalg.eigvals(M.toarray()):
+            assert np.abs(full - e).min() < 1e-9
+        assert 0 < n < len(full)
+
+
+def test_lambda_A_is_negative_and_meets_the_deterministic_rate():
+    """FINDINGS 63: no sign change at finite Omega, and above gamma_c the CME converges
+    to §62's exact (1-2g)/3 -- an absolute check, not a fit (rule 16)."""
+    from crnl.networks.am_reversible import am_reversible
+    from experiments.threshold_sharpness import lambda_A
+
+    for g in (0.30, 0.45, 0.60):
+        for om in (20, 40):
+            assert lambda_A(am_reversible(g), om) < 0
+
+    dev = [abs(lambda_A(am_reversible(0.75), om) / ((1 - 2 * 0.75) / 3) - 1.0)
+           for om in (20, 40, 80)]
+    assert dev[0] > dev[1] > dev[2], dev          # converging, not merely close
+    assert dev[-1] < 0.05

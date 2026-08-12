@@ -1,0 +1,46 @@
+=== P1 GATE (a): <c, v(x*)> (§54) vs P_at(x*) (§53)
+  worst relative disagreement over 40 networks: 7.767e-11
+  -> P1(a) HOLDS
+
+=== P1 GATE (b): AM against §55's published P(x*) = (1 - 2 gamma)/3
+   gamma          u*      P_closed    (1-2g)/3        rel
+    0.05  0.33333333   0.300000000  0.30000000   1.85e-16
+    0.20  0.33333333   0.200000000  0.20000000   2.78e-16
+    0.35  0.33333333   0.100000000  0.10000000   4.16e-16
+    0.49  0.33333333   0.006666667  0.00666667   8.33e-15
+  -> P1(b) HOLDS (worst 8.33e-15)
+  gamma_c from the criterion = 0.50000000000000   published 0.5   |diff| 1.11e-15
+
+=== P2: does sign(P at x*) predict the ODE? (one disagreement refutes)
+  120 decidable networks (60 predicted restoring, 60 predicted decaying) out of 434 drawn
+  excluded and counted: no_fp=0, multi_fp=32, marginal=0, ambiguous=0, neg_species=0, solver=7, branch_full=275
+  DISAGREEMENTS: 0
+  -> P2 HOLDS: the criterion IS the boundary, with both branches exercised (60 / 60)
+
+=== P3: two restoring rate vectors whose SUM does not restore?
+  COUNTEREXAMPLE: classes [7, 8]  P(c1)=+5.535e-02  P(c2)=+6.975e-02  P(c1+c2)=-2.142e-01
+  drew 6000 pairs, of which 210 had BOTH restoring (only those can test convexity); found 1 counterexamples
+  -> P3 the realising set is NOT convex -- §56's cone does not transport
+
+=== P4 (rule 9): is the criterion LOCAL only? verdict vs kick size d0
+  20 restoring + 20 decaying networks re-integrated
+        d0    agree   ambig   flip  dropped
+     1e-06       40       0      0        0
+     1e-04       40       0      0        0
+     1e-02       40       0      0        0
+     1e-01       39       0      0        1
+  -> verdict is d0-INDEPENDENT: the criterion is global on this family
+
+=== P5: gamma_c in closed form, for AM and for other class-sets
+         network       gamma_c   u* at g_c   note
+    AM {dis,rec}    0.50000000  0.33333333
+         AM+cls0            --          --   restores at NO gamma  (P: -1.000e+00 .. -1.666e+00)
+         AM+cls1            --          --   restores at NO gamma  (P: -9.997e-05 .. -3.332e-01)
+         AM+cls2            --          --   restores at NO gamma  (P: -2.333e+00 .. -2.999e+00)
+         AM+cls3            --          --   restores at NO gamma  (P: -1.000e+00 .. -3.332e+00)
+         AM+cls4            --          --   restores at NO gamma  (P: -2.007e-01 .. -1.666e+00)
+         AM+cls5    0.16666667  0.33333333
+         AM+cls6    0.38829144  0.30585428
+         AM+cls9            --          --   restores at NO gamma  (P: -8.000e-05 .. -6.661e-01)
+
+(249s) wrote results/restoration_boundary.json

@@ -1031,3 +1031,92 @@ def test_prefactor_ratio_is_theta_independent():
                                / p_err_2d(net, 150, n0, thr)))
     assert got[0.80][0] != got[0.70][0], "the thresholds must actually differ"
     assert got[0.80][1] == pytest.approx(got[0.70][1], abs=1e-6)
+
+
+def test_symmetric_fixed_point_criterion_reproduces_gamma_c():
+    """FINDINGS 62: P at the symmetric steady state is (1-2g)/3 and vanishes at g_c = 1/2.
+
+    §55 measured the value; §62 uses it as a CRITERION, so the root must land on the
+    published 1/2 without a fit (rule 16).
+    """
+    from scipy.optimize import brentq
+    from crnl.networks.am_reversible import am_reversible
+    from experiments.restoration_boundary import P_closed, symmetric_fixed_points
+
+    def amP(g):
+        net = am_reversible(g)
+        fps = symmetric_fixed_points(net, n=801)
+        assert len(fps) == 1
+        return P_closed(net, fps[0])
+
+    for g in (0.05, 0.20, 0.35, 0.49):
+        assert amP(g) == pytest.approx((1.0 - 2.0 * g) / 3.0, abs=1e-12)
+    assert brentq(amP, 0.05, 0.95, xtol=1e-14) == pytest.approx(0.5, abs=1e-12)
+
+
+def test_decomposition_matches_antisymmetric_eigenvalue_on_symmetric_line():
+    """FINDINGS 62: §54's <c, v(x)> equals §53's P_at on the symmetric line."""
+    from experiments.restoration_boundary import P_closed, _sym_state
+    from experiments.amplification_sign import P_at
+    from experiments.optimal_element import symmetric_classes
+    from experiments.free_rate_optimum import build_free
+
+    rng = np.random.default_rng(7)
+    cls = symmetric_classes()
+    checked = 0
+    for _ in range(25):
+        ids = rng.choice(len(cls), size=2, replace=False)
+        net = build_free([cls[i] for i in ids], np.exp(rng.uniform(-2, 2, 4)))
+        u = float(rng.uniform(0.05, 0.45))
+        a = P_closed(net, u)
+        if a is None:
+            continue
+        assert a == pytest.approx(P_at(net, _sym_state(u), 0, 1, h=1e-6), rel=1e-6,
+                                  abs=1e-12)
+        checked += 1
+    assert checked >= 15
+
+
+def test_realising_set_is_not_convex():
+    """FINDINGS 62.2: two restoring rate vectors in AM's own classes sum to a
+    non-restoring one, so §56's cone covers capability but NOT realisation."""
+    from experiments.optimal_element import symmetric_classes
+    from experiments.free_rate_optimum import build_free
+    from experiments.restoration_boundary import P_closed, symmetric_fixed_points
+
+    cls = symmetric_classes()
+    ids = [7, 8]                       # {X+Y->2B} and {B+X->2X, B+Y->2Y}: AM
+    c1 = np.array([0.8273, 7.9309, 5.2147, 0.4279])
+    c2 = np.array([1.6947, 0.0782, 2.8352, 1.3938])
+    got = []
+    for c in (c1, c2, c1 + c2):
+        net = build_free([cls[i] for i in ids], c)
+        fps = symmetric_fixed_points(net, n=2001)
+        assert len(fps) == 1
+        got.append(P_closed(net, fps[0]))
+    assert got[0] > 0 and got[1] > 0, "both summands must restore"
+    assert got[2] < 0, "their sum must not -- this is the counterexample"
+
+
+def test_criterion_agrees_with_the_ode_on_both_branches():
+    """FINDINGS 62.1: sign(P at x*) predicts the mass-action ODE, restoring AND decaying.
+
+    Gated on both branches firing -- the first version of §62's P2 drew 20 networks that
+    were all on the decaying side and printed a verdict off a branch that never ran.
+    """
+    from crnl.networks.am_reversible import am_reversible
+    from experiments.restoration_boundary import (P_closed, dynamics_verdict,
+                                                  symmetric_fixed_points)
+
+    seen = set()
+    for g in (0.20, 0.35, 0.60, 0.80):          # gamma_c = 1/2 straddled deliberately
+        net = am_reversible(g)
+        fps = symmetric_fixed_points(net, n=801)
+        assert len(fps) == 1
+        p = P_closed(net, fps[0])
+        dyn = dynamics_verdict(net, fps[0], 1e-4)
+        assert dyn is not None and not dyn["neg"]
+        pred = "restore" if p > 0 else "decay"
+        assert dyn["verdict"] == pred, (g, p, dyn)
+        seen.add(pred)
+    assert seen == {"restore", "decay"}, "both branches must be exercised"

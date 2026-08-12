@@ -1849,6 +1849,12 @@ propensity). Conflating them is what produced the bug.
 tuned.** §53 said "restoration is tuned, not topological". That is half right, and §54's
 decomposition contained the other half.
 
+> **Qualified by §62.** "Tuned" now has a criterion -- realisation is decided by
+> `sum_r c_r d_r B_r(x*) > 0` at the symmetric steady state -- and the convexity below is
+> a statement about **capability only**. The realising set of rate vectors is **not** convex:
+> §62.2 gives two restoring c in AM's own classes whose sum does not restore. Nothing measured
+> in §56 changes; what changes is that its cone must not be read as covering realisation.
+
 P is LINEAR in the rate constants: with v_r(x) = d_r B_r(x), P(x) = <c, v(x)>. So a network
 fails to restore exactly when <c, v(x)> <= 0 for every accessible x, and that is closed
 under addition and positive scaling:
@@ -1895,14 +1901,35 @@ capable, ~49% realise it at randomly drawn rates. So "the transistor is a near-i
 restoring switch" splits into a structural claim that is decidable and a tuning claim that is
 not.
 
-**T15-i, open: is the restoration cone's boundary computable in closed form?** The cone is
-the polar of conv{v(x)}, so its facets are determined by the extreme points of {d_r B_r(x)}
-over the accessible set. For AM that boundary is gamma = gamma_c(n), already known in closed
-form (§55). **How to kill:** compute the extreme points of {v(x)} for the cofactor and cubic
-families of §42/§43 and check whether the resulting facet inequalities reproduce their
-measured restoration boundaries. If they do, the trichotomy becomes constructive -- one could
-DESIGN a restoring network by choosing d_r and then solving a linear feasibility problem for
-the rates.
+**~~T15-i, open: is the restoration cone's boundary computable in closed form?~~ -> §62:
+YES, AND IT IS NOT THE CONE'S BOUNDARY.** The question as posed asked for the facets of the
+polar of conv{v(x)} over the accessible set. That is the boundary of **capability**, and it
+is the wrong object: the state that decides is not an arbitrary accessible x but the
+**symmetric steady state x\***, the decision point the dynamics occupies. §55 had already
+measured P there -- (1 - 2 gamma)/3 for AM, vanishing at gamma_c = 1/2 -- without noticing it
+was a criterion. So:
+
+> **RESTORES  <=>  sum_r c_r d_r B_r(x\*) > 0**, one linear inequality in the rate constants
+> at fixed x\*, for any exchange-symmetric mass-action network.
+
+Verified against the DYNAMICS rather than against another algebraic rule: 120 networks, 60
+predicted restoring and 60 decaying, **0 disagreements**; reproduces AM's published
+gamma_c = 1/2 to 1.1e-15. The trichotomy is now constructive -- pick d_r, then solve a linear
+feasibility problem in c at the self-consistent x\*.
+
+**And §56's convexity does NOT transport, which the original framing would have got wrong.**
+The cone theorem needs P linear in c at FIXED x; x\*(c) moves with c. §62.2 exhibits two
+restoring rate vectors **in AM's own two classes** whose sum does not restore
+(P = +5.5e-2, +6.98e-2, sum -2.14e-1; confirmed by the ODE at x6236, x5659, x1.1e-12).
+**Capability is a convex cone; realisation is not convex.**
+
+**T15-j, open (replacing T15-i): which fixed point decides when the symmetric steady state is
+not unique?** 7.4% of drawn networks had more than one symmetric steady state and are outside
+§62's claim. **How to kill:** for those networks, evaluate the criterion at every symmetric
+fixed point and ask which one's sign matches the ODE from a small kick at each. The natural
+guess is that the one that decides is the one reached from the relevant basin, which would
+make the criterion basin-dependent rather than network-dependent -- a strictly weaker
+statement than §62's, and worth knowing before §62 is cited beyond its stated scope.
 
 **T-OPT -> §57: an exhaustive search REDISCOVERS AM, and the optimum is what §54
 predicted.** The founding question, with §56 making it tractable. On {X,Y,B} with X+Y+B

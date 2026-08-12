@@ -7713,3 +7713,100 @@ that is correct to 0.006% in the slaved limit. **A prefactor calculation now has
 with a known form and a known set of arguments — (γ, ε) and not θ** — which is what an
 analytic route (Assaf–Meerson, or the cat-qubit path integral of arXiv:2507.18714 noted in
 THEORIES §5) would have to reproduce.
+
+---
+
+### 62 The restoration boundary is a closed form — T15-i, and §56's cone does not survive it
+
+§56 proved the non-restoring rate vectors form a convex cone and that **capability** is
+combinatorial: some d_r > 0 suffices. It said nothing about **realisation**, and left the
+trichotomy half-finished — "tuned" is the absence of a criterion, not a criterion.
+
+**§55 already contained the missing half.** It measured P at the symmetric fixed point and
+got (1−2γ)/3 for AM, vanishing exactly at γ_c = 1/2. So the state that decides realisation
+is not an arbitrary accessible x — **it is the symmetric steady state, the decision point the
+dynamics actually occupies** — and §54 gives P there explicitly:
+
+> **RESTORES ⟺ Σ_r c_r d_r B_r(x\*) > 0**,  d_r = S_X(r) − S_Y(r),  B_r(x\*) ≥ 0
+>
+> a **single linear inequality in the rate constants at fixed x\***, for any
+> exchange-symmetric mass-action network — §43 makes P exist, §54 makes it explicit, and no
+> simulation is involved.
+
+**Gates.** §54's closed form equals §53's `P_at` on the symmetric line to **7.8e-11** over 40
+random networks. For AM it reproduces §55's published (1−2γ)/3 to **8.3e-15**, and
+root-finding the criterion returns **γ_c = 0.50000000000000**, |diff| **1.1e-15** — an
+absolute check against a stored number, not a fit (rule 16).
+
+### 62.1 Tested against the dynamics, not against another rule
+
+sign(P at x\*) versus the full mass-action ODE integrated from x\* with an antisymmetric
+kick. **120 decidable networks drawn from 434, 60 predicted restoring and 60 decaying, and
+0 disagreements.** Excluded and counted rather than dropped: 32 with more than one symmetric
+fixed point, 7 solver, 275 refused because their branch was already full. None marginal,
+none ambiguous, none with a species going negative (rule 10's guard: the integrator never
+clips, it discards).
+
+> ⚠ **The first version of this test could not fail, and that is rule 19 again.** It drew 20
+> networks, the criterion predicted **20 decaying and 0 restoring**, and it printed "P2 HOLDS:
+> the criterion IS the boundary" — off a branch that never ran. Random class-sets are almost
+> never capable, so the restoring half of a two-sided claim was simply absent. The sampling is
+> now stratified and **the verdict is gated on both branches having ≥ 30 cases**, printing
+> UNDER-TESTED otherwise. The 60/60 above is what that gate is for.
+
+### 62.2 The realising set is NOT convex — and the counterexample is AM itself
+
+§56's cone theorem needs P linear in c at **fixed** x. Here x\*(c) moves with c, so the
+argument cannot transport. Searching 6000 pairs, of which **210 had both members restoring**
+(only those can test convexity), found one counterexample — in **AM's own two classes**,
+{X+Y→2B} and {B+X→2X, B+Y→2Y}, with free forward and reverse rates:
+
+| | k_dis^f | k_dis^r | k_rec^f | k_rec^r | u\* | P | ODE |
+|---|---|---|---|---|---|---|---|
+| c₁ | 0.8273 | 7.9309 | 5.2147 | 0.4279 | 0.45718 | **+5.535e−2** | restores, spread ×6236 |
+| c₂ | 1.6947 | 0.0782 | 2.8352 | 1.3938 | 0.32696 | **+6.975e−2** | restores, spread ×5659 |
+| **c₁+c₂** | 2.5220 | 8.0091 | 8.0499 | 1.8217 | 0.41858 | **−2.142e−1** | **decays, ×1.1e−12** |
+
+Verified three independent ways per rule 14 — the closed form, §53's `P_at` (agreeing to all
+printed digits), and the ODE — and none of the three values is marginal.
+
+> **Two restoring elements can sum to a non-restoring one.** §56's convexity is a property of
+> **capability** and does not extend to **realisation**; the mechanism is visible in the table,
+> since x\* moved from 0.457 and 0.327 to 0.419 and P is not monotone along that path.
+
+### 62.3 Critical points this project did not have
+
+The criterion is constructive, so γ_c follows for any class-set by one root-find:
+
+| network | γ_c | u\* at γ_c |
+|---|---|---|
+| AM {X+Y→2B, B+X→2X} | **0.50000000** (gate: published) | 0.33333333 |
+| AM + {X+Y→2X, X+Y→2Y} | **0.16666667** (= 1/6) | 0.33333333 |
+| AM + {X+Y→B+X, X+Y→B+Y} | **0.38829144** | **0.30585428** |
+| AM + five other classes | — | restore at **no** γ (P from −8.0e−5 to −3.3e0) |
+
+The third is the interesting one: adding that class **moves the symmetric fixed point off
+1/3**, which is why its γ_c is not a simple fraction. The first two keep x\* at 1/3 and give
+exact rationals.
+
+### 62.4 Scope, and a second criterion caught by rule 19
+
+The criterion is a linearisation, so rule 9 demands an axis I did not choose: the kick size.
+Over d₀ = 10⁻⁶ … 10⁻¹, **40/40 verdicts agree at every decade** — d₀-independent, so on this
+family the criterion is global and not merely local.
+
+> ⚠ **It did not read that way at first, and the fault was again the verdict rule.** The
+> original P4 declared restoration at "spread ratio ≥ 10". At d₀ = 0.1 that printed **20
+> ambiguous**, which looks like the criterion failing at large kicks. Reading the cells
+> (rule 18) instead of the summary: all 20 were restoring networks whose spread had
+> **saturated at s₁ = 0.70–1.00** — they restored completely — while s₀ was already 0.11–0.43.
+> The normalised spread cannot exceed 1, so the largest attainable ratio is 1/s₀, and that was
+> **2.3–9.5 in every one of the 20**. *The threshold was unreachable by construction.* A
+> conservative geometric estimate caught only 5 of the 20; the cells had to be read one by
+> one. Replaced by a ceiling-aware rule, s₁ ≥ min(10 s₀, 0.5), which is satisfiable at every
+> d₀ and identical at the small d₀ where §62.1 runs — §62.1's 60/60 is unchanged by the fix.
+
+**Stated scope.** Conservative bimolecular networks on {X, Y, B} with a **unique** symmetric
+steady state; 7.4% of draws had more than one and are outside the claim, since which fixed
+point decides is then undetermined. The dynamical test is mass-action, not CME — this is a
+statement about the deterministic restoring element, which is what §56's trichotomy was about.

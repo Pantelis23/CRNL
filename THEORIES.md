@@ -1989,6 +1989,32 @@ kill:** read Montoya/Cruz/Agreda and the MATCH algebraic-analysis paper properly
 whether the racemic-stability condition is ever written as a nonneg-weighted sum over
 reactions carrying combinatorial signs. Until then §65 claims priority for nothing.
 
+**T-CASC-a -> §72: CLOSED. THE DEPTH CEILING TRANSFERS -- the first quantity in this
+project that does.** Both routes through the matrix exponential wall out (§71.2), including the
+second-eigenvalue route, which still needs exp(Qt)v. The reduction that works avoids the
+exponential entirely and is exactly the regime §12's formula describes: in the fully-restoring
+limit the chemistry contributes one number per rail, the probability of committing to the wrong
+one, which is the EXACT birth-death splitting probability §61/§69 already compute in closed
+form. O(cap) per cell. The element is asymmetric so eps_hi != eps_lo and the cascade is a binary
+ASYMMETRIC channel, handled by a two-state chain.
+
+All three channels saturate in Omega up to 28800, and the ratio of measured D_max to
+exp(Delta^2/2 sigma^2)/4 lands on AM's published ratios: **2.71 / 3.04 / 3.75 against AM's
+3.00 / 3.38 / 3.33** at sigma/Delta = 0.45 / 0.35 / 0.28. §12's ceiling, which AM overshoots by
+~3x, is overshot by ~3x on an element with one species, no symmetry, chemostats and a different
+reaction order.
+
+**CAVEAT that keeps this at "tens of percent", not 10%:** this is the t_stage -> infinity
+idealisation and AM's numbers are finite-t. The gap is measured -- at Omega = 400, f = 0.45 the
+finite-time cascade plateaus at 5.10 against the saturated 6-7 -- so a like-for-like correction
+moves the disagreements to roughly 25/25/10%. Still a different category from a quantity with
+no counterpart (§67) or one varying 4x inside a family (§68).
+
+**Standing statement: the THERMODYNAMIC accounting of restoration is substrate-specific; the
+INFORMATION-THEORETIC accounting is not.** What makes a restoring element good at composing is
+how far apart its rails are relative to the noise, and that transfers across chemistry with
+nothing in common.
+
 **T-CASC-a's kill test is REPLACED by §71.2, because the obvious route makes things worse.**
 Going sparse -- exp(Qt)v by expm_multiply plus a Gaussian convolution instead of a dense
 kernel -- was built and VALIDATED against the exact instrument to 3e-6 in I with D_max

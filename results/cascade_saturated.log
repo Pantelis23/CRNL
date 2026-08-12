@@ -1,0 +1,29 @@
+rails 0.1/1.9, saddle 1.0, Delta = 0.8999999999999999
+
+=== P2 GATE: is p_cross a proper splitting probability?
+  p_cross at low rail 1.000000, saddle 0.538581, high rail 0.000000
+  range [0.000e+00, 1.000000], monotone decreasing: True
+  -> P2 HOLDS
+
+=== P1 GATE: does §71's finite-t cascade approach this limit as t grows?
+  saturated D_max at Omega=400, f=0.45: 6.0
+    t_stage=  2.0: finite-time D_max = 4.3867076988670775
+    t_stage=  6.0: finite-time D_max = 5.106281343690258
+    t_stage= 18.0: finite-time D_max = 5.103459257127771
+  -> P1: the finite-time ceiling must rise toward the saturated value as t grows
+
+=== P3/P4: does D_max saturate in Omega?
+     f       W=400       W=900      W=1800      W=3600      W=7200     W=14400     W=28800
+  0.45         6.0         7.0         7.0         7.0         7.0         7.0         8.0
+       last three spread  13.64% against tolerance 20.45% (quantisation-aware)   -> SATURATED
+  0.35        30.0        38.0        42.0        43.0        44.0        45.0        45.0
+       last three spread   2.24% against tolerance  5.00% (quantisation-aware)   -> SATURATED
+  0.28       200.0       358.0       447.0       499.0       528.0       543.0       551.0
+       last three spread   4.25% against tolerance  5.00% (quantisation-aware)   -> SATURATED
+
+=== P4: ratio to exp(Delta^2/2 sigma^2)/4, gated on P3
+  f=0.45: measured 8.0, predicted 2.95, ratio 2.71  against AM's 3.00 -- 10%  -> TRANSFERS
+  f=0.35: measured 45.0, predicted 14.81, ratio 3.04  against AM's 3.38 -- 10%  -> TRANSFERS
+  f=0.28: measured 551.0, predicted 147.12, ratio 3.75  against AM's 3.33 -- 13%  -> TRANSFERS
+
+wrote results/cascade_saturated.json

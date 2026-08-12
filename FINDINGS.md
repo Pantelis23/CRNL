@@ -8610,3 +8610,77 @@ which method sets it.
 > `p @ (C @ K)`, channel then chemistry — which left a half-stage offset worth **~1%** in
 > D_max. A faster instrument that disagreed with the exact one would have been worse than no
 > instrument, and neither bug is visible in the output of the fast path alone.
+
+---
+
+### 72 The depth ceiling TRANSFERS — the first quantity in this project that does
+
+§71 left T-CASC-a undecided and §71.2 showed the wall was structural: `‖Qt‖ ~ Ω` because
+propensities are extensive, so every exponential method — dense or sparse — walls out near 10⁴
+states. §71.2 proposed the stage map's second eigenvalue, **which inherits the same wall**,
+since applying `C·K` still needs `exp(Qt)v`.
+
+**The right reduction avoids the exponential entirely, and it is exactly the regime in
+question.** §12's ceiling describes the limit where each stage *fully restores*. In that limit
+the chemistry contributes one number per rail — the probability of committing to the wrong one
+— so the per-stage error is
+
+    ε = Σ_n q(n)·p_cross(n)
+
+with `q` the channel's output from a rail and **`p_cross` the exact birth–death splitting
+probability**, which §61/§69 already compute in closed form from the scale function, in logs,
+with no solve. **O(cap) per cell, no exponential anywhere.** The element is asymmetric, so
+ε_hi ≠ ε_lo and the cascade is a binary *asymmetric* channel — handled exactly by a two-state
+chain, where `(1−2ε)^D` would be wrong.
+
+| σ/Δ | Ω=400 | 1800 | 7200 | 28800 | **saturated** | predicted | **ratio** | AM's ratio |
+|---|---|---|---|---|---|---|---|---|
+| 0.45 | 6 | 7 | 7 | 8 | ✓ | 2.95 | **2.71** | 3.00 |
+| 0.35 | 30 | 42 | 44 | 45 | ✓ | 14.81 | **3.04** | 3.38 |
+| 0.28 | 200 | 447 | 528 | 551 | ✓ | 147.12 | **3.75** | 3.33 |
+
+> **All three channels saturate in Ω, and all three ratios land on AM's — 10%, 10%, 13%.**
+> §12's ceiling `D_max ≈ exp(δ*²/2σ²)/4`, which AM overshoots by ≈3×, is overshot by ≈3× on an
+> element with one species, no symmetry, chemostats, and a different reaction order.
+
+**This is the first quantity in the project to transfer across substrates**, and it is the one
+that was *predicted* to — §71 wrote that prior deliberately, against three prior failures, on
+the grounds that the depth ceiling is information-theoretic rather than thermodynamic. Set
+against §67 (cost per e-fold: no counterpart at all) and §68 (affinity floor: varies 4× inside
+one family), the contrast is now measured rather than suggested.
+
+### 72.1 The caveat that keeps this at "tens of percent"
+
+**The two sides are not perfectly like-for-like, and the mismatch runs one way.** This
+measures the t_stage → ∞ idealisation; AM's published 9 / 50 / 489 were measured at *finite*
+stage time. P1 quantifies the gap: at Ω = 400, σ/Δ = 0.45 the finite-time cascade plateaus at
+**5.10** (t = 6 and t = 18 agree) against the saturated **6–7** — the saturated value is an
+upper bound, ~25% high.
+
+So a like-for-like correction would raise AM's effective ratios by roughly that much, moving
+the disagreements from 10/10/13% to something nearer 25/25/10%. **The honest claim is that the
+ceiling transfers to within tens of percent, not to 10%** — which is still a different
+category from a quantity that has no counterpart or varies fourfold.
+
+> ⚠ **Two more criteria of mine, both caught.** The saturation test demanded spread < 5%, but
+> D_max is an **integer** depth, so at D_max ≈ 7 one unit of quantisation is 14% and the test
+> could never pass there — the f = 0.45 column read 6,7,7,7,7,7,8 and was declared "still
+> moving". Now `max(5%, 1.5 units/mean)`. And `p_cross` was written with a per-state
+> log-sum-exp loop, O(cap²), which could not reach the Ω this experiment exists to test;
+> replaced by a suffix cumulative sum in O(cap), **gated against the O(cap²) version to
+> 9.8e−15**.
+
+### 72.2 What the founding claim now says
+
+| you buy | you pay | transfers? |
+|---|---|---|
+| existence of a landscape | a nonzero drive | **no** — element-specific (§68) |
+| gain (e-folds) | entropy per molecule | **no counterpart** off a closed element (§67) |
+| reliability | molecules, exp(−cΩ) | yes, by construction |
+| **composition depth** | **channel noise against rail separation** | **YES — §72** |
+
+**The thermodynamic accounting of restoration is substrate-specific; the information-theoretic
+accounting is not.** That is the sharpest form the founding claim has taken here: what makes a
+restoring element good at composing is *how far apart its rails are relative to the noise* —
+and that quantity, unlike every price attached to it, is the same across chemistry with
+nothing in common.

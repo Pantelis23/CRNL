@@ -1,0 +1,64 @@
+=== P1 GATE: closed form vs direct solve of the SAME 1-D chain
+  Omega=  60: closed 5.3701217952e-03  solve 5.3701217952e-03  rel 9.69e-15
+  Omega= 100: closed 3.5002621011e-04  solve 3.5002621011e-04  rel 1.01e-14
+  Omega= 150: closed 1.8817897953e-05  solve 1.8817897953e-05  rel 8.64e-15
+  -> P1 HOLDS
+
+=== P3/P5: ln(P_1D / P_2D) vs Omega, at each rho
+
+  rho = 1.0   (delta* = 0.8165)
+  Omega           P_1D           P_2D    ln(1D/2D)
+    100   3.500262e-04   2.502703e-04      0.33547
+    150   1.881790e-05   1.295474e-05      0.37335
+    200   1.547980e-06   1.124385e-06      0.31971
+    300   3.624780e-09   2.496001e-09      0.37310
+    400   8.976939e-12   5.862223e-12      0.42613
+    500   2.293334e-14   1.420461e-14      0.47903
+    slope d ln(ratio)/d Omega = +0.000345   intercept +0.2895   span 0.1593
+
+  rho = 4.0   (delta* = 0.8192)
+  Omega           P_1D           P_2D    ln(1D/2D)
+    100   3.500215e-06   2.588825e-06      0.30162
+    150   4.757966e-08   3.863366e-08      0.20828
+    200   1.825115e-10   1.539699e-10      0.17006
+    300   5.606078e-15   4.943775e-15      0.12572
+    400   3.499431e-19   3.452250e-19      0.01357
+    500   1.174404e-23   1.210138e-23     -0.02997
+    slope d ln(ratio)/d Omega = -0.000787   intercept +0.3480   span 0.3316
+
+  rho = 16.0   (delta* = 0.8197)
+  Omega           P_1D           P_2D    ln(1D/2D)
+    100   5.618724e-07   4.113156e-07      0.31191
+    150   3.778097e-09   2.938864e-09      0.25120
+    200   5.727529e-12   4.547748e-12      0.23065
+    300   3.074754e-17   2.533493e-17      0.19363
+    400   1.748132e-22   1.494778e-22      0.15657
+    500   4.720162e-27   4.242570e-27      0.10667
+    slope d ln(ratio)/d Omega = -0.000462   intercept +0.3355   span 0.2052
+
+  rho = 64.0   (delta* = 0.8198)
+  Omega           P_1D           P_2D    ln(1D/2D)
+    100   7.536483e-07   5.523078e-07      0.31082
+    150   1.843491e-09   1.368606e-09      0.29787
+    200   4.759130e-12   3.567676e-12      0.28815
+    300   7.023210e-18   5.271155e-18      0.28697
+    400   2.433500e-23   1.859443e-23      0.26905
+    500   1.931885e-28   1.501549e-28      0.25200
+    slope d ln(ratio)/d Omega = -0.000132   intercept +0.3206   span 0.0588
+
+=== P3 verdict: FLAT (prefactor) or LINEAR (exponent mismatch)?
+  rho=   1.0: slope +0.000345, total drift over the Omega range +0.1382 nats  -> FLAT, a prefactor ratio
+  rho=   4.0: slope -0.000787, total drift over the Omega range +0.3149 nats  -> LINEAR, exponents differ
+  rho=  16.0: slope -0.000462, total drift over the Omega range +0.1848 nats  -> FLAT, a prefactor ratio
+  rho=  64.0: slope -0.000132, total drift over the Omega range +0.0530 nats  -> FLAT, a prefactor ratio
+
+=== P5 (rule 9): does the slope shrink with rho, as §39.2 requires?
+  rho=1.0:+0.000345   rho=4.0:-0.000787   rho=16.0:-0.000462   rho=64.0:-0.000132
+  -> slope SHRINKS with rho: the discrepancy is the slow-manifold lag
+
+=== P6: the prefactor ratio, where the ratio is flat
+  rho=1.0: P_1D/P_2D = 1.46883  over Omega 100..500  (spread 0.1593 nats)
+  rho=16.0: P_1D/P_2D = 1.23175  over Omega 100..500  (spread 0.2052 nats)
+  rho=64.0: P_1D/P_2D = 1.32862  over Omega 100..500  (spread 0.0588 nats)
+
+(38s) wrote results/prefactor_1d.json

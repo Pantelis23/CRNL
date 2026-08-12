@@ -2642,6 +2642,23 @@ though its coefficients are not. Predict the curve, not the coefficients. Measur
 directly would need 1/Omega decorrelated over ~100x -- Omega ~ 15,000, ~1e8 states --
 out of reach for the exact solver and not worth reaching for when the analysis exists.
 
+**T14-e, NARROWED by §61: the prefactor discrepancy is a START effect, and the exponent
+is exact.** §35.3's proof that fitting cannot separate prefactor from exponent is about
+the 2-D problem. §50's exact 1-D slaved chain has a CLOSED-FORM splitting probability
+(scale-function sums evaluated in logs -- no solve, no fit, no cancellation), and §44's
+rho is a lever that drives sep -> infinity, which §39.2 says makes the reduction exact.
+Together they separate the two: an exponent error is a SLOPE in ln(P_1D/P_2D) vs Omega,
+a prefactor is an INTERCEPT. At rho = 1024 the slope vanishes (**exponent error 0.006%**,
+span 0.0138 nats against ln P ~ 70) and a constant intercept survives. That constant is
+**not universal** -- it moves with gamma (1.26-1.60) and strongly with eps (1.37->1.83) --
+**but it is exactly theta-independent**, identical to four decimals while the threshold
+moves 14% (thr 98 vs 86, 328 vs 287). **So the reduction gets the quasi-stationary escape
+mode right and its excitation wrong**: the error is a function of (gamma, eps) alone.
+**How to kill / what would settle it:** an Assaf-Meerson dissipative-WKB prefactor for
+the 2-D problem must reproduce a ratio-to-the-1-D-chain that is a function of the START
+and independent of the absorbing threshold. That is now a falsifiable target with known
+arguments, which it was not before §61. **Still open:** the prefactor itself.
+
 **Superseded, kept for the record:** **T14-d -> §35.2: NOT CLOSED. Both dependencies survive, and that is the answer for
 now.** Matched-decade sweeps do not collapse the gamma-spread (at the one genuinely
 matched target, 21 decades with a 7.5% span, b still runs -0.4519/-0.4352/-0.4172

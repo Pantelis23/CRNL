@@ -996,3 +996,38 @@ def test_fluctuation_theorem_factorises_over_outcomes():
         assert r["Phi_e"] / r["p_e"] == pytest.approx(1.0, abs=0.08)
         # and the hypothesis it refutes: Phi_e is nowhere near p_c
         assert r["Phi_e"] / p_c < 0.3
+
+
+def test_1d_closed_form_matches_direct_solve():
+    """FINDINGS 61: the birth-death splitting probability in logs, against a sparse solve."""
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho
+    from experiments.prefactor_1d import _setup, p_err_1d, p_err_1d_solve
+
+    net, ds = am_rho(0.20, 1.0), delta_star_rho(0.20, 1.0)
+    for om in (60, 100, 150):
+        s = _setup(net, ds, om, 0.35, 0.80)
+        assert s is not None
+        _, thr, d0 = s
+        a, b = p_err_1d(net, om, d0, thr), p_err_1d_solve(net, om, d0, thr)
+        assert a == pytest.approx(b, rel=1e-8)
+
+
+def test_prefactor_ratio_is_theta_independent():
+    """FINDINGS 61: the 1-D/2-D prefactor ratio depends on the START, not the threshold.
+
+    theta = 0.80 and 0.70 give thresholds differing by 14% and identical ratios, which
+    localises the whole discrepancy to how the initial condition excites the escape mode.
+    """
+    from experiments.arrhenius_optimum import am_rho, delta_star_rho
+    from experiments.prefactor_1d import _setup, p_err_1d, p_err_2d
+
+    net, ds = am_rho(0.20, 1024.0), delta_star_rho(0.20, 1024.0)
+    got = {}
+    for th in (0.80, 0.70):
+        s = _setup(net, ds, 150, 0.35, th)
+        assert s is not None
+        n0, thr, d0 = s
+        got[th] = (thr, np.log(p_err_1d(net, 150, d0, thr)
+                               / p_err_2d(net, 150, n0, thr)))
+    assert got[0.80][0] != got[0.70][0], "the thresholds must actually differ"
+    assert got[0.80][1] == pytest.approx(got[0.70][1], abs=1e-6)

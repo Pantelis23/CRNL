@@ -7638,3 +7638,78 @@ is p_c + p_e = 1 wearing a disguise.
 exact. And a closed door: **entropy production and decision outcome do not couple through the
 fluctuation theorem**, so the exact reliability–dissipation relation this project has been
 circling since §37 is not to be found there.
+
+---
+
+### 61 The reduction's exponent is exact and its prefactor is a START effect — T14-e
+
+§35.3 proved the prefactor cannot be extracted **numerically** from the 2-D problem: the
+candidate basis functions are collinear over any accessible Ω range (correlations 0.961 and
+0.986, condition number 2.8×10⁸), so a slowly-varying prefactor and a slightly wrong exponent
+cannot be told apart by fitting. That stands. **But §50's exact 1-D slaved chain is an
+instrument §35.3 did not have**, because a birth–death chain's splitting probability is
+closed-form:
+
+    P(hit a before b | i) = Σ_{k=i}^{b−1} π_k / Σ_{k=a}^{b−1} π_k,   ln π_k = Σ [ln μ_j − ln λ_j]
+
+evaluated in logs — **exact at any Ω, no solve, no fitting**, and naming the wrong outcome
+directly as §35 requires. Verified against a sparse solve of the same chain to <10⁻⁸.
+
+**And §44's ρ is the knob that separates the two.** An exponent error shows as a *slope* in
+ln(P_1D/P_2D) versus Ω; a prefactor shows as an *intercept*. §39.2 says the reduction becomes
+exact as sep → ∞, so driving ρ up kills the slope and leaves the intercept clean. §35.3 had
+no such knob — ρ did not exist until §44.
+
+| ρ | exponent error | ln(P_1D/P_2D) span | intercept |
+|---|---|---|---|
+| 64 | 0.107% | 0.069 | 0.3209 |
+| 256 | — | 0.022 | 0.3201 |
+| **1024** | **0.006%** | **0.0138** | **0.3188** |
+
+At ρ = 1024 the ratio reads **0.3143, 0.3249, 0.3112, 0.3146, 0.3140** across Ω = 150…700 —
+a span of **0.0138 nats while ln P itself spans ~70**. **The exponent is exact in the slaved
+limit**, confirming §39.2 on a new axis and for the error probability rather than the time,
+and **a constant prefactor ratio survives.**
+
+### 61.1 The prefactor is a property of the START, not the boundary
+
+The surviving constant is **not universal** — checked before writing it down rather than
+after:
+
+| γ | ε=0.35, θ=0.80 | ε=0.50, θ=0.80 | ε=0.35, **θ=0.70** |
+|---|---|---|---|
+| 0.10 | 1.6002 | 2.3790 | **1.6002** |
+| 0.20 | 1.3720 | 1.8299 | **1.3720** |
+| 0.30 | 1.2556 | 1.5484 | **1.2556** |
+
+It varies with γ (1.26 → 1.60) and strongly with ε (1.37 → 1.83 at γ = 0.20). **So there is
+no constant to name** — and per §49's precedent that declined π on two cells, the check came
+first.
+
+> **But the θ column is identical to four decimals, and the thresholds genuinely differ** —
+> thr = 98 vs 86 at Ω = 150, 328 vs 287 at Ω = 500, a 14% change that moves nothing.
+>
+> **The prefactor discrepancy between the 1-D reduction and the exact 2-D CME depends on the
+> START and not at all on where the threshold is read.**
+
+That localises T14-e. Both descriptions relax into the same quasi-stationary escape mode; the
+threshold only reads that mode out, so it cannot affect the ratio. What differs is **how much
+of the initial condition feeds into the mode** — set by the start ε and the landscape shape
+γ, and by nothing downstream. **The 1-D reduction gets the escape mode exactly right and its
+excitation wrong.**
+
+> ⚠ **Rule 19's first live catch, on the run that motivated it.** P3's verdict criterion
+> thresholded the *absolute* drift at 0.2 nats. The four values were 0.138, 0.315, 0.185,
+> 0.053 — straddling the threshold, so the verdict flip-flopped non-monotonically in ρ
+> (FLAT, LINEAR, FLAT, FLAT) on data that is in fact monotone. **The criterion was measuring
+> noise around its own threshold.** Normalising the drift by the range of ln P turns it into
+> an exponent error and the picture becomes monotone and interpretable. Written one commit
+> after the rule, and caught by it.
+
+**What T14-e now has.** Not the prefactor — that remains uncomputed, and §35.3's proof that
+fitting cannot supply it is untouched. What is new is its **structure**: the slaved
+reduction's error is a pure start-side factor, exactly θ-independent, on top of an exponent
+that is correct to 0.006% in the slaved limit. **A prefactor calculation now has a target
+with a known form and a known set of arguments — (γ, ε) and not θ** — which is what an
+analytic route (Assaf–Meerson, or the cat-qubit path integral of arXiv:2507.18714 noted in
+THEORIES §5) would have to reproduce.

@@ -1,0 +1,50 @@
+=== P1 GATE: closed form vs direct solve of the SAME 1-D chain
+  Omega=  60: closed 5.3701217952e-03  solve 5.3701217952e-03  rel 9.69e-15
+  Omega= 100: closed 3.5002621011e-04  solve 3.5002621011e-04  rel 1.01e-14
+  Omega= 150: closed 1.8817897953e-05  solve 1.8817897953e-05  rel 8.64e-15
+  -> P1 HOLDS
+
+=== P3/P5: ln(P_1D / P_2D) vs Omega, at each rho
+
+  rho = 64.0   (delta* = 0.8198)
+  Omega           P_1D           P_2D    ln(1D/2D)
+    150   1.843491e-09   1.368606e-09      0.29787
+    250   2.574328e-15   1.911623e-15      0.29764
+    350   4.290624e-20   3.290058e-20      0.26553
+    500   1.931885e-28   1.501549e-28      0.25200
+    700   2.609144e-39   2.076199e-39      0.22848
+    slope d ln(ratio)/d Omega = -0.000135   intercept +0.3209   span 0.0694
+
+  rho = 256.0   (delta* = 0.8199)
+  Omega           P_1D           P_2D    ln(1D/2D)
+    150   1.532076e-09   1.123288e-09      0.31036
+    250   1.867095e-15   1.357962e-15      0.31840
+    350   1.247974e-20   9.176339e-21      0.30748
+    500   1.030898e-28   7.620230e-29      0.30221
+    700   1.078358e-39   8.019830e-40      0.29611
+    slope d ln(ratio)/d Omega = -0.000034   intercept +0.3201   span 0.0223
+
+  rho = 1024.0   (delta* = 0.8199)
+  Omega           P_1D           P_2D    ln(1D/2D)
+    150   1.462293e-09   1.067947e-09      0.31427
+    250   1.721944e-15   1.244223e-15      0.32494
+    350   2.497390e-20   1.829532e-20      0.31119
+    500   8.800132e-29   6.424579e-29      0.31464
+    700   8.631263e-40   6.305469e-40      0.31397
+    slope d ln(ratio)/d Omega = -0.000008   intercept +0.3188   span 0.0138
+
+=== P3 verdict: FLAT (prefactor) or LINEAR (exponent mismatch)?
+  rho=  64.0: slope -0.000135, total drift over the Omega range +0.0742 nats  -> FLAT, a prefactor ratio
+  rho= 256.0: slope -0.000034, total drift over the Omega range +0.0186 nats  -> FLAT, a prefactor ratio
+  rho=1024.0: slope -0.000008, total drift over the Omega range +0.0042 nats  -> FLAT, a prefactor ratio
+
+=== P5 (rule 9): does the slope shrink with rho, as §39.2 requires?
+  rho=64.0:-0.000135   rho=256.0:-0.000034   rho=1024.0:-0.000008
+  -> slope SHRINKS with rho: the discrepancy is the slow-manifold lag
+
+=== P6: the prefactor ratio, where the ratio is flat
+  rho=64.0: P_1D/P_2D = 1.30774  over Omega 150..700  (spread 0.0694 nats)
+  rho=256.0: P_1D/P_2D = 1.35922  over Omega 150..700  (spread 0.0223 nats)
+  rho=1024.0: P_1D/P_2D = 1.37136  over Omega 150..700  (spread 0.0138 nats)
+
+(50s) wrote results/prefactor_1d_hi.json

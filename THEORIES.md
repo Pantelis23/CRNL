@@ -1989,6 +1989,26 @@ kill:** read Montoya/Cruz/Agreda and the MATCH algebraic-analysis paper properly
 whether the racemic-stability condition is ever written as a nonneg-weighted sum over
 reactions carrying combinatorial signs. Until then §65 claims priority for nothing.
 
+**T-CASC-a, open -> §71: the depth ceiling is the most promising transfer candidate found,
+and it is NOT DECIDED.** The founding claim is about composition, and §12.1's ceiling
+D_max ~ exp(delta*^2/2 sigma^2)/4 is INFORMATION-THEORETIC, not thermodynamic -- its formula
+mentions only the rails against the channel noise. So unlike §67's cost per e-fold and §68's
+affinity floor it has a reason to transfer, and the prediction was written that way on purpose.
+
+Run on §67/§69's asymmetric Schloegl element with both gates holding (kernel stochastic to
+7e-13 and holding its rail; with the channel OFF, I stays at 0.9637 through 600 stages, so the
+decay measured is the channel's). **But D_max keeps rising with Omega** -- 13.6%, 37.6%, 84.8%
+spread, still climbing at Omega = 1300 -- and §12's ceiling is an Omega-SATURATED quantity. Not
+the same object yet, so the ratio is withheld rather than reported.
+
+**The qualitative contrast is worth keeping and is NOT a result (rule 17):** Schloegl's
+measured/predicted runs 0.97-1.70 against AM's 3.0-3.4 -- the same quantity within a factor of
+~2, on a formula with no free parameter -- where §67's dissipation comparison missed by 20x
+with no intensive definition available and §68's floor varies 4x inside one family. **How to
+kill / what it costs:** f = 0.45 is decelerating toward ~5.7 and is reachable at Omega of a few
+thousand; cap = 2*r3*Omega states with a dense expm puts the practical wall near 1e4 states,
+and the narrower channels need much more.
+
 **T-THM-b -> §67: PARTLY ANSWERED, and the answer is that the COST QUESTION does not
 port.** Schloegl's model -- one dynamic species, chemostatted, no exchange symmetry to break,
 and 1-D so the chain is exact -- was run through this project's rulers.

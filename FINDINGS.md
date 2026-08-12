@@ -8500,3 +8500,76 @@ hedge was written before the papers were read and it survives them.
 > findings weakly supported and not relied on here). The homochirality field is seventy years
 > old and this is not a survey. **Clause 2 is "not found in two papers", which is weaker than
 > "novel"**, and §65's refusal to claim priority stands until someone reads more widely.
+
+---
+
+### 71 The depth ceiling on an asymmetric element — NOT DECIDED, and the gate says so
+
+Everything in §62–§70 is a single element. **The founding claim is about composition**, and
+§12.1 priced that for AM: the ceiling is set by the *inter-stage channel*, not by molecule
+count, and at large Ω the per-stage error saturates so that
+
+    D_max ≈ exp(δ*²/2σ²) / 4
+
+AM ran about 3× that (9 against 3.0, 50 against 14.8, 489 against 147).
+
+**The prior here was the opposite of §67's and §68's, deliberately.** Those asked whether
+*thermodynamic* quantities transfer, and neither did — the affinity floor is element-specific
+(§68) and the cost per e-fold has no counterpart on a driven element (§67). But the depth
+ceiling is **information-theoretic**, and its formula mentions only the geometry of the two
+rails against the channel noise. Nothing in it refers to bookkeeping, affinity, or how the
+element is driven. So this one *should* transfer, and writing the prediction that way is the
+test: three prior failures make "does not transfer" the cheap answer and it must not become
+the automatic one.
+
+Run on §67/§69's Schlögl element (one species, no symmetry, 1-D so the stage kernel is an exact
+matrix exponential), rails at 0.1 and 1.9, channel-then-chemistry as §7 orders it:
+
+| σ/Δ | predicted | Ω=400 | Ω=600 | Ω=900 |
+|---|---|---|---|---|
+| 0.45 | 2.95 | 4.39 | 4.76 | 5.03 |
+| 0.35 | 14.81 | 14.85 | 18.58 | 21.77 |
+| 0.28 | 147.12 | 58.52 | 97.84 | 143.20 |
+
+Both gates hold: the kernel is stochastic to 7e−13 and holds its rail (0.99973 after 20
+noiseless stages), and with the channel **off** the mutual information stays at 0.9637 through
+600 stages — so the decay being measured is the channel's, not the harness's.
+
+> **But P4 fails: D_max keeps rising with Ω** (13.6%, 37.6%, 84.8% spread), and pushed further
+> it is still climbing at Ω = 1300 (f = 0.45: 4.39, 4.76, 5.03, 5.22). **§12's ceiling is an
+> Ω-*saturated* quantity; this one has not saturated, so it is not yet the same object and the
+> ratios are not comparable.**
+
+**Verdict: NOT DECIDED.** The comparison is withheld rather than reported.
+
+### 71.1 What can honestly be said, and what cannot
+
+Cannot: that the depth ceiling transfers. The measurement never reached the regime where §12's
+formula is a statement.
+
+Can, and it is worth recording as a *qualitative* contrast: **the ceiling is of the right
+order.** Schlögl's measured/predicted runs 0.97–1.70 where AM's is 3.0–3.4 — the same
+quantity within a factor of ~2, against a formula containing no free parameter and fitted to
+nothing. Set beside the thermodynamic comparisons, where §67's cycles-per-molecule missed AM
+by **20×** and had no intensive definition at all, and §68's affinity floor varies by **4×
+inside one family**, that is a visibly different kind of disagreement.
+
+> That is a suggestive contrast, **not a result** (rule 17). It is one substrate pair, at
+> unsaturated Ω, on a formula whose own AM ratio is 3 rather than 1. The right reading is that
+> the information-theoretic quantity is the *most promising* transfer candidate found so far,
+> and that saying more requires the saturated regime.
+
+**What it would take.** f = 0.45 is decelerating toward roughly 5.7 (increments 0.37, 0.27,
+0.19), so it is within reach at Ω of a few thousand — cap = 2·r₃·Ω states and a dense matrix
+exponential, so ~10⁴ states is the practical wall for `expm`. The narrower channels need
+much more. **Opened as T-CASC-a with that cost stated**, rather than left as an implied
+success.
+
+> ⚠ **Two of my own criteria failed here, both caught.** P2's first version tested
+> `d_max(I) is None` and printed **HOLDS on a run whose I was 0.000000** — `d_max` returns
+> None both when I never falls through 0.5 and when it started *below* 0.5 and so never
+> crossed it, which are the two opposite cases the gate exists to separate. It is now
+> `min(I) > 0.5`. And P3 printed **"THE DEPTH CEILING TRANSFERS"** for f = 0.45 in the first
+> full run **while P4 had already reported the ceiling still moving with Ω** — a verdict
+> announced from a comparison its own precondition had just invalidated. P3 is now gated on
+> P4 and prints WITHHELD.

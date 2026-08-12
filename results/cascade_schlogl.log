@@ -1,0 +1,35 @@
+Schloegl rails at 0.1 and 1.9; Delta = 0.8999999999999999; saddle 1.0
+
+=== P1 GATE: is the stage kernel stochastic, and does it hold a rail?
+  |row sums - 1| max 7.06e-13; mass still above the saddle after 20 noiseless stages: 0.999730
+  -> P1 HOLDS
+
+=== P2 GATE (rule 10): with the channel OFF, does I survive?
+  I after 400 noiseless stages: 0.974115  (min over the run 0.974115)
+  -> P2 HOLDS: no ceiling without channel noise
+
+=== P3/P4: the ceiling against exp(Delta^2/2 sigma^2)/4
+  f=s/D    Om    sigma  predicted  measured   ratio
+   0.45   400   0.4050       2.95      4.39    1.49
+   0.45   600   0.4050       2.95      4.76    1.61
+   0.45   900   0.4050       2.95      5.03    1.70
+   0.35   400   0.3150      14.81     14.85    1.00
+   0.35   600   0.3150      14.81     18.58    1.25
+   0.35   900   0.3150      14.81     21.77    1.47
+   0.28   400   0.2520     147.12     58.52    0.40
+   0.28   600   0.2520     147.12     97.84    0.67
+   0.28   900   0.2520     147.12    143.20    0.97
+
+=== P4 (rule 9): is the ceiling Omega-independent, as §12 claims for AM?
+  f=0.45: D_max = 4.4, 4.8, 5.0  spread 13.6%
+  f=0.35: D_max = 14.9, 18.6, 21.8  spread 37.6%
+  f=0.28: D_max = 58.5, 97.8, 143.2  spread 84.8%
+  -> MOVES with Omega: not the same object, and P3s ratio is not comparable
+
+=== P3 VERDICT: ratios, against AM's published ratios
+  (P6: printed ONLY where P4's Omega-saturation gate passed)
+  f=0.45: WITHHELD -- D_max still moving with Omega (4.4, 4.8, 5.0), so the ratio is not comparable to AM's saturated value
+  f=0.35: WITHHELD -- D_max still moving with Omega (14.9, 18.6, 21.8), so the ratio is not comparable to AM's saturated value
+  f=0.28: WITHHELD -- D_max still moving with Omega (58.5, 97.8, 143.2), so the ratio is not comparable to AM's saturated value
+
+wrote results/cascade_schlogl.json

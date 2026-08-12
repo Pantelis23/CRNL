@@ -1967,7 +1967,36 @@ kill:** read Montoya/Cruz/Agreda and the MATCH algebraic-analysis paper properly
 whether the racemic-stability condition is ever written as a nonneg-weighted sum over
 reactions carrying combinatorial signs. Until then §65 claims priority for nothing.
 
-**T-THM-b, open: does the theorem survive loss of exchange symmetry?** Every quantitative
+**T-THM-b -> §67: PARTLY ANSWERED, and the answer is that the COST QUESTION does not
+port.** Schloegl's model -- one dynamic species, chemostatted, no exchange symmetry to break,
+and 1-D so the chain is exact -- was run through this project's rulers.
+
+**What transfers: the affinity floor exists in both, and the values are close.** As the
+landscape dies, Schloegl's cycle affinity tends to **ln 9 = 2 ln 3 = 2.1972**, independent of
+where the degenerate point sits (derived, then confirmed by the engine's `cycle_affinity` to
+8.9e-16). AM's is **3 ln 2 = 2.0794** (§9.1). **Not universal -- 5.66% apart -- but both are
+ln(small integer) from chemistry with nothing in common**, and both fit `(pairs) x ln(pairs+1)`.
+
+**What does NOT transfer, and not as a number: §38's cost per e-fold has no counterpart.** AM
+is closed and conservative, so all dissipation belongs to the decision; Schloegl is
+chemostatted and burns entropy sitting still (Sigma = 14293 against a cycle affinity of 2.26).
+Two repairs were tried and both refuted -- a housekeeping subtraction came out NEGATIVE in
+every cell, and a dimensionless cycles-per-molecule measure grows with Omega. The reason is
+structural: a 1-D birth-death chain has zero stationary probability current, so the
+non-adiabatic part is the system term, which is negative along the decision path. **The price
+of restoration is defined relative to closed conservative bookkeeping and does not survive the
+move to a driven device.**
+
+**T-THM-c, open: is the affinity floor (pairs) x ln(pairs+1)?** Two substrates fit it: AM with
+3 reversible pairs gives 3 ln 2, Schloegl with 2 gives 2 ln 3. Two points fit almost any
+two-parameter form, so this is a PATTERN, not a law (rule 17). **How to kill:** find a
+restoring element with 4 reversible pairs and check for 4 ln 5 = 6.44, or one with 2 pairs and
+a different topology and check it still gives 2 ln 3. A single counterexample settles it, so
+do not write a tolerance.
+
+**~~T-THM-b, open: does the theorem survive loss of exchange symmetry?~~ (original entry
+below, kept per rule 3 -- note it asked about the THEOREM and §67 answered about the COST;
+whether clauses 1-4 have an asymmetric analogue at all is still open.)** Every quantitative
 result in this project -- G ~ 2 k_B per molecule per e-fold, the frontier exponent, gamma_c --
 is measured on ONE symmetric network, while the founding object (an inverter driven toward
 one rail) is ASYMMETRIC. Clause 1 fails outright without the symmetry (§42: residuals 1.9e1,

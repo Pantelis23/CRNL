@@ -8202,3 +8202,87 @@ five sections in a row had one. The cost was about ten minutes.
 > cells are the ln w = −38.9 precision failure. Gated, **all three are excluded and P5 has
 > nothing to say at β = 0.40.** A gate applied in one place and not another is the same class
 > of defect as a gate on the wrong quantity (§64), and it took reading the cells to see it.
+
+---
+
+### 67 The rulers on an element with no symmetry to break — T-THM-b
+
+Every quantitative result in this project is measured on Approximate Majority or its
+exchange-symmetric relatives, §65's theorem is conditioned on that symmetry outright, and the
+founding object — an inverter driving toward one rail — is asymmetric. So the founding
+question's quantitative answer has **n = 1**. Schlögl's model is the textbook bistable CRN,
+chemostatted, with **one dynamic species and therefore no exchange symmetry to break**:
+
+    2X ⇌ 3X   (k1a = k1[A], k1r)        ∅ ⇌ X   (k2b = k2[B], k2r)
+
+It is 1-D, so the chain is **exact** — splitting probability in closed form, MFPT, its
+variance, and the mean entropy production all tridiagonal solves. A failure to transfer
+cannot be blamed on numerics here.
+
+Placing the fixed points at x₀−m, x₀, x₀+m gives `k1a/k1r = 3x₀`, `k2r/k1r = 3x₀²−m²`,
+`k2b/k1r = x₀(x₀²−m²)`; m → 0 is where bistability dies, the analogue of γ → γ_c.
+
+**A structural difference, before any number.** In Schlögl the affinity is *determined* by the
+landscape — `A = ln[3(3x₀²−m²)/(x₀²−m²)]`. There is **no free drive knob at fixed landscape**,
+unlike AM's γ. That is a fact about the substrate.
+
+### 67.1 Both substrates have an affinity floor, and they are 3 ln 2 against 2 ln 3
+
+Derived analytically, then confirmed against the engine's `cycle_affinity` — which takes the
+null space of the per-pair stoichiometry and knows nothing of the formula — agreeing to
+**8.9e−16** across seven cells. As m → 0:
+
+> **Schlögl:  A_c = ln 9 = 2 ln 3 = 2.1972245773, independent of x₀** (checked at x₀ = 0.4,
+> 1.0, 2.5).
+> **AM (§9.1): A_c = 3 ln 2 = 2.0794415417.**
+>
+> **Different — so the floor is not universal — but 5.66% apart, from chemistry with nothing
+> in common.** Both are ln(small integer): ln 8 against ln 9.
+
+§9.1 read its own floor as "3 reactions × ln 2" and called the Landauer resemblance
+arithmetic coincidence. This substrate has **2 reversible pairs and gives 2 × ln 3**, so the
+pattern is `(pairs) × ln(pairs+1)` in both cases — which is now a testable statement rather
+than a decorative one, and a third substrate would settle it.
+
+### 67.2 §38's cost per e-fold has no counterpart here — two definitions, both refuted
+
+The raw numbers are G = 8.3–27.1 against AM's ~2, and Q = 388–7102 against AM's 5.475.
+**Reporting those as "does not transfer" would have been a rule-11 error**: AM is closed and
+conservative, so all its dissipation belongs to the decision, while Schlögl is chemostatted
+and burns entropy sitting still. Σ = 14293 at Ω = 800 against a cycle affinity of 2.26 is
+housekeeping, not restoration.
+
+| repair attempted | result |
+|---|---|
+| subtract housekeeping, `Σ − σ_local(x₀)·⟨T⟩` | **negative in 5/5 cells** (−1316 … −5878). Not a small number — an invalid definition. |
+| dimensionless cycles per molecule, `Σ/(ΩA)` | 2.56–9.67 against AM's 0.342 — but it **grows with Ω** (4.52, 6.46, 7.44 at Ω = 200, 400, 800), so it is not intensive either. |
+
+The reason no subtraction works is structural: a 1-D birth–death chain has **zero stationary
+probability current**, so essentially all of σ_local is adiabatic and the non-adiabatic part
+is the system term `ln[π(n₀)/π(n_f)]`, which is *negative* along a trajectory running from the
+unstable point down to a rail.
+
+> **NO dissipation-based cost measure ported.** The chemostatted element's dissipation is
+> dominated by a term proportional to the decision *time*, for which a closed element has no
+> analogue. **§38's G is not merely a different number on this substrate — it is not the same
+> quantity.** The founding question's "price of restoration" is defined relative to closed
+> conservative bookkeeping, and that bookkeeping does not survive the move to a driven device.
+
+**P5 is therefore NOT DECIDED**: Q inherits the same non-comparability and is reported, not
+compared. (No cell fell below §40's floor of 1, so the instrument is at least not broken.)
+
+### 67.3 What this does to the programme's answer
+
+The four-currency reading — existence bought with affinity, gain with entropy, reliability
+with molecules, speed with time — survives only in its **first** clause across substrates.
+The affinity floor is a real structural feature of both elements and the two values are within
+6%. The **gain** clause is AM-specific bookkeeping. Nothing here touches the reliability
+clause, which was always about molecule count and is substrate-neutral by construction.
+
+> ⚠ **Rule 19's convention caught a third defect before any cell ran.** P1's gate demanded the
+> chain's drift equal the ODE field to 1e−12. **That is false and could never have passed** —
+> the chain uses falling factorials n(n−1) where mass action uses x², so the two differ by
+> O(1/Ω) *by construction*, and that gap is the discreteness this whole project measures. The
+> gate is now that Ω·|drift − field| is Ω-independent, which holds to 3e−3. A gate demanding
+> something false is the same defect class as a verdict that cannot fail, and the pre-run test
+> cost ten minutes.

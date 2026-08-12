@@ -8358,3 +8358,83 @@ refuted**, and the honest cross-substrate statement is now:
 > Every restoring element examined has an affinity floor — a nonzero drive below which no
 > bistable landscape exists — but **its value is set by the element's own stoichiometry and
 > ranges over at least a factor of four**. There is no universal price of admission.
+
+---
+
+### 69 The outcome-wise factorisation is deeper than symmetry — T-TUR-f
+
+§66 could not settle whether §60's closure survives asymmetry, because the π(n)/π(n₀) boundary
+convention exhausts double precision exactly where the predicted effect is largest. **Rather
+than fight that wall in 2-D, ask the question where the instrument is exact.** §67's Schlögl
+element has **one dynamic species — no exchange symmetry exists to appeal to** — and is 1-D,
+so every quantity is a tridiagonal solve.
+
+**And the tilted generator collapses.** For an up-jump the two channels contribute
+`a₁(n)·[a₂(n+1)/a₁(n)] + a₃(n)·[a₄(n+1)/a₃(n)] = μ(n+1)`, and for a down-jump `λ(n−1)`. So the
+reverse-weighted generator is **just the chain with λ and μ swapped and shifted** — explicit,
+tridiagonal, and free of the enormous factors that broke §66. ln π comes from the exact
+birth–death product formula in logs.
+
+Asymmetry is built in by placing the fixed points at arbitrary r₁ < r₂ < r₃, with skew
+s = (r₃−r₂)/(r₂−r₁):
+
+| skew | mean \|Φ_lo/p_lo − 1\| | mean \|Φ_hi/p_hi − 1\| | max \|ln w\| |
+|---|---|---|---|
+| 1.0 | 9.07e−14 | 9.96e−14 | 3.7 |
+| 1.7 | 1.32e−14 | 1.82e−13 | 1.6 |
+| 2.2 | 3.54e−14 | 5.27e−14 | 9.4 |
+| 3.0 | 1.01e−13 | 5.58e−14 | 29.2 |
+| 4.0 | 4.56e−14 | 4.81e−14 | 32.3 |
+
+P1 holds on all 17 surviving cells (max |Φ_lo+Φ_hi−1| = 2.0e−13) — **the gate §66 could not
+hold**. One cell was excluded on precision, at ln w = 67.
+
+> **Φ_o = p_o to 2e−13 on an element with no symmetry whatsoever, while the two boundaries'
+> stationary weights differ by a factor of e³². §60's RESULT generalises. §60's MECHANISM for
+> it is wrong.**
+
+§60 attributed the cancellation to the boundaries being exchange images of equal stationary
+weight. That account is simply unavailable here — there is one species, the rails are images
+of nothing, and ln w runs over tens — yet the factorisation is exact. **So the outcome-wise
+identity does not come from symmetry**, and what does produce it is now an open question with
+no candidate mechanism attached (rule 17: it gets none until something independent supplies
+one).
+
+### 69.1 This resolves §66, against my own prediction
+
+§66 measured |r_e − 1| rising 40× with the tilt and could not separate that from the solve,
+because the nuisance grew with the cause. **§69 breaks that confound by construction**: ln w
+spans 0 → 32.3 here while |r−1| stays at 10⁻¹³. A boundary-weight ratio of e³² does not
+disturb the factorisation when the arithmetic can carry it.
+
+> **So §66's rise was the conditioning, not the tilt** — and §66's own within-band correlation
+> of +0.579 was reading solve error. §66 declined to call it either way and recorded
+> "suggestive only"; that caution was correct, and the effect it was suggestive *of* is now
+> refuted.
+>
+> **My prediction was wrong in the informative direction.** §66 and §69 both pre-registered
+> that the factorisation would fail once symmetry was gone. It does not. §60's closure of the
+> founding question's sharpest form therefore **stands, and stands more broadly than §60 could
+> claim** — but for a reason nobody has yet given.
+
+### 69.2 Where this leaves the founding question
+
+The reliability–dissipation link is now closed on much firmer ground than in §60. The
+fluctuation theorem factorises over outcomes on:
+
+* a symmetric two-species element at every γ (§60),
+* an asymmetric one-species element at every skew up to 4:1 (§69),
+
+with the boundary weights differing by up to e³² and the identity holding to 2e−13. **The
+error rate is not obtainable from the entropy production by this route, and the obstruction is
+not a symmetry accident.**
+
+That closes the last exact route this project had to a thermodynamic price for reliability,
+and it agrees with the four-currency reading arrived at independently: reliability is bought
+with **molecules**, not free energy. §1, §35 and §38's exp(−cΩ) is the whole story, and §68
+has already removed the affinity floor's claim to universality.
+
+> ⚠ **Scope.** Both tests are single restoring elements with two absorbing outcomes and a
+> unique separatrix. Nothing here addresses cascades, where §12's depth ceiling lives, nor
+> n > 2 outcomes. The identity is an identity; what is shown is that *splitting it by outcome
+> yields no information*, on the two substrate families examined.

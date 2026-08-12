@@ -2210,6 +2210,33 @@ does not depend on settling it: **§60 claimed a general closure from the one ca
 symmetry guarantees it.** For tilted elements the factorisation is untested, not established,
 and the founding question's sharpest form is OPEN where real devices live. See §66.
 
+**T-TUR-f -> §69: CLOSED. The factorisation is DEEPER than symmetry, and §60's mechanism
+is withdrawn while its result is strengthened.** Asked on §67's Schloegl element -- one dynamic
+species, so no exchange symmetry exists to appeal to, and 1-D so the tilted generator collapses
+to the chain with lambda and mu swapped and shifted, tridiagonal and free of §66's enormous
+factors. **Phi_o = p_o to 2e-13 across skews from 1:1 to 4:1, with the two boundaries'
+stationary weights differing by up to e^32.** §60 attributed the cancellation to the boundaries
+being exchange images of equal weight; that account is unavailable here and the factorisation
+is exact anyway, so **it is wrong, and what does produce the identity has no candidate
+mechanism (rule 17: it gets none until something independent supplies one).**
+
+**This also resolves §66 against its own prediction.** §66 saw |r-1| rise 40x with the tilt and
+could not separate it from the solve because the nuisance grew with the cause. §69 breaks that
+confound by construction -- ln w spans 0 to 32.3 with |r-1| at 1e-13 -- so **§66's rise was the
+conditioning**, and its within-band correlation of +0.579 was reading solve error. §66's
+refusal to call it either way was correct.
+
+**Standing statement on the founding question's sharpest form:** the fluctuation theorem
+factorises over outcomes on a symmetric two-species element at every gamma and on an asymmetric
+one-species element at every skew tested, so the error rate is not obtainable from the entropy
+production by this route, and the obstruction is NOT a symmetry accident. Combined with §68
+removing the affinity floor's universality, the surviving cross-substrate statement is that
+reliability is bought with MOLECULES, not free energy. Scope: single elements, two outcomes,
+one separatrix; cascades and n > 2 outcomes are untouched.
+
+**~~T-TUR-f, open: does the outcome-wise factorisation survive a tilt?~~ (original entry
+below, kept per rule 3)**
+
 **T-TUR-f, open: does the outcome-wise factorisation survive a tilt?** §66 could not reach
 past beta/beta_c ~ 0.6 because the pi(n)/pi(n0) boundary convention exhausts double precision
 exactly where the predicted effect is largest. **How to kill:** redo the tilted generator in

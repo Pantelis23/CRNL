@@ -1151,3 +1151,47 @@ def test_lambda_A_is_negative_and_meets_the_deterministic_rate():
            for om in (20, 40, 80)]
     assert dev[0] > dev[1] > dev[2], dev          # converging, not merely close
     assert dev[-1] < 0.05
+
+
+def test_action_gate_drift_understates_the_remaining_error():
+    """FINDINGS 64: for A_eff = A + c/Wbar the remaining error is ~4x the drift between
+    consecutive estimates on these ladders -- which is what invalidated §63.2's gate."""
+    from experiments.action_extrapolated import extrapolate
+
+    ladder = [40, 60, 90, 120, 160, 200, 260, 320, 400, 500]   # §63's actual ladder
+    wb = np.array([(ladder[i] + ladder[i + 1]) / 2 for i in range(len(ladder) - 1)])
+    A_true, c = 0.0080, 1.5
+    a = A_true + c / wb
+    A, resid = extrapolate(wb, a)
+    assert A == pytest.approx(A_true, rel=1e-9)
+    assert resid < 1e-9
+    drift = abs(a[-1] - a[-2])
+    remaining = abs(a[-1] - A_true)
+    assert remaining / drift == pytest.approx(4.0, rel=0.05), (drift, remaining)
+
+
+def test_verdict_helper_can_reach_all_three_branches():
+    """FINDINGS 64.2: the first version could never print (c) -- for data monotone toward 2
+    its trend and scatter were identically equal. All three branches must be reachable."""
+    from experiments.action_extrapolated import verdict
+
+    # still moving by more than its distance to 2, and heading there: unresolved
+    assert verdict([(0, 1.70), (1, 1.80), (2, 1.88)], "t")["outcome"] == "c"
+    assert verdict([(0, 1.9507), (1, 1.9465), (2, 1.9498), (3, 1.9517)],
+                   "t")["outcome"] == "b"          # reproduces §63.2's own verdict
+    # arrived: the gap to 2 is inside the residual movement
+    assert verdict([(0, 1.90), (1, 1.97), (2, 1.999)], "t")["outcome"] == "a"
+
+
+def test_stationary_route_to_the_action_is_independent_and_near_2():
+    """FINDINGS 64.1: -ln(pi)/Omega -> V with no eigenvalue and no antisymmetric block."""
+    from experiments.action_extrapolated import action_from_stationary
+
+    for g in (0.32, 0.41):
+        vals = [action_from_stationary(g, om) for om in (60, 100, 150)]
+        assert all(v > 0 for v in vals)
+        assert vals[0] > vals[1] > vals[2]        # converging downward in Omega
+    # the barrier must fall steeply toward gamma_c, roughly quadratically
+    a1, a2 = action_from_stationary(0.32, 150), action_from_stationary(0.41, 150)
+    nu = np.log(a2 / a1) / np.log((0.5 - 0.41) / (0.5 - 0.32))
+    assert 1.6 < nu < 2.4, nu

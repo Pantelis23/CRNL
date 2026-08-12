@@ -1,0 +1,49 @@
+=== P1 GATE: is A_eff linear in 1/Wbar, as the extrapolation assumes?
+  gamma  A_eff(last)    A extrap   shift%      resid/A  used
+  0.280    0.1513038   0.1521105    -0.53       0.0003   yes
+  0.320    0.1020415   0.1023721    -0.32       0.0003   yes
+  0.350    0.0715692   0.0717058    -0.19       0.0002   yes
+  0.380    0.0464530   0.0465393    -0.19       0.0001   yes
+  0.410    0.0265630   0.0266978    -0.51       0.0001   yes
+  0.430    0.0162343   0.0161339     0.62       0.0025   yes
+  0.450    0.0084333   0.0076050    10.89       0.0055   yes
+  0.460    0.0056728   0.0045254    25.35       0.0045   yes
+  -> P1: 8 of 8 gamma usable
+
+=== P2/P3: nu after extrapolation (§63.2 had 1.9496; predicted 2.02 +- 0.03)
+                window   n        nu   amplitude
+          [0.24, 0.46]   8    2.0425      3.4695
+          [0.30, 0.46]   7    2.0593      3.6317
+          [0.35, 0.46]   6    2.0836      3.8886
+          [0.38, 0.46]   5    2.1243      4.3710
+          [0.41, 0.46]   4    2.1941      5.3744
+  nu across nested windows: 2.0425, 2.0593, 2.0836, 2.1243, 2.1941
+    narrowest window 2.1941, still moving by 0.0699, |nu - 2| = 0.1941 (2.8x that movement), not monotone
+    -> (b) nu FLAT at 2.1941, 2 excluded at 2.8x the residual movement: §63.2's conclusion survives
+  P2 direction: nu moved +0.1512 from §63.2's 1.9496 -> UP, as predicted
+  P3 absolute: predicted 2.02 +- 0.03, got 2.1008  -> MISSED
+
+=== P5 (rule 9): the same thing from a DISJOINT Omega ladder
+  ladder A 40..500, ladder B 50..480; 8 gamma in both
+  worst relative disagreement in A: 2.53%
+  nu from ladder B: 2.0569, 2.0763, 2.1030, 2.1453, 2.2141
+    narrowest window 2.2141, still moving by 0.0687, |nu - 2| = 0.2141 (3.1x that movement), not monotone
+    -> (b) nu FLAT at 2.2141, 2 excluded at 3.1x the residual movement: §63.2's conclusion survives
+
+=== P6 (rule 14): the action from the STATIONARY DISTRIBUTION alone
+  gamma        W=60       W=100       W=150       W=220
+  0.240    0.258710    0.238488          --    0.155989
+  0.280    0.187586    0.172618    0.165477    0.149125
+  0.320    0.130955    0.118935    0.113061    0.109501
+  0.350    0.095269    0.085303    0.080491    0.077614
+  0.380    0.065174    0.057270    0.053456    0.051188
+  0.410    0.040637    0.034684    0.031801    0.030094
+  0.430    0.027309    0.022649    0.020360    0.019043
+  0.450    0.016604    0.013055    0.011371    0.010416
+  0.460    0.012053    0.009265    0.007826    0.007043
+  nu from pi alone: 1.8522, 1.9857, 1.9909
+    narrowest window 1.9909, still moving by 0.0052, |nu - 2| = 0.0091 (1.7x that movement), monotone toward 2
+    -> (c) nu is DRIFTING toward 2, at 1.9909 and still moving: consistent with 2 but NOT arrived; nothing is rounded
+  eigenvalue route 2.1008 vs stationary route 1.9430  -> DISAGREE: the correction is NOT established (rule 14)
+
+(190s) wrote results/action_extrapolated.json

@@ -7886,8 +7886,13 @@ at the value §62 proves exactly** — so this is a test, not a two-parameter fi
 | γ ∈ [0.38, 0.45] | 4 | 1.9498 |
 | γ ∈ [0.41, 0.45] | 3 | 1.9517 |
 
-> **ν = 1.9496 ± 0.0026, flat and non-monotone across nested windows, with 2 lying 9.7×
-> the scatter away. The pitchfork value is excluded over the accessible window.**
+> ~~**ν = 1.9496 ± 0.0026, flat and non-monotone across nested windows, with 2 lying 9.7×
+> the scatter away. The pitchfork value is excluded over the accessible window.**~~
+>
+> **WITHDRAWN by §64.** The gate admitted points whose remaining error was 4× the drift it
+> measured — ~6% at γ = 0.45 against ~0.1% at γ = 0.38 — and that bias runs in exactly the
+> direction that manufactures a deficit below 2. Left as first printed per rule 7; the
+> corrected reading is ν ≈ 2 ± 0.1, and no instrument here excludes the pitchfork.
 
 **Scope, and it is the whole caveat.** The narrowest window still stops at γ = 0.45, and the
 γ = 0.46 point was excluded because its action had not converged in Ω (4.33% drift). So
@@ -7929,3 +7934,90 @@ And rule 13 caught the estimator before any of this: **A = −ln|λ_A|/Ω drifte
 gate refused all 7 γ and reported no ν. The repair is the local slope in Ω, which cancels the
 constant exactly — and deliberately **not** a three-parameter fit, since §35.3 proved Ω and
 ln Ω collinear over any bounded window here and §35.1's b was withdrawn for exactly that.
+
+---
+
+### 64 §63.2's ν = 1.95 was an unconverged estimator — the exclusion of 2 is withdrawn
+
+**§63.2 gated the wrong quantity.** It extracted A as the local slope of −ln|λ_A| in Ω and
+required the *drift* between the last two slopes to be under 2%. If A_eff(Ω̄) = A + c/Ω̄, that
+drift is c(1/Ω̄₁ − 1/Ω̄₂) while the **remaining error is c/Ω̄₂** — and for those Ω ladders the
+second is 4× the first. Measured, not assumed:
+
+| γ | 0.38 | 0.41 | 0.43 | 0.45 | 0.46 |
+|---|---|---|---|---|---|
+| drift (what §63.2 gated) | 0.03% | 0.12% | 0.20% | 1.49% | 4.33% |
+| **remaining error** | 0.14% | 0.48% | 0.79% | **5.95%** | 17.31% |
+
+So §63.2 admitted a point carrying ~6% error at γ = 0.45 against ~0.1% at γ = 0.38. **That
+bias is systematic in γ and signed** — A_eff approaches A from above, worse toward γ_c — which
+flattens ln A against ln(γ_c−γ) and *lowers* ν. Predicted correction, written before the run:
+ν should move **up** by ≈ 0.067, to 2.02 ± 0.03.
+
+**The direction was right, the value was not.** After extrapolating A_eff → A:
+
+| window | §63.2 (unextrapolated) | **extrapolated** | ladder B (disjoint Ω) |
+|---|---|---|---|
+| γ ≥ 0.24 | — | 2.0425 | 2.0569 |
+| γ ≥ 0.35 | 1.9498 | 2.0836 | 2.1030 |
+| γ ≥ 0.41 | 1.9517 | **2.1941** | **2.2141** |
+
+ν moved **+0.15**, up as predicted (P2 hit); the predicted 2.02 ± 0.03 was **missed** (2.10).
+A disjoint Ω ladder agrees to 2.5% in A, so the extrapolation is not ladder-dependent.
+
+### 64.1 Three extractions, and rule 14 refuses the correction
+
+A correction is a claim, so it gets an independent instrument. The action is also the
+quasipotential barrier, and −ln π/Ω → V for the CME whether or not detailed balance holds —
+computable from the stationary distribution alone, with no eigenvalue, no antisymmetric block
+and no local slope. And §63.1's **width** exponent gives 1/ν with *no action extrapolation at
+all*. Three routes:
+
+| route | extrapolation done | ν |
+|---|---|---|
+| width of the transition (§63.1) | **none** | 2.027, 1.973, **1.948** |
+| stationary distribution π | mild (Ω ≤ 220) | 1.852 → 1.986 → **1.991**, drifting toward 2 |
+| λ_A action, extrapolated | heavy (10.9% and 25.4% shifts at γ = 0.45, 0.46) | 2.04 → **2.19**, rising |
+
+> **They disagree, so the corrected value is NOT established.** The route doing the most
+> extrapolation is the outlier. What all three agree on is that ν is **near 2**, and none of
+> them supports 1.95 as a distinct value.
+
+**~~§63.2: "ν = 1.9496 ± 0.0026 … 2 is excluded at 9.7× the scatter"~~ — WITHDRAWN.** The
+number was produced by an estimator whose remaining error was 4× the gate that admitted it,
+and the bias ran the right way to manufacture exactly that deficit. **Present statement:
+ν ≈ 2 ± 0.1, consistent with §9.1's pitchfork, and not determined more precisely than that by
+any instrument here.**
+
+**What survives untouched: §63.1.** The width exponent −0.4934 / −0.5069 / −0.5133 was measured
+directly from λ_A's Ω-scaling with no action extrapolation anywhere, so nothing in this section
+touches it. **w(Ω) ~ Ω^(−1/2) stands**, as does the device reading — four times the molecules
+for half the blur.
+
+> ⚠ **And §63.1's "agreement confirms the ansatz" is weakened.** §63.1 noted 1/ν = 0.5129
+> against the width's 0.5133 and read it as confirming that the width is set by the action
+> alone. Both numbers came from the same biased ν. With the bias removed the action route
+> gives 2.10–2.19 against the width's 1.95–2.03, so **the ansatz is no longer confirmed — it
+> is untested**, and the tension is itself the open question.
+
+### 64.2 Two more verdict rules, and one withdrawn kill test
+
+> ⚠ **P1's residual was normalised by the range of the points being fitted** — a range that
+> shrinks toward zero as convergence improves, so it punished exactly the γ it should pass:
+> γ = 0.43 shifts by 0.62% and scored 0.41, γ = 0.46 shifts by 25% and scored 0.019. It
+> rejected all 8 γ and printed no ν. A residual must be normalised by the quantity being
+> estimated, not by the spread of the estimates.
+>
+> ⚠ **The three-way verdict helper had an unreachable branch.** It tested `trend > scatter`
+> with trend = |ν_first − 2| − |ν_last − 2|; for any sequence *monotone toward 2* those are
+> identically equal, so a drifting sequence could never print "(c) still drifting" and fell
+> through to "(a) ν = 2 within the scatter" — which it duly did on 1.8522, 1.9857, 1.9909.
+> Replaced, and **checked against §63.2's own numbers, where the new rule still returns that
+> section's verdict** — so it is not tuned toward the answer now expected.
+
+> **T15-m's kill test is withdrawn as unreachable.** §63 proposed settling ν by pushing the
+> action measurement to γ = 0.47–0.49, calling it "reachable rather than hypothetical" on the
+> strength of Ω = 640 costing 7s. At γ = 0.47 the slope still drifts **4.2% at Ω = 1000**
+> (17.8s, 5×10⁵ states), so 1% needs Ω ≈ 4000 and ~8×10⁶ states. **The estimate was made from
+> wall-clock without asking what Ω the convergence required.** A kill test costed by runtime
+> instead of by the convergence it must reach is not a kill test.

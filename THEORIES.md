@@ -1935,7 +1935,17 @@ Device reading: **to halve the blur on a chemical switch's threshold, use four t
 molecules.** The extrapolation beyond the measured decade is NOT resolved (three ansaetze
 spread 90% at Omega = 1000) -- the exponent stands, the value past the data does not.
 
-**T15-l -> §63.2: the exponent is nearly, but not exactly, §9.1's pitchfork.** w ~ Omega^(-1/nu)
+**~~T15-l -> §63.2: the exponent is nearly, but not exactly, §9.1's pitchfork.~~ ->
+§64: WITHDRAWN, and the pitchfork is not excluded.** §63.2's estimator was gated on the DRIFT
+between consecutive local slopes while its REMAINING error was 4x that drift, admitting a
+point with ~6% error at gamma = 0.45 against ~0.1% at gamma = 0.38 -- a bias systematic in
+gamma and signed exactly to lower nu. Extrapolated, nu moves UP by 0.15 as §64 predicted
+before running. But three routes then disagree on where it lands (width of the transition,
+which needs no extrapolation: 1.95-2.03; stationary distribution: 1.99; extrapolated action:
+2.10-2.19), so **nu ~ 2 +- 0.1 and nothing here excludes 2.** §63.1's width exponent is
+untouched -- it never used the action. The original entry, for the record:
+
+**T15-l -> §63.2 (as first written):** w ~ Omega^(-1/nu)
 where A(gamma) ~ (gamma_c - gamma)^nu, so -1/2 says nu = 2 -- which is what §9.1's pitchfork
 predicts independently (barrier a^2/4b with a ~ gamma_c - gamma). Fitted with gamma_c held
 FIXED at the value §62 proves exactly, **nu = 1.9496 +- 0.0026, flat and non-monotone across
@@ -1943,7 +1953,22 @@ nested windows, with 2 lying 9.7x the scatter away.** Note the agreement 1/nu = 
 the width's 0.5133 is NOT an independent confirmation -- both are readings of the same surface
 lambda_A(gamma, Omega) related by the scaling ansatz, so it confirms the ANSATZ, not nu.
 
-**T15-m, open: is nu = 2 recovered in the last 10% of the approach to gamma_c?** §63.2's
+**T15-n, open (T15-m's kill test was withdrawn by §64 as unreachable -- it was costed by
+wall-clock at Omega = 640 rather than by the Omega its convergence needed, and gamma = 0.47
+still drifts 4.2% at Omega = 1000). WHY DO THE THREE ROUTES TO nu DISAGREE?** The width of the
+transition (no extrapolation) gives 1.95-2.03, the stationary distribution 1.99, and the
+extrapolated action 2.10-2.19, with the heaviest extrapolation the outlier. **How to kill:**
+the extrapolation assumes A_eff = A + c/Wbar, but the WKB form carries a b*ln(Omega)/Omega term
+too, which is exactly the collinearity §35.3 proved unresolvable over a bounded window -- so
+test the extrapolation on a case where A is known independently rather than trying to fit the
+second term. §61's 1-D slaved chain has a CLOSED-FORM splitting probability and therefore an
+exactly-known action; run the same A_eff-plus-extrapolation machinery on it and measure the
+residual bias directly. If the bias explains the 2.19, the action route is corrected and the
+width route stands; if not, the scaling ansatz linking them is what fails, which §64.1 already
+flags as untested rather than confirmed.
+
+**~~T15-m, open: is nu = 2 recovered in the last 10% of the approach to gamma_c?~~ ->
+§64: the question was fine, its kill test was not. Superseded by T15-n.** §63.2's
 narrowest window stops at gamma = 0.45 and the gamma = 0.46 point was excluded for a 4.33%
 drift in Omega. So 2 is excluded over [0.20, 0.45] with no drift toward it, which is not the
 same as excluding it asymptotically. **How to kill:** push the action measurement to

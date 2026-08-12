@@ -5,9 +5,13 @@ asserts the theorem rather than five separate facts that happen to appear in one
 Scope is asserted too: clause 1 is checked to FAIL when the exchange symmetry is broken, and
 clause 4 is applied only where the symmetric steady state is unique.
 
-Prior art and what is and is not claimed: see FINDINGS §65.1. Clause 1's invariance half is
-standard (Golubitsky-Stewart-Schaeffer); the novelty claim rests on clause 2 and is recorded
-as UNVERIFIED pending T-THM-a.
+Prior art and what is and is not claimed: see FINDINGS §65.1 and §70. Clause 1's invariance
+half is standard (Golubitsky-Stewart-Schaeffer). **Clause 4 is also prior art** -- Montoya,
+Cruz & Agreda (Life 9:74, 2019) Theorem 1 is exactly it, for k enantiomeric pairs where this
+file tests k = 1. The contribution narrows to clauses 2 and 3, and even that is only "not
+found in two papers", not "novel": §65 claims priority for nothing.
+
+These tests assert the theorem is TRUE, which is independent of who first wrote it down.
 """
 from __future__ import annotations
 

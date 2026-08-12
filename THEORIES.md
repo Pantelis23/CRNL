@@ -1961,7 +1961,29 @@ action networks by linear inequalities.
 clause 2 -- which separates topology from rates, reduces capability to the signs of a list of
 integers, and attributes amplification to named reactions.
 
-**T-THM-a, open and the novelty claim rests on it: is clause 2's decomposition already in the
+**T-THM-a -> §70: SETTLED for the two papers read, and it cost clause 4.** Montoya, Cruz &
+Agreda (Life 9:74, 2019) Theorem 1, the "MM-condition": a racemic steady state is
+symmetry-breaking iff the characteristic polynomial of A_Om - B_Om is unstable. For a
+Z_2-symmetric Jacobian [[A,B],[B,A]] the spectrum splits into A+B and A-B, so **A_Om - B_Om IS
+the antisymmetric block** and their Theorem 1 IS §62's clause 4 -- stated for k enantiomeric
+pairs where CRNL has k = 1, so MORE general, not less. §65 called it "in substance" their
+routine practice; it is more specific than that and §65 understated it.
+
+**What is not in those papers:** no per-reaction signed decomposition (the criterion is
+Jacobian-eigenvalue-based via Hurwitz-Routh on symbolic determinants), and no purely
+combinatorial capability result -- their one structural theorem is negative and case-by-case.
+So **the contribution narrows to clauses 2 and 3**, which is exactly what §65 hedged before
+reading them.
+
+Also worth recording: two independent routes reach the same object, and §63's lambda_A is the
+exact CME counterpart of their deterministic A_Om - B_Om -- clause 5, where nothing comparable
+was found.
+
+**SCOPE: two papers, one of them poorly extracted. "Not found in two papers" is weaker than
+"novel", and the homochirality field is seventy years old. §65 claims priority for nothing and
+that still stands.**
+
+**~~T-THM-a, open and the novelty claim rests on it: is clause 2's decomposition already in the
 mirror-symmetry-breaking literature?** NOT SETTLED -- abstracts are not enough. **How to
 kill:** read Montoya/Cruz/Agreda and the MATCH algebraic-analysis paper properly and check
 whether the racemic-stability condition is ever written as a nonneg-weighted sum over

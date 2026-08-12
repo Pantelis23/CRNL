@@ -8438,3 +8438,65 @@ has already removed the affinity floor's claim to universality.
 > unique separatrix. Nothing here addresses cascades, where §12's depth ceiling lives, nor
 > n > 2 outcomes. The identity is an identity; what is shown is that *splitting it by outcome
 > yields no information*, on the two substrate families examined.
+
+---
+
+### 70 T-THM-a settled: clause 4 is prior art, and in more generality than §65 claimed
+
+§65 stated the Symmetric Restoration Theorem and recorded its novelty as **UNVERIFIED**,
+noting that whether clause 2's decomposition is already in the mirror-symmetry-breaking
+literature "has *not* been settled — that needs the Montoya et al. and MATCH
+algebraic-analysis papers read properly, not their abstracts." Read properly:
+
+**Montoya, Cruz & Ágreda, *Life* 9:74 (2019), Theorem 1 — the "MM-condition":**
+
+> *"Let s be a racemic steady state of the pseudochiral network Ω, we have that s is
+> symmetry-breaking, if and only if, the characteristic polynomial of A_Ωs − B_Ωs is
+> unstable."*
+
+with `A_Ω` the k×k block of the Jacobian on the first enantiomer set and `B_Ω` the block
+coupling it to the mirror set. **For a Z₂-symmetric Jacobian `[[A, B], [B, A]]` the spectrum
+splits into A+B (symmetric) and A−B (antisymmetric), so `A_Ω − B_Ω` IS the antisymmetric
+block.** Their Definition 7 makes the same distinction CRNL's P does, requiring an unstable
+eigenvector with `v_i ≠ v_{i+k}` — an antisymmetric mode, not just any instability.
+
+> **So clause 4 is prior art, and §65 understated how much.** §65 said it was "in substance
+> linear stability of the racemic state, which that literature does routinely". It is more
+> specific than that: **it is their Theorem 1**, stated for k enantiomeric pairs where CRNL's
+> §62 has k = 1. The generality runs the other way from what §65 implied.
+
+**What that literature does *not* contain**, on the reading of both papers:
+
+* **No per-reaction signed decomposition.** The criterion is Jacobian-eigenvalue-based and
+  tested through Hurwitz–Routh inequalities on symbolic determinants. Nothing of the form
+  `P = Σ_r c_r·d_r·B_r(x)` with `d_r` integral and `B_r ≥ 0` appears.
+* **No purely combinatorial capability result.** No statement of the form "the network can
+  break symmetry for *some* rate constants ⟺ [condition on stoichiometry alone]". Their one
+  structural theorem is negative and case-by-case (the Calvin model cannot break symmetry,
+  proved by ruling out Hurwitz inequalities). Clarke's extreme currents enter only to make
+  sampling cheaper, not to decide capability.
+
+### 70.1 The corrected novelty statement
+
+| clause | status |
+|---|---|
+| **1** invariance / divisibility | **prior art** — flow-invariance of Fix(Z₂), a folk theorem of equivariant dynamics (§65.1) |
+| **2** decomposition `P = Σ_r c_r d_r B_r`, `B_r ≥ 0` | **not found** in either paper — the candidate contribution |
+| **3** capability ⟺ some `d_r > 0`; non-restoring rates a convex cone | **not found** — follows from clause 2 |
+| **4** realisation as one inequality at x\* | **prior art** — Montoya et al. Theorem 1, at k ≥ 1 |
+| **5** exact stochastic antisymmetric sector, λ_A | **unchecked** against literature |
+
+**So the theorem's contribution narrows to clauses 2 and 3, exactly as §65 hedged** — not that
+a criterion exists, but that it has a fixed sign structure separating topology from rates. That
+hedge was written before the papers were read and it survives them.
+
+> **And the agreement is itself worth recording.** Two independent routes — this project's
+> §53/§54 decomposition and their Jacobian block analysis — arrive at the same object. Their
+> `A_Ω − B_Ω` is the deterministic antisymmetric block; §63's λ_A is its **exact CME
+> counterpart**, which is where clause 5 sits and where nothing comparable was found.
+
+> ⚠ **Scope of this literature check, stated because it is not exhaustive.** Two papers read:
+> Montoya/Cruz/Ágreda (clear) and the MATCH algebraic-analysis paper (PDF extraction poor, its
+> findings weakly supported and not relied on here). The homochirality field is seventy years
+> old and this is not a survey. **Clause 2 is "not found in two papers", which is weaker than
+> "novel"**, and §65's refusal to claim priority stands until someone reads more widely.

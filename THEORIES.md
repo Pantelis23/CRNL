@@ -1935,6 +1935,48 @@ Device reading: **to halve the blur on a chemical switch's threshold, use four t
 molecules.** The extrapolation beyond the measured decade is NOT resolved (three ansaetze
 spread 90% at Omega = 1000) -- the exponent stands, the value past the data does not.
 
+**T-THM -> §65: THE SYMMETRIC RESTORATION THEOREM, and the literature that was never
+checked.** §43/§54/§55/§56/§62/§63 are one statement in six clauses: (1) invariance --
+b_X - b_Y = (n_X - n_Y) P(n), so the sign of a lead is a deterministic invariant; (2)
+decomposition -- P = sum_r c_r d_r B_r(x) with d_r = S_X - S_Y integral and every B_r >= 0;
+(3) capability is combinatorial -- restores for SOME c iff some d_r > 0, and the non-restoring
+c form a convex cone; (4) realisation is ONE linear inequality, sum_r c_r d_r B_r(x*) > 0, and
+the realising set is a cone but NOT convex; (5) at finite Omega the generator block-
+diagonalises and lambda_A is the exact stochastic P, negative always, with the transition
+rounded to width ~ Omega^(-1/2).
+
+**Prior art, checked at last (§65.1).** Clause 1 is the folk theorem on flow-invariance of
+Fix(Z_2) in equivariant dynamics (Golubitsky, Stewart & Schaeffer 1988) -- §43's framing of it
+as a discovery is withdrawn. **The nearest neighbour is the SPONTANEOUS MIRROR-SYMMETRY
+BREAKING / homochirality literature**, not CRNT: an exchange-symmetric network whose two
+species are enantiomers, asked when it leaves the racemic state, is that field's central
+problem from Frank (1953) through Ribo & Hochberg to Montoya, Cruz & Agreda (Life 9:74, 2019)
+and the Listanalchem tool. Clause 4 is, in substance, linear stability of the racemic state,
+which they do routinely -- but their conditions come out SEMIALGEBRAIC AND HARD TO SAMPLE,
+linearised where possible via Clarke's stoichiometric network analysis. Adjacent: Craciun-
+Feinberg's species-reaction graph, Joshi & Shiu, and arXiv:1002.1054 on switching in mass
+action networks by linear inequalities.
+
+**So the claim is not that a criterion exists but that it has a FIXED SIGN STRUCTURE** --
+clause 2 -- which separates topology from rates, reduces capability to the signs of a list of
+integers, and attributes amplification to named reactions.
+
+**T-THM-a, open and the novelty claim rests on it: is clause 2's decomposition already in the
+mirror-symmetry-breaking literature?** NOT SETTLED -- abstracts are not enough. **How to
+kill:** read Montoya/Cruz/Agreda and the MATCH algebraic-analysis paper properly and check
+whether the racemic-stability condition is ever written as a nonneg-weighted sum over
+reactions carrying combinatorial signs. Until then §65 claims priority for nothing.
+
+**T-THM-b, open: does the theorem survive loss of exchange symmetry?** Every quantitative
+result in this project -- G ~ 2 k_B per molecule per e-fold, the frontier exponent, gamma_c --
+is measured on ONE symmetric network, while the founding object (an inverter driven toward
+one rail) is ASYMMETRIC. Clause 1 fails outright without the symmetry (§42: residuals 1.9e1,
+2.9e2). **How to kill:** run the rulers on a driven Schloegl switch (A + 2X <-> 3X, B <-> X,
+chemostatted), which restores with no exchange symmetry at all and is 1-D so everything is
+exact. Per this project's three failures of exponent transfer (§39.2, §46, §59), the prior is
+that G != 2 and the frontier exponent differs; if instead they transfer, that is a
+substrate-independent price of restoration and a far bigger result.
+
 **~~T15-l -> §63.2: the exponent is nearly, but not exactly, §9.1's pitchfork.~~ ->
 §64: WITHDRAWN, and the pitchfork is not excluded.** §63.2's estimator was gated on the DRIFT
 between consecutive local slopes while its REMAINING error was 4x that drift, admitting a

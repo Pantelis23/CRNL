@@ -1987,7 +1987,25 @@ non-adiabatic part is the system term, which is negative along the decision path
 of restoration is defined relative to closed conservative bookkeeping and does not survive the
 move to a driven device.**
 
-**T-THM-c, open: is the affinity floor (pairs) x ln(pairs+1)?** Two substrates fit it: AM with
+**~~T-THM-c, open: is the affinity floor (pairs) x ln(pairs+1)?~~ -> §68: REFUTED, one
+commit after it was opened, and by derivation rather than by fitting.** Generalising Schloegl's
+autocatalysis to order p at fixed pair count and imposing a triple root gives
+**A_c(p) = 2 ln[(p+1)/(p-1)]** -- confirmed against the engine's `cycle_affinity` to 4.4e-16
+and x0-independent to 8.9e-16. At p = 3 that is 2 ln 2 = 1.3863, killing both the
+(pairs)x ln(pairs+1) reading (predicts 2.1972) and the (pairs) x ln(max order) reading
+(predicts 2.7726) with a single counterexample. **The floor runs 2.1972 down to 0.5026 within
+ONE family at FIXED pair count and tends to 0 as p grows**, so §67's 5.66% agreement between
+3 ln 2 and 2 ln 3 is a coincidence of two points. Worse, the "pairs" reading was malformed:
+at three or more reversible pairs the cycle space is no longer one-dimensional and a single
+affinity is not defined at all.
+
+**Standing statement:** every restoring element examined has an affinity floor -- a nonzero
+drive below which no bistable landscape exists -- but its value is set by the element's own
+stoichiometry and varies by at least a factor of four. **There is no universal price of
+admission.** §68 also closed a gap §67 left: A_c is a genuine MINIMUM (A rises monotonically
+away from the degenerate point), which §67 had assumed rather than checked.
+
+**T-THM-c (original entry, kept per rule 3), open: is the affinity floor (pairs) x ln(pairs+1)?** Two substrates fit it: AM with
 3 reversible pairs gives 3 ln 2, Schloegl with 2 gives 2 ln 3. Two points fit almost any
 two-parameter form, so this is a PATTERN, not a law (rule 17). **How to kill:** find a
 restoring element with 4 reversible pairs and check for 4 ln 5 = 6.44, or one with 2 pairs and

@@ -1,0 +1,69 @@
+=== P1 GATE: is it a genuine triple root, and is the perturbed element bistable?
+  p     x0        |f|        |f|       |f"|              roots off-degeneracy
+  2   0.60   1.11e-16   1.05e-10   1.11e-06                     [0.5 0.6 0.7]
+  3   0.60   0.00e+00   1.19e-10   5.55e-07         [0.50486 0.6     0.68811]
+  4   0.60   2.78e-17   1.19e-10   5.55e-07         [0.50054 0.6     0.6852 ]
+  5   0.60   0.00e+00   1.07e-10   2.78e-07         [0.48905 0.6     0.68656]
+  6   0.60   6.94e-18   9.06e-11   6.94e-08         [0.46884 0.6     0.69051]
+  8   0.60   1.73e-18   5.59e-11   5.20e-08         [0.36211 0.6     0.70334]
+  -> P1 HOLDS  (triple root exact; perturbed element has 3 positive fixed points)
+
+=== P2/P3/P4: the floor against the derivation, and against the two readings
+  p     x0    A (engine)   2ln[(p+1)/(p-1)]  (a) 2ln3  (b) 2ln(p+1)
+  2   0.60  2.1972245773       2.1972245773    2.1972        2.1972
+  2   1.00  2.1972245773       2.1972245773    2.1972        2.1972
+  2   2.50  2.1972245773       2.1972245773    2.1972        2.1972
+  3   0.60  1.3862943611       1.3862943611    2.1972        2.7726
+  3   1.00  1.3862943611       1.3862943611    2.1972        2.7726
+  3   2.50  1.3862943611       1.3862943611    2.1972        2.7726
+  4   0.60  1.0216512475       1.0216512475    2.1972        3.2189
+  4   1.00  1.0216512475       1.0216512475    2.1972        3.2189
+  4   2.50  1.0216512475       1.0216512475    2.1972        3.2189
+  5   0.60  0.8109302162       0.8109302162    2.1972        3.5835
+  5   1.00  0.8109302162       0.8109302162    2.1972        3.5835
+  5   2.50  0.8109302162       0.8109302162    2.1972        3.5835
+  6   0.60  0.6729444732       0.6729444732    2.1972        3.8918
+  6   1.00  0.6729444732       0.6729444732    2.1972        3.8918
+  6   2.50  0.6729444732       0.6729444732    2.1972        3.8918
+  8   0.60  0.5026288566       0.5026288566    2.1972        4.3944
+  8   1.00  0.5026288566       0.5026288566    2.1972        4.3944
+  8   2.50  0.5026288566       0.5026288566    2.1972        4.3944
+  -> P2 HOLDS (worst 4.44e-16)
+
+  P3 KILL at p = 3: measured A_c = 1.386294
+    reading (a) (pairs x ln(pairs+1)) predicts 2.197225  -> REFUTED
+    reading (b) (pairs x ln(max order)) predicts 2.772589  -> REFUTED
+    derivation 2 ln[(p+1)/(p-1)] predicts 1.386294  -> CONFIRMED
+
+  P4 x0-independence: worst spread across x0 = 8.88e-16
+  -> P4 HOLDS: the floor is a property of the element, not the operating point
+
+=== P6: is A_c a FLOOR (a minimum), or merely the boundary value? §67 assumed.
+  p       m=0.0      m=0.05       m=0.1       m=0.2       m=0.3
+  2    2.197225    2.198894    2.203936    2.224624    2.261076
+  3    1.386294    1.387547    1.391332    1.406914    1.434561
+  4    1.021651    1.022653    1.025684    1.038181    1.060449
+  5    0.810930    0.811765    0.814292    0.824724    0.843365
+  6    0.672944    0.673660    0.675826    0.684779    0.700810
+  8    0.502629    0.503186    0.504871    0.511846    0.524369
+  -> P6 HOLDS: A(m) is minimised at m = 0, so floor is the right word
+
+=== P5 (rule 9): does the PAIR COUNT enter at all? add a third reversible pair
+  p  pairs    A (engine)   2ln[(p+1)/(p-1)]  changed?
+  2      3           nan       2.1972245773ValueError
+  3      3           nan       1.3862943611ValueError
+  4      3           nan       1.0216512475ValueError
+  -> a third pair opens a SECOND independent cycle, so a single affinity may not
+     be defined; whatever it prints above is reported, not interpreted.
+
+=== summary: the floor across the family
+  p = 2: A_c = 2.197225
+  p = 3: A_c = 1.386294
+  p = 4: A_c = 1.021651
+  p = 5: A_c = 0.810930
+  p = 6: A_c = 0.672944
+  p = 8: A_c = 0.502629
+  AM (§9.1, 3 pairs, bimolecular): 2.079442
+  -> the floor spans 0.5026..2.1972 within ONE family at FIXED pair count, and tends to 0 as p grows
+
+wrote results/affinity_floor_family.json

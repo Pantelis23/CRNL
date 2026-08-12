@@ -67,3 +67,41 @@ def test_cap_is_not_a_reflecting_wall():
     b = cell(200, 1.0, 0.5, 0.35, 0.80, cap_mult=6.0)
     for k in ("p_down", "mean_T", "Sigma", "Q"):
         assert a[k] == pytest.approx(b[k], rel=1e-9), k
+
+
+def test_affinity_floor_is_not_universal_across_autocatalytic_order():
+    """FINDINGS §68: A_c(p) = 2 ln[(p+1)/(p-1)], so p = 3 kills both readings of §67."""
+    from crnl.networks.am_reversible import cycle_affinity, reverse_pairing
+    from experiments.affinity_floor_family import build
+
+    for p in (2, 3, 4, 6, 8):
+        for x0 in (0.6, 1.0, 2.5):
+            net = build(p, x0)
+            assert cycle_affinity(net, reverse_pairing(net)) == pytest.approx(
+                2.0 * np.log((p + 1) / (p - 1)), abs=1e-12), (p, x0)
+
+    a3 = 2.0 * np.log(4.0 / 2.0)
+    assert a3 != pytest.approx(2 * np.log(3), abs=1e-6)   # kills (pairs) x ln(pairs+1)
+    assert a3 != pytest.approx(2 * np.log(4), abs=1e-6)   # kills (pairs) x ln(max order)
+
+
+def test_affinity_floor_is_a_minimum_not_just_a_boundary_value():
+    """FINDINGS §68.1: §67 called it a floor without checking. A(m) must rise away from m=0."""
+    from experiments.affinity_floor_family import degenerate_consts
+
+    for p in (2, 3, 5):
+        x0 = 1.0
+        k1a, k1r, k2b, k2r = degenerate_consts(p, x0)
+        As = [np.log(k1a * (k2r - m ** 2) / (k1r * (k2b - m ** 2 * x0)))
+              for m in (0.0, 0.05, 0.10, 0.20, 0.30)]
+        assert all(np.diff(As) > 0), (p, As)
+
+
+def test_three_reversible_pairs_leave_the_affinity_undefined():
+    """FINDINGS §68.1: a third pair opens a second cycle, so cycle_affinity must REFUSE."""
+    from crnl.networks.am_reversible import cycle_affinity, reverse_pairing
+    from experiments.affinity_floor_family import build
+
+    net = build(2, 1.0, extra_pair=(0.7, 0.3))
+    with pytest.raises(ValueError):
+        cycle_affinity(net, reverse_pairing(net))

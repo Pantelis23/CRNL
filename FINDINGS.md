@@ -8286,3 +8286,75 @@ clause, which was always about molecule count and is substrate-neutral by constr
 > gate is now that Ω·|drift − field| is Ω-independent, which holds to 3e−3. A gate demanding
 > something false is the same defect class as a verdict that cannot fail, and the pre-run test
 > cost ten minutes.
+
+---
+
+### 68 The affinity floor is not a law — T-THM-c killed one commit after it was opened
+
+§67 found affinity floors of **3 ln 2** (AM) and **2 ln 3** (Schlögl), noted they are 5.66%
+apart and both ln(small integer), and opened T-THM-c as a *pattern* rather than a law. Two
+readings fit those two points equally well:
+
+    (a)  A_c = (pairs) × ln(pairs + 1)        3 ln 2  and  2 ln 3
+    (b)  A_c = (pairs) × ln(max order)        AM's max order 2, Schlögl's 3
+
+**Both are wrong, and a derivation settles it without any fitting.** Generalise Schlögl's
+autocatalysis to order p at fixed pair count — `pX ⇌ (p+1)X`, `∅ ⇌ X` — and impose a triple
+root (f = f′ = f″ = 0):
+
+    k1a/k1r = (p+1)x₀/(p−1),   k2r/k1r = (p+1)x₀^p/(p−1),   k2b/k1r = x₀^(p+1)
+
+so that `A = ln[k1a·k2r/(k1r·k2b)]` gives, with **x₀ cancelling exactly**,
+
+> **A_c(p) = 2 ln[(p+1)/(p−1)]**
+
+Confirmed against the engine's `cycle_affinity` — which takes the null space of the per-pair
+stoichiometry and has no access to the formula — to **4.4e−16**, and x₀-independent to
+**8.9e−16** across x₀ = 0.6, 1.0, 2.5:
+
+| p | 2 | 3 | 4 | 5 | 6 | 8 |
+|---|---|---|---|---|---|---|
+| **A_c** | 2.1972 | **1.3863** | 1.0217 | 0.8109 | 0.6729 | 0.5026 |
+| reading (a) predicts | 2.1972 | 2.1972 | 2.1972 | 2.1972 | 2.1972 | 2.1972 |
+| reading (b) predicts | 2.1972 | 2.7726 | 3.2189 | 3.5835 | 3.8918 | 4.3944 |
+
+**p = 3 kills both on the spot** — one counterexample, no tolerance written (rule 19).
+
+> **The floor spans 2.1972 down to 0.5026 within ONE family at FIXED pair count, and tends to
+> 0 as p → ∞.** So §67's near-agreement between 3 ln 2 and 2 ln 3 is a coincidence of two
+> points that happen to sit 5.66% apart, and **there is no substrate-independent affinity
+> floor.** The floor is a property of the specific element, not of restoration.
+
+### 68.1 Two things §67 asserted without checking
+
+> **§67 called A_c a "floor" without verifying it is a minimum.** It is the affinity at which
+> bistability dies — a *boundary* value. If A(m) dipped below it, a restoring element could
+> run cheaper than "the floor" and the word would be wrong. Swept here: A(m) rises
+> monotonically away from m = 0 for every p (e.g. p = 2: 2.1972, 2.1989, 2.2039, 2.2246,
+> 2.2611). **It is a genuine minimum, so the word survives** — but it was luck, not evidence.
+
+> **P5 found the pair count never enters, and cannot.** Adding a third reversible pair opens a
+> *second independent cycle*, so `cycle_affinity` refuses with a `ValueError` — by design; it
+> checks the cycle space is one-dimensional rather than summing an arbitrary combination.
+> **So "A_c = (pairs) × something" was malformed as well as wrong**: at more than two pairs a
+> single affinity is not defined at all, and both readings were extrapolating a quantity that
+> stops existing.
+
+> ⚠ **The P1 gate failed twice, and both times the probe was wrong, not the claim.** First it
+> perturbed the *constant* term k2b — but near a triple root f ≈ −k(x−x₀)³ + δ has one real
+> root for any δ. Then it perturbed k2r alone, which also leaves the family. §67's actual knob
+> adds m²(x−x₀), moving **k2r and k2b together**; with that, every p gives three positive roots
+> straddling x₀ and the gate holds. **A gate that fails because the probe is wrong looks
+> exactly like a gate that fails because the claim is wrong**, and the only thing that
+> distinguishes them is checking the probe against a case whose answer is already known — here
+> §67's p = 2, which the first two probes also failed.
+
+### 68.2 What survives of §67
+
+The measurements stand: Schlögl's floor *is* 2 ln 3, AM's *is* 3 ln 2, both exact. What is
+withdrawn is the invitation to read them as instances of a law. **T-THM-c is closed as
+refuted**, and the honest cross-substrate statement is now:
+
+> Every restoring element examined has an affinity floor — a nonzero drive below which no
+> bistable landscape exists — but **its value is set by the element's own stoichiometry and
+> ranges over at least a factor of four**. There is no universal price of admission.

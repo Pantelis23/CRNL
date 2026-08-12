@@ -29,3 +29,19 @@ def test_stage_kernel_is_stochastic():
     assert K.shape == (cap + 1, cap + 1)
     assert np.abs(K.sum(axis=1) - 1.0).max() < 1e-12
     assert (K >= -1e-14).all()
+
+
+def test_fast_and_exact_cascades_agree():
+    """FINDINGS §71.2: run_fast is validated against the dense instrument.
+
+    It is 50-90x SLOWER (||Qt|| ~ Omega, so Krylov cost scales with Omega), so it is kept
+    for correctness, not speed. Two bugs were caught by exactly this comparison: a globally
+    rather than per-source normalised channel, and channel/chemistry applied in the wrong
+    order.
+    """
+    from experiments.cascade_schlogl import run, run_fast, d_max
+
+    a, _ = run(120, 0.1, 1.0, 1.9, 2.0, 25, 0.45 * 0.9)
+    b, _ = run_fast(120, 0.1, 1.0, 1.9, 2.0, 25, 0.45 * 0.9)
+    assert np.abs(a - b).max() < 1e-4
+    assert d_max(a) == pytest.approx(d_max(b), rel=1e-3)

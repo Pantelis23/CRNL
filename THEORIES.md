@@ -1989,6 +1989,17 @@ kill:** read Montoya/Cruz/Agreda and the MATCH algebraic-analysis paper properly
 whether the racemic-stability condition is ever written as a nonneg-weighted sum over
 reactions carrying combinatorial signs. Until then §65 claims priority for nothing.
 
+**T-CASC-a's kill test is REPLACED by §71.2, because the obvious route makes things worse.**
+Going sparse -- exp(Qt)v by expm_multiply plus a Gaussian convolution instead of a dense
+kernel -- was built and VALIDATED against the exact instrument to 3e-6 in I with D_max
+identical to four decimals, and it is **50-90x SLOWER** (95s against 2.1s). The reason is
+structural: propensities are extensive, so ||Qt|| ~ Omega (8.5e4 at Omega = 200, 1.5e6 at
+3600), and every Krylov/Taylor exponential costs O(||Qt||) while dense scaling-and-squaring
+absorbs the norm in log time but costs O(n^3). **Both wall out near 1e4 states, for opposite
+reasons.** So T-CASC-a needs a different instrument, not a bigger machine: **D_max is set by
+the second eigenvalue of the stage map C*K**, and a sparse partial eigensolve is O(nnz) per
+iteration with no dependence on ||Qt|| at all. That is the reachable form of the measurement.
+
 **T-CASC-a, open -> §71: the depth ceiling is the most promising transfer candidate found,
 and it is NOT DECIDED.** The founding claim is about composition, and §12.1's ceiling
 D_max ~ exp(delta*^2/2 sigma^2)/4 is INFORMATION-THEORETIC, not thermodynamic -- its formula

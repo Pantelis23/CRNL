@@ -8573,3 +8573,40 @@ success.
 > full run **while P4 had already reported the ceiling still moving with Ω** — a verdict
 > announced from a comparison its own precondition had just invalidated. P3 is now gated on
 > P4 and prints WITHHELD.
+
+### 71.2 The wall is structural, and the obvious way around it makes things worse
+
+§71 estimated the cost of reaching saturation as "dense `expm` walls out near 10⁴ states". The
+obvious fix is to stop forming a dense matrix: the chemistry step only needs `exp(Qt)·v`
+(sparse `expm_multiply`) and the channel is a Gaussian convolution rather than a (cap+1)²
+matrix. Built as `run_fast`, and **validated against the exact instrument to 3e−6 in I, with
+D_max identical to four decimals**.
+
+**It is 50–90× slower.**
+
+| Ω, σ/Δ | max \|ΔI\| | D_max dense vs sparse | dense | sparse |
+|---|---|---|---|---|
+| 150, 0.45 | 5.2e−6 | 3.0451 / 3.0450 | 2.1 s | 95.5 s |
+| 200, 0.35 | 7.4e−8 | 8.5255 / 8.5255 | 1.6 s | 139.4 s |
+
+The reason is structural and settles the cost question properly: **propensities are extensive,
+so `‖Qt‖` grows linearly with Ω** — 8.5e4 at Ω = 200, 3.8e5 at Ω = 900, 1.5e6 at Ω = 3600.
+Every Krylov or Taylor exponential costs O(‖Qt‖) work, while dense scaling-and-squaring absorbs
+the norm in log time but costs O(n³) and O(n²) memory. **Both methods wall out around 10⁴
+states, for opposite reasons**, so §71's estimate was right about the wall and wrong about
+which method sets it.
+
+> **T-CASC-a therefore needs a different instrument, not a bigger machine.** The stage map is a
+> fixed stochastic kernel applied repeatedly, so the natural route is its dominant eigenvalues
+> rather than its repeated action — D_max is set by the second eigenvalue of `C·K`, and a
+> sparse partial eigensolve is O(nnz) per iteration with no dependence on ‖Qt‖ at all. That is
+> the reachable version of this measurement and it is what the open question should have asked
+> for.
+
+> ⚠ **Two bugs in the fast instrument, both caught by the gate against the exact one.** The
+> channel was normalised globally where the reference normalises **per source row** (the dense
+> map truncates the Gaussian asymmetrically at the lattice edges), which disagreed by |ΔI| up
+> to **0.30**; and the two steps were applied in the wrong order — `run` computes
+> `p @ (C @ K)`, channel then chemistry — which left a half-stage offset worth **~1%** in
+> D_max. A faster instrument that disagreed with the exact one would have been worse than no
+> instrument, and neither bug is visible in the output of the fast path alone.

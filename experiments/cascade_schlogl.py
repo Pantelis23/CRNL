@@ -76,9 +76,10 @@ import json
 import pathlib
 
 import numpy as np
+import scipy.sparse as sp
 from scipy.linalg import expm
-
-from experiments.affinity_floor_family import degenerate_consts
+from scipy.signal import fftconvolve
+from scipy.sparse.linalg import expm_multiply
 
 # §12.1's published AM numbers: predicted D_max and the measured depth at Omega = 128
 AM_PREDICTED = {0.45: 3.0, 0.35: 14.8, 0.28: 147.0}
@@ -148,6 +149,53 @@ def run(omega, r1, r2, r3, t_stage, depth, sigma, cap_mult=2.0):
         p_lo = p_lo @ step
         Is.append(mutual_information(p_hi, p_lo, r2, omega))
     return np.array(Is), K
+
+
+def _sparse_Q(omega, r1, r2, r3, cap_mult=2.0):
+    c = schlogl_consts(r1, r2, r3)
+    cap = int(np.ceil(cap_mult * r3 * omega))
+    lam, mu = rates(omega, c, cap)
+    idx = np.arange(cap + 1)
+    Q = sp.diags([mu[1:], -(lam + mu), lam[:-1]], [-1, 0, 1], format="csc")
+    return Q, cap
+
+
+def run_fast(omega, r1, r2, r3, t_stage, depth, sigma, cap_mult=2.0):
+    """Same cascade without ever forming a dense matrix.
+
+    The chemistry step is exp(Qt)v by sparse expm_multiply; the channel is a Gaussian
+    CONVOLUTION rather than a (cap+1)^2 matrix. Validated against `run` at small Omega --
+    a faster instrument that disagreed with the exact one would be worse than no instrument.
+    """
+    Q, cap = _sparse_Q(omega, r1, r2, r3, cap_mult)
+    Qt = (Q * t_stage).T.tocsc()          # act on row-vectors: p exp(Qt) = exp(Q^T t) p
+    if sigma > 0:
+        # The dense reference normalises C PER SOURCE ROW, so the Gaussian is truncated
+        # asymmetrically at the lattice edges. A globally-renormalised convolution is a
+        # DIFFERENT map -- the first version of this function did that and disagreed with
+        # the exact instrument by |dI| up to 0.30. Reproduce it exactly: divide by the
+        # per-source mass Z first, then convolve over the FULL offset range.
+        off = np.arange(-cap, cap + 1)
+        k = np.exp(-0.5 * (off / (sigma * omega)) ** 2)
+        Z = fftconvolve(np.ones(cap + 1), k, mode="full")[cap:cap + cap + 1]
+    else:
+        k = Z = None
+
+    def step(p):
+        # CHANNEL THEN CHEMISTRY: `run` computes p @ (C @ K) = (p @ C) @ K. The first
+        # version of this function applied them the other way round and disagreed with the
+        # exact instrument by ~1% in D_max -- a half-stage offset, not a rounding error.
+        if k is not None:
+            p = fftconvolve(p / Z, k, mode="full")[cap:cap + cap + 1]
+        return expm_multiply(Qt, p)
+
+    p_hi = np.zeros(cap + 1); p_hi[int(round(r3 * omega))] = 1.0
+    p_lo = np.zeros(cap + 1); p_lo[int(round(r1 * omega))] = 1.0
+    Is = []
+    for _ in range(depth):
+        p_hi, p_lo = step(p_hi), step(p_lo)
+        Is.append(mutual_information(p_hi, p_lo, r2, omega))
+    return np.array(Is), cap
 
 
 def d_max(Is, level=0.5):

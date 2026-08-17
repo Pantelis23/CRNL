@@ -246,6 +246,26 @@ survives with a different formula** — the escape action is also a deterministi
 So the founding question is still answered without a master equation; it is the quasipotential
 integral rather than the linear-noise variance.
 
+### The ODE does not determine reliability
+
+**§83 is the sharpest single result of this arc, and it constrains the project's own method.**
+A depends on λ and μ separately; the mass-action ODE depends only on their difference. So a
+reaction pair adding the same function to both — a birth and a death with identical *reactant
+complexes*, like `X→2X` with `X→∅`, or AM's `X+Y→2X` with `X+Y→2Y` — leaves the deterministic
+dynamics **exactly** unchanged and still moves A.
+
+> Gated on both substrates: the drift is invariant to **4.9e−15** (Schlögl) and **1.1e−16** (AM).
+> Across the sweep A falls 5.6× and η falls 4.4×, monotonically, by two unrelated routes. **At
+> Ω = 6400 the depth ceiling spans e¹³⁷ between elements no ODE measurement can tell apart.**
+
+§78/§81's operational claim survives — A is still quadrature, no master equation needed. Its
+gloss did not: *"a property of the deterministic field"* was too loose. **A is a functional of the
+propensity pair, and the ODE is strictly coarser than the thing that sets reliability.**
+
+Both neutral pairs are irreversible, so this sharpens §82 rather than qualifying it: the element
+pays an *unbounded* thermodynamic cost and gets **worse** reliability for it. Drive and
+reliability move in opposite directions inside one network.
+
 §71/§72's external-channel cascade is unaffected — checked, not assumed: there the readout term
 binds by 35 nats. **Engineered wiring and chemical coupling are physically different cascades.**
 

@@ -9426,3 +9426,65 @@ landscape's headline number has most of one. The suspect (rule 17) remains *"A i
 of the whole field, not of any single number extracted from it"*, and it is not yet confirmed —
 what would confirm it is a second field with identical Δ **and** identical saddle placement
 giving a different A.
+
+---
+
+### 83 Two networks with identical mass-action ODEs have different reliability — T-COST-o
+
+§82 left one suspect standing: A is a functional of the whole field and of no scalar summary of
+it. The kill test as opened was to match Δ and the saddle placement and vary the curvature.
+**A sharper version was available, and it kills more than the suspect.**
+
+`A = −∫ln(μ/λ)dx` depends on λ and μ **separately**. The mass-action ODE depends only on their
+*difference*. So any reaction pair adding the same function to both leaves the deterministic
+dynamics exactly unchanged while moving A — and mass action supplies such pairs directly, since
+a birth and a death with identical **reactant complexes** have identical propensities:
+
+| substrate | the neutral pair | shared propensity |
+|---|---|---|
+| Schlögl | `X→2X` and `X→∅` at equal rate c | `c·n` |
+| AM | `X+Y→2X` and `X+Y→2Y` at equal rate c | `c·n_X·n_Y/Ω` |
+
+**P1(a), the gate the section means nothing without.** Schlögl: `max|f_c(x) − f_0(x)| = 1.07e−14`
+over 41 points × 6 values of c, against a field scale of 2.16 — a relative perturbation of
+**4.9e−15**. AM: `1.11e−16` over 200 random simplex points × 3 values of c. **The deterministic
+dynamics is identical on both substrates**, every fixed point, Δ, and the saddle included.
+
+**P1(b), rule 16, absolute.** The quadrature is checked against the *exact* first-passage time of
+the modified chain at every c — worst **0.215%**. Without this the whole result could have been a
+quadrature drifting with c while the true barrier did not.
+
+**P2/P3/P4 — the measurement, at a fixed deterministic field:**
+
+| c | A | A/A(0) | η | η/η(0) | ln D_max at Ω=6400 |
+|---|---|---|---|---|---|
+| 0.0 | 0.026047 | 1.0000 | 0.059537 | 1.0000 | **163.9** |
+| 1.0 | 0.021108 | 0.8104 | 0.050782 | 0.8529 | 132.3 |
+| 5.0 | 0.012044 | 0.4624 | 0.031974 | 0.5370 | 74.3 |
+| 20.0 | 0.004629 | 0.1777 | 0.013384 | 0.2248 | **26.8** |
+
+Both exponents fall, monotonically and in the same direction — A by 5.6×, η by 4.4×. They are
+computed by completely different routes (quadrature over the barrier; Lyapunov at the rail), and
+a disagreement in *direction* would have meant one of them was wrong.
+
+> **At Ω = 6400 the depth ceiling spans e¹³⁷ between elements that no ODE measurement can tell
+> apart.**
+
+**P5, rule 9, on a conservative two-species element.** AM's neutral pair collapses it the same
+way: at γ = 0.35, A falls 0.07158 → 0.02034, a factor of **3.52**, monotone, with local
+`d ln T/dΩ` converging to four figures in every retained cell; at γ = 0.40, a factor of 2.27 with
+the c = 1.0 cell excluded on the convergence gate. AM's c = 0 value reproduces §82's 0.07158
+exactly, which pins the two sections' instruments together.
+
+**What this costs and what it does not.** §78/§81's operational claim survives untouched — A is
+still obtained by quadrature with no master equation. **Its gloss did not: "a property of the
+deterministic field" was too loose.** The Lyapunov route needs `D = S·diag(a)·Sᵀ`, which is the
+propensities and not the drift, and so does A. The correct statement is that A is a functional of
+the **propensity pair**, and the ODE is a strictly coarser object than the thing that sets
+reliability.
+
+**And it sharpens §82 rather than qualifying it.** Both neutral pairs are irreversible as
+written, so their dissipation is formally infinite. The element therefore pays an *unbounded*
+thermodynamic cost and gets **worse** reliability for it — drive and reliability moving in
+opposite directions inside a single network, which is a stronger statement than §82's
+independence.

@@ -3547,11 +3547,42 @@ The corrected reading is sharper than either prediction: **Delta and the affinit
 determine A, by margins three orders of magnitude apart -- 1.75x against 926x.** The drive has
 essentially no grip; the landscape's headline number has most of one.
 
-**T-COST-o, open: is A a functional of the field alone?** The surviving suspect (rule 17, NOT a
-mechanism) is that A is determined by the whole rate-function shape and by no scalar summary of
-it. **How to kill:** construct two fields with identical Delta AND identical saddle placement but
-different curvature, and measure A. Equal A would promote the suspect; different A would confirm
-it. §82 constrained only two scalars and cannot distinguish these.
+~~**T-COST-o, open: is A a functional of the field alone?**~~ **-> §83. CLOSED, and by a
+sharper test than the one it was opened with, which settles more than it asked.**
+
+The kill test as opened was to match Delta and the saddle placement and vary the curvature. The
+sharper version: **A depends on lam and mu separately; the ODE depends only on their difference.**
+So a reaction pair adding the SAME function to both leaves the deterministic dynamics exactly
+unchanged while moving A -- and mass action supplies such pairs directly, since a birth and a
+death with identical REACTANT COMPLEXES have identical propensities. Schloegl: X -> 2X and
+X -> 0 at equal rate, both c*n. AM: X+Y -> 2X and X+Y -> 2Y, both c*n_X*n_Y/Omega.
+
+  * ODE invariance gated on BOTH substrates: 4.9e-15 relative for Schloegl over 41 points x 6
+    rates, 1.1e-16 for AM over 200 random simplex points x 3 rates.
+  * Quadrature checked against the EXACT first passage of the modified chain at every rate,
+    worst 0.215% (rule 16 -- otherwise a quadrature drifting with c fabricates the result).
+  * **A falls 5.6x and eta falls 4.4x, monotonically and in the same direction**, by two
+    unrelated routes. AM falls 3.52x at gamma = 0.35 and reproduces §82's A to four figures at
+    c = 0, pinning the two sections' instruments together.
+
+**The consequence is larger than T-COST-o.** This project's method is the gap between the ODE and
+the CME. Two networks sharing an ODE exactly and differing in A means **the ODE does not determine
+reliability, and does not determine the maximum composition depth** -- at Omega = 6400 the ceiling
+spans e^137 between elements no ODE measurement can distinguish. §78/§81's operational claim
+survives (A is still quadrature, no master equation); **its gloss did not.** "A property of the
+deterministic field" was too loose: the Lyapunov route needs D = S diag(a) S^T, which is the
+propensities and not the drift, and so does A. A is a functional of the PROPENSITY PAIR.
+
+**And it sharpens §82 rather than qualifying it.** Both neutral pairs are irreversible as written,
+so their dissipation is formally infinite: the element pays an UNBOUNDED thermodynamic cost and
+gets WORSE reliability for it. Drive and reliability move in OPPOSITE directions inside a single
+network, which is stronger than §82's independence.
+
+**T-COST-p, open: how much of the depth ceiling is propensity and how much is drift?** §83 shows
+the drift does not determine A but says nothing about how the two divide. **How to kill:** hold
+lam + mu fixed while varying lam - mu, the orthogonal sweep to §83's, and see whether A is
+constant on THAT level set. If it is, A is a functional of (lam+mu) alone and the pair collapses
+to one scalar function; if not, both halves matter and the ceiling needs the full pair.
 
 ## 5. Where this sits in the literature
 

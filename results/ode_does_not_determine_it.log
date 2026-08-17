@@ -1,0 +1,54 @@
+=== P1(a) GATE: is the mass-action ODE really untouched?
+  max |f_c(x) - f_0(x)| over 41 points and 6 values of c: 1.066e-14
+  (field scale max|f_0| = 2.1600, so the relative perturbation is 4.9e-15)
+  AM, 200 random simplex points x 3 values of c: max |f_c - f_0| = 1.110e-16  (field scale 0.6877)
+  -> P1(a) HOLDS on BOTH substrates: the deterministic dynamics is identical
+
+=== P1(b) GATE (rule 16, ABSOLUTE): quadrature against the exact first passage
+      c   A quadrature   A exact MFPT    ratio
+    0.0       0.026047       0.026044   1.0001
+    0.5       0.023315       0.023312   1.0002
+    1.0       0.021108       0.021104   1.0002
+    2.0       0.017757       0.017753   1.0002
+    5.0       0.012044       0.012039   1.0004
+   20.0       0.004629       0.004619   1.0021
+  worst |quadrature/exact - 1| = 0.215%
+  -> P1(b) HOLDS: the quadrature tracks the true barrier at every c
+
+=== P2/P4: A and eta against the futile rate, at a FIXED deterministic field
+      c           A    A/A(0)         eta   eta/eta(0)
+    0.0    0.026047    1.0000    0.059537       1.0000
+    0.5    0.023315    0.8951    0.054812       0.9206
+    1.0    0.021108    0.8104    0.050782       0.8529
+    2.0    0.017757    0.6817    0.044271       0.7436
+    5.0    0.012044    0.4624    0.031974       0.5370
+   20.0    0.004629    0.1777    0.013384       0.2248
+  A falls by a factor of 5.6 across the sweep; eta by 4.4
+  -> P2 HOLDS: A is NOT a functional of the drift -- the ODE does not determine reliability
+  -> P4 the two exponents agree in direction, as they must
+
+=== P3: the consequence, in depth. ln D_max = A*Omega - ln(t/c*)
+      c   Omega    ln D_max         D_max
+    0.0    6400       163.9     1.556e+71
+    0.5    6400       146.4     3.966e+63
+    1.0    6400       132.3     2.907e+57
+    2.0    6400       110.9     1.406e+48
+    5.0    6400        74.3     1.861e+32
+   20.0    6400        26.8     4.569e+11
+  -> at Omega = 6400 the depth ceiling spans e^137 between elements that NO ODE measurement can tell apart
+
+=== P5 (rule 9): AM, a conservative two-species element, with its own neutral pair
+  gamma      c         A    A/A(0)  local A series
+   0.35    0.0   0.07158    1.0000  0.0715, 0.0715, 0.0716
+   0.35   0.25   0.04396    0.6142  0.0438, 0.0439, 0.0440
+   0.35    0.5   0.03173    0.4433  0.0315, 0.0316, 0.0317
+   0.35    1.0   0.02034    0.2841  0.0205, 0.0203, 0.0203
+    0.4    0.0   0.03253    1.0000  0.0323, 0.0324, 0.0325
+    0.4   0.25   0.01985    0.6102  0.0201, 0.0198, 0.0198
+    0.4    0.5   0.01432    0.4404  0.0150, 0.0145, 0.0143
+    0.4    1.0  EXCLUDED            0.0107, 0.0099, 0.0095
+  gamma=0.35: A falls by a factor of 3.52  (monotone)
+  gamma=0.4: A falls by a factor of 2.27  (monotone)
+  -> P5 HOLDS on a second substrate: a conservative element collapses the same way
+
+wrote results/ode_does_not_determine_it.json

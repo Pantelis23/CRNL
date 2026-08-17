@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§70. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§82. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -261,8 +261,23 @@ what makes §80 a correction rather than a relabelling — a constant ratio woul
 
 ## 3. Why reliability has no thermodynamic price
 
-The natural hope is an exact relation between error rate and dissipation. It was pursued four
-ways and closed each time — the last closure being the sharpest.
+The natural hope is an exact relation between error rate and dissipation. It was pursued five
+ways and closed each time — and the fifth is the one that counts, because the first four priced
+quantities §80 later showed govern nothing.
+
+**§82 asks it of the escape action, the exponent that does govern reliability and depth.** Both
+networks have a *one-dimensional* cycle space, so their entire non-equilibrium drive is a single
+number that can be pinned by construction while the kinetics move:
+
+> With the affinity held fixed to **4.9e−14 nats**, A spans a factor of **926**. With A held
+> fixed to **0.0000%**, the affinity spans **0.92 nats**.
+
+Neither implication holds. The drive does not set the action, and the action does not report the
+drive — and unlike the earlier closures, this one runs in both directions. What *does* constrain
+A is the landscape, though not tightly: at fixed Δ, across a 32.7× move in the saddle's position,
+A still varies by 1.75×. **Both fail, by margins three orders of magnitude apart.**
+
+The four earlier closures, each correct about its own observable:
 
 The integral fluctuation theorem `⟨e^(−S_tot)⟩ = 1` holds at the decision time — best cell
 5.5e−14, **median 1.33e−9** over 36 cells (§41; quoting only the best cell would be the

@@ -3519,6 +3519,40 @@ closer to thermodynamically optimal than §40 reports.
 
 ---
 
+**T-COST-n -> §82: CLOSED. The escape action has no thermodynamic price, and the closure is
+two-way.** §80 showed the exponent governing reliability and depth is the escape action A;
+§3's four earlier closures all priced quantities that do not govern it, so the founding question
+was reopened by §80 whether or not anyone said so. §82 asks it of A directly, using the fact that
+both networks have a ONE-DIMENSIONAL cycle space, so the entire non-equilibrium drive is a single
+number that can be pinned by construction:
+
+  * **At the affinity held fixed to 4.9e-14 nats, A spans a factor of 926** (Schloegl, exact
+    quadrature). At AM's affinity held fixed to 4.4e-16 nats, a factor of 5.0.
+  * **At A held fixed to 0.0000%, the affinity spans 0.92 nats.** So the drive does not set the
+    action AND the action does not report the drive. Earlier closures established only the
+    first direction.
+
+**How to reopen:** find any network whose cycle space is one-dimensional and whose A is constant
+on the affinity level set. The measurement is exact and cheap in 1-D, so this is falsifiable by
+one counterexample rather than by a fit.
+
+**T-COST-n's own rule-9 failure, in the section whose method IS rule 9.** P5 asked what does set
+A if the affinity does not. Swept over r1 in [0.05, 0.35] -- a 1.4x move in the saddle's relative
+position -- A spanned 3% and the verdict printed "Delta alone reproduces A". Widened to the full
+admissible range (32.7x) at three separate Delta, A spans up to 1.754x. **The narrow sweep was
+not wrong about its own data; it was wrong that its range was the range that mattered, and
+nothing in the output said so.** Both numbers are kept and both are in the test.
+
+The corrected reading is sharper than either prediction: **Delta and the affinity both fail to
+determine A, by margins three orders of magnitude apart -- 1.75x against 926x.** The drive has
+essentially no grip; the landscape's headline number has most of one.
+
+**T-COST-o, open: is A a functional of the field alone?** The surviving suspect (rule 17, NOT a
+mechanism) is that A is determined by the whole rate-function shape and by no scalar summary of
+it. **How to kill:** construct two fields with identical Delta AND identical saddle placement but
+different curvature, and measure A. Equal A would promote the suspect; different A would confirm
+it. §82 constrained only two scalars and cannot distinguish these.
+
 ## 5. Where this sits in the literature
 
 The project has run without citations. That is a defect, not a style: several results

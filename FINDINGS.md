@@ -9357,3 +9357,72 @@ external channel and are a different regime (§80 P5), not these numbers.
 Both conclusions survive the exclusion, with smaller numbers. **That is the point of catching
 it: the verdicts were right and the magnitudes were not**, and a factor of 282 quoted from an
 underflow would have been the most quotable wrong number in the record.
+
+---
+
+### 82 The escape action has no thermodynamic price — T-COST-n
+
+The founding question was pursued four ways and closed each time (§3 of `SYNTHESIS.md`). **Every
+one of those closures priced a quantity §80 has since shown governs nothing.** §80/§81
+established that the exponent setting reliability, and therefore depth, is the escape action A.
+A had never been asked the thermodynamic question.
+
+**The test is exact, because the drive of these networks is one number.** AM's reversible pairs
+span a one-dimensional cycle space, so its entire non-equilibrium force is the cycle affinity
+(§16, derived generically by `cycle_affinity`, not assumed); Schlögl's two pairs likewise span
+one cycle, with affinity `ln(k1a·k2r / k1r·k2b)`. **So the force can be pinned to a constant by
+construction while the kinetics move** — rule 9's opposite sweep in its strongest form.
+
+**Why the saddle is pinned at r₂ = 1.** The Schlögl affinity `ln(e₁e₂/e₃)` is invariant under
+rescaling all three roots, while A scales *linearly* with concentration (§75, §78). A uniform
+rescaling therefore moves A at fixed affinity for free — and would be correctly dismissed as a
+change of units. Pinning r₂ = 1 removes that freedom.
+
+**P2, 1-D and exact to quadrature (errors 1e−17 to 1e−10):**
+
+| r₁ | r₃ | affinity | A | Δ |
+|---|---|---|---|---|
+| 0.08 | 1.3480 | 3.543245 | 0.002240 | 0.634 |
+| 0.10 | 1.9000 | 3.543245 | 0.026047 | 0.900 |
+| 0.20 | 4.3505 | 3.543245 | 0.439982 | 2.075 |
+| 0.50 | 9.6411 | 3.543245 | 2.073935 | 4.571 |
+
+The affinity varies by **4.9e−14 nats** across the family. **A spans a factor of 926.**
+
+**P3, a second substrate.** AM with per-reaction reverse ratios (γ₁, γ₂, γ₂) on the level set
+γ₁γ₂² = const — which holds the affinity fixed to 4.4e−16 nats *and* keeps X↔Y exchange symmetry
+exact, so the saddle stays on the diagonal. A spans **0.01770 to 0.08808, a factor of 5.0**, with
+local `d ln T/dΩ` converging to four figures in every retained cell. One cell (γ₂ = 0.25) failed
+the convergence gate and was excluded, not fitted.
+
+**P4, and the dissociation runs both ways.** Elements tuned to *identical* A = 0.026047 (to
+0.0000%) carry affinities from **3.226 to 4.143 nats**. So A does not bound the drive either.
+
+> **Neither implication holds. The thermodynamic force does not set the escape action, and the
+> escape action does not report the force.** This is the fifth closure of the founding question,
+> and the first one aimed at the exponent that actually governs anything.
+
+### 82.1 P5's verdict was right for a range and a half, and then wrong
+
+P5 asked what *does* set A, predicting that Δ — one scalar against a whole field — would not be
+enough. **Swept over r₁ ∈ [0.05, 0.35], A spanned 3% and the verdict printed "Δ alone reproduces
+A".** That sweep moves the saddle's relative position by only 1.4×. Widened to the full
+admissible range 0.02 < r₁ < 0.97 — a **32.7×** move — at three separate Δ:
+
+| Δ | saddle position moved | A spans | affinity spans |
+|---|---|---|---|
+| 0.9 | 32.7× | **1.754×** | 2.558 nats |
+| 1.5164 | 32.7× | 1.189× | 2.731 nats |
+| 3.0 | 32.7× | 1.426× | 2.919 nats |
+
+> **This is rule 9 caught in flight, in the section that invokes rule 9 as its own method.** The
+> narrow sweep was not wrong about its own data — A really does vary by 3% there. It was wrong
+> that the range it covered was the range that mattered, and nothing in the output said so.
+
+Both numbers are kept, and both are in the test. **The corrected reading is sharper than either
+prediction: Δ and the affinity both fail to determine A, by margins three orders of magnitude
+apart — 1.75× against 926×.** The drive has essentially no grip on the escape action; the
+landscape's headline number has most of one. The suspect (rule 17) remains *"A is a functional
+of the whole field, not of any single number extracted from it"*, and it is not yet confirmed —
+what would confirm it is a second field with identical Δ **and** identical saddle placement
+giving a different A.

@@ -161,6 +161,24 @@ convention, not about conservation.
 > own numbers showed it without my seeing it: A = 9 → 28 k_BT bought a factor of 8 in depth,
 > and A → ∞ bought another 1.04.
 
+**§76 closes it: the two are not merely the same currency, they are the same number.** For a
+binary channel with per-stage error ε, the depth at which the bit dies is exactly
+
+> **D_max = c\*/ε,  c\* = 0.124266404564**
+
+verified to 8.9e−9 over seven decades and identical across every substrate measured, to under
+1%. So the cascade apparatus — kernels, mutual-information decay, the ceiling formula — carries
+no information beyond ε.
+
+> **A restoring element is characterised, for every purpose this project set out to measure, by
+> one number: its per-stage error probability.** Reliability *is* ε. Depth *is* c\*/ε. There is
+> no second quantity, no trade-off between them, and no thermodynamic price on either — ε is
+> bought with molecules, exponentially.
+>
+> This is a **deflationary** answer to the founding question, and it is worth stating as such:
+> the depth advantage of a restoring switch is not an additional property beyond its error
+> rate. It is the same property counted twice.
+
 ---
 
 ## 3. Why reliability has no thermodynamic price

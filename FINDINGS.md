@@ -1108,6 +1108,12 @@ against 1.4× (for 16×) at 0.45. Molecules do buy depth — with sharply dimini
 returns that set in earlier the noisier the channel, because `Ω× = 1/(2κσ²)` falls as
 σ rises.
 
+**~~The ceiling's "factor ≈3" is not a prefactor — it is a 7% error in the
+exponent.~~ — WITHDRAWN by §76.1: it is precisely a prefactor, the Laplace factor that
+`exp(δ*²/2σ²)/4` discards, and the exact ceiling c\*/Φ(−δ*/σ) puts the ratio at
+4c\*√(2π)·(δ*/σ) — rising with δ*/σ, not a constant 3. The exponent was never wrong.**
+Original reading retained below per rule 7:
+
 **The ceiling's "factor ≈3" is not a prefactor — it is a 7% error in the
 exponent.** §12.1 predicted `D_max ≈ exp(δ*²/2σ²)/4` and measured about three times
 that, which was filed as a missing Laplace prefactor. Read at a *fixed* Ω the factor
@@ -8922,3 +8928,85 @@ from A = 8.99 to A = 27.6 bought a factor of 8 in depth, and going to infinity b
 > Replaced by a convergence test; that then failed too, because Ω = 400 sits outside the
 > asymptotic regime the LNA is about, so the tail is asserted and the exclusion is printed. And
 > `ln_pi` used an interpreted O(cap) loop that did not return at cap ≈ 10⁶; vectorised.
+
+---
+
+### 76 Depth *is* the error rate: `D_max · ε = c*` — T-DEPTH-c
+
+§75 found depth and reliability bought in the same currency with the same functional form. That
+invites a sharper question, and it can be answered before measuring anything. For a binary
+symmetric channel the D-step bias is (1−2ε)^D and the mutual information falls through ½ at
+b\*, defined by H((1+b\*)/2) = ½. So
+
+> **D_max = ln b\* / ln(1−2ε) → c\*/ε,   c\* = −ln(b\*)/2 = 0.124266404564**
+
+**D_max · ε is a pure number.** Verified against the closed-form chain:
+
+| ε | 1e−1 | 1e−2 | 1e−3 | 1e−4 | 1e−6 | 1e−8 |
+|---|---|---|---|---|---|---|
+| \|D·ε/c\*−1\| | 1.0e−1 | 1.0e−2 | 1.0e−3 | 1.0e−4 | 1.0e−6 | **8.9e−9** |
+
+And it is the **same constant on every substrate** — Schlögl at λ = 1 and 4, Ω = 3600 and
+14400, and §73's step function at two channel widths — all giving D·ε/c\* within **0.8%**, the
+residual being the asymmetry correction below rather than anything about the substrate.
+
+> **So §75's unification is an identity, not a coincidence.** The depth ceiling contains *no
+> information beyond the per-stage error rate*. §12's entire depth apparatus — cascade kernels,
+> mutual-information decay, the ceiling formula — reduces to one number the single element
+> already determines.
+
+**The asymmetric case.** Real elements have ε_hi ≠ ε_lo. The decay rate is λ = 1 − ε_hi − ε_lo,
+which depends on the sum alone, so the **arithmetic** mean is the right ε — confirmed against
+geometric and harmonic. It is exact only in the symmetric limit, and the deviation grows with
+the asymmetry ratio: 3× → 1.050, 9× → 1.165, 20× → 1.247, 1000× → 1.385. Every element measured
+in this project is mildly asymmetric and sits inside 1%.
+
+### 76.1 What §12's "factor of 3" actually was
+
+§12.1 measured its ceiling running ≈3× the prediction and concluded: *"The ceiling's 'factor
+≈3' is not a prefactor — it is a 7% error in the exponent."* **That reading is wrong.**
+
+`exp(Δ²/2σ²)/4` is the Gaussian tail with its algebraic prefactor discarded. The exact ceiling
+is c\*/Φ(−Δ/σ), and since Φ(−z) ≈ exp(−z²/2)/(z√2π),
+
+    exact / §12's formula  ≈  4c*√(2π) · (Δ/σ)
+
+— **an algebraic prefactor that grows linearly in Δ/σ, not a constant.**
+
+| σ/Δ | Δ/σ | §12's formula | exact c\*/ε | ratio | predicted 4c\*√2π·(Δ/σ) |
+|---|---|---|---|---|---|
+| 0.45 | 2.222 | 2.95 | 9.46 | **3.204** | 2.769 |
+| 0.35 | 2.857 | 14.81 | 58.14 | **3.926** | 3.560 |
+| 0.28 | 3.571 | 147.12 | 700.01 | **4.758** | 4.450 |
+
+The ratio rises exactly as the dropped prefactor requires, and §73's clean step-function
+measurements rise with it (2.71, 3.11, 3.80). §12.1's own AM numbers (3.00, 3.38, 3.33) do not
+rise monotonically, but they were measured at finite Ω in a different setup and were read as a
+*constant* 3 — which is the reading this section overturns.
+
+> **~~§12.1: "the factor ≈3 is not a prefactor — it is a 7% error in the exponent"~~ —
+> WITHDRAWN.** It is precisely a prefactor: the Laplace factor that `exp(Δ²/2σ²)/4` drops. The
+> exponent was never wrong. Left as first printed per rule 7.
+
+### 76.2 What the founding claim reduces to
+
+Chaining §73 → §76: composition depth does not see the element's dynamics (§73), the element
+enters only through Δ (§73), Δ/σ is fixed by molecules at the rail (§75), and depth is exactly
+c\*/ε (§76). So the whole cascade apparatus collapses to a single element quantity:
+
+> **A restoring element is characterised, for every purpose this project set out to measure, by
+> one number: its per-stage error probability ε.** Reliability is ε. Depth is c\*/ε. There is
+> no second quantity, no trade-off between them, and no thermodynamic price on either — ε is
+> bought with molecules, exponentially.
+
+That is the founding question answered in one line, and it is a *deflationary* answer: the
+depth advantage of a restoring switch is not an additional property beyond its error rate but
+the same property counted twice.
+
+> ⚠ **Two more gates too strict, and the class is now stable enough to name.** P1 demanded
+> |D·ε/c\*−1| < 1e−3 for every ε ≤ 1e−3 and rejected ε = 1e−3 at *exactly* 1e−3; P3 demanded
+> 0.1% across substrates when the physical residual is the 0.8% asymmetry correction. **Both
+> are fixed tolerances applied to converging quantities — the same error as §63's P1(c) and
+> §75's P1, now three sections running.** The fix each time is to test convergence rather than
+> a level, and the reason it keeps recurring is that writing a tolerance is easier than asking
+> what the residual is made of.

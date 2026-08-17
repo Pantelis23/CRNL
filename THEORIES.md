@@ -2006,6 +2006,34 @@ PHYSICAL units instead:
 and §68 found no substrate-independent price -- they were pricing the wrong thing.** The cost
 of depth is in Delta, and what Delta costs depends on whether the element is conserved.
 
+**T-DEPTH-c -> §76: DEPTH *IS* THE ERROR RATE. D_max * eps = c* = 0.124266404564.** For a
+binary symmetric channel the D-step bias is (1-2eps)^D and I falls through 1/2 at b* with
+H((1+b*)/2) = 1/2, so D_max -> c*/eps with c* = -ln(b*)/2. Verified to 8.9e-9 over seven
+decades of eps, and the SAME constant on every substrate measured -- Schloegl at two lambda and
+two Omega, and §73's bare step function -- all within 0.8%, the residual being an asymmetry
+correction rather than anything about the substrate. For asymmetric channels the ARITHMETIC
+mean is the right eps (the decay rate 1 - e_hi - e_lo depends on the sum), exact in the
+symmetric limit and drifting with the asymmetry ratio: 3x -> 1.050, 1000x -> 1.385.
+
+**So §75's unification is an IDENTITY, not a coincidence: the depth ceiling carries no
+information beyond the per-stage error rate**, and §12's whole cascade apparatus reduces to one
+number the single element already determines.
+
+**§12.1's reading of its own factor of 3 is WITHDRAWN.** It concluded "the factor ~3 is not a
+prefactor -- it is a 7% error in the exponent". It is precisely a prefactor: exp(D^2/2s^2)/4 is
+the Gaussian tail with its algebraic factor dropped, and the exact ceiling c*/Phi(-D/s) puts the
+ratio at 4 c* sqrt(2pi) (D/s) -- RISING with D/s (3.204, 3.926, 4.758 at f = 0.45, 0.35, 0.28),
+not a constant. §73's step-function measurements rise with it (2.71, 3.11, 3.80). The exponent
+was never wrong.
+
+**THE FOUNDING CLAIM, REDUCED.** Chaining §73 -> §76: depth does not see the element's dynamics,
+the element enters only through Delta, Delta/sigma is fixed by molecules at the rail, and depth
+is exactly c*/eps. **A restoring element is characterised, for every purpose this project set
+out to measure, by ONE number: its per-stage error probability. Reliability is eps. Depth is
+c*/eps. No second quantity, no trade-off, no thermodynamic price on either.** A deflationary
+answer: the depth advantage of a restoring switch is not a property beyond its error rate but
+the same property counted twice.
+
 **T-DEPTH-b -> §75: ANSWERED, and it collapses §74 into something simpler. ONE CURRENCY:
 MOLECULES AT THE RAIL.** In a chemically coupled cascade sigma is not a modelling choice --
 stage 1's output species IS stage 2's input, so the inter-stage noise is stage 1's own rail

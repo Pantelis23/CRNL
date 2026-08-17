@@ -8813,10 +8813,16 @@ and cannot exceed 9.50e9 at any drive, while Schlögl passes 10¹⁸ by scaling 
 affinity is identical. What Schlögl spends instead is *material*: its rails sit at r₁Ω and r₃Ω
 molecules, so λ = 64 is 64× the molecules for the same thermodynamic force.
 
-> **Closed and open elements pay for depth in different currencies — affinity and material —
+> ~~**Closed and open elements pay for depth in different currencies — affinity and material —
 > and that is why §67 and §68 found no substrate-independent price. They were pricing the wrong
 > thing.** The founding question's cost is not in the dissipation, the gain, or the affinity
-> floor; it is in Δ, and what Δ costs depends on whether the element is conserved.
+> floor; it is in Δ, and what Δ costs depends on whether the element is conserved.~~
+>
+> **DEFLATED by §75.** True at fixed σ, which this section flagged as load-bearing. With σ
+> intrinsic to the chemistry, the rail fluctuation is Poissonian and Δ/σ depends on the
+> molecule count λΩ **alone**, to 0.000% — so scaling rails and scaling Ω are the same act,
+> there is no separate "material" currency, and AM's ceiling disappears too. One currency:
+> molecules at the rail.
 
 ### 74.3 Scope, and the convention that decides everything
 
@@ -8839,3 +8845,80 @@ assumption rather than buried.
 > depths here (~10¹⁰); replaced by a closed form, `T^D = π ⊕ λ^D(I − π)`, **gated against the
 > iterative version to 1e−12 in I(D) with matching ceilings**, so §72's published numbers are
 > untouched.
+
+---
+
+### 75 There is one currency after all: molecules at the rail — T-DEPTH-b
+
+§74 rested entirely on holding the inter-stage noise σ fixed in physical units, and said so.
+**In a cascade whose coupling is chemical there is no such freedom**: stage 1's output species
+*is* stage 2's input, so the corruption between stages is stage 1's own fluctuation about its
+rail, which the CME fixes exactly.
+
+**My prediction for how that noise scales was wrong.** I argued that under Schlögl's rescaling
+`r → λr` every propensity scales as λ³, so the quasipotential stretches by λ, its curvature
+falls as 1/λ², and σ ∝ λ — which would have made Δ/σ λ-invariant and deflated §74 outright.
+Measured: **the exponent is 0.486, not 1.**
+
+The right reading is simpler and is the ordinary one: **the rail fluctuation is Poissonian in
+the molecule count.** σ_n ~ √n̄, so in concentration units
+
+    σ_x ~ √(λ/Ω)     measured  d ln σ / d ln λ = +0.486,   d ln σ / d ln Ω = −0.52
+
+and therefore **Δ/σ ~ √(λΩ) — the square root of the number of molecules at the rail.**
+
+### 75.1 The collapse is exact
+
+| λ | Ω | λΩ | Δ/σ |
+|---|---|---|---|
+| 0.50 | 1600 | 800 | 3.0037 |
+| 2.00 | 400 | 800 | 3.0037 |
+| 1.00 | 800 | 800 | 3.0037 |
+| 0.25 | 12800 | 3200 | 6.8718 |
+| 0.50 | 6400 | 3200 | 6.8718 |
+| 2.00 | 1600 | 3200 | 6.8718 |
+| 8.00 | 400 | 3200 | 6.8718 |
+
+> **Δ/σ depends on the product λΩ alone, to 0.000% spread**, across a 32× range in each. Not a
+> fit — an exact scaling symmetry: **scaling an element's rails and increasing its molecule
+> count are the same act.**
+
+And AM behaves identically. Its rail width scales as Ω^(−0.5035) and Ω^(−0.5000) at γ = 0.20
+and 0.05 — Poisson again — so δ\*/σ = 14.74, 20.92, 29.62 at Ω = 60, 120, 240: **√Ω, without
+bound.**
+
+### 75.2 §74 is deflated, and the answer gets simpler
+
+> **~~§74: "closed elements pay affinity, open ones pay material" / "a conservative element has
+> a maximum composition depth of 9.5e9"~~ — DEFLATED.** Both statements were true *at fixed
+> σ*, which §74 flagged as load-bearing and untested. With σ intrinsic:
+>
+> * AM's ceiling disappears — δ\*/σ ~ √Ω grows without bound, so the cap was a fact about the
+>   convention, **not about conservation**;
+> * Schlögl's "material" currency is not a separate currency — scaling rails by λ is
+>   *identical* to scaling Ω by λ.
+
+Left as first printed per rule 7. What replaces it is shorter:
+
+> **Depth is bought with molecules at the rail, in both substrates, and with nothing else.**
+> `D_max ~ exp(Δ²/2σ²)` with `Δ/σ ~ √N_rail`, so `D_max ~ exp(c·N_rail)`.
+
+That is the *same currency and the same functional form* as reliability — §1, §35 and §38's
+exp(−cΩ) error probability. **The founding question's two halves collapse into one statement:
+a restoring element buys both its error rate and its composition depth with molecules,
+exponentially, and buys neither with free energy.**
+
+### 75.3 What this does to the affinity
+
+Affinity has not become irrelevant — it has become a *gate* rather than a *price*. Drive is
+required for rails to exist at all (§9.1's floor, §68's `2 ln[(p+1)/(p−1)]`), and it sets where
+the rails sit. But **once the rails exist, buying more depth is a matter of counting, not of
+dissipation.** §74's own table already showed the shape of this without my seeing it: going
+from A = 8.99 to A = 27.6 bought a factor of 8 in depth, and going to infinity bought 1.04.
+
+> ⚠ **Three criteria, and the pattern is now familiar.** P1 first demanded |exact/LNA − 1| <
+> 0.10 at every cell and failed on the coarsest one while the series ran 0.1538 → 0.0200 →
+> 0.0044 — a fixed tolerance on a converging quantity, **the same error as §63's P1(c)**.
+> Replaced by a convergence test; that then failed too, because Ω = 400 sits outside the
+> asymptotic regime the LNA is about, so the tail is asserted and the exclusion is printed. And
+> `ln_pi` used an interpreted O(cap) loop that did not return at cap ≈ 10⁶; vectorised.

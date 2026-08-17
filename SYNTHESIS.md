@@ -88,7 +88,7 @@ sections destroyed the universality of two of them.
 | **gain** (e-folds of amplification) | ~2 k_B per molecule per e-fold | **AM-specific bookkeeping** |
 | **reliability** (error rate) | **molecules**, as exp(−cΩ) | **survives; the only cross-substrate claim** |
 | **speed** at fixed distance from the TUR bound | time | untested off AM |
-| **composition depth** | *nothing — see §73* | **not a currency** |
+| **composition depth** | **molecules at the rail** (§75) | same currency as reliability |
 
 **Existence.** Every restoring element examined has an affinity floor: below some drive, no
 bistable landscape exists at all. AM's is exactly `3 ln 2 = 2.0794` (§9.1); Schlögl's is
@@ -143,10 +143,23 @@ isolated:
 substrate-independent price was ever found: the earlier sections were pricing dissipation, gain
 and affinity floors, all of which are upstream of Δ and invisible to depth.
 
-> ⚠ **This hangs on one convention.** §74 holds the channel noise fixed in physical units. Under
-> §12's σ = f·Δ the ratio Δ/σ is constant and the question cannot be posed at all. Which is
-> physical depends on whether inter-stage noise belongs to the wiring or scales with the signal
-> — untested, and the whole of §74 rests on it (T-DEPTH-b).
+**§75 settled the convention, and §74 did not survive it.** In a chemically coupled cascade σ
+is not a choice: stage 1's output species *is* stage 2's input, so the inter-stage noise is
+stage 1's own rail fluctuation. It is **Poissonian in the molecule count**, σ_n ~ √n̄, so
+Δ/σ ~ √(λΩ) — and measured, **Δ/σ depends on the product λΩ alone, to 0.000% spread over 32× in
+each.** Scaling an element's rails and increasing its molecule count are the *same act*. AM
+behaves identically (σ ~ Ω^−0.50), so its "maximum composition depth" was a fact about the
+convention, not about conservation.
+
+> **So there is one currency, not four.** Depth: `D_max ~ exp(c·N_rail)`. Reliability:
+> `p_err ~ exp(−cΩ)`. **Same currency, same functional form.** A restoring element buys both
+> its error rate and its composition depth with molecules, exponentially, and buys neither with
+> free energy.
+>
+> Affinity is a **gate, not a price**: drive is required for rails to exist at all (§9.1, §68)
+> and it sets where they sit — but once they exist, more depth is a matter of counting. §74's
+> own numbers showed it without my seeing it: A = 9 → 28 k_BT bought a factor of 8 in depth,
+> and A → ∞ bought another 1.04.
 
 ---
 

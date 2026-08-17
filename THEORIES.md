@@ -2006,7 +2006,32 @@ PHYSICAL units instead:
 and §68 found no substrate-independent price -- they were pricing the wrong thing.** The cost
 of depth is in Delta, and what Delta costs depends on whether the element is conserved.
 
-**T-DEPTH-b, open and it is load-bearing: which channel-noise convention is physical?** §74's
+**T-DEPTH-b -> §75: ANSWERED, and it collapses §74 into something simpler. ONE CURRENCY:
+MOLECULES AT THE RAIL.** In a chemically coupled cascade sigma is not a modelling choice --
+stage 1's output species IS stage 2's input, so the inter-stage noise is stage 1's own rail
+fluctuation, which the CME fixes. **My prediction that sigma ~ lambda was WRONG** (the
+lambda^3-propensity argument with it): measured exponent 0.486. The rail fluctuation is
+POISSONIAN in the count, sigma_n ~ sqrt(n_bar), so sigma_x ~ sqrt(lambda/Omega) and
+**Delta/sigma ~ sqrt(lambda*Omega)**.
+
+**The collapse is exact: Delta/sigma depends on the product lambda*Omega ALONE, to 0.000%
+spread over 32x in each.** Scaling an element's rails and increasing its molecule count are the
+same act. AM behaves identically -- rail width ~ Omega^(-0.50), so delta*/sigma ~ sqrt(Omega)
+without bound.
+
+**So §74 is deflated in both halves** (true at fixed sigma, which §74 flagged): AM's "maximum
+composition depth" was a fact about the convention and not about conservation, and Schloegl's
+"material" currency is not separate from Omega. What replaces it:
+
+> **Depth is bought with molecules at the rail and with nothing else: D_max ~ exp(c*N_rail).**
+
+That is the same currency and the same functional form as reliability (§1/§35/§38's exp(-c*Omega)),
+so **the founding question's two halves collapse into one statement: a restoring element buys
+both its error rate and its composition depth with molecules, exponentially, and buys neither
+with free energy.** Affinity is a GATE, not a price -- required for rails to exist (§9.1, §68)
+and setting where they sit, but once they exist more depth is a matter of counting.
+
+**~~T-DEPTH-b, open and it is load-bearing: which channel-noise convention is physical?** §74's
 entire content hangs on sigma being fixed in physical units rather than scaling as f*Delta. The
 case for fixed sigma is that the inter-stage channel belongs to the wiring, not the gate; but a
 real chemical cascade may well have noise scaling with the signal, in which case §12's

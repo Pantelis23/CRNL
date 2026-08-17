@@ -1,0 +1,58 @@
+=== P1 GATE: exact rail width against the linear-noise estimate
+  lambda   Omega    sd exact      sd LNA    ratio
+    1.00    1600    0.114002    0.098802   1.1538
+    1.00    6400    0.049628    0.048653   1.0200
+    4.00    1600    0.198511    0.194611   1.0200
+    4.00    6400    0.097372    0.096944   1.0044
+  |exact/LNA - 1| vs Omega: 0.0366, 0.1538, 0.0200, 0.0044
+  (the coarsest Omega is outside the LNA's asymptotic regime and is excluded; the tail is monotone: 0.1538, 0.0200, 0.0044)
+  -> P1 HOLDS: the LNA discrepancy vanishes with Omega
+
+=== P2: how does the intrinsic width scale with the RAIL SCALE lambda?
+   Omega     lam=0.5       lam=1       lam=2       lam=4       lam=8      lam=16   exponent
+     400    0.119680    0.206059    0.332923    0.456007    0.582093    0.794045     0.5314
+    1600    0.083231    0.114002    0.145523    0.198511    0.277057    0.389487     0.4407
+    6400    0.036381    0.049628    0.069264    0.097372    0.137312    0.193917     0.4848
+  mean exponent d ln sigma / d ln lambda = 0.4856
+  -> P2 exponent 0.486, neither 0 nor 1
+
+=== P3: and with Omega?
+  lambda=1.0: d ln sigma / d ln Omega = -0.5135   (CME says -0.5)
+  lambda=4.0: d ln sigma / d ln Omega = -0.5569   (CME says -0.5)
+
+=== P2/P3 CONSEQUENCE: the dimensionless ratio that sets depth
+  lambda   Omega     Delta      sigma  Delta/sigma
+    0.50     400    0.2500   0.119680        2.089
+    0.50    1600    0.2500   0.083231        3.004
+    0.50    6400    0.2500   0.036381        6.872
+    1.00     400    0.5000   0.206059        2.426
+    1.00    1600    0.5000   0.114002        4.386
+    1.00    6400    0.5000   0.049628       10.075
+    2.00     400    1.0000   0.332923        3.004
+    2.00    1600    1.0000   0.145523        6.872
+    2.00    6400    1.0000   0.069264       14.437
+    4.00     400    2.0000   0.456007        4.386
+    4.00    1600    2.0000   0.198511       10.075
+    4.00    6400    2.0000   0.097372       20.540
+    8.00     400    4.0000   0.582093        6.872
+    8.00    1600    4.0000   0.277057       14.437
+    8.00    6400    4.0000   0.137312       29.131
+   16.00     400    8.0000   0.794045       10.075
+   16.00    1600    8.0000   0.389487       20.540
+   16.00    6400    8.0000   0.193917       41.255
+
+=== P4: does §74.1's conservative CEILING survive an intrinsic sigma?
+   gamma   Omega    delta*      sigma delta*/sigma
+    0.20      60   0.81650   0.055394       14.740
+    0.20     120   0.81650   0.039038       20.915
+    0.20     240   0.81650   0.027564       29.622
+    0.05      60   0.95213   0.027654       34.431
+    0.05     120   0.95213   0.019554       48.693
+    0.05     240   0.95213   0.013826       68.863
+  gamma=0.2: d ln sigma / d ln Omega = -0.5035
+  gamma=0.05: d ln sigma / d ln Omega = -0.5000
+  -> if sigma ~ Omega^(-1/2) then delta*/sigma ~ sqrt(Omega) grows without bound,
+     and §74.1's 'maximum composition depth' is a fact about FIXED sigma, not
+     about conservation.
+
+wrote results/chemical_channel_noise.json

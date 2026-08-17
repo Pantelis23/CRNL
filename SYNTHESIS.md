@@ -249,6 +249,14 @@ integral rather than the linear-noise variance.
 §71/§72's external-channel cascade is unaffected — checked, not assumed: there the readout term
 binds by 35 nats. **Engineered wiring and chemical coupling are physically different cascades.**
 
+**§81 redid all three sections against A, and the answers hold in their new form.** The integral
+predicts the exact first-passage time to **0.06% on four landscapes it never saw**, one of them a
+different reaction order — so §78's claim (the coefficient is available from the deterministic
+side alone) is now established for the exponent that actually governs depth. A does not transfer
+either: a factor of 13 across shapes and substrates. And **A/η spans a factor of 3.78**, which is
+what makes §80 a correction rather than a relabelling — a constant ratio would have carried
+§77–§79's conclusions over intact.
+
 ---
 
 ## 3. Why reliability has no thermodynamic price

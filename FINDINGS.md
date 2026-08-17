@@ -9299,3 +9299,61 @@ Every later section then inherited the assumption without restating it.
 > row was written at the wrong lattice site, since the band spans lo+1…hi−1 and the reflecting
 > site is hi. A mean first-passage time cannot be negative, and nothing was read off it.
 > Replaced by the exact log-space sum, which gives ln T linear in Ω to 0.01%.
+
+---
+
+### 81 §77–§79 redone against the escape action — T-DEPTH-h
+
+§80 showed the coefficient governing depth in a chemically-coupled cascade is the escape action
+A, not the linear-noise η. Three sections were built on η, and each needed redoing.
+
+**§79 redone (out of sample), and it is the strongest form yet.** A is an integral of the
+propensity densities, so it can be *predicted* with no chain, no lattice and no master equation
+— and checked against the exact mean first-passage time:
+
+| landscape | A from ∫ | A from exact MFPT | ratio | used in §80? |
+|---|---|---|---|---|
+| 0.1 / 1.9 | 0.026047 | 0.026044 | 1.0001 | yes |
+| 0.4 / 2.2 | 0.034764 | 0.034761 | 1.0001 | **no** |
+| 0.3 / 1.7 | 0.010138 | 0.010132 | 1.0006 | **no** |
+| 0.05 / 2.5 | 0.093421 | 0.093419 | 1.0000 | **no** |
+| quartic 3X⇌4X | 0.009985 | *(1-D integral)* | — | **no** |
+
+**Worst 0.06%, on four landscapes never used**, including a different reaction order. So §78's
+"deterministic-side, no master equation" claim holds for A at least as well as it did for η —
+and A is the exponent that actually governs the depth.
+
+**§77 redone: A does not transfer either.** It spans 0.0101 to 0.1358, a factor of 13, moving
+with landscape shape inside each substrate. The same conclusion as η's, reached independently.
+
+**And §80 is not a relabelling.** A/η spans **0.2002 to 0.7560 — a factor of 3.78** across
+shapes and substrates. The two coefficients respond differently to the landscape, exactly as
+predicted: η is a *local harmonic* quantity at the rail, A is a *global integral* over the
+barrier. Had A/η been constant, §77's conclusions would have carried over unchanged and §80
+would have been a change of name.
+
+**§72's depths restated.** With escape dominant, `ln D_max = AΩ − ln(t/c*)`:
+
+| element | Ω | ln D (escape) | ln D (readout) |
+|---|---|---|---|
+| Schlögl 0.1/1.9 | 6400 | **163.9** | 381.0 |
+| Schlögl 0.4/2.2 | 6400 | **219.7** | 305.9 |
+
+The escape route gives a far shallower ceiling. §72's published depths were computed with an
+external channel and are a different regime (§80 P5), not these numbers.
+
+### 81.1 An underflow was driving both headline spreads
+
+> ⚠ **AM at γ = 0.20 first returned A = 5.7137, 3.8145, 2.8591 at Ω = 120, 180, 240.** Those
+> products with Ω are 685, 686, 686 — the barrier was not growing at all. `π(saddle)` had reached
+> the 1e−300 floor, so `ln π(rail) − ln π(saddle)` saturated at ln(10³⁰⁰) ≈ 691 and "A" became
+> exactly 691/Ω. **That single cell was inflating A's reported span from a factor of 13 to a
+> factor of 282, and A/η's from 3.78 to 7.79.**
+>
+> The tell was that the value scaled as 1/Ω — a quasipotential barrier per molecule must
+> *converge*, not decay. Cells at the floor are now excluded rather than fitted, and γ = 0.20 is
+> reported as having no usable stationary solve.
+
+Both conclusions survive the exclusion, with smaller numbers. **That is the point of catching
+it: the verdicts were right and the magnitudes were not**, and a factor of 282 quoted from an
+underflow would have been the most quotable wrong number in the record.

@@ -1,0 +1,37 @@
+=== P1/P3 GATE: the integral against the exact MFPT, incl. out-of-sample shapes
+                 landscape   A integral  A from MFPT    ratio  in §80?
+               0.1/1.0/1.9     0.026047     0.026044   1.0001      yes
+               0.4/1.0/2.2     0.034764     0.034761   1.0001       NO
+               0.3/1.0/1.7     0.010138     0.010132   1.0006       NO
+              0.05/1.0/2.5     0.093421     0.093419   1.0000       NO
+           QUARTIC 3X<->4X     0.009985(1-D integral)       --       NO
+  worst |integral/MFPT - 1| = 0.06%   (4 of 5 never used in §80)
+  -> P1/P3 HOLD: the integral predicts A on landscapes it never saw
+
+=== P2: §77 redone -- does A transfer?
+                   element           A         eta    A/eta
+           Schlogl 0.1/1.9    0.026047    0.059537   0.4375
+           Schlogl 0.4/2.2    0.034764    0.047793   0.7274
+           Schlogl 0.3/1.7    0.010138    0.026155   0.3876
+          Schlogl 0.05/2.5    0.093421    0.123581   0.7560
+              AM gamma=0.2   no usable stationary solve
+              AM gamma=0.3    0.135776    0.678054   0.2002   (A series 0.1411, 0.1358)
+             AM gamma=0.35    0.077087    0.354669   0.2173   (A series 0.0829, 0.0790, 0.0771)
+  A spans 0.010138 .. 0.135776 -- a factor of 13
+  -> P2 A does NOT transfer either, like eta
+
+=== P4: is A/eta constant? (if so, §80 is a relabelling)
+  A/eta: 0.4375, 0.7274, 0.3876, 0.7560, 0.2002, 0.2173
+  spans 0.2002 .. 0.7560, a factor of 3.78
+  -> P4 A/eta is NOT constant: the two coefficients respond differently to shape, so §80 is not a relabelling
+
+=== P5: the depth, restated. ln D_max = A*Omega - ln(t/c*)
+                   element   Omega  ln D (escape)  ln D (readout)
+           Schlogl 0.1/1.9    1600           38.9            95.3
+           Schlogl 0.1/1.9    6400          163.9           381.0
+           Schlogl 0.4/2.2    1600           52.8            76.5
+           Schlogl 0.4/2.2    6400          219.7           305.9
+  -> the escape route gives a far SHALLOWER ceiling; §72's depths were computed
+     with an external channel and are not these numbers (§80 P5).
+
+wrote results/action_redo.json

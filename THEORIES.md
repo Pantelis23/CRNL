@@ -2037,11 +2037,32 @@ became available. **When a reduction replaces one physical mechanism with anothe
 the failure modes. Simplifying algebra cannot introduce new ones; changing what the model
 represents can.**
 
-**T-DEPTH-h, open: redo §77-§79 with A in place of eta.** The depth is c*/(t*exp(-A*Omega)), so
-the coefficient that matters is A, and §77's transfer sweep, §78's derivation and §79's
-out-of-sample test should all be repeated against it. **How to kill:** A is already computable
-from the rate functions in 1-D, so the Schloegl half is cheap; AM needs the 2-D quasipotential,
-which §63/§64 have partial machinery for and which is where T15-n's unresolved nu also lives.
+~~**T-DEPTH-h, open: redo §77-§79 with A in place of eta.**~~ **-> §81. Done, and all three
+redos give the same verdicts as their eta originals -- but §80 is not a relabelling.**
+
+  * **§79 redone (out of sample) is the strongest version yet.** `A = -int ln(mu/lam) dx`
+    predicts the exact mean first-passage time to **0.06% worst case on FOUR landscapes never
+    used in §80**, including a different reaction order (the quartic 3X <-> 4X). §78's
+    "deterministic side, no master equation" claim therefore holds for the exponent that
+    actually governs depth, not just for the one that did not.
+  * **§77 redone: A does not transfer.** 0.0101 .. 0.1358, a factor of 13, moving with
+    landscape shape inside each substrate. Same conclusion as eta's, reached independently.
+  * **A/eta is NOT constant: 0.2002 .. 0.7560, a factor of 3.78.** This is what makes §80 a
+    correction rather than a change of name. eta is a local harmonic quantity at the rail; A is
+    a global integral over the barrier; they respond differently to shape. Had the ratio been
+    constant, every conclusion of §77-§79 would have carried over with a rescaled axis.
+
+**T-DEPTH-h's own instrument failure, and it was inflating the headline.** AM at gamma = 0.20
+first returned A = 5.7137, 3.8145, 2.8591 at Omega = 120, 180, 240 -- products with Omega of
+685, 686, 686, i.e. exactly the ln(1e300) ~ 691 underflow floor of the stationary weights, so
+"A" was 691/Omega and not a barrier at all. **That one cell was reporting A's span as a factor
+of 282 instead of 13, and A/eta's as 7.79 instead of 3.78.** The tell is the shape, not the
+size: a quasipotential barrier per molecule must CONVERGE in Omega, and anything decaying as
+1/Omega is a saturated numerator. Floor cells are now excluded rather than fitted. Both verdicts
+survived; both magnitudes did not, and the factor of 282 would have been the most quotable wrong
+number in the record. This is rule 20's shape (never gate a converging quantity with a fixed
+tolerance) turned around: **check that a quantity claimed to converge actually does, because a
+saturated instrument produces a smooth, plausible, wrong series.**
 
 **T-DEPTH-f -> §79: OUT OF SAMPLE. The ODE predicts systems the derivation never saw, and
 §78's closing claim needs one qualification.** §78 was checked on the systems it was built from,

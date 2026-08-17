@@ -9152,3 +9152,70 @@ and how deep the wells are — that is, through Δ and V — and never appears i
 > not the same exponent. The lesson is narrow and worth keeping: **when a section reduces to
 > "one number", check which definition of that number the reduction actually used before
 > proposing how to derive it.**
+
+---
+
+### 79 Out of sample: the ODE predicts systems it never saw — and §78 needs one qualification
+
+§78 was checked on exactly the systems it was built from. **A formula that fits the data it was
+derived on is not a formula that works** — rule 16 exists here because §22 fitted a convolution
+for three subsections and was out by 3688× against an exactly-computable quantity. So: predict
+first, from the ODE and the Lyapunov equation alone, then check against the exact CME.
+
+| system | never used before? | \|σ_pred/σ_exact − 1\| across Ω |
+|---|---|---|
+| AM γ = 0.10 | γ never used | 0.04% → 0.02% → **0.01%** |
+| AM γ = 0.35 | γ never used | 13.96% → 5.04% → 1.98% → **1.12%** |
+| **Schlögl QUARTIC** (3X⇌4X) | **different reaction order** | 2.63% → 0.58% → **0.14%** |
+| Schlögl asymmetric rails | unequal basins | 0.70% → 0.17% → **0.04%** |
+| *AM γ = 0.45* | *predicted to fail* | *10.76% → 8.88% → 23.72% → 23.33%* |
+
+**All three out-of-sample systems converge.** The quartic is the one that matters most: it
+changes the *reaction order*, not a parameter inside a family — a quartic deterministic field,
+`3X ⇌ 4X`, never touched by §73–§78 — and the ODE predicts its rail width to 0.14%.
+
+**And the case predicted to fail, failed.** AM at γ = 0.45 does not converge at all
+(0.8924 → 1.0888 → 1.2372 → 1.2333), landing **20.9× worse** than the worst passing case.
+That is §78's P4 diagnosis confirmed on a system chosen in advance to break it: the rail is
+shallowest near γ_c, so the LNA's harmonic assumption fails there and nowhere else. **Including
+a case the theory should get wrong is what makes the other three mean anything.**
+
+### 79.1 The qualification §78 needs
+
+`D_max ~ exp(Δ²Ω/2V)`, so a relative error δ in V becomes a factor `D_max^δ` in the depth. **A
+1% error in σ is not a 1% error in D_max.**
+
+| system | ln D predicted | ln D exact | ratio | σ error |
+|---|---|---|---|---|
+| AM γ = 0.10 | 1135.55 | 1135.32 | **1.26×** | 0.01% |
+| Schlögl asymmetric | 1226.23 | 1225.20 | **2.8×** | 0.04% |
+| Schlögl quartic | 918.10 | 915.52 | **13.2×** | 0.14% |
+| AM γ = 0.35 | 143.53 | 140.40 | **22.8×** | 1.12% |
+
+> **§78's "the exact CME is not needed to use it" holds for η and not for D_max.** The ODE route
+> predicts the *exponent* to well under a percent on systems it never saw — that is the real
+> claim, and it survives — but the depth itself only to a factor of 1.3–23×, because depth is
+> exponentially sensitive to V. Anyone wanting D_max to better than an order of magnitude needs
+> the master equation after all.
+
+That is a genuine limit rather than a failure. `ln D_max` is predicted to 0.02–2%; `D_max` is
+not. The distinction matters because §72–§77 reported depths as numbers, and those numbers
+carry the exponential amplification with them.
+
+### 79.2 Rule 20 did not stop me writing the same gate
+
+> ⚠ **I added rule 20 two sections ago — never gate a converging quantity with a fixed
+> tolerance — and then wrote exactly that gate here.** P1's first version demanded
+> |ratio − 1| < 1% at the largest Ω and called AM γ = 0.35 a **MISS at 1.12%** while its series
+> ran 1.1396 → 1.0504 → 1.0198 → 1.0112. Replaced by a convergence test, under which it passes
+> and γ = 0.45 correctly does not. **Writing the rule down did not stop me writing the gate**,
+> which is worth recording because it says something about how these rules actually work: they
+> catch the error on re-reading, not on first drafting.
+
+> ⚠ **And one instrument failure that looked like a physics failure.** The quartic system first
+> read 0.966 → 1.253 → 1.047, non-monotone, which would have been evidence that the formula
+> breaks under a change of reaction order. It was my landscape: at m = 0.35 the rails sit only
+> Δ/σ ≈ 2.4 apart at Ω = 1600, so the basin-restricted second moment was contaminated by the
+> *other* rail's tail. Separating them (m = 0.8, roots 0.298/1.0/1.505) gives the clean
+> 2.63% → 0.58% → 0.14%. **Non-monotone convergence is a signature worth trusting — it meant the
+> instrument, not the theory.**

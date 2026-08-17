@@ -1,0 +1,55 @@
+PREDICTIONS from the ODE + Lyapunov equation ONLY -- no CME anywhere:
+                      system    Delta           V  eta = D^2/2V
+                AM gamma=0.1  0.90707    0.087154      4.720226
+               AM gamma=0.35  0.63555    0.569440      0.354669
+               AM gamma=0.45  0.40052    2.243894      0.035745
+   Schlogl QUARTIC (3X<->4X)  0.60384    5.097835      0.035762
+    Schlogl ASYMMETRIC rails  0.90000    8.474074      0.047793
+
+=== P1/P2: predicted sigma against the EXACT stationary rail width
+                      system   Omega  sigma pred  sigma exact    ratio
+                AM gamma=0.1      60    0.038113     0.038130   1.0004
+                AM gamma=0.1     120    0.026950     0.026955   1.0002
+                AM gamma=0.1     240    0.019056     0.019058   1.0001
+                AM gamma=0.1     400   EXCLUDED: stationary solve untrustworthy
+               AM gamma=0.35      60    0.097420     0.111023   1.1396
+               AM gamma=0.35     120    0.068886     0.072360   1.0504
+               AM gamma=0.35     240    0.048710     0.049677   1.0198
+               AM gamma=0.35     400    0.037731     0.038152   1.0112
+               AM gamma=0.45      60    0.193386     0.172573   0.8924
+               AM gamma=0.45     120    0.136745     0.148892   1.0888
+               AM gamma=0.45     240    0.096693     0.119629   1.2372
+               AM gamma=0.45     400    0.074898     0.092371   1.2333
+   Schlogl QUARTIC (3X<->4X)    1600    0.056446     0.057933   1.0263
+   Schlogl QUARTIC (3X<->4X)    6400    0.028223     0.028387   1.0058
+   Schlogl QUARTIC (3X<->4X)   25600    0.014111     0.014131   1.0014
+    Schlogl ASYMMETRIC rails    1600    0.072776     0.073287   1.0070
+    Schlogl ASYMMETRIC rails    6400    0.036388     0.036450   1.0017
+    Schlogl ASYMMETRIC rails   25600    0.018194     0.018202   1.0004
+
+=== P1 verdict: does |ratio - 1| CONVERGE toward zero? (rule 20)
+                  AM gamma=0.1: 0.04% -> 0.02% -> 0.01%   CONVERGES  
+                 AM gamma=0.35: 13.96% -> 5.04% -> 1.98% -> 1.12%   CONVERGES  
+                 AM gamma=0.45: 10.76% -> 8.88% -> 23.72% -> 23.33%   does NOT converge  EXPECTED TO FAIL
+     Schlogl QUARTIC (3X<->4X): 2.63% -> 0.58% -> 0.14%   CONVERGES  
+      Schlogl ASYMMETRIC rails: 0.70% -> 0.17% -> 0.04%   CONVERGES  
+  -> P1 HOLDS: the ODE predicts systems the derivation never saw
+
+=== P2: does the shallow-rail case break, as §78's diagnosis requires?
+  gamma=0.45 series: 0.8924 -> 1.0888 -> 1.2372 -> 1.2333  (not converging)
+  gamma=0.45 error 23.33% against the worst passing case 1.12%  -- 20.9x
+  -> P2 HOLDS: the theory fails where it was predicted to
+
+=== P3: end-to-end -- an ODE calculation predicting a composition DEPTH
+  NOTE: D_max ~ exp(Delta^2 Omega / 2V), so a relative error d in V becomes a
+  factor D_max^d in the depth. A 1% sigma error is NOT a 1% depth error.
+                      system   Omega   ln D pred  ln D exact       ratio  sigma err
+                AM gamma=0.1     240     1135.55     1135.32        1.26      0.01%
+               AM gamma=0.35     400      143.53      140.40        22.8      1.12%
+   Schlogl QUARTIC (3X<->4X)   25600      918.10      915.52        13.2      0.14%
+    Schlogl ASYMMETRIC rails   25600     1226.23     1225.20         2.8      0.04%
+  -> the ODE route predicts the ERROR RATE to well under a percent, but the
+     DEPTH only to a factor -- depth is exponentially sensitive to V, so §78's
+     'the CME is not needed to use it' holds for eta and NOT for D_max itself.
+
+wrote results/out_of_sample.json

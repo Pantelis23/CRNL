@@ -215,6 +215,19 @@ That also explains, retrospectively, why every thermodynamic price failed to tra
 production is not in the formula.** Affinity enters only by setting where the rails sit and how
 deep the wells are — through Δ and V — and never in its own right.
 
+**§79 tested that out of sample, which is the only test that counts.** Predicting from the ODE
+alone and then checking against the exact CME, on systems the derivation never saw: AM at two
+unused γ (0.01%, 1.12%), Schlögl with **quartic autocatalysis, 3X⇌4X — a different reaction
+order** (0.14%), and Schlögl with asymmetric rails (0.04%). All converge. And a case chosen *in
+advance to fail* — AM at γ = 0.45, where the rail is shallowest — duly failed, not converging at
+all and landing 20.9× worse.
+
+> **One qualification, and it is real.** `D_max ~ exp(Δ²Ω/2V)`, so a relative error δ in V
+> becomes a factor `D_max^δ`. Sub-percent σ errors become depth factors of 1.3–23×. **The ODE
+> route predicts the exponent — η and ln D_max — to well under a percent; it does not predict
+> D_max itself to better than an order of magnitude.** For that, the master equation is still
+> required.
+
 ---
 
 ## 3. Why reliability has no thermodynamic price

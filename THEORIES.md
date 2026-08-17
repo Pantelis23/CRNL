@@ -2006,6 +2006,40 @@ PHYSICAL units instead:
 and §68 found no substrate-independent price -- they were pricing the wrong thing.** The cost
 of depth is in Delta, and what Delta costs depends on whether the element is conserved.
 
+**T-DEPTH-f -> §79: OUT OF SAMPLE. The ODE predicts systems the derivation never saw, and
+§78's closing claim needs one qualification.** §78 was checked on the systems it was built from,
+which is not a test (rule 16; §22 fitted a convolution for three subsections and was out by
+3688x against an exactly-computable quantity). Predicting first from ODE + Lyapunov, then
+checking against the exact CME:
+
+  * AM gamma = 0.10 (unused value): 0.04% -> 0.02% -> **0.01%**
+  * AM gamma = 0.35 (unused value): 13.96% -> 5.04% -> 1.98% -> **1.12%**
+  * **Schloegl QUARTIC, 3X <-> 4X -- a DIFFERENT REACTION ORDER**, never touched by §73-§78:
+    2.63% -> 0.58% -> **0.14%**
+  * Schloegl with asymmetric rails: 0.70% -> 0.17% -> **0.04%**
+  * AM gamma = 0.45, **chosen in advance to fail**: 10.76% -> 8.88% -> 23.72% -> 23.33%,
+    NOT converging, 20.9x worse than the worst passing case.
+
+All three out-of-sample systems converge; the case predicted to break, broke. That confirms
+§78's P4 diagnosis on a system chosen in advance: the LNA fails on a shallow rail near gamma_c
+and nowhere else.
+
+**THE QUALIFICATION.** D_max ~ exp(Delta^2 Omega / 2V), so a relative error d in V becomes a
+factor D_max^d in the depth. Measured: sigma errors of 0.01%, 0.04%, 0.14%, 1.12% become D_max
+factors of 1.26x, 2.8x, 13.2x, 22.8x. **§78's "the exact CME is not needed to use it" holds for
+eta and for ln D_max (predicted to 0.02-2%), NOT for D_max itself.** Anyone wanting a depth to
+better than an order of magnitude still needs the master equation. That is a limit, not a
+failure, and it matters because §72-§77 reported depths as numbers.
+
+**PROCESS, recorded because it is about the rules themselves:** rule 20 was added two sections
+before this one and I wrote exactly the gate it forbids -- a fixed 1% tolerance that called AM
+gamma = 0.35 a MISS at 1.12% while its series ran 1.1396 -> 1.0504 -> 1.0198 -> 1.0112. Writing
+the rule down did not stop the drafting error; it caught it on re-reading. And the quartic first
+read non-monotone (0.966 -> 1.253 -> 1.047), which would have been evidence that the formula
+breaks under a change of reaction order -- it was my landscape, with the rails only 2.4 sigma
+apart so the basin second moment ate the other peak's tail. **Non-monotone convergence meant the
+instrument, not the theory.**
+
 **T-DEPTH-e -> §78: eta IS DERIVED, and §77's kill test named the wrong theory.** §77
 proposed getting eta from WKB as the barrier action per molecule. WKB gives the ESCAPE
 probability, but §75/§77's eps is not an escape -- it is the Gaussian readout of the rail's own

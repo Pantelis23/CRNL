@@ -1,0 +1,19 @@
+Omega = 14400, rails 0.1/1.9, Delta = 0.8999999999999999
+Schloegl slope at the saddle: 24.115 per unit x  (sigmoid matched to it)
+
+   commitment function        f=0.45        f=0.35        f=0.28
+       a schlogl exact          2.37          3.04          3.69
+       b langevin well          2.71          3.04          3.79
+             c sigmoid          2.37          3.04          3.66
+                d step          2.71          3.11          3.80
+        AM (published)          3.00          3.38          3.33
+
+=== P2/P3: does the ELEMENT matter, or only the readout geometry?
+  Schloegl's band across channels: 2.37..3.69
+     b langevin well: 2.71..3.79  -> INSIDE Schloegl band
+           c sigmoid: 2.37..3.66  -> INSIDE Schloegl band
+              d step: 2.71..3.80  -> INSIDE Schloegl band
+
+  -> DEFLATES §72: a step function with NO dynamics reproduces the ceiling, so it is a property of the readout geometry, not of the element
+
+wrote results/ceiling_is_it_the_element.json

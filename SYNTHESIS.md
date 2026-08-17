@@ -88,7 +88,7 @@ sections destroyed the universality of two of them.
 | **gain** (e-folds of amplification) | ~2 k_B per molecule per e-fold | **AM-specific bookkeeping** |
 | **reliability** (error rate) | **molecules**, as exp(−cΩ) | **survives; the only cross-substrate claim** |
 | **speed** at fixed distance from the TUR bound | time | untested off AM |
-| **composition depth** | channel noise against rail separation | **transfers (§72)** |
+| **composition depth** | *nothing — see §73* | **not a currency** |
 
 **Existence.** Every restoring element examined has an affinity floor: below some drive, no
 bistable landscape exists at all. AM's is exactly `3 ln 2 = 2.0794` (§9.1); Schlögl's is
@@ -109,16 +109,22 @@ device.*
 **Reliability.** The error probability falls as exp(−cΩ) (§1, §35, §38). No free-energy cost
 attaches to it, and §3 below says why that is structural.
 
-**Composition depth — and this one transfers.** §12's ceiling `D_max ≈ exp(δ*²/2σ²)/4` is set
-by the inter-stage channel against the rails, not by molecule count. AM overshoots it by ≈3×;
-on Schlögl — one species, no symmetry, chemostatted, different reaction order — the ratios come
-out **2.71 / 3.04 / 3.75 against AM's 3.00 / 3.38 / 3.33** (§72). Within tens of percent, on a
-formula with no free parameter. **It is the only quantity here that survives a change of
-substrate**, and it is the information-theoretic one.
+**Composition depth — and it is not a currency at all.** §12's ceiling
+`D_max ≈ exp(δ*²/2σ²)/4` is set by the inter-stage channel against the rails. §72 measured it
+on Schlögl, found the ratios landing on AM's, and read that as the one quantity that transfers.
+**§73 deflated it**: a *step function* — commit to whichever rail is nearer, no chemistry, no
+dynamics — reproduces the same ratios, and a slope-matched sigmoid matches Schlögl to three
+significant figures.
 
-> So the sharpest form the founding claim takes: **the thermodynamic accounting of restoration
-> is substrate-specific; the information-theoretic accounting is not.** What makes an element
-> good at composing is how far apart its rails sit relative to the noise.
+> The corrected statement is sharper. **Composition depth is fixed by the readout geometry, and
+> the restoring element's entire contribution is where it puts its rails.** Reaction order,
+> symmetry, drive, chemostatting — none of it survives into D_max once Δ is fixed. So a
+> restoring element, for the purposes of depth, is a *rail-placer*.
+>
+> And the search for a substrate-independent price is over: three costs were tested across
+> substrates and none transferred (§67, §68); the fourth was not a cost. **No cost of
+> restoration measured here is substrate-independent, and the one substrate-independent
+> quantity is not a cost.**
 
 ---
 

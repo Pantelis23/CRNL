@@ -8639,9 +8639,14 @@ chain, where `(1−2ε)^D` would be wrong.
 | 0.35 | 30 | 42 | 44 | 45 | ✓ | 14.81 | **3.04** | 3.38 |
 | 0.28 | 200 | 447 | 528 | 551 | ✓ | 147.12 | **3.75** | 3.33 |
 
-> **All three channels saturate in Ω, and all three ratios land on AM's — 10%, 10%, 13%.**
+> ~~**All three channels saturate in Ω, and all three ratios land on AM's — 10%, 10%, 13%.**
 > §12's ceiling `D_max ≈ exp(δ*²/2σ²)/4`, which AM overshoots by ≈3×, is overshot by ≈3× on an
-> element with one species, no symmetry, chemostats, and a different reaction order.
+> element with one species, no symmetry, chemostats, and a different reaction order.**~~
+>
+> **DEFLATED by §73.** The measurement stands; the reading does not. A **step function with no
+> dynamics at all** gives 2.71/3.11/3.80 on the same geometry, so the agreement is not evidence
+> about substrates — the ceiling does not depend on the element beyond where it puts its rails.
+> Left as first printed per rule 7.
 
 **This is the first quantity in the project to transfer across substrates**, and it is the one
 that was *predicted* to — §71 wrote that prior deliberately, against three prior failures, on
@@ -8684,3 +8689,75 @@ accounting is not.** That is the sharpest form the founding claim has taken here
 restoring element good at composing is *how far apart its rails are relative to the noise* —
 and that quantity, unlike every price attached to it, is the same across chemistry with
 nothing in common.
+
+---
+
+### 73 §72's transfer was never about the element — T-CASC-b
+
+§72 read the saturated depth ceiling landing on AM's ratios as **"the first quantity in this
+project to transfer across substrates."** There is a nastier reading it did not test, and §72's
+own reduction makes it obvious in hindsight: **the chemistry enters only through `p_cross`**,
+the probability of committing to the wrong rail — a monotone function near 1 at the low rail
+and near 0 at the high one. If *any* such function with the same geometry gives the same ratio,
+the ceiling was never a property of the element.
+
+Holding the rails, the channel and the depth criterion fixed, and swapping **only** the
+commitment function:
+
+| commitment function | f=0.45 | f=0.35 | f=0.28 |
+|---|---|---|---|
+| **(a)** Schlögl, exact birth–death splitting | 2.37 | 3.04 | 3.69 |
+| **(b)** Langevin double well, exact — different physics, no counting noise | 2.71 | 3.04 | 3.79 |
+| **(c)** bare sigmoid, slope matched at the saddle, **no dynamics** | 2.37 | 3.04 | 3.66 |
+| **(d)** step function — **no element at all** | 2.71 | 3.11 | 3.80 |
+| AM (published) | 3.00 | 3.38 | 3.33 |
+
+> **A step function reproduces the ceiling.** Commit to whichever rail is nearer, with no
+> chemistry, no noise, no dynamics of any kind, and the ratio to `exp(Δ²/2σ²)/4` is
+> 2.71/3.11/3.80 — inside the band Schlögl's exact solution gives. The sigmoid matches Schlögl
+> to **three significant figures**.
+
+**~~§72: "the depth ceiling TRANSFERS — the first quantity in this project that does"~~ —
+DEFLATED.** Left as first printed per rule 7. The agreement between Schlögl and AM is real, and
+it is not evidence about substrates: **both agree with a function that has no substrate.**
+
+### 73.1 The corrected claim, which is sharper than the one it replaces
+
+The right reading is not that the ceiling transfers but that **the ceiling does not see the
+element**:
+
+> **Composition depth is fixed by the readout geometry — rail separation against channel noise
+> — and the restoring element's entire contribution is where it puts its rails.** Reaction
+> order, symmetry, drive, chemostatting, the shape of the commitment function: none of it
+> survives into D_max once Δ is fixed.
+
+That is a stronger statement than §72's and a more useful one. It says what a restoring element
+is *for* in a cascade: it is a rail-placer. Everything this project measured about how the
+element gets to its rails — §67's dissipation, §68's affinity floor, §63's threshold blur — is
+invisible to the depth it can support.
+
+It also explains the four-currency table's shape rather than adding a row to it. §72 recorded
+composition depth as a fifth currency that transfers; it is not a currency at all, because
+**nothing is being bought**. `SYNTHESIS.md` is corrected accordingly.
+
+### 73.2 What this does and does not license
+
+**Does not license:** any claim that the chemistry is irrelevant to restoration. The element
+determines Δ, whether rails exist at all (§68's floor), how fast it decides (§58), and how
+sharply it thresholds at finite Ω (§63). All of that is upstream of the geometry and none of it
+is touched here.
+
+**Does license:** dropping the search for a substrate-independent *price*. Three currencies
+were tested across substrates and none transferred (§67, §68); the fourth appeared to and
+turned out not to be a currency. **The honest summary is that no cost of restoration measured
+here is substrate-independent, and the one quantity that is substrate-independent is not a
+cost.**
+
+> ⚠ **A broken instrument nearly became the flattering evidence.** Row (b) first read
+> 0.68/0.14/0.01 — comfortably "OUTSIDE", which would have *saved* §72 by suggesting the
+> commitment function's shape matters after all. It was wrong twice over: the scale density for
+> `dX = −U′dt + √(2D)dW` is `exp(U/D)` and I wrote `exp(2U/D)`, and a plain `cumsum` over an
+> integrand spanning e⁹⁴⁵⁰ produced 0/0 which `np.clip` silently turned into a plausible
+> column. Redone in logs with a suffix log-sum-exp, (b) joins the others at 2.71/3.04/3.79.
+> **The bug pointed toward the conclusion I had just published, and a RuntimeWarning was the
+> only thing that flagged it.**

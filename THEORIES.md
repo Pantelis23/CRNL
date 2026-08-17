@@ -1989,6 +1989,35 @@ kill:** read Montoya/Cruz/Agreda and the MATCH algebraic-analysis paper properly
 whether the racemic-stability condition is ever written as a nonneg-weighted sum over
 reactions carrying combinatorial signs. Until then §65 claims priority for nothing.
 
+**T-CASC-b -> §73: §72's TRANSFER IS DEFLATED -- the ceiling does not see the element.**
+§72's own reduction has the chemistry entering only through p_cross, a monotone commitment
+function near 1 at the low rail and 0 at the high one. Holding rails, channel and criterion
+fixed and swapping ONLY that function: Schloegl exact gives 2.37/3.04/3.69, an exact Langevin
+double well 2.71/3.04/3.79, a slope-matched sigmoid with NO dynamics 2.37/3.04/3.66, and a
+**STEP FUNCTION with no element at all** 2.71/3.11/3.80. The sigmoid matches the chemistry to
+three significant figures. **So the Schloegl-AM agreement is real and is not evidence about
+substrates: both agree with a function that has no substrate.**
+
+**Corrected claim, sharper than the one it replaces: composition depth is fixed by the READOUT
+GEOMETRY -- rail separation against channel noise -- and the restoring element's entire
+contribution is where it puts its rails.** Reaction order, symmetry, drive, chemostatting and
+the shape of the commitment function do not survive into D_max once Delta is fixed. For the
+purposes of depth a restoring element is a rail-placer.
+
+**Consequence for the founding question:** composition depth is not a fifth currency, because
+nothing is being bought. Three costs were tested across substrates and none transferred (§67,
+§68); the fourth was not a cost. **No cost of restoration measured here is
+substrate-independent, and the one substrate-independent quantity is not a cost.** This does
+NOT say chemistry is irrelevant to restoration -- the element still sets Delta, whether rails
+exist at all (§68), how fast it decides (§58) and how sharply it thresholds at finite Omega
+(§63). All of that is upstream of the geometry.
+
+**Instrument note (rule 10, and it nearly went the other way):** the Langevin column first read
+0.68/0.14/0.01, comfortably OUTSIDE, which would have SAVED §72. It was wrong twice -- the
+scale density is exp(U/D) and I wrote exp(2U/D), and a plain cumsum over an integrand spanning
+e^9450 gave 0/0 that np.clip turned into a plausible column. **The bug pointed toward the
+conclusion just published.**
+
 **T-CASC-a -> §72: CLOSED. THE DEPTH CEILING TRANSFERS -- the first quantity in this
 project that does.** Both routes through the matrix exponential wall out (§71.2), including the
 second-eigenvalue route, which still needs exp(Qt)v. The reduction that works avoids the

@@ -2006,6 +2006,43 @@ PHYSICAL units instead:
 and §68 found no substrate-independent price -- they were pricing the wrong thing.** The cost
 of depth is in Delta, and what Delta costs depends on whether the element is conserved.
 
+**T-DEPTH-g -> §80: §75-§79 PRICED THE WRONG FAILURE MODE.** An element in a cascade can
+fail two ways -- misreading its input (the Gaussian readout of the intrinsic noise,
+eps ~ exp(-eta*Omega)) or spontaneously escaping its rail during the stage time
+(eps ~ t*exp(-A*Omega)). Both are exponential in Omega, so the SMALLER exponent dominates
+absolutely, and the arc never compared them. Measured on §75's own element:
+**A = 0.026046 against eta = 0.059537**, so escape wins by e^432 at Omega = 12800 and readout
+would bind only for stage times below 6e-188. **§75's own premise -- that the physical cascade
+is chemically coupled -- selects the regime where §75-§79's eps is not the physical one.**
+
+**What survives.** §76's D_max = c*/eps is mathematics about a binary channel and does not care
+where eps comes from; only which eps to use changes. §77's eta is the right KIND of statement
+(one exponent governs everything) with the wrong number for this regime; its measurement and its
+transfer conclusion are unaffected, since A is just as substrate-specific. **§78's headline
+survives with a different formula**: the escape action is an integral of the propensity
+densities, A = -int ln(mu/lam) dx from saddle to rail, giving 0.026047 against the exact MFPT's
+0.026046 -- still no master equation, but the quasipotential integral rather than the LNA
+variance. SCOPE: that integral form is 1-D; a multi-dimensional element needs Hamilton-Jacobi,
+which is harder than the LNA and not done here.
+
+**§71/§72 are unaffected and this was checked.** They used an EXTERNAL channel 4.8x wider than
+the intrinsic width, where ln eps_read = -6.15 against escape at -41.70, so readout binds by 35
+nats. Engineered wiring and chemical coupling are physically different cascades.
+
+**WHY IT WAS MISSED FOR FIVE SECTIONS, and the generalisable form:** the §73-§79 chain was
+reductions each correct given the last, and the error entered at the ONE step that changed the
+physical setup rather than simplifying the mathematics -- §75 replaced an external channel with
+the intrinsic rail width, a change of MODEL, and that is exactly where a second failure mode
+became available. **When a reduction replaces one physical mechanism with another, re-enumerate
+the failure modes. Simplifying algebra cannot introduce new ones; changing what the model
+represents can.**
+
+**T-DEPTH-h, open: redo §77-§79 with A in place of eta.** The depth is c*/(t*exp(-A*Omega)), so
+the coefficient that matters is A, and §77's transfer sweep, §78's derivation and §79's
+out-of-sample test should all be repeated against it. **How to kill:** A is already computable
+from the rate functions in 1-D, so the Schloegl half is cheap; AM needs the 2-D quasipotential,
+which §63/§64 have partial machinery for and which is where T15-n's unresolved nu also lives.
+
 **T-DEPTH-f -> §79: OUT OF SAMPLE. The ODE predicts systems the derivation never saw, and
 §78's closing claim needs one qualification.** §78 was checked on the systems it was built from,
 which is not a test (rule 16; §22 fitted a convolution for three subsections and was out by

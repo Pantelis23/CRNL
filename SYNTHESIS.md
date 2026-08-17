@@ -228,6 +228,27 @@ all and landing 20.9× worse.
 > D_max itself to better than an order of magnitude.** For that, the master equation is still
 > required.
 
+### The correction that matters most
+
+**§80 found that §75–§79 priced the wrong failure mode.** An element in a cascade can misread
+its input *or* spontaneously escape its rail during the stage time. Both are exponential in Ω,
+so the smaller exponent wins outright — and on §75's own element the escape exponent is
+**A = 0.026046 against the readout's η = 0.059537**. Escape is more likely by **e⁴³²** at
+Ω = 12800; readout would bind only for stage times below 10⁻¹⁸⁸.
+
+> **§75's own premise — that a physical cascade is chemically coupled — selects the regime in
+> which §75–§79's ε is not the physical one.**
+
+What survives: §76's `D_max = c*/ε` is mathematics and doesn't care where ε comes from. §77's
+"one exponent governs everything" is the right shape with the wrong number. **And §78's headline
+survives with a different formula** — the escape action is also a deterministic-side quantity,
+`A = −∫ln(μ/λ)dx` from the rate functions alone, matching the exact first-passage time to 1e−4.
+So the founding question is still answered without a master equation; it is the quasipotential
+integral rather than the linear-noise variance.
+
+§71/§72's external-channel cascade is unaffected — checked, not assumed: there the readout term
+binds by 35 nats. **Engineered wiring and chemical coupling are physically different cascades.**
+
 ---
 
 ## 3. Why reliability has no thermodynamic price

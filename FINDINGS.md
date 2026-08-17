@@ -9219,3 +9219,83 @@ carry the exponential amplification with them.
 > *other* rail's tail. Separating them (m = 0.8, roots 0.298/1.0/1.505) gives the clean
 > 2.63% → 0.58% → 0.14%. **Non-monotone convergence is a signature worth trusting — it meant the
 > instrument, not the theory.**
+
+---
+
+### 80 §75–§79 priced the wrong failure mode — T-DEPTH-g
+
+§75 argued that a chemically-coupled cascade has no abstract channel: stage 1's output species
+*is* stage 2's input, so the inter-stage noise is stage 1's own rail fluctuation. §76–§79 built
+everything on the resulting per-stage error, the **Gaussian readout** of that fluctuation.
+
+**An element in a cascade has a second way to fail, and the arc never compared them.** During
+the stage time it can spontaneously escape its rail. Both are exponential in Ω:
+
+    ε_read ~ exp(−ηΩ),   η = Δ²/(2V)        [LNA, §78]
+    ε_esc  ~ t·exp(−AΩ), A = the escape action [quasipotential]
+
+**Whichever exponent is smaller dominates absolutely.** Measured on §75's own element, with the
+escape action from the exact mean first-passage time (ln T linear in Ω, local A settling
+0.025923 → 0.026046):
+
+| Ω | ln ε_read | ln ε_esc | difference | binds |
+|---|---|---|---|---|
+| 400 | −24.73 | −10.53 | 14.20 | **ESCAPE** |
+| 1600 | −97.22 | −41.70 | 55.52 | **ESCAPE** |
+| 6400 | −383.75 | −166.70 | 217.05 | **ESCAPE** |
+| 12800 | −765.14 | −333.40 | **431.74** | **ESCAPE** |
+
+> **A = 0.026046 against η = 0.059537** — the escape exponent is 2.29× smaller, so at Ω = 12800
+> spontaneous escape is **e⁴³² ≈ 3×10¹⁸⁷ times more likely** than misreading. Readout would bind
+> only for stage times below **6×10⁻¹⁸⁸**.
+>
+> **§75's own premise — that the physical cascade is chemically coupled — selects the regime in
+> which §75–§79's ε is not the physical one.**
+
+### 80.1 What survives, and one thing that survives in better shape than expected
+
+**§76 stands as mathematics.** `D_max = c\*/ε` is a statement about a binary channel with
+per-stage error ε, verified to 8.9e−9. It does not care where ε comes from. What changes is
+which ε to put in it.
+
+**§77's η is the wrong coefficient for this regime.** "The last free number" is the right *kind*
+of statement — one exponent governs everything — but for a chemically-coupled cascade the number
+is A, not η. §77's measurement of η is correct and its transfer conclusion is unaffected (A is
+just as substrate-specific), but η is not what sets the depth.
+
+**§78's headline survives, with a different formula.** Its claim was that the founding question
+is answered by deterministic-side quantities with no master equation. That is still true — the
+escape action is an integral of the *propensity densities*:
+
+    A = −∫ ln(μ(x)/λ(x)) dx    from the saddle to the rail
+
+Computed that way, from the rate functions alone with no chain and no lattice: **0.026047,
+against the exact MFPT's 0.026046 — agreement to 1×10⁻⁴.** So the answer is still on the
+deterministic side; it is the quasipotential integral rather than the linear-noise variance.
+
+> **Scope on that.** The integral form is a 1-D fact. For a multi-dimensional element like AM
+> the quasipotential requires solving a Hamilton–Jacobi equation rather than an integral —
+> harder than the LNA, still deterministic-side, and not done here.
+
+**§71/§72 are unaffected, and this was checked rather than assumed.** They used an *external*
+channel with σ = f·Δ, 4.8× wider than the intrinsic width at Ω = 1600. There ln ε_read = −6.15
+against escape at −41.70, so the readout term binds by 35 nats. **Engineered wiring and chemical
+coupling are physically different cascades, and the readout analysis is right for the first.**
+
+### 80.2 Why I missed it for five sections
+
+The arc from §73 was a chain of reductions, each correct given the last, and **the error entered
+at the one step that changed the physical setup rather than simplifying the mathematics.** §75
+replaced an external channel with the intrinsic rail width — a change of *model*, not of
+algebra — and that is precisely the step at which a second failure mode became available.
+Every later section then inherited the assumption without restating it.
+
+> The generalisable form: **when a reduction replaces one physical mechanism with another,
+> re-enumerate the failure modes.** Simplifying algebra cannot introduce new ones; changing what
+> the model represents can.
+
+> ⚠ **The first escape instrument returned a negative time.** A banded MFPT solve gave
+> −4.98×10¹³ at Ω = 3200 and a value that did not grow with Ω at all — the reflecting-boundary
+> row was written at the wrong lattice site, since the band spans lo+1…hi−1 and the reflecting
+> site is hi. A mean first-passage time cannot be negative, and nothing was read off it.
+> Replaced by the exact log-space sum, which gives ln T linear in Ω to 0.01%.

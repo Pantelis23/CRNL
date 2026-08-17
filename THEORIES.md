@@ -2006,6 +2006,37 @@ PHYSICAL units instead:
 and §68 found no substrate-independent price -- they were pricing the wrong thing.** The cost
 of depth is in Delta, and what Delta costs depends on whether the element is conserved.
 
+**T-DEPTH-d -> §77: THE LAST FREE NUMBER IS eta, AND IT DOES NOT TRANSFER.** §76 left one
+coefficient: eta = d ln(1/eps)/d Omega, nats of reliability per molecule. It EXISTS -- ln(1/eps)
+becomes linear in Omega on both substrates, gated on convergence (rule 20): AM settles to 0.09%
+and 0.01% at gamma = 0.20 and 0.05, Schloegl to 0.20% by Omega = 25600.
+
+**P3's prediction held and it mattered:** Schloegl's ratios looked superlinear in §75's data
+(2.288 against sqrt(4) = 2) and were predicted to be small-Omega contamination rather than
+different physics, BECAUSE §75's exact lambda*Omega collapse cannot coexist with two exponents.
+It straightens, and lambda = 4 gives 0.238185 / 0.059574 = 3.998 -- exactly the lambda-scaling
+the collapse requires. The two sections agree where they must.
+
+**eta spans a factor of 633** (AM gamma=0.05: 9.8813; Schloegl spread 0.6: 0.015617) and moves
+with the landscape INSIDE each substrate -- gamma 0.30 -> 0.05 buys 14x, Schloegl's root spacing
+0.6 -> 0.9 buys 3.8x. **It does not transfer, and it was never going to: eta is the one place
+the chemistry survives.**
+
+**CLOSING STATEMENT OF THE PROGRAMME.** Everything about a restoring element washes out of
+composition -- reaction orders, symmetry, drive, dissipation, the shape of its commitment
+function, even whether it is conserved -- **except eta, which is the element's own.** A
+restoring element is a device for converting molecules into nats at an exchange rate set by its
+landscape, and nothing else about it matters to what it can compute. The transistor's advantage
+is not a special thermodynamic property; it is a good exchange rate.
+
+**T-DEPTH-e, open: DERIVE eta.** Its landscape dependence is measured and not derived --
+0.6813, 1.8346, 9.8813 at gamma = 0.30, 0.20, 0.05, plainly not linear. WKB should give it in
+closed form as the barrier action per molecule. **How to kill:** compute the quasipotential
+barrier for AM in closed form (§9.1 has the landscape; §63/§64 have the action machinery) and
+check it against these three numbers ABSOLUTELY, no fit. And note the scope: eps here is the
+Gaussian readout of the intrinsic noise, which §75 showed is what a chemically-coupled cascade
+uses, but a different readout would move eta's absolute value even if the ratios survive.
+
 **T-DEPTH-c -> §76: DEPTH *IS* THE ERROR RATE. D_max * eps = c* = 0.124266404564.** For a
 binary symmetric channel the D-step bias is (1-2eps)^D and I falls through 1/2 at b* with
 H((1+b*)/2) = 1/2, so D_max -> c*/eps with c* = -ln(b*)/2. Verified to 8.9e-9 over seven

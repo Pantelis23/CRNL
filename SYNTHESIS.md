@@ -179,6 +179,23 @@ no information beyond ε.
 > the depth advantage of a restoring switch is not an additional property beyond its error
 > rate. It is the same property counted twice.
 
+**§77 names the one number that is left.** If reliability and depth are both ε, the whole
+question is how fast ln(1/ε) grows with molecule count — `η = d ln(1/ε)/dΩ`, **nats of
+reliability per molecule.** It exists: ln(1/ε) becomes linear in Ω on both substrates, settling
+to 0.01–0.20%. And it does **not** transfer — spanning a factor of **633**, and moving with the
+landscape inside each substrate (γ from 0.30 to 0.05 buys 14×).
+
+> **Everything about a restoring element washes out of composition — reaction orders, symmetry,
+> drive, dissipation, the shape of its commitment function, even whether it is conserved —
+> except η, and η is the element's own.**
+>
+> A restoring element is a device for converting **molecules into nats** at an exchange rate set
+> by its landscape, and nothing else about it matters to what it can compute. The transistor's
+> advantage is not a special thermodynamic property. **It is a good exchange rate.**
+
+What that leaves open is η itself: its landscape dependence is measured, not derived. WKB should
+give it in closed form as the barrier action per molecule (T-DEPTH-e).
+
 ---
 
 ## 3. Why reliability has no thermodynamic price

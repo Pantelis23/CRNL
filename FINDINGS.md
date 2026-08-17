@@ -9010,3 +9010,78 @@ the same property counted twice.
 > §75's P1, now three sections running.** The fix each time is to test convergence rather than
 > a level, and the reason it keeps recurring is that writing a tolerance is easier than asking
 > what the residual is made of.
+
+---
+
+### 77 The last free number: nats per molecule, and it does not transfer — T-DEPTH-d
+
+§76 reduced everything this project set out to measure to one element quantity: the per-stage
+error ε. Reliability is ε, depth is c\*/ε, there is no third thing. **So the whole founding
+question rests on one coefficient** — how fast ln(1/ε) grows with molecule count:
+
+    η  =  d ln(1/ε) / dΩ        [nats of reliability per molecule]
+
+**This is the transfer test that matters, and the earlier ones did not.** §67 priced
+dissipation per e-fold and §68 the affinity floor; §73 later showed both are invisible to
+composition. η is the only quantity left.
+
+**It exists.** ln(1/ε) becomes linear in Ω on both substrates, gated on convergence rather
+than a tolerance (rule 20):
+
+| element | landscape | ln(1/ε) at successive Ω | **η** | last-step drift |
+|---|---|---|---|---|
+| AM | γ = 0.20 | 112.2, 222.7, 443.0, 736.6 | **1.8346** | 0.09% |
+| AM | γ = 0.05 | 597.2, 1190.3, 2376.2, 3957.2 | **9.8813** | 0.01% |
+| Schlögl | λ = 1 | 24.7, 97.2, 383.7, 1527.6 | **0.059574** | 0.20% |
+| Schlögl | λ = 4 | 97.2, 383.7, 1527.6, 6100.7 | **0.238185** | 0.05% |
+
+**P3's prediction held.** Schlögl's ratios looked superlinear in §75's data (2.288 against
+√4 = 2), and I predicted that was small-Ω contamination of the rail width rather than different
+physics, *because §75's exact λΩ collapse cannot coexist with two exponents*. It straightens:
+η settles to 0.20% by Ω = 25600. And λ = 4 gives **0.238185 / 0.059574 = 3.998** — exactly the
+λ-scaling §75's collapse requires, so the two sections agree where they must.
+
+### 77.1 η does not transfer, and that is the answer
+
+| element | landscape | η |
+|---|---|---|
+| AM | γ = 0.30 | 0.6813 |
+| AM | γ = 0.20 | 1.8346 |
+| AM | γ = 0.05 | **9.8813** |
+| Schlögl | spread 0.6 | **0.015617** |
+| Schlögl | spread 0.9 (λ=1) | 0.059574 |
+| Schlögl | λ = 4 | 0.238185 |
+
+> **η spans a factor of 633**, and it moves with the landscape *inside* each substrate — γ from
+> 0.30 to 0.05 buys 14×, and Schlögl's root spacing from 0.6 to 0.9 buys 3.8×. **It does not
+> transfer, and it was never going to: η is the one place the chemistry survives.**
+
+So the programme's closing arithmetic is:
+
+> Everything about a restoring element washes out of composition — its reaction orders, its
+> symmetry, its drive, its dissipation, the shape of its commitment function, even whether it
+> is conserved — **except one number, η, and that number is the element's own.** A restoring
+> element is a device for converting molecules into nats at an exchange rate set by its
+> landscape, and *nothing else about it matters* to what it can compute.
+
+That is the founding question answered, and the answer is deflationary in the same direction
+§73 and §76 pushed: the transistor's advantage is not a special thermodynamic property. It is a
+good exchange rate.
+
+### 77.2 What is unresolved
+
+**η's dependence on the landscape is measured, not derived.** γ → η runs 0.6813, 1.8346, 9.8813
+at γ = 0.30, 0.20, 0.05 — plainly not linear, and WKB should give it in closed form as the
+barrier action per molecule. That is the natural next quantity and this section does not claim
+it. **T-DEPTH-e.**
+
+**And the definition of ε is a convention.** It is the Gaussian readout of the element's own
+intrinsic noise, which is what §75 established the chemically-coupled cascade actually uses —
+but a different readout would give a different η. The *ratios* above would survive; the
+absolute numbers might not.
+
+> ⚠ **A bare `except` was hiding an exclusion.** The first version wrapped the AM loop in
+> `except Exception: continue`, and one cell (γ = 0.30, Ω = 240) was silently dropped when the
+> engine's own guard refused an untrustworthy stationary solve. The guard was working; my
+> handler discarded its message. Failures are now counted and printed — **1 cell excluded** —
+> which is what rule 10 asks for and what a bare `except` is structurally incapable of doing.

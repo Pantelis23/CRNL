@@ -1,0 +1,47 @@
+=== P1/P2: AM -- does ln(1/eps) become linear in Omega, and what is eta?
+  gamma  Omega   delta*     sigma   ln(1/eps)  local eta
+   0.30     60  0.70741  0.082221      40.097         --
+   0.30    120  0.70741  0.056438      82.006     0.6985
+   0.30    240   EXCLUDED: the stationary solve is not trustworthy
+   0.30    400  0.70741  0.030515     272.778     0.6813
+         -> eta = 0.6813 nats/molecule, last-step drift 2.52%
+   0.20     60  0.81650  0.055394     112.243         --
+   0.20    120  0.81650  0.039038     222.690     1.8408
+   0.20    240  0.81650  0.027564     443.039     1.8362
+   0.20    400  0.81650  0.021339     736.583     1.8346
+         -> eta = 1.8346 nats/molecule, last-step drift 0.09%
+   0.05     60  0.95213  0.027654     597.189         --
+   0.05    120  0.95213  0.019554    1190.319     9.8855
+   0.05    240  0.95213  0.013826    2376.230     9.8826
+   0.05    400  0.95213  0.010710    3957.238     9.8813
+         -> eta = 9.8813 nats/molecule, last-step drift 0.01%
+
+=== P1/P3: Schloegl -- does it straighten at larger Omega?
+  lambda   Omega     sigma   ln(1/eps)  local eta
+     1.0     400  0.135998      24.728         --
+     1.0    1600  0.065751      97.223   0.060413
+     1.0    6400  0.032667     383.748   0.059693
+     1.0   25600  0.016309    1527.568   0.059574
+          -> eta = 0.059574 nats/molecule, last-step drift 0.20%   SETTLED
+     4.0     400  0.263002      97.223         --
+     4.0    1600  0.130670     383.748   0.238771
+     4.0    6400  0.065236    1527.568   0.238296
+     4.0   25600  0.032606    6100.721   0.238185
+          -> eta = 0.238185 nats/molecule, last-step drift 0.05%   SETTLED
+
+=== P4/P5: does eta transfer, and what does it depend on?
+               element     landscape         eta
+                    AM     gamma=0.3      0.6813   (Omega 120->400)
+                    AM     gamma=0.2      1.8346   (Omega 240->400)
+                    AM    gamma=0.05      9.8813   (Omega 240->400)
+              Schloegl    lambda=1.0    0.059574
+              Schloegl    lambda=4.0    0.238185
+              Schloegl    spread=0.6    0.015617
+              Schloegl    spread=0.9    0.059574
+
+  eta spans 0.015617 .. 9.8813  -- a factor of 633
+  -> P4 eta does NOT transfer: it is the one place the chemistry survives
+
+  cells excluded on an untrustworthy stationary solve: 1  [(0.3, 240)]
+
+wrote results/nats_per_molecule.json

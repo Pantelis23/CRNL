@@ -122,7 +122,7 @@ def stationary(net: ReactionNetwork, total: int, omega: float) -> np.ndarray:
     if worst > 1e-9:
         raise RuntimeError(
             f"stationary solve produced a negative probability of {worst:.3e} "
-            "at total={total}; the solve is not trustworthy"
+            f"at total={total}; the solve is not trustworthy"
         )
     p = np.maximum(p, 0.0)
     return p / p.sum()

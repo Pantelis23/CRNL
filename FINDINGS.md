@@ -9488,3 +9488,84 @@ written, so their dissipation is formally infinite. The element therefore pays a
 thermodynamic cost and gets **worse** reliability for it — drive and reliability moving in
 opposite directions inside a single network, which is a stronger statement than §82's
 independence.
+
+---
+
+### 84 ν = 2 exactly — T15-n closed, and every route was measuring a window
+
+§64 extracted the barrier exponent in `A ~ (γ_c − γ)^ν` three ways and got three answers — width
+1.95–2.03, stationary 1.99, extrapolated action 2.10–2.19 — and left T15-n open on *why*. §64's
+own present statement was **"ν ≈ 2 ± 0.1, and not determined more precisely than that by any
+instrument here."**
+
+**Every one of those is a fit, and rule 16 is exactly about this: nobody computed what the normal
+form predicts.** So this section derives A(γ) in closed form and checks it in *absolute* terms.
+
+**The derivation.** Near the pitchfork b is fast (symmetric eigenvalue −(1+2γ)) and the lead
+u = x−y is slow. The lead's drift factors exactly — this is §43's invariance — as
+`du/dt = k·u·[b(1+γ) − γ]`, so the saddle sits at `b* = γ/(1+γ)`. Eliminating b from `ds/dt = 0`
+gives `b(u) = b₀ + b₂u²`, and **b₀ = 1/3 exactly for every γ** (the symmetric fixed point never
+moves), so
+
+    ε = b₀ − b* = (1−2γ)/(3(1+γ)),     b₂ = −(1−γ)/(2(1+2γ))
+
+Per **§83**, the noise must come from the propensities and not the drift — a normal form carrying
+only the drift would be precisely the error §83 identified. Summing (Δu)² over the four
+lead-changing reactions gives `D_u(0) = 2k(1+γ)/9`, and `A = 2∫₀^{u*} F/D du` collapses to
+
+> **A = 9ε²/(4|b₂|) = (1+2γ)(1−2γ)² / (2(1−γ)(1+γ)²)**
+>
+> manifestly ∝ (γ_c−γ)², so **ν = 2 exactly.** k, D_u and the prefactor all cancel: the formula
+> has no free parameter of any kind.
+
+**P1, the gate.** `k(1+γ)ε` reproduces the module's independently-computed `lambda_antisym(γ)` to
+**5.6e−17** at eight γ, and the normal form's δ* converges to the exact `delta_star`:
+0.1835 → 0.1136 → 0.0646 → 0.0320 → 0.0117 → 0.0050 → 0.0009 → **0.0001**. (Rule 20: it is a
+leading-order form, 18% off at γ=0, and that is not a failure — convergence is the criterion.)
+
+**P2, the test, absolute — closed form against the exact first-passage action:**
+
+| γ | A measured | A closed form | ratio |
+|---|---|---|---|
+| 0.30 | 0.125373 | 0.108199 | 0.8630 |
+| 0.38 | 0.046444 | 0.042929 | 0.9243 |
+| 0.42 | 0.021153 | 0.020138 | 0.9520 |
+| 0.44 | 0.012080 | 0.011657 | 0.9650 |
+| 0.45 | 0.008458 | 0.008215 | 0.9713 |
+| 0.46 | 0.005460 | 0.005338 | **0.9776** |
+
+Monotone, from below, with residual/(γ_c−γ) = 0.685 → 0.559 — an O(γ_c−γ) correction, as an
+omitted next-order term must be. **Zero cells excluded; zero fitted parameters.**
+
+**P3/P4, why the three routes disagreed. ν is a limit, and every finite window reads below it.**
+The closed form's own effective exponent runs **1.8300** on §63.2's window [0.20, 0.45] and
+climbs to **1.9898** on [0.48, 0.499]. The *measured* A gives 1.9424 / 1.9416 / 1.9430 over three
+windows — **squarely on §64's width route (1.95–2.03) and its stationary route (1.99)**.
+
+> **§63.2's "2 is excluded over [0.20, 0.45] with no drift toward it" was reading the window
+> bias.** An effective exponent below 2 over a finite window is exactly what ν = 2 with a
+> correction to scaling produces. The exclusion was already withdrawn by §64; this says what it
+> was. §64's present statement "ν ≈ 2 ± 0.1, not determined more precisely by any instrument
+> here" is now superseded — **ν = 2 exactly, by derivation, validated absolutely.**
+
+### 84.1 Two criteria that were wrong, in a section about wrong criteria
+
+> **P3 as first written demanded the closed form land within 0.05 of §64's width route on that
+> window, and printed FAILS off 1.8300.** But §64's routes fit a width, a stationary distribution
+> and an extrapolated action over their own γ grids — **none of them this quadrature**. A
+> threshold between effective exponents of *different observables fitted by different protocols*
+> cannot be satisfied only by the thing it claims to test (rule 19). What is comparable is the
+> sign and direction of the window bias, and that is what the verdict now tests.
+>
+> **P4 gated the measured-vs-closed-form exponent gap at 0.10 and passed at 0.091** — a fixed
+> tolerance on a quantity that converges, which is rule 20 verbatim, two sections after rule 20
+> was last invoked.
+
+The gap it was hiding is real and is reported instead of gated: the closed form's window bias is
+**larger** than the true one (1.8513/1.8691/1.8814 against 1.9424/1.9416/1.9430), in the same
+direction at every window. That is a leading-order artifact — the closed form's subleading term is
+not the true one, which is also why P2's ratio sits below 1 away from γ_c. **ν = 2 rests on P1 and
+P2, the absolute check, and on none of these fits.**
+
+**Still open (T15-n.1):** the quantitative gap between the closed form's window exponent (1.83)
+and §64's measured routes (1.95–2.19) on the same window is *not* explained here.

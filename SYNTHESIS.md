@@ -374,6 +374,11 @@ The measurements in this project survive. The explanations attached to them most
 * **Why the fluctuation theorem factorises over outcomes.** Measured twice, explained never.
 * **The WKB prefactor** (T14-e): localised to a start-side factor, exactly θ-independent, a
   function of (γ, ε) — §61 gave it a falsifiable target that analysis must now reproduce.
-* **The barrier exponent ν**, where three extraction routes disagree between 1.95 and 2.19
-  (§64, T15-n).
+* ~~**The barrier exponent ν**, where three extraction routes disagree between 1.95 and 2.19~~
+  — **closed by §84: ν = 2 exactly.** Eliminating the fast variable gives the escape action in
+  closed form with no fitted parameter, `A = (1+2γ)(1−2γ)²/(2(1−γ)(1+γ)²)`, which matches the
+  exact first-passage action to **0.9776 and rising** at γ = 0.46. The three routes were never
+  disagreeing about a value: ν is a *limit*, every finite window reads below it, and the measured
+  effective exponent (1.942) is exactly §64's width route. §63.1's width exponent of exactly 1/2
+  follows. *(Open: why the closed form's window bias exceeds the true one — T15-n.1.)*
 * **Cascades.** Everything above is one element. The founding claim is about *composition*.

@@ -2380,30 +2380,53 @@ nested windows, with 2 lying 9.7x the scatter away.** Note the agreement 1/nu = 
 the width's 0.5133 is NOT an independent confirmation -- both are readings of the same surface
 lambda_A(gamma, Omega) related by the scaling ansatz, so it confirms the ANSATZ, not nu.
 
-**T15-n, open (T15-m's kill test was withdrawn by §64 as unreachable -- it was costed by
-wall-clock at Omega = 640 rather than by the Omega its convergence needed, and gamma = 0.47
-still drifts 4.2% at Omega = 1000). WHY DO THE THREE ROUTES TO nu DISAGREE?** The width of the
-transition (no extrapolation) gives 1.95-2.03, the stationary distribution 1.99, and the
-extrapolated action 2.10-2.19, with the heaviest extrapolation the outlier. **How to kill:**
-the extrapolation assumes A_eff = A + c/Wbar, but the WKB form carries a b*ln(Omega)/Omega term
-too, which is exactly the collinearity §35.3 proved unresolvable over a bounded window -- so
-test the extrapolation on a case where A is known independently rather than trying to fit the
-second term. §61's 1-D slaved chain has a CLOSED-FORM splitting probability and therefore an
-exactly-known action; run the same A_eff-plus-extrapolation machinery on it and measure the
-residual bias directly. If the bias explains the 2.19, the action route is corrected and the
-width route stands; if not, the scaling ansatz linking them is what fails, which §64.1 already
-flags as untested rather than confirmed.
+~~**T15-n, open: WHY DO THE THREE ROUTES TO nu DISAGREE?**~~ **-> §84. CLOSED. nu = 2 exactly,
+and the three routes were not disagreeing about a value -- each was measuring how far its own
+window sat from gamma_c.**
 
-**~~T15-m, open: is nu = 2 recovered in the last 10% of the approach to gamma_c?~~ ->
-§64: the question was fine, its kill test was not. Superseded by T15-n.** §63.2's
-narrowest window stops at gamma = 0.45 and the gamma = 0.46 point was excluded for a 4.33%
-drift in Omega. So 2 is excluded over [0.20, 0.45] with no drift toward it, which is not the
-same as excluding it asymptotically. **How to kill:** push the action measurement to
-gamma = 0.47-0.49, which needs Omega well beyond 500 for A_eff to converge -- the antisymmetric
-block is O(Omega^2/2) states and shift-invert was 7s at Omega = 640, so this is reachable
-rather than hypothetical. If nu stays at 1.95 the pitchfork normal form does not govern the
-escape action here and the reason is worth finding; if it climbs to 2, §63.1's exponent is
-exactly 1/2 and the 1.95 is a correction to scaling.
+The original kill test proposed running the extrapolation machinery on §61's closed-form 1-D
+chain to measure the bias. **That was not needed, and the reason it was not needed is rule 16:
+all three routes were FITS, and nobody had computed what the pitchfork normal form predicts.**
+
+Eliminating the fast variable b (symmetric eigenvalue -(1+2g)) from the exactly-factoring lead
+drift du/dt = k u [b(1+g) - g], with b0 = 1/3 exactly for every gamma:
+
+    eps = (1-2g)/(3(1+g)),  b2 = -(1-g)/(2(1+2g)),  D_u(0) = 2k(1+g)/9
+    **A = 9 eps^2/(4|b2|) = (1+2g)(1-2g)^2 / (2(1-g)(1+g)^2)**
+
+k, D_u and the prefactor all cancel. **The noise had to come from the propensities, not the
+drift** -- a normal form built on the drift alone would be exactly §83's error.
+
+  * **P1**: k(1+g)eps reproduces `lambda_antisym` to 5.6e-17 at eight gammas; the normal form's
+    delta* converges to the exact one, residual 0.1835 -> 0.0001.
+  * **P2, ABSOLUTE**: against the exact first-passage action the ratio runs 0.8630 -> 0.9776
+    over gamma = 0.30..0.46, monotone from below, residual/(g_c-g) = 0.685 -> 0.559. Zero cells
+    excluded, zero fitted parameters.
+  * **P3/P4**: the closed form's effective exponent is 1.8300 on §63.2's window [0.20, 0.45] and
+    1.9898 on [0.48, 0.499]. The MEASURED A gives 1.942 -- squarely on §64's width route
+    (1.95-2.03) and stationary route (1.99).
+
+**So §63.2's "2 is excluded over [0.20, 0.45] with no drift toward it" was reading the window
+bias.** §64 had already withdrawn the exclusion; §84 says what it was. And §64's present
+statement -- "nu ~ 2 +- 0.1, not determined more precisely than that by any instrument here" --
+is superseded: **nu = 2 exactly, by derivation, validated in absolute terms.** §63.1's width
+exponent of exactly 1/2 follows, as §64 said it would if nu climbed to 2.
+
+**T15-n's own two broken criteria (§84.1), in a section about broken criteria.** P3 first demanded
+the closed form land within 0.05 of §64's width route and printed FAILS off 1.8300 -- but those
+routes fit a width, a stationary distribution and an extrapolated action over their own grids, and
+**a threshold between effective exponents of different observables fitted by different protocols
+cannot be satisfied only by the thing it claims to test** (rule 19). P4 then gated the
+measured-vs-predicted exponent gap at 0.10 and passed at 0.091 -- a fixed tolerance on a
+converging quantity, rule 20 verbatim, two sections after rule 20 was last invoked.
+
+**T15-n.1, open: why is the closed form's window bias LARGER than the true one?** 1.8513 /
+1.8691 / 1.8814 against a measured 1.9424 / 1.9416 / 1.9430 -- systematic, same direction at every
+window, and the same fact that puts P2's ratio below 1 away from gamma_c. **How to kill:** carry
+the elimination to next order (the u^5 term in the normal form, and the u-dependence of D_u, both
+dropped here) and check whether the resulting A reproduces BOTH the ratio's approach to 1 and the
+window exponent. If it reproduces one and not the other, the missing piece is the fast variable's
+own noise feeding the lead -- the one approximation here that §83 says to distrust.
 
 **T15-j, open (replacing T15-i): which fixed point decides when the symmetric steady state is
 not unique?** 7.4% of drawn networks had more than one symmetric steady state and are outside

@@ -9085,3 +9085,70 @@ absolute numbers might not.
 > engine's own guard refused an untrustworthy stationary solve. The guard was working; my
 > handler discarded its message. Failures are now counted and printed — **1 cell excluded** —
 > which is what rule 10 asks for and what a bare `except` is structurally incapable of doing.
+
+---
+
+### 78 η is derived, and the founding question lands in the ODE — T-DEPTH-e
+
+§77 left η undetermined and proposed deriving it from WKB as the barrier action per molecule.
+**That named the wrong theory.** WKB gives the *escape* probability — the chance the element
+spontaneously crosses its own saddle — but §75/§77's ε is not an escape. It is the **Gaussian
+readout of the rail's own fluctuation**, ε = Φ(−Δ/σ), which is what a chemically-coupled
+cascade actually applies. The relevant object is therefore the **linear-noise variance**:
+
+    σ² = V/Ω  (Lyapunov at the fixed point)  ⟹  ln(1/ε) ≈ Δ²Ω/2V  ⟹  **η = Δ²/(2V)**
+
+**The LNA is the exact rail width in the large-Ω limit**, converging on every element (rule 20
+— convergence, not a tolerance): AM at γ=0.20 gives |ratio−1| running 0.0062 → 0.0028 → 0.0013
+→ 0.0008; at γ=0.05 it is already 1.0000 to four places; Schlögl runs 0.0084 → 0.0020 → 0.0005.
+
+Against §77's stored numbers, with nothing fitted:
+
+| element | Δ | V | η predicted | η measured | ratio |
+|---|---|---|---|---|---|
+| AM γ=0.05 | 0.95213 | 0.045880 | 9.8797 | 9.8813 | **0.9998** |
+| AM γ=0.20 | 0.81650 | 0.181858 | 1.8329 | 1.8346 | 0.9991 |
+| AM γ=0.30 | 0.70741 | 0.369014 | 0.6781 | 0.6813 | 0.9952 |
+| Schlögl s=0.6 | 0.60000 | 11.555556 | 0.015577 | 0.015617 | 0.9974 |
+| Schlögl s=0.9 | 0.90000 | 6.802469 | 0.059537 | 0.059574 | 0.9994 |
+
+**Worst 0.48%.** P4's prediction held: the error is largest at γ = 0.30, nearest γ_c where the
+rail is shallowest and the LNA's harmonic assumption is weakest, and vanishes at γ = 0.05.
+P5's holds too — η(λ=4)/η(λ=1) = **4.0000**, exactly what §75's λΩ collapse requires.
+
+### 78.1 How much of this is content and how much is algebra
+
+**Stated plainly, because P2 is mostly P1 restated.** η_measured was extracted from ε = Φ(−Δ/σ)
+with σ from the exact CME, so η_measured ≈ Δ²/(2V_exact) up to the algebraic corrections in Φ.
+The test `η_pred/η_meas ≈ 1` is therefore, at bottom, **V_LNA = V_exact** — which is P1 — plus
+algebra. What P2 adds is that the Φ prefactor corrections, which enter the *slope* in Ω, are
+small enough not to disturb it at the 0.5% level.
+
+The content is P1's, and it is worth having: **the linear-noise variance is the whole story for
+this ε.**
+
+### 78.2 The founding question is in the ODE
+
+`η = Δ²/(2V)` needs the rail separation, the Jacobian, and the diffusion matrix `S·diag(a)·Sᵀ`
+at a fixed point. **All three are deterministic-plus-LNA quantities.** No master equation, no
+stationary solve, no simulation, no entropy production.
+
+> Chaining §73 → §78: depth does not see the element's dynamics; the element enters only
+> through Δ; Δ/σ is molecules at the rail; depth is exactly c\*/ε; ε is fixed by η; and
+> **η = Δ²/2V is computable from the deterministic field and its linearisation.**
+>
+> **The entire founding question — how deeply can you compose a noisy restoring element, and
+> what does it cost — is answered by the ODE and its linear-noise correction.** The exact CME
+> was needed to *establish* that, and is not needed to *use* it.
+
+That is the strongest form of the deflationary answer this programme has been converging on
+since §73. It also explains, retrospectively, why every thermodynamic price failed to transfer:
+entropy production is not in the formula. Affinity enters only by setting where the rails sit
+and how deep the wells are — that is, through Δ and V — and never appears in its own right.
+
+> ⚠ **§77's kill test named the wrong theory, and I wrote it.** "WKB should give η in closed
+> form as the barrier action per molecule" is a well-formed proposal about a *different* ε than
+> the one §77 measured. Both quantities are real and both are exponential in Ω; they are simply
+> not the same exponent. The lesson is narrow and worth keeping: **when a section reduces to
+> "one number", check which definition of that number the reduction actually used before
+> proposing how to derive it.**

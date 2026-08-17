@@ -1,0 +1,39 @@
+=== P1 GATE: does the LNA reproduce the exact rail widths, converging in Omega?
+           element   Omega  sigma exact  sqrt(V/Om)    ratio
+      AM gamma=0.2      60     0.055394    0.055054   1.0062
+      AM gamma=0.2     120     0.039038    0.038929   1.0028
+      AM gamma=0.2     240     0.027564    0.027527   1.0013
+      AM gamma=0.2     400     0.021339    0.021322   1.0008
+     AM gamma=0.05      60     0.027654    0.027652   1.0000
+     AM gamma=0.05     120     0.019554    0.019553   1.0000
+     AM gamma=0.05     240     0.013826    0.013826   1.0000
+     AM gamma=0.05     400     0.010710    0.010710   1.0000
+     Schlogl s=0.9    1600     0.065751    0.065204   1.0084
+     Schlogl s=0.9    6400     0.032667    0.032602   1.0020
+     Schlogl s=0.9   25600     0.016309    0.016301   1.0005
+  AM 0.2: |ratio-1| 0.0062 -> 0.0028 -> 0.0013 -> 0.0008
+  AM 0.05: |ratio-1| 0.0000 -> 0.0000 -> 0.0000 -> 0.0000
+  Sch 0.9: |ratio-1| 0.0084 -> 0.0020 -> 0.0005
+  -> P1 HOLDS: the LNA discrepancy shrinks with Omega on every element
+
+=== P2: eta = Delta^2/(2V), against §77's measured values. No fit.
+           element    Delta           V  eta predicted  eta measured    ratio
+     AM gamma=0.05  0.95213    0.045880         9.8797        9.8813   0.9998
+      AM gamma=0.2  0.81650    0.181858         1.8329        1.8346   0.9991
+      AM gamma=0.3  0.70741    0.369014         0.6781        0.6813   0.9952
+     Schlogl s=0.6  0.60000   11.555556       0.015577      0.015617   0.9974
+     Schlogl s=0.9  0.90000    6.802469       0.059537      0.059574   0.9994
+  worst |predicted/measured - 1| = 0.48%
+  -> P2 HOLDS: eta is derived, not fitted
+
+=== P4: is the error worst where the LNA should be worst (rails shallow)?
+  |ratio-1| by gamma: 0.05: 0.02%, 0.2: 0.09%, 0.3: 0.48%
+  -> as predicted: worst at the gamma nearest gamma_c, where the rail is shallowest
+
+=== P5 (rule 9): does eta ~ lambda exactly, as §75's collapse demands?
+  lambda= 1.0: V = 6.802469, eta = 0.059537
+  lambda= 2.0: V = 13.604938, eta = 0.119074
+  lambda= 4.0: V = 27.209877, eta = 0.238149
+  eta(lambda=4)/eta(lambda=1) = 4.0000   (§75's collapse requires 4)
+
+wrote results/derive_eta.json

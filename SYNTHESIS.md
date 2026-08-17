@@ -193,8 +193,27 @@ landscape inside each substrate (γ from 0.30 to 0.05 buys 14×).
 > by its landscape, and nothing else about it matters to what it can compute. The transistor's
 > advantage is not a special thermodynamic property. **It is a good exchange rate.**
 
-What that leaves open is η itself: its landscape dependence is measured, not derived. WKB should
-give it in closed form as the barrier action per molecule (T-DEPTH-e).
+**§78 derives η, and it lands somewhere unexpected.** Not WKB — that gives the *escape*
+probability, a different exponent. The ε here is the Gaussian readout of the rail's own
+fluctuation, so the relevant object is the **linear-noise variance**: σ² = V/Ω from the Lyapunov
+equation, giving
+
+> **η = Δ²/(2V)**
+
+Against §77's measured values with nothing fitted: 9.8797 vs 9.8813, 1.8329 vs 1.8346, 0.6781 vs
+0.6813 (AM), 0.015577 vs 0.015617 and 0.059537 vs 0.059574 (Schlögl). **Worst 0.48%**, largest
+exactly where the rail is shallowest and the LNA weakest.
+
+> **Δ, the Jacobian and D = S·diag(a)·Sᵀ are all deterministic-plus-LNA quantities.** No master
+> equation, no stationary solve, no simulation, no entropy production.
+>
+> **So the whole founding question — how deeply can you compose a noisy restoring element, and
+> what does it cost — is answered by the ODE and its linear-noise correction.** The exact CME
+> was needed to *establish* that; it is not needed to *use* it.
+
+That also explains, retrospectively, why every thermodynamic price failed to transfer: **entropy
+production is not in the formula.** Affinity enters only by setting where the rails sit and how
+deep the wells are — through Δ and V — and never in its own right.
 
 ---
 

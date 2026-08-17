@@ -2006,6 +2006,33 @@ PHYSICAL units instead:
 and §68 found no substrate-independent price -- they were pricing the wrong thing.** The cost
 of depth is in Delta, and what Delta costs depends on whether the element is conserved.
 
+**T-DEPTH-e -> §78: eta IS DERIVED, and §77's kill test named the wrong theory.** §77
+proposed getting eta from WKB as the barrier action per molecule. WKB gives the ESCAPE
+probability, but §75/§77's eps is not an escape -- it is the Gaussian readout of the rail's own
+fluctuation, which is what a chemically-coupled cascade applies. The right object is the
+LINEAR-NOISE variance: sigma^2 = V/Omega from the Lyapunov equation, so **eta = Delta^2/(2V)**.
+
+Against §77's stored numbers with nothing fitted: 9.8797 vs 9.8813, 1.8329 vs 1.8346, 0.6781 vs
+0.6813 for AM at gamma = 0.05, 0.20, 0.30, and 0.015577 vs 0.015617, 0.059537 vs 0.059574 for
+Schloegl. **Worst 0.48%**, largest at gamma = 0.30 where the rail is shallowest and the LNA is
+weakest -- as P4 predicted -- and eta(lambda=4)/eta(lambda=1) = 4.0000 exactly, as §75's
+collapse requires.
+
+**HOW MUCH IS CONTENT (stated because P2 is largely P1 restated):** eta_measured came from
+eps = Phi(-Delta/sigma) with sigma from the exact CME, so the test is at bottom
+V_LNA = V_exact plus algebra. The content is that **the linear-noise variance is the whole
+story for this eps**, and that Phi's prefactor corrections do not disturb the slope at the 0.5%
+level.
+
+**THE FOUNDING QUESTION IS IN THE ODE.** Delta, the Jacobian and D = S diag(a) S^T are all
+deterministic-plus-LNA. Chaining §73 -> §78: depth does not see the element's dynamics; the
+element enters only through Delta; Delta/sigma is molecules at the rail; depth is c*/eps; eps
+is fixed by eta; and eta = Delta^2/2V comes from the ODE and its linearisation. **The exact CME
+was needed to ESTABLISH this and is not needed to USE it.** It also explains retrospectively
+why every thermodynamic price failed to transfer: entropy production is not in the formula.
+Affinity enters only by setting where the rails sit and how deep the wells are -- through Delta
+and V -- and never in its own right.
+
 **T-DEPTH-d -> §77: THE LAST FREE NUMBER IS eta, AND IT DOES NOT TRANSFER.** §76 left one
 coefficient: eta = d ln(1/eps)/d Omega, nats of reliability per molecule. It EXISTS -- ln(1/eps)
 becomes linear in Omega on both substrates, gated on convergence (rule 20): AM settles to 0.09%

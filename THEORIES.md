@@ -1989,6 +1989,33 @@ kill:** read Montoya/Cruz/Agreda and the MATCH algebraic-analysis paper properly
 whether the racemic-stability condition is ever written as a nonneg-weighted sum over
 reactions carrying combinatorial signs. Until then §65 claims priority for nothing.
 
+**T-DEPTH-a -> §74: WHAT DELTA COSTS -- closed elements pay affinity, open ones pay
+material.** §73 collapsed the founding question to "what does it cost to place rails Delta
+apart?", and §12's sigma = f*Delta convention had hidden it: under that convention
+Delta/sigma = 1/f identically and every element gives the same depth. Holding sigma fixed in
+PHYSICAL units instead:
+
+  * **AM is conservative**, so delta* <= 1 and D_max SATURATES -- at sigma = 0.15 no drive
+    pushes a conservative element past **D_max = 9.50e9**. Going from A = 8.99 to A = 27.6
+    buys a factor of 8; going to infinity buys another 1.04.
+  * **Schloegl is open**, and its affinity ln[e1 e2/e3] is EXACTLY invariant under r -> lambda r
+    (measured drift 0.00e+00 over 2.5 decades) while Delta scales linearly. At matched affinity
+    it passes 1e18 by scaling rails, paying in MATERIAL: rails at r1*Omega and r3*Omega.
+
+**So closed and open elements pay different currencies for the same quantity, which is why §67
+and §68 found no substrate-independent price -- they were pricing the wrong thing.** The cost
+of depth is in Delta, and what Delta costs depends on whether the element is conserved.
+
+**T-DEPTH-b, open and it is load-bearing: which channel-noise convention is physical?** §74's
+entire content hangs on sigma being fixed in physical units rather than scaling as f*Delta. The
+case for fixed sigma is that the inter-stage channel belongs to the wiring, not the gate; but a
+real chemical cascade may well have noise scaling with the signal, in which case §12's
+convention is right and no element beats any other. **How to kill:** build a two-stage cascade
+where the coupling is itself chemical -- the output species of stage 1 IS the input of stage 2,
+with no abstract channel -- and measure how the effective sigma scales with the rail
+separation. That is a modelling question this project has never posed, and it decides whether
+§74 is a result or an artifact of a convention.
+
 **T-CASC-b -> §73: §72's TRANSFER IS DEFLATED -- the ceiling does not see the element.**
 §72's own reduction has the chemistry entering only through p_cross, a monotone commitment
 function near 1 at the low rail and 0 at the high one. Holding rails, channel and criterion

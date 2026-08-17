@@ -8761,3 +8761,81 @@ cost.**
 > column. Redone in logs with a suffix log-sum-exp, (b) joins the others at 2.71/3.04/3.79.
 > **The bug pointed toward the conclusion I had just published, and a RuntimeWarning was the
 > only thing that flagged it.**
+
+---
+
+### 74 What Δ costs: closed elements pay affinity, open ones pay material — T-DEPTH-a
+
+§73 collapsed the founding question to one line. If composition depth is fixed by the readout
+geometry and the element's entire contribution is where it puts its rails, then **the cost of
+depth, if it exists, lives in Δ**.
+
+**§12's convention had hidden the question.** §12, §71 and §72 all set the channel noise as a
+*fraction* of the element's own rails, σ = f·Δ. Then Δ/σ = 1/f identically, D_max depends only
+on f, and every element gives the same answer — which is exactly why the predictions matched
+across substrates in §72 and why §73's step function reproduced them. **To ask what Δ buys, σ
+must be held fixed in physical units.** That change of convention is what this section rests
+on, and everything below uses σ = 0.15 in concentration units.
+
+### 74.1 A conservative element has a maximum composition depth
+
+AM conserves X + Y + B = Ω, so concentrations are normalised and δ\* ≤ 1. Sweeping the drive:
+
+| γ | A = −3 ln γ | δ\* | D_max |
+|---|---|---|---|
+| 0.45 | 2.40 | 0.4005 | 32.7 |
+| 0.20 | 4.83 | 0.8165 | 4.75e6 |
+| 0.05 | 8.99 | 0.9521 | 1.14e9 |
+| 0.002 | 18.64 | 0.9980 | 8.68e9 |
+| 1e−4 | 27.63 | 0.9999 | 9.46e9 |
+
+> **δ\* → 1 as γ → 0, so D_max saturates: at σ = 0.15 no amount of drive can push a
+> conservative element past D_max = 9.50e9.** Spending 27.6 k_BT of affinity per cycle instead
+> of 8.99 buys a factor of 8 in depth; spending infinitely more buys another factor of 1.04.
+> **Drive buys rail separation, rail separation is capped by conservation, and depth is capped
+> with it.**
+
+### 74.2 An open element buys depth with material, and affinity is free
+
+Schlögl's cycle affinity is `ln[e₁e₂/e₃]`, and under `r → λr` the elementary symmetric
+polynomials go as `λe₁`, `λ²e₂`, `λ³e₃` — so **A is exactly invariant** while Δ scales
+linearly. Measured over 2.5 decades of λ, the affinity moves by **0.00e+00**:
+
+| λ | rails | A | Δ | D_max |
+|---|---|---|---|---|
+| 0.25 | 0.125 / 0.375 | 2.3978952728 | 0.125 | 1 |
+| 1 | 0.5 / 1.5 | 2.3978952728 | 0.5 | 289.5 |
+| 4 | 2 / 6 | 2.3978952728 | 2.0 | **>1e18** |
+| 64 | 32 / 96 | 2.3978952728 | 32.0 | **>1e18** |
+
+**At matched affinity — Schlögl's A = 2.3979, i.e. AM at γ = 0.4496 — AM reaches D_max = 33.5
+and cannot exceed 9.50e9 at any drive, while Schlögl passes 10¹⁸ by scaling its rails.** The
+affinity is identical. What Schlögl spends instead is *material*: its rails sit at r₁Ω and r₃Ω
+molecules, so λ = 64 is 64× the molecules for the same thermodynamic force.
+
+> **Closed and open elements pay for depth in different currencies — affinity and material —
+> and that is why §67 and §68 found no substrate-independent price. They were pricing the wrong
+> thing.** The founding question's cost is not in the dissipation, the gain, or the affinity
+> floor; it is in Δ, and what Δ costs depends on whether the element is conserved.
+
+### 74.3 Scope, and the convention that decides everything
+
+**This is geometry, not dynamics** — §73 licenses that, since the commitment function's shape
+does not enter D_max. Every number above uses a step commitment deliberately, to isolate the
+one thing that matters.
+
+**σ fixed in physical units is doing all the work, and it should be argued rather than
+assumed.** Under σ = f·Δ the question cannot even be posed. The physical case for fixed σ is
+that the inter-stage channel is a property of the wiring, not of the gate — but a real chemical
+cascade might well have channel noise scaling with the signal, in which case §12's convention
+is the right one and *no* element beats any other. **Which convention is physical is not
+settled here, and the entire content of §74 hangs on it.** Stated as the load-bearing
+assumption rather than buried.
+
+> ⚠ **Two instrument faults, both caught.** `depth_at` clamped its grid at zero — correct for
+> Schlögl's concentrations, **wrong for AM**, whose coordinate is the signed lead δ = x − y
+> with its low rail at −δ\*. That cut off the entire low rail and returned `None` in all ten AM
+> cells. And `d_max_saturated` iterates O(depth) per evaluation, which does not return at the
+> depths here (~10¹⁰); replaced by a closed form, `T^D = π ⊕ λ^D(I − π)`, **gated against the
+> iterative version to 1e−12 in I(D) with matching ceilings**, so §72's published numbers are
+> untouched.

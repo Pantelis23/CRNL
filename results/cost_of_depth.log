@@ -1,0 +1,48 @@
+channel noise sigma = 0.15 in concentration units, HELD FIXED (not f*Delta)
+
+=== P1 GATE: affinities against their published closed forms
+  AM: |cycle_affinity - (-3 ln gamma)| max 1.78e-15
+  -> P1 HOLDS
+
+=== P2: is AM's rail separation bounded? (conservation says yes)
+   gamma   A = -3 ln g    delta*       D_max
+  0.4500        2.3955  0.400519       32.65
+  0.4000        2.7489  0.540848       798.1
+  0.3000        3.6119  0.707406   1.033e+05
+  0.2000        4.8283  0.816497   4752114.0
+  0.1000        6.9078  0.907068         nan
+  0.0500        8.9872  0.952130   1.136e+09
+  0.0200       11.7361  0.980376   3.929e+09
+  0.0100       13.8155  0.990097   6.071e+09
+  0.0020       18.6438  0.998004   8.675e+09
+  0.0001       27.6310  0.999900   9.455e+09
+  delta* -> 1 as gamma -> 0, so the CEILING at sigma = 0.15 is D_max = 9.498e+09
+  -> P2 HOLDS: delta* rises with drive but is capped at 1
+
+=== P3: is Schloegl's affinity scale-invariant, leaving Delta free?
+    lambda        r1        r3             A     Delta       D_max
+      0.25    0.1250    0.3750  2.3978952728    0.1250           1  <- rail within 3 sigma of 0
+      1.00    0.5000    1.5000  2.3978952728    0.5000       289.5
+      4.00    2.0000    6.0000  2.3978952728    2.0000       >1e18
+     16.00    8.0000   24.0000  2.3978952728    8.0000       >1e18
+     64.00   32.0000   96.0000  2.3978952728   32.0000       >1e18
+  |A - A(lambda=1)| max over 2.5 decades of lambda: 0.00e+00
+  -> P3 HOLDS: affinity exactly invariant, Delta scales, depth unbounded
+
+=== P4: at MATCHED affinity, what depth can each element reach?
+  Schloegl's A = 2.3979; the AM with the same affinity has gamma = exp(-A/3) = 0.4496
+    AM      : delta* = 0.4018  ->  D_max = 33.5   (and no drive can push past 9.498e+09)
+    Schloegl: lambda =  0.25, Delta = 0.1250  ->  D_max = 1   at the SAME affinity 2.3979
+    Schloegl: lambda =  1.00, Delta = 0.5000  ->  D_max = 289.5   at the SAME affinity 2.3979
+    Schloegl: lambda =  4.00, Delta = 2.0000  ->  D_max =   >1e18   at the SAME affinity 2.3979
+    Schloegl: lambda = 16.00, Delta = 8.0000  ->  D_max =   >1e18   at the SAME affinity 2.3979
+    Schloegl: lambda = 64.00, Delta = 32.0000  ->  D_max =   >1e18   at the SAME affinity 2.3979
+  -> P4 HOLDS: at fixed affinity Schloegl passes AMs absolute ceiling; the currencies differ
+
+=== P5 GUARD: does any of this survive re-expressing sigma as a fraction?
+  Under sigma = f*Delta, Delta/sigma = 1/f identically, so D_max is the SAME for
+  every element and every Delta -- the question cannot even be posed. That is why
+  the fixed-sigma convention is the one used above, and why §12/§71/§72's matched
+  predictions across substrates carried no information about the elements.
+
+wrote results/cost_of_depth.json

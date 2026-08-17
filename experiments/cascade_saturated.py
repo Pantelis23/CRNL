@@ -136,6 +136,49 @@ def mutual_info_depth(e_hi, e_lo, depth):
     return np.array(out)
 
 
+def mutual_info_at(e_hi, e_lo, depth):
+    """I at a single depth in CLOSED FORM, so no O(depth) iteration.
+
+    T has eigenvalues 1 and lam = 1 - e_hi - e_lo, so T^D = pi (+) lam^D (I - pi), i.e.
+    T^D[i,j] = pi_j + lam^D (delta_ij - pi_j). Added because the iterative version costs
+    O(depth) per evaluation and §74 needs depths of 1e10, where it simply does not return.
+    Gated against `mutual_info_depth` at moderate depth.
+    """
+    tot = e_hi + e_lo
+    if tot <= 0:
+        return 1.0
+    lam = 1.0 - tot
+    pi = np.array([e_hi / tot, e_lo / tot])
+    ld = lam ** depth if abs(lam) < 1 else 1.0
+    P = np.array([pi + ld * (np.array([1.0, 0.0]) - pi),
+                  pi + ld * (np.array([0.0, 1.0]) - pi)])
+
+    def h(v):
+        v = np.asarray(v, float)
+        v = v[v > 0]
+        return float(-(v * np.log2(v)).sum())
+
+    return h(0.5 * (P[0] + P[1])) - 0.5 * (h(P[0]) + h(P[1]))
+
+
+def d_max_closed(e_hi, e_lo, level=0.5):
+    """Depth where I falls through `level`, by bisection on the closed form. O(log)."""
+    if max(e_hi, e_lo) <= 0 or (e_hi + e_lo) >= 1.0:
+        return None
+    lo, hi = 1.0, 2.0
+    while mutual_info_at(e_hi, e_lo, hi) >= level:
+        hi *= 2.0
+        if hi > 1e18:
+            return None
+    while hi - lo > max(1e-9, 1e-9 * hi):
+        mid = 0.5 * (lo + hi)
+        if mutual_info_at(e_hi, e_lo, mid) >= level:
+            lo = mid
+        else:
+            hi = mid
+    return float(hi)
+
+
 def d_max_saturated(e_hi, e_lo, level=0.5, cap_depth=10 ** 7):
     """Depth where I falls through `level`. Bisection on the closed-form chain."""
     if max(e_hi, e_lo) <= 0:

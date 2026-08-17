@@ -126,6 +126,28 @@ significant figures.
 > restoration measured here is substrate-independent, and the one substrate-independent
 > quantity is not a cost.**
 
+**§74 says why, and it is the closest thing here to an answer.** If depth is bought with Δ,
+then the cost of depth is the cost of Δ — and that depends on a structural property nobody had
+isolated:
+
+> **A conservative element has a maximum composition depth.** AM's δ\* ≤ 1 because
+> X + Y + B = Ω, so at fixed channel noise no amount of drive pushes it past D_max = 9.5×10⁹.
+> Going from 9 to 28 k_BT of affinity per cycle buys a factor of 8; going to infinity buys
+> another 1.04.
+>
+> **An open element has none.** Schlögl's affinity `ln[e₁e₂/e₃]` is *exactly* invariant under
+> rescaling its rails (measured drift 0.00e+00 over 2.5 decades), so at the same affinity it
+> passes 10¹⁸ — paying in **material**, not free energy.
+
+**Closed and open elements pay different currencies for the same quantity.** That is why no
+substrate-independent price was ever found: the earlier sections were pricing dissipation, gain
+and affinity floors, all of which are upstream of Δ and invisible to depth.
+
+> ⚠ **This hangs on one convention.** §74 holds the channel noise fixed in physical units. Under
+> §12's σ = f·Δ the ratio Δ/σ is constant and the question cannot be posed at all. Which is
+> physical depends on whether inter-stage noise belongs to the wiring or scales with the signal
+> — untested, and the whole of §74 rests on it (T-DEPTH-b).
+
 ---
 
 ## 3. Why reliability has no thermodynamic price

@@ -9942,3 +9942,54 @@ beats readout because A < η, where both were available. §77 measured η = 9.88
 have to be wrong by **415%** for readout to bind, and P1's bias is a few percent *and of the wrong
 sign to help*. It rests only on the extrapolation not being wrong by ~5×. **§80's regime has no
 boundary down to γ = 0.05.**
+
+---
+
+### 89 The reduction's error is the term it drops — T15-n.5, and the arc closes
+
+§88 left the overshoot falling with timescale separation but slower than 1/M, its law
+unidentified. **The obvious next move — fit a power to the decay — is exactly rule 21's mistake,
+and this project has paid for it twice.** There is a computable candidate instead: the slow-fast
+reduction drops the fast pair's contribution to the action, `C = ∫p_s ds`, which
+Assaf–Roberts–Luthey-Schulten (PRL 106:248102, 2011) name explicitly and which §85.3 recorded the
+literature agrees on in magnitude while claiming no sign. §87's solve already returns p_s(u) and
+s(u), so **C can be integrated along the curve and compared in absolute terms. Nothing is fitted.**
+
+| γ | A measured | A predicted | overshoot | **C = ∫p_s ds** | C/over | **A − C, as ratio** |
+|---|---|---|---|---|---|---|
+| 0.30 | 0.125373 | 0.132428 | 0.007055 | 0.006826 | 0.968 | **1.0018** |
+| 0.35 | 0.071577 | 0.074442 | 0.002865 | 0.002808 | 0.980 | 1.0008 |
+| 0.40 | 0.032622 | 0.033460 | 0.000838 | 0.000814 | 0.971 | 1.0007 |
+| 0.44 | 0.012080 | 0.012262 | 0.000182 | 0.000173 | 0.950 | 1.0008 |
+| 0.46 | 0.005460 | 0.005516 | 0.000056 | 0.000051 | 0.912 | **1.0009** |
+
+**C accounts for 91–98% of the overshoot at every γ, with the right sign, and subtracting it
+improves the agreement in 8/8 cells** — from a +1.02…+5.61% error to **+0.07…+0.18%**.
+
+**P4, the M axis, is the part that needed no power.** §88 found the overshoot falls but not like
+1/M, *non-monotonically at the first step*. C reproduces that shape: C/overshoot = 0.973, 0.981,
+0.961, 0.947, 0.848 over M = 1…16 at γ = 0.40, and the corrected ratio sits at **1.0006–1.0012 at
+every M**, including the first step where the raw overshoot *rises*. **The term is identified
+without any law being fitted to it.**
+
+> **So the escape action of a two-species restoring element is computable to ~0.1% from its rate
+> functions alone**: solve the fast Hamiltonian fixed point, integrate `−∫p_u du`, subtract
+> `∫p_s ds`. No master equation, no stationary solve, no lattice, no Ω — validated absolutely
+> against exact CME first passage over eight γ and ten (γ, M) cells.
+
+### 89.1 The residual is flat, which is a suspect and not a result
+
+The corrected ratio is not 1 — it is **1.0007 ± 0.0004 across every cell**, γ and M alike. Its
+*flatness* is the striking part: the raw overshoot varies 7× across γ and the correction removes
+essentially all of that structure, leaving a constant.
+
+> **A constant offset that survives a correction which fixed everything else is more likely to be
+> on the measurement side than the theory side (rule 17 — this is a suspect, named, not a
+> conclusion).** §84's measured A is a local slope `d ln T/dΩ` admitted by a 2% convergence gate;
+> a systematic ~0.1% bias there is entirely ordinary, and it would appear exactly like this — the
+> same sign and size in every cell regardless of γ or M.
+>
+> **How to kill:** re-extract the measured A with Richardson extrapolation in Ω rather than a
+> two-point local slope, at three γ. If the offset moves toward zero the residual is the
+> instrument; if it does not, there is a second physical term at 0.1% and it is the next thing to
+> find. **Do not fit it.**

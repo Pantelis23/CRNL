@@ -1,0 +1,39 @@
+=== P1 GATE: does this curve reproduce §88's action?
+  gamma=0.3: A here = 0.132428, §88 = 0.132412, ratio 1.000116
+  gamma=0.4: A here = 0.033460, §88 = 0.033457, ratio 1.000094
+  gamma=0.46: A here = 0.005516, §88 = 0.005515, ratio 1.000087
+  -> P1 HOLDS: same curve
+
+=== P2/P3/P5: the dropped term against the measured overshoot, per gamma
+  gamma     A meas     A pred  overshoot           C   C/over  A pred - C   ratio
+    0.3   0.125373   0.132428   0.007055    0.006826    0.968    0.125602  1.0018
+   0.35   0.071577   0.074442   0.002865    0.002808    0.980    0.071635  1.0008
+   0.38   0.046444   0.047897   0.001453    0.001418    0.976    0.046479  1.0007
+    0.4   0.032622   0.033460   0.000838    0.000814    0.971    0.032646  1.0007
+   0.42   0.021153   0.021585   0.000432    0.000414    0.959    0.021171  1.0008
+   0.44   0.012080   0.012262   0.000182    0.000173    0.950    0.012089  1.0008
+   0.45   0.008458   0.008565   0.000107    0.000100    0.937    0.008465  1.0008
+   0.46   0.005460   0.005516   0.000056    0.000051    0.912    0.005465  1.0009
+  |C/overshoot| runs 0.97, 0.98, 0.98, 0.97, 0.96, 0.95, 0.94, 0.91
+  -> P2 HOLDS: C is the same size as the overshoot at every gamma
+  subtracting C improves the agreement in 8/8 cells; sign of C/overshoot: [np.float64(1.0)]
+  -> P3 HOLDS: the dropped term has the right sign and subtracting it corrects the reduction
+  -> P5 the ratio C/overshoot spans 0.91..0.98 (a factor of 1.07), flat in gamma
+
+=== P4: the M axis -- does C reproduce the overshoot's non-1/M shape?
+  gamma   M   overshoot           C   C/over  A pred - C   ratio
+    0.4   1    0.000837    0.000814    0.973    0.032646  1.0007
+    0.4   2    0.002146    0.002105    0.981    0.071616  1.0006
+    0.4   4    0.002127    0.002043    0.961    0.096482  1.0009
+    0.4   8    0.001459    0.001382    0.947    0.110458  1.0007
+    0.4  16    0.000941    0.000798    0.848    0.117865  1.0012
+   0.44   1    0.000184    0.000173    0.940    0.012089  1.0009
+   0.44   2    0.000895    0.000869    0.971    0.041078  1.0006
+   0.44   4    0.001018    0.000974    0.957    0.060911  1.0007
+   0.44   8    0.000742    0.000695    0.936    0.072215  1.0007
+   0.44  16    0.000468    0.000411    0.878    0.078231  1.0007
+  gamma=0.4: C/overshoot over M = 0.973, 0.981, 0.961, 0.947, 0.848   (spans 1.16x)
+  gamma=0.44: C/overshoot over M = 0.940, 0.971, 0.957, 0.936, 0.878   (spans 1.11x)
+  -> P4 HOLDS: C tracks the overshoot along M as well, so the term is identified with no power fitted
+
+wrote results/the_dropped_term.json

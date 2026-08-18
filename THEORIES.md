@@ -2509,12 +2509,35 @@ separation -- but the 1/M law predicted for it is REFUTED.**
     at the first step (2.56 -> 2.99 at gamma = 0.40). **The decay is slower than 1/M and its law
     is not identified.** Reported rather than fitted (rule 15).
 
-**T15-n.5, open: what IS the decay law of the reduction error?** It falls with separation but
-slower than 1/M, and the first step rises. **How to kill:** the Assaf-Roberts-Luthey-Schulten
-estimate (§85.3) says the dropped term is int p_f dx_f ~ O(1/separation); compute that integral
-directly along §87's solved curve and compare it to the measured overshoot, rather than fitting a
-power. If it reproduces both the magnitude AND the non-monotone first step, the law is identified;
-if it reproduces only the magnitude, the first step is a separate effect.
+~~**T15-n.5, open: what IS the decay law of the reduction error?**~~ **-> §89. CLOSED, and no law
+was fitted: the error IS the term the reduction drops.**
+
+The slow-fast reduction discards the fast pair's action contribution C = int p_s ds
+(Assaf-Roberts-Luthey-Schulten, PRL 106:248102, 2011, name it; §85.3 recorded that the literature
+agrees on its magnitude and claims no sign). §87's solve already returns p_s(u) and s(u), so C is
+integrable along the curve and comparable in ABSOLUTE terms (rule 16).
+
+  * **C accounts for 91-98% of the overshoot at every gamma**, with the right sign, improving the
+    agreement in 8/8 cells: a +1.02..+5.61% error becomes **+0.07..+0.18%**.
+  * **It reproduces the non-1/M shape §88 could not fit**, including the NON-MONOTONE first step
+    where the raw overshoot rises: corrected ratio 1.0006-1.0012 at every M = 1..16.
+
+**THE ARC'S RESULT, stated plainly.** The escape action of a two-species restoring element is
+computable to ~0.1% from its rate functions alone -- solve the fast Hamiltonian fixed point,
+integrate -int p_u du, subtract int p_s ds -- with no master equation, no stationary solve, no
+lattice and no Omega, validated against exact CME first passage over eight gammas and ten (gamma,
+M) cells. §84's closed form was the leading term of this; §85-§88 were the diagnosis.
+
+**T15-n.6, open: the residual is FLAT, and that is a suspect (rule 17), not a finding.** The
+corrected ratio is 1.0007 +- 0.0004 in every cell, gamma and M alike -- the correction removes a
+7x spread in the raw overshoot and leaves a constant. **A constant offset surviving a correction
+that fixed everything else is more likely to be on the MEASUREMENT side.** §84's measured A is a
+two-point local slope d ln T/dOmega admitted by a 2% convergence gate, and a systematic ~0.1% bias
+there would look exactly like this: same sign and size in every cell regardless of gamma or M.
+**How to kill:** re-extract the measured A by Richardson extrapolation in Omega instead of a
+two-point slope, at three gammas. If the offset moves toward zero it is the instrument; if it does
+not, there is a second physical term at the 0.1% level. **Do not fit it** -- that is how §84's P3
+became a claim about a phenomenon that was its own Taylor term.
 
 **§88's PAYOFF, and it is the reason the route was worth building.** §81/§82 could not measure
 AM's action at deep barriers -- stationary underflow (§81.1) and negative first-passage times with

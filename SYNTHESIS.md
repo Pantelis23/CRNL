@@ -406,4 +406,10 @@ The measurements in this project survive. The explanations attached to them most
   no stationary solve and no Ω** (§87), where the deterministic slow manifold gives 0.9027/0.9348.
   §86's ridge measurement stands; §86's *mechanism* was withdrawn by §87, since the instanton's
   curve is displaced opposite to the ridge.
+  **§89 closes the arc**: the remaining overshoot is the fast-pair term `∫p_s ds` the reduction
+  drops — computed, not fitted, it accounts for 91–98% of it at every γ and reproduces the
+  non-1/M shape §88 could not. **The escape action of a two-species restoring element is
+  computable to ~0.1% from its rate functions alone**, validated absolutely against exact CME
+  first passage over eight γ and ten (γ, M) cells. What began as "ν ≈ 2 ± 0.1, not determined
+  more precisely by any instrument here" (§64) ends as a quadrature.
 * **Cascades.** Everything above is one element. The founding claim is about *composition*.

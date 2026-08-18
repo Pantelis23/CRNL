@@ -1,0 +1,38 @@
+=== P1/P2: the ladder, and is the bias visible before it is removed?
+
+  gamma=0.35  ln T at Omega 100:11.095, 150:14.664, 200:18.239, 250:21.817, 300:25.396
+    local slopes: 0.071380, 0.071508, 0.071556, 0.071577
+    P1 clean;  slope vs 1/Omega correlation -0.9919
+
+  gamma=0.4  ln T at Omega 200:10.607, 300:13.858, 400:17.116, 500:20.376, 650:25.270
+    local slopes: 0.032503, 0.032580, 0.032608, 0.032622
+    P1 clean;  slope vs 1/Omega correlation -0.9904
+
+  gamma=0.44  ln T at Omega 500:10.436, 700:12.838, 900:15.247, 1100:17.660, 1400:21.282, 1700:24.907
+    local slopes: 0.012008, 0.012047, 0.012064, 0.012074, 0.012081
+    P1 clean;  slope vs 1/Omega correlation -0.9909
+
+  -> P1 HOLDS;  P2 HOLDS: the slopes are linear in 1/Omega, so there IS a bias to remove
+
+=== P3/P4: the re-extracted A, and what it does to §89's residual
+  gamma  §84 two-point   Richardson   shift %   §89 ratio  new ratio
+   0.35       0.071577     0.071744     0.234      1.0007     0.9984
+    0.4       0.032622     0.032719     0.297      1.0006     0.9977
+   0.44       0.012080     0.012130     0.415      1.0007     0.9965
+
+=== RULE 15: every candidate extrapolation, not the one that closes the residual
+  gamma  last slope   lin all  lin last3     quad  lin last4  spread %
+   0.35    0.071577  0.071744   0.071696 0.071601   0.071744     0.234
+        §89 corrected/A for each: last=1.0007, lin all=0.9984, lin last3=0.9990, quad=1.0004, lin last4=0.9984
+    0.4    0.032622  0.032719   0.032689 0.032634   0.032719     0.296
+        §89 corrected/A for each: last=1.0006, lin all=0.9977, lin last3=0.9986, quad=1.0003, lin last4=0.9977
+   0.44    0.012081  0.012130   0.012112 0.012093   0.012119     0.407
+        §89 corrected/A for each: last=1.0006, lin all=0.9965, lin last3=0.9980, quad=0.9996, lin last4=0.9975
+  ansatz spread in the measured A: up to 0.407%, against §89's residual of
+  +0.07..+0.18%. **The extrapolations STRADDLE 1 at every gamma.**
+  -> T15-n.6 RESOLVES AS UNRESOLVABLE HERE: the measured A is not determined to better than its own ansatz spread, which EXCEEDS the residual it was being used to judge. §89s residual is below the resolution of the instrument that would test it -- attributable to neither side
+  And §89.1's flatness argument is weaker than it looked: every cell used the SAME
+  two-point estimator, so its bias is COMMON MODE and a flat residual is what that
+  produces. Flatness across cells sharing an estimator is not evidence about physics.
+
+wrote results/richardson_A.json

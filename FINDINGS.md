@@ -9993,3 +9993,54 @@ essentially all of that structure, leaving a constant.
 > two-point local slope, at three γ. If the offset moves toward zero the residual is the
 > instrument; if it does not, there is a second physical term at 0.1% and it is the next thing to
 > find. **Do not fit it.**
+
+---
+
+### 90 §89's residual is below the resolution of the instrument that would test it — T15-n.6
+
+§89.1 named the flat 1.0007 residual a suspect on the measurement side: §84's A is a two-point
+local slope `d ln T/dΩ` behind a 2% convergence gate, and the WKB form
+`ln T = AΩ + b lnΩ + c + O(1/Ω)` makes such a slope carry a bias of **fixed sign** that a
+convergence gate cannot remove — the gate checks that successive slopes stop moving *quickly*, not
+that they have stopped moving.
+
+**P1/P2 — the bias is real and visible before removal.** The local slopes are linear in 1/Ω with
+correlation −0.9919, −0.9904, −0.9909 at γ = 0.35, 0.40, 0.44. So there is something to
+extrapolate. (Per T15-n's own history this does **not** fit A, b and c together — that is the
+collinearity §35.3 proved unresolvable, and §64's action route, the 2.19 outlier, was the heaviest
+extrapolation of the three. One parameter only.)
+
+**P3 — the sign is right and the size is wrong.** §84's two-point value is biased **low** by
++0.234%, +0.297%, +0.415%. §89 needed about **+0.07%**. Correcting the bias therefore *overshoots*
+and flips the residual negative: 1.0007 → 0.9984, 1.0006 → 0.9977, 1.0007 → 0.9965.
+
+**And then rule 15, which is the actual result:**
+
+| γ | last slope | lin (all) | lin (last 3) | quadratic | lin (last 4) | spread |
+|---|---|---|---|---|---|---|
+| 0.35 | 0.071577 | 0.071744 | 0.071696 | 0.071601 | 0.071744 | 0.234% |
+| 0.40 | 0.032622 | 0.032719 | 0.032689 | 0.032634 | 0.032719 | 0.296% |
+| 0.44 | 0.012081 | 0.012130 | 0.012112 | 0.012093 | 0.012119 | **0.407%** |
+
+§89's corrected ratio against each, at γ = 0.44: **1.0006, 0.9965, 0.9980, 0.9996, 0.9975.**
+
+> **The candidate extrapolations straddle 1 at every γ, and their spread exceeds the residual they
+> were brought in to judge.** The measured A is not determined to better than ~0.4% once its own
+> ansatz is varied. **§89's 0.07–0.18% residual is below the resolution of the instrument that
+> would test it, and is attributable to neither side.** T15-n.6 resolves as unresolvable here.
+
+**What this costs and what it does not.** §88's overshoot (+1.02…+5.61%) is far larger than 0.4%
+and stands untouched; so does §89's correction, whose effect is to bring theory and measurement
+into agreement **to within the measurement's own resolution** — which is a cleaner statement than
+"1.0007" ever was. What does not survive is the *precision* §89 quoted.
+
+> ~~§89: "the corrected ratio is 1.0007 ± 0.0004 across every cell"~~ — **the ± is not meaningful.**
+> Every cell used the same two-point estimator, so its bias is **common mode**, and a flat residual
+> is exactly what that produces. **§89.1 read the flatness as evidence pointing at the instrument;
+> it is weaker than that — flatness across cells sharing an estimator is not evidence about
+> physics at all.** The correct statement is that the corrected action agrees with the measured one
+> to within ~0.4%, the resolution of the measurement.
+
+**And a correction to §84/§88's published numbers (rule 7).** Their measured A carries a
+two-point bias of +0.23…+0.42%, low. The originals stand as printed; this is the size and sign of
+the correction, and no re-fit is offered because the ansatz spread is as large as the bias.

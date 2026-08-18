@@ -412,4 +412,9 @@ The measurements in this project survive. The explanations attached to them most
   computable to ~0.1% from its rate functions alone**, validated absolutely against exact CME
   first passage over eight γ and ten (γ, M) cells. What began as "ν ≈ 2 ± 0.1, not determined
   more precisely by any instrument here" (§64) ends as a quadrature.
+  > ⚠ **§90 withdraws §89's quoted precision.** The measured A is itself only determined to ~0.4%
+  > once its extrapolation ansatz is varied, and the candidates straddle the theory value. §89's
+  > 0.1% residual is *below the resolution of the instrument that would test it*. The agreement
+  > stands — to within the measurement's own resolution — but "1.0007 ± 0.0004" does not, and the
+  > flatness that made it look physical was a common-mode estimator bias.
 * **Cascades.** Everything above is one element. The founding claim is about *composition*.

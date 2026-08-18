@@ -2528,16 +2528,41 @@ integrate -int p_u du, subtract int p_s ds -- with no master equation, no statio
 lattice and no Omega, validated against exact CME first passage over eight gammas and ten (gamma,
 M) cells. §84's closed form was the leading term of this; §85-§88 were the diagnosis.
 
-**T15-n.6, open: the residual is FLAT, and that is a suspect (rule 17), not a finding.** The
-corrected ratio is 1.0007 +- 0.0004 in every cell, gamma and M alike -- the correction removes a
-7x spread in the raw overshoot and leaves a constant. **A constant offset surviving a correction
-that fixed everything else is more likely to be on the MEASUREMENT side.** §84's measured A is a
-two-point local slope d ln T/dOmega admitted by a 2% convergence gate, and a systematic ~0.1% bias
-there would look exactly like this: same sign and size in every cell regardless of gamma or M.
-**How to kill:** re-extract the measured A by Richardson extrapolation in Omega instead of a
-two-point slope, at three gammas. If the offset moves toward zero it is the instrument; if it does
-not, there is a second physical term at the 0.1% level. **Do not fit it** -- that is how §84's P3
-became a claim about a phenomenon that was its own Taylor term.
+~~**T15-n.6, open: the residual is FLAT, and that is a suspect**~~ **-> §90. RESOLVES AS
+UNRESOLVABLE HERE, and §89's quoted precision is withdrawn.**
+
+The suspect was right about a mechanism and wrong about its size. §84's two-point local slope IS
+biased -- the slopes are linear in 1/Omega (correlation -0.99 at all three gammas), and Richardson
+extrapolation puts the bias at **+0.234%, +0.297%, +0.415%, LOW**. §89 needed +0.07%. So correcting
+it OVERSHOOTS and flips the residual negative (1.0007 -> 0.9984, 1.0006 -> 0.9977, 1.0007 ->
+0.9965).
+
+**Then rule 15.** Varying the extrapolation ansatz -- last slope, linear in 1/Omega over all
+points, over the last three, over the last four, quadratic -- gives a spread of up to **0.407%** in
+the measured A, and §89's corrected ratio against each **STRADDLES 1** at every gamma
+(1.0006, 0.9965, 0.9980, 0.9996, 0.9975 at gamma = 0.44). **The measured A is not determined to
+better than the residual it was being used to judge.**
+
+  * ~~§89: "the corrected ratio is 1.0007 +- 0.0004 across every cell"~~ -- **the +- is withdrawn.**
+  * **§89.1's flatness argument is weaker than it looked, and this is the transferable part.**
+    Every cell used the SAME two-point estimator, so its bias is **COMMON MODE**, and a flat
+    residual is precisely what that produces. **Flatness across cells sharing an estimator is not
+    evidence about physics.** §89.1 read it as evidence pointing at the instrument; it was not
+    evidence either way.
+  * What survives is better stated than what was claimed: §89's correction brings theory and
+    measurement into agreement **to within the measurement's own resolution (~0.4%)**. §88's
+    +1.02..+5.61% overshoot is far larger than that and is untouched.
+
+**Correction to §84/§88's published numbers (rule 7):** their measured A carries a two-point bias
+of +0.23..+0.42%, low. The originals stand as printed; no re-fit is offered, because the ansatz
+spread is as large as the bias.
+
+**T15-n.7, open: can the measured A be pinned below 0.1% at all?** Not with this instrument. **How
+to kill:** the bias is O(1/Omega) with a coefficient set by the WKB prefactor b, and T14-e already
+localises b (start-side factor, exactly theta-independent, a function of (gamma, epsilon)). If b
+can be computed rather than fitted, the two-point bias becomes a KNOWN subtraction rather than an
+extrapolation, and the ansatz spread collapses. That makes T14-e -- open since §61 -- the blocker
+for a 0.1% test, which is a use nobody had for it.
 
 **§88's PAYOFF, and it is the reason the route was worth building.** §81/§82 could not measure
 AM's action at deep barriers -- stationary underflow (§81.1) and negative first-passage times with

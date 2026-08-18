@@ -9569,3 +9569,188 @@ P2, the absolute check, and on none of these fits.**
 
 **Still open (T15-n.1):** the quantitative gap between the closed form's window exponent (1.83)
 and §64's measured routes (1.95–2.19) on the same window is *not* explained here.
+
+---
+
+### 85 Where §84's deficit lives — two suspects die, the third is confirmed (T15-n.1)
+
+§84's closed form approaches the exact action **from below** (0.8630 → 0.9776). Three things could
+produce that, and they are separable.
+
+**P1, the gate.** The reduced chain reproduces what it claims to reduce: `b(u*) = b*` to
+**5.6e−17**, and the reduced drift `λ_u − μ_u` equals the exactly-factored lead drift
+`(1+γ)u(b−b*)` to **4.0e−17** at 36 interior points — not only at the fixed points. So any deficit
+is the reduction, not a coding error.
+
+**S1 — truncation of the slow manifold. REFUTED, and backwards.** §84 expanded `b(u) = b₀ + b₂u²`.
+Solving `ds/dt = 0` for b exactly at every u makes the agreement **worse**:
+
+| γ | measured | §84 truncated | ratio | exact manifold | ratio |
+|---|---|---|---|---|---|
+| 0.30 | 0.125373 | 0.108199 | 0.8630 | 0.106405 | 0.8487 |
+| 0.40 | 0.032622 | 0.030612 | 0.9384 | 0.029435 | 0.9023 |
+| 0.46 | 0.005460 | 0.005338 | **0.9776** | 0.005210 | 0.9542 |
+
+Residual ~ (γ_c−γ)^**1.121** truncated against (γ_c−γ)^**0.750** exact.
+
+**S2 — the diffusion approximation. REFUTED, and it was the motivating suspicion.** §84 used the
+Fokker–Planck form `2∫F/D du`; the exact jump-process action is `∫ln(λ_u/μ_u)du`, and since
+`ln r − 2(r−1)/(r+1) ≈ (r−1)³/12 > 0` the FP form *must* underestimate — **the observed sign**. It
+is nevertheless not the cause: on the same manifold the two agree to **0.30%**, against a deficit
+of 2–10%. λ_u/μ_u stays close to 1 across this barrier, so the cubic term never gets going. *(0.30%
+in the action is not negligible in a rate — at Ω = 650 it is a factor of e² in the mean first
+passage — it is just far too small to be this deficit.)*
+
+**P5, and it is awkward for §84.** `A_trunc/A_exact-manifold` = 1.0169, 1.0358, 1.0401, 1.0400,
+1.0374, 1.0323, 1.0288, 1.0246 — **non-monotone**. A systematically better approximation would be
+one-signed. **§84's closer agreement is a cancellation of two errors, not an improvement.** Its
+ν = 2 is untouched (both reductions share the leading behaviour); its numerical closeness is luck,
+and saying so is the point of rule 15.
+
+**S3 — the adiabatic elimination. CONFIRMED, by a decisive and cheap test.** The pair `X+Y→2B` and
+`2B→X+Y` has **Δu = 0**: it moves the fast variable and never touches the lead's own rates.
+Multiplying both by M therefore sharpens the timescale separation, leaves the cycle affinity
+*exactly* unchanged (M cancels in the pair's ratio), and makes the elimination asymptotically
+exact:
+
+| M | 1 | 2 | 4 | 8 | 16 |
+|---|---|---|---|---|---|
+| 1 − ratio, γ = 0.40 | 0.0977 | 0.0661 | 0.0379 | 0.0220 | **0.0130** |
+| 1 − ratio, γ = 0.44 | 0.0651 | 0.0532 | 0.0312 | 0.0175 | **0.0100** |
+
+Monotone to zero on both, no cells excluded. **T15-n.1 is closed: the deficit is the adiabatic
+elimination itself.**
+
+> **And the sign rules out the obvious repair.** The measured action is *larger* than the reduced
+> one. Fast-variable fluctuations feeding the lead would add to its effective diffusion, and more
+> noise means a *smaller* barrier. So this is not "the lead is noisier than the reduction thinks",
+> and any correction of that form moves the wrong way. What the elimination is losing is not
+> captured by widening D_u.
+
+### 85.1 ⚠ PRIOR ART: §83's construction is published, and §80's action formula is standard
+
+A literature check was run on §83 and §84 — **early this time, which is the whole point of §65.1
+and §70.** It came back badly for §83's framing, and the record is corrected here rather than in a
+later section.
+
+**§83's construction is not new. It is published, with the same example.** Plesa, Zygalakis,
+Anderson & Erban, *Noise control for molecular computing*, J. R. Soc. Interface 15:20180199 (2018),
+arXiv:1705.09392, call these **"zero-drift networks"**. Their `R³₁,₁` (their Eq. 5) is literally
+`s + s̄ → 2s` and `s + s̄ → 2s̄` at equal rate — **§83's AM pair verbatim** — and they state the
+property in the same words: the pair "does not affect the underlying deterministic model. However,
+[it] does affect the underlying stochastic model." They prove the total propensity gains 2Kβ(x)
+with the drift untouched, and use it to make a monostable network stochastically multimodal.
+
+**That dynamically equivalent networks differ stochastically is also known**, and has a settled
+vocabulary §83 did not use:
+
+* Networks with identical mass-action ODEs are **dynamically equivalent** (Horn & Jackson's
+  *macro-equivalence*, 1972) or **confoundable** — Craciun & Pantea, *Identifiability of chemical
+  reaction networks*, J. Math. Chem. 44:244 (2008), is the canonical reference.
+* Enciso, Erban & Kim (arXiv:2006.02272, EJAM 2021) open on exactly §83's point and then prove the
+  converse: the CTMC rates determine network *and* constants, so the stochastic model is strictly
+  finer than the ODE.
+* Faul, Hoessly & Xia (arXiv:2505.07638) give the sharp statement — the ODE sees only `y′−y`, the
+  generator additionally sees `(y′−y)(y′−y)ᵀ` — and **their Example 5.12 is §83's one-species
+  construction**, `∅ ← S → 2S`.
+
+**And §80/§81's action formula is textbook.** `A = −∫ln(μ/λ)dx` is Assaf & Meerson, *WKB theory of
+large deviations in stochastic populations*, J. Phys. A 50:263001 (2017), Eqs. (43)–(44), for the
+Hamiltonian `H = λ(e^p−1) + μ(e^{−p}−1)`. **This project derived it independently and should have
+cited it from §80.** The same review also states §85's S2 in general form: the Fokker–Planck
+reduction keeps only λ−μ and λ+μ and is *not* a controlled approximation to the action.
+
+> **What survives as possibly unstated**, and it is narrow: no source was found computing an escape
+> action, quasipotential or switching rate *for a dynamically equivalent pair*, nor drawing a
+> composition-depth consequence from one. But **per §70's rule that is not novelty** — it is a
+> one-line corollary of two literatures that have not been joined, and there is a published
+> near-instance: Assaf & Meerson §IV's bursty Verhulst model has "the deterministic rate equation
+> coincides with" the non-bursty one while the MTE differs exponentially. **§83 is not the first
+> instance of the phenomenon.** The honest residual claim is the *quantification* — that the escape
+> action is where dynamical equivalence fails, by a factor set by the futile rate — and the CRNT
+> framing, not the construction and not the mechanism.
+
+**A scope statement §83 should have carried.** Anderson, Craciun & Kurtz (arXiv:0803.3042) prove
+complex-balanced networks have product-form Poisson stationary distributions *at the deterministic
+equilibrium* — so for that class the ODE **does** determine the stationary distribution. §83's
+construction escapes only because `X→2X, X→∅` is neither weakly reversible nor complex-balanced.
+That is the first objection anyone would raise and §83 did not answer it.
+
+### 85.2 ⚠ PRIOR ART: §84's ν = 2 is a known universal exponent, and its "window effect" is its own Taylor term
+
+The same literature check covered §84, and it deflates it further than §85.1 deflates §83.
+
+**ν = 2 at a supercritical pitchfork is standard and universal.** Dykman, Maloney, Smelyanskiy &
+Silverstein, Phys. Rev. E 57, 5202 (1998): the activation barrier scales as |μ−μ_b|^ξ with **ξ = 2
+at a pitchfork** and 3/2 at a saddle-node, the exponent set by the bifurcation type alone (after
+Dykman & Krivoglaz 1979). It has been **measured**: Chan & Stambaugh, Phys. Rev. Lett. 99, 060601
+(2007), get **2.0 ± 0.1 and 2.00 ± 0.03** at the two pitchforks of a micromechanical oscillator.
+
+> **So §84's ν = 2 is not a discovery, and worse, it does not discriminate.** A transcritical
+> bifurcation gives 2 as well; only a saddle-node gives 3/2. "We measured ν = 2" is consistent with
+> a wide class and is *not* evidence for the pitchfork mechanism §84 derived it from.
+
+**The transfer from Langevin to the master equation is also a citable statement, not a gap this
+project closed.** Assaf & Meerson (2017) §II show the van Kampen/Fokker–Planck Hamiltonian — wrong
+in general for large deviations — **coincides with the exact WKB Hamiltonian near a bifurcation**.
+That is precisely why §85's S2 found FP and WKB agreeing to 0.30%: expected, not surprising. Their
+§VII A 1 works the *transcritical* case by §84's own method (timescale separation → reduced
+Hamiltonian → closed-form action ∝ δ²).
+
+**And §84's "every finite window reads below 2" is a named, standard phenomenon.** Effective
+exponents: Kouvel & Fisher, Phys. Rev. 136, A1626 (1964); Riedel & Wegner, Phys. Rev. B 9, 294
+(1974). Corrections to scaling: Wegner, Phys. Rev. B 5, 4529 (1972). Documented **for escape near a
+bifurcation specifically**: Dykman & Ryvkine, Phys. Rev. Lett. 92, 080602 (2004), *Critical Exponent
+Crossovers in Escape near a Bifurcation Point*. Chan & Stambaugh's own log-log fits give 2.0 near
+the pitchfork and 1.43/1.53 further out — numerically the same story as §84's 1.99 vs 1.83.
+
+**The deflation is sharper than "someone else said it first": it is algebra inside §84's own
+formula.** With ε = ½ − γ,
+
+    A = (32/9)·ε²·(1 − (5/3)ε + O(ε²))      so      ν_eff(ε) = 2 − (5/3)ε + O(ε²)
+
+verified against the closed form (ratio to the two-term expansion 0.9679 → 0.9997 → 1.0000 as
+ε → 0; local ν_eff 1.8651 / 1.9254 / 1.9837 against 2−(5/3)ε = 1.8333 / 1.9167 / 1.9833). Inverting
+§84's window fits: 1.8300 implies ε = 0.102 on a window spanning ε ∈ [0.05, 0.30], and 1.9898
+implies ε = 0.0061 on ε ∈ [0.001, 0.02].
+
+> **§84's P3 presented as a finding what is the leading correction term of its own closed form.**
+> The measurement was sound and the account was true; it was simply not new, and not deep.
+
+**What actually survives §84/§85, stated narrowly:**
+
+1. The **closed form for reversible AM** — no source was found computing an escape action or
+   quasipotential for AM, reversible or otherwise, in the molecular-programming literature
+   (Cardelli & Csikász-Nagy 2012; Cardelli et al. 2016; Angluin–Aspnes–Eisenstat 2008;
+   Condon et al. 2017/2020) or in the voter-model analogues. Per §70 that is **not novelty**, and
+   the risk here is a buried supplementary calculation rather than a titled paper.
+2. The **absolute validation** against exact CME first passage, 0.8630 → 0.9776 with zero fitted
+   parameters, which is the part rule 16 exists to demand.
+3. §85's **M-sweep**, which is a measurement and stands: the deficit is the adiabatic elimination.
+
+### 85.3 §85's S3 sign is a suspect, and the literature's better-documented mechanism has the opposite sign
+
+§85 confirmed *that* the deficit is the elimination and argued from the sign that extra lead noise
+cannot be the repair. **The sign argument is weaker than §85 made it sound (rule 17).**
+
+* **Pointing §85's way:** Gao & Stephan (arXiv:2412.14411) prove a Γ-convergence liminf in which
+  the reduction discards *non-negative* fast-reaction cost terms, so the effective action is
+  asymptotically a **lower** bound — the reduction underestimates because it throws away cost.
+  This is an asymptotic statement for paths already confined to the slow manifold, not a finite-ε
+  inequality.
+* **Pointing the other way, and better documented:** the true slow Hamiltonian is the **Perron
+  eigenvalue of the tilted fast generator** (Kifer, Mem. AMS 201(944), 2009; Faggionato, Gabrielli
+  & Crivellari 2009; Bressloff & Faugeras, arXiv:1410.2152). By convexity it *dominates* the
+  naively reduced Hamiltonian — letting the fast variable fluctuate atypically opens **cheaper**
+  escape routes — so suppressing fast noise should make the barrier too **large**. Empirically:
+  Assaf, Roberts & Luthey-Schulten, Phys. Rev. Lett. 106, 248102 (2011) and Mehta, Mukhopadhyay &
+  Wingreen, Phys. Biol. 5, 026005 (2008) both find that reinstating the fast species' noise
+  **shortens** switching times, i.e. their reduced models overestimated the barrier.
+* **On magnitude the literature agrees with §85 and claims no sign.** Assaf–Roberts–Luthey-Schulten
+  state plainly that the reduction "neglected in S(y) the term ∫p_x dx ∼ O(γ⁻¹)" — an error of
+  order 1/(timescale separation), which is exactly what §85's M-sweep measured (0.0977 → 0.0130
+  over M = 1…16) and what §84's ratio does as γ → γ_c by critical slowing down.
+
+> **Corrected reading: the deficit's size is expected and now measured; its sign is a coefficient
+> of this network, not a law**, and a well-documented mechanism runs the other way. §85's "the sign
+> forbids the obvious repair" holds *for this network* and must not be read as general.

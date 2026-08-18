@@ -262,6 +262,16 @@ dynamics **exactly** unchanged and still moves A.
 gloss did not: *"a property of the deterministic field"* was too loose. **A is a functional of the
 propensity pair, and the ODE is strictly coarser than the thing that sets reliability.**
 
+> ⚠ **And almost none of that is new — checked early, and the check came back badly (§85.1).**
+> The construction is published as **"zero-drift networks"** (Plesa, Zygalakis, Anderson & Erban
+> 2018), with §83's `X+Y→2X` / `X+Y→2Y` pair as their own worked example. Networks with identical
+> mass-action ODEs are **dynamically equivalent** / **confoundable** (Horn–Jackson 1972;
+> Craciun–Pantea 2008), and that they differ stochastically is established (Enciso–Erban–Kim 2021;
+> Faul–Hoessly–Xia, whose Example 5.12 is §83's one-species case). The action `−∫ln(μ/λ)dx` used
+> since §80 is Assaf–Meerson (2017) Eqs. (43)–(44) and should have been cited there.
+> **What is left is the quantification, not the phenomenon** — and per §70, "not found" is not
+> novelty.
+
 Both neutral pairs are irreversible, so this sharpens §82 rather than qualifying it: the element
 pays an *unbounded* thermodynamic cost and gets **worse** reliability for it. Drive and
 reliability move in opposite directions inside one network.
@@ -380,5 +390,14 @@ The measurements in this project survive. The explanations attached to them most
   exact first-passage action to **0.9776 and rising** at γ = 0.46. The three routes were never
   disagreeing about a value: ν is a *limit*, every finite window reads below it, and the measured
   effective exponent (1.942) is exactly §64's width route. §63.1's width exponent of exactly 1/2
-  follows. *(Open: why the closed form's window bias exceeds the true one — T15-n.1.)*
+  follows. **T15-n.1 closed by §85**: the residual is the adiabatic elimination — truncation and
+  the diffusion approximation are both refuted, and sharpening the timescale separation drives the
+  residual 0.0977 → 0.0130.
+  > ⚠ **But almost none of §84 is new (§85.2).** ν = 2 at a supercritical pitchfork is a standard
+  > universal exponent (Dykman et al. 1998), measured at 2.00 ± 0.03 (Chan & Stambaugh 2007), and
+  > it **does not discriminate** — transcritical gives 2 too. The "every window reads below 2"
+  > account is the named effective-exponent/corrections-to-scaling phenomenon (Wegner 1972;
+  > Dykman & Ryvkine 2004) — and it is algebra inside our own formula: `A = (32/9)ε²(1 − (5/3)ε)`,
+  > so `ν_eff = 2 − (5/3)ε`. What survives is the closed form for reversible AM and the absolute
+  > validation against exact CME first passage.
 * **Cascades.** Everything above is one element. The founding claim is about *composition*.

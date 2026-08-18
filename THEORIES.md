@@ -2406,6 +2406,19 @@ drift** -- a normal form built on the drift alone would be exactly §83's error.
     1.9898 on [0.48, 0.499]. The MEASURED A gives 1.942 -- squarely on §64's width route
     (1.95-2.03) and stationary route (1.99).
 
+> ⚠ **DEFLATED BY §85.2, and heavily.** nu = 2 at a supercritical pitchfork is a STANDARD
+> universal exponent (Dykman, Maloney, Smelyanskiy & Silverstein, PRE 57:5202, 1998: xi = 2 at a
+> pitchfork, 3/2 at a saddle-node), and it has been MEASURED at 2.0 +- 0.1 and 2.00 +- 0.03
+> (Chan & Stambaugh, PRL 99:060601, 2007). **It also does not discriminate** -- transcritical gives
+> 2 as well. And the "every finite window reads below 2" account is the named, standard
+> effective-exponent / corrections-to-scaling phenomenon (Wegner 1972; Riedel & Wegner 1974;
+> Kouvel & Fisher 1964), documented for escape near bifurcations specifically by Dykman & Ryvkine,
+> PRL 92:080602 (2004). **Worse, it is algebra inside §84's own formula**: with eps = 1/2 - gamma,
+> A = (32/9) eps^2 (1 - (5/3) eps + ...), so nu_eff = 2 - (5/3) eps, which reproduces both window
+> fits on inversion. §84's P3 presented as a finding the leading correction term of its own closed
+> form. What survives is the closed form for reversible AM (not found elsewhere -- which per §70 is
+> not novelty) and the absolute validation.
+
 **So §63.2's "2 is excluded over [0.20, 0.45] with no drift toward it" was reading the window
 bias.** §64 had already withdrawn the exclusion; §84 says what it was. And §64's present
 statement -- "nu ~ 2 +- 0.1, not determined more precisely than that by any instrument here" --
@@ -2420,13 +2433,49 @@ cannot be satisfied only by the thing it claims to test** (rule 19). P4 then gat
 measured-vs-predicted exponent gap at 0.10 and passed at 0.091 -- a fixed tolerance on a
 converging quantity, rule 20 verbatim, two sections after rule 20 was last invoked.
 
-**T15-n.1, open: why is the closed form's window bias LARGER than the true one?** 1.8513 /
-1.8691 / 1.8814 against a measured 1.9424 / 1.9416 / 1.9430 -- systematic, same direction at every
-window, and the same fact that puts P2's ratio below 1 away from gamma_c. **How to kill:** carry
-the elimination to next order (the u^5 term in the normal form, and the u-dependence of D_u, both
-dropped here) and check whether the resulting A reproduces BOTH the ratio's approach to 1 and the
-window exponent. If it reproduces one and not the other, the missing piece is the fast variable's
-own noise feeding the lead -- the one approximation here that §83 says to distrust.
+~~**T15-n.1, open: why is the closed form's window bias LARGER than the true one?**~~ **-> §85.
+CLOSED. Three suspects, two killed, and the survivor confirmed by a test that isolates it.**
+
+  * **S1, truncation of the slow manifold: REFUTED, and backwards.** Solving ds/dt = 0 exactly at
+    every u makes agreement WORSE -- residual (gc-g)^0.750 against the truncated form's
+    (gc-g)^1.121. §84's closer numbers are a CANCELLATION: A_trunc/A_exact is non-monotone
+    (1.0169 .. 1.0401 .. 1.0246), and a systematically better approximation would be one-signed.
+  * **S2, the Fokker-Planck vs jump-process action: REFUTED, and it was the motivating suspect.**
+    It has the right SIGN -- ln r - 2(r-1)/(r+1) ~ (r-1)^3/12 > 0, so the diffusion form must
+    underestimate -- but on the same manifold the two agree to 0.30% against a 2-10% deficit.
+    lam_u/mu_u stays near 1 across this barrier.
+  * **S3, the adiabatic elimination: CONFIRMED.** The pair X+Y <-> 2B has Delta u = 0, so scaling
+    it by M sharpens the timescale separation, leaves the cycle affinity exactly unchanged, and
+    makes the elimination asymptotically exact. The residual falls monotonically to zero:
+    0.0977 -> 0.0130 at gamma = 0.40 and 0.0651 -> 0.0100 at gamma = 0.44, over M = 1..16.
+
+**And the sign forbids the obvious repair.** The true action is LARGER than the reduced one, while
+fast-variable noise feeding the lead would ADD to its diffusion and so LOWER the barrier. Whatever
+the elimination loses, it is not captured by widening D_u -- so "add the fast variable's noise" is
+refuted before it is tried.
+
+**T15-n.2, open: what does the elimination lose, given it cannot be extra lead noise?** The
+candidate is that the true escape path leaves the slow manifold, so no 1-D reduction built from
+manifold-projected rates can be exact at any order. **How to kill:** compute the 2-D quasipotential
+by the tilted-generator route (H_eff as the principal eigenvalue of the fast generator at fixed
+conjugate momentum) and check whether it reproduces the measured action where the 1-D reduction
+does not. This is the slow-fast large-deviations problem, and §85's M-sweep gives it a calibrated
+target rather than a qualitative one. **The literature says this is the right route** -- the exact
+slow Hamiltonian IS that Perron eigenvalue (Kifer 2009; Faggionato, Gabrielli & Crivellari 2009;
+Bressloff & Faugeras arXiv:1410.2152).
+
+**And §85's SIGN argument is a suspect, not a law (§85.3).** Gao & Stephan (arXiv:2412.14411) prove
+a Gamma-convergence liminf in which the reduction discards non-negative cost, giving an asymptotic
+LOWER bound -- §85's direction. But the Perron-eigenvalue argument dominates the naive reduction by
+convexity (fast fluctuations open CHEAPER escape routes), predicting the barrier should come out too
+LARGE, and Assaf, Roberts & Luthey-Schulten (PRL 106:248102, 2011) and Mehta, Mukhopadhyay &
+Wingreen (Phys. Biol. 5:026005, 2008) both find reinstating fast noise SHORTENS switching times.
+The literature agrees with §85 on MAGNITUDE -- the dropped term is O(1/separation), exactly what the
+M-sweep measured -- and claims no sign. **Two further kill tests worth naming:** (i) a sign-transfer
+test, scaling a different reaction subset so which variable is fast changes independently of gamma,
+to see whether the deficit's sign is structural or a coefficient; (ii) an instrument test on the
+"exact" side, reporting A(Omega) per gamma rather than one value -- §84 held A*Omega in [6, 20] per
+gamma BY DESIGN for this reason, and that choice should be defended explicitly rather than assumed.
 
 **T15-j, open (replacing T15-i): which fixed point decides when the symmetric steady state is
 not unique?** 7.4% of drawn networks had more than one symmetric steady state and are outside
@@ -3690,6 +3739,64 @@ of this**, which is reassuring for the measurements and deflating for their nove
 what is new here is the OPTIMAL DRIVE (§38, gamma ~ 0.20-0.24), not the divergence.
 Rao & Peliti (JSTAT P06001, 2015) and Sartori & Pigolotti (PRL 110, 188101, 2013) give
 the kinetic-vs-energetic discrimination framework that §38's gain/margin split resembles.
+
+### §80-§83 -- checked EARLY this time, and the check came back badly (§85.1)
+
+**§83's construction is published.** Plesa, Zygalakis, Anderson & Erban, *Noise control for
+molecular computing*, J. R. Soc. Interface 15:20180199 (2018), arXiv:1705.09392, name these
+**"zero-drift networks"**; their Eq. (5) `s + s_bar -> 2s` / `s + s_bar -> 2s_bar` at equal rate is
+§83's AM pair verbatim, and they state the deterministic-invariance/stochastic-difference property
+in the same words.
+
+**The framing has a settled vocabulary §83 did not use.** Identical mass-action ODEs =
+**dynamical equivalence** (Horn & Jackson 1972, *macro-equivalence*) or **confoundability**
+(Craciun & Pantea, J. Math. Chem. 44:244, 2008 -- canonical). That such networks differ
+stochastically: Enciso, Erban & Kim (arXiv:2006.02272, EJAM 2021) prove the CTMC rates determine
+the network uniquely, so the stochastic model is strictly finer; Faul, Hoessly & Xia
+(arXiv:2505.07638) give the sharp criterion -- the ODE sees y'-y, the generator also sees
+(y'-y)(y'-y)^T -- and **their Example 5.12 is §83's one-species construction**.
+
+**§80/§81's action formula is textbook.** `A = -int ln(mu/lam) dx` is Assaf & Meerson, *WKB theory
+of large deviations in stochastic populations*, J. Phys. A 50:263001 (2017), Eqs. (43)-(44). It was
+derived here independently and should have been cited from §80. The same review states §85's S2 in
+general: the Fokker-Planck reduction is not a controlled approximation to the action.
+
+**A published near-instance of §83's phenomenon.** Assaf & Meerson §IV's bursty Verhulst model has
+"the deterministic rate equation coincides with" the non-bursty one, with an exponentially
+different mean time to extinction. **§83 is not the first instance.**
+
+**A scope statement §83 should have carried.** Anderson, Craciun & Kurtz (arXiv:0803.3042):
+complex-balanced networks have product-form Poisson stationary distributions AT the deterministic
+equilibrium, so for that class the ODE DOES determine the stationary distribution. §83's
+construction escapes only because X -> 2X, X -> 0 is neither weakly reversible nor complex-balanced.
+
+**What is left, and it is narrow.** No source was found computing an escape action or switching
+rate for a dynamically equivalent PAIR, nor drawing a composition-depth consequence. Per §70's own
+rule that is **not novelty** -- it is a one-line corollary of two literatures that have not been
+joined. The residual claim is the quantification and the CRNT framing, not the construction and
+not the mechanism.
+
+### §84-§85 (nu = 2 and the escape action near the pitchfork) -- mostly known, and one part is our own algebra
+
+**nu = 2 is a standard universal exponent.** Dykman, Maloney, Smelyanskiy & Silverstein, PRE
+57:5202 (1998): the activation barrier goes as |mu - mu_b|^xi with xi = 2 at a pitchfork and 3/2 at
+a saddle-node, after Dykman & Krivoglaz (1979). Measured at 2.0 +- 0.1 and 2.00 +- 0.03 by Chan &
+Stambaugh, PRL 99:060601 (2007). **It does not discriminate**: transcritical also gives 2.
+
+**The Langevin-to-CME transfer is citable, not a gap closed here.** Assaf & Meerson (2017) §II: the
+van Kampen/Fokker-Planck Hamiltonian, wrong in general for large deviations, COINCIDES with the
+exact WKB Hamiltonian near a bifurcation -- which is why §85's S2 found FP and WKB agreeing to
+0.30%. Their §VII A 1 works the transcritical case by §84's own method.
+
+**The effective-exponent bias is named and standard.** Kouvel & Fisher (1964); Riedel & Wegner,
+PRB 9:294 (1974); Wegner, PRB 5:4529 (1972). For escape near a bifurcation specifically: Dykman &
+Ryvkine, PRL 92:080602 (2004). Chan & Stambaugh's own fits give 2.0 near the pitchfork and
+1.43/1.53 further out -- the same story as §84's 1.99 vs 1.83.
+
+**What was not found:** any escape action or quasipotential for Approximate Majority, reversible or
+not -- checked across the molecular-programming literature (Cardelli & Csikasz-Nagy 2012; Cardelli
+et al. 2016; Angluin-Aspnes-Eisenstat 2008; Condon et al. 2017/2020) and the voter-model analogues
+(Castello, Eguiluz & San Miguel 2006; the noisy/partisan voter models). Per §70 that is not novelty.
 
 ### The methodological point
 

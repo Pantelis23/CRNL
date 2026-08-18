@@ -2472,12 +2472,36 @@ quasipotential is the RIDGE b_ridge(u) = argmax_b pi(u,b), and they differ by a 
   * **The displacement tracks the deficit toward gamma_c** (0.00254 -> 0.00104 against
     0.0977 -> 0.0651), so it is not a bystander.
 
-**T15-n.3, open: is there a PREDICTIVE curve?** §86 shows a correct b(u) exists and identifies it
-after the fact. **How to kill:** the tilted-generator route (§85's T15-n.2 note) predicts the
-optimal b from the fast generator's Perron eigenvalue at fixed conjugate momentum, with no
-stationary solve. If it reproduces b_ridge to the resolved displacement, the reduction becomes
-predictive and §84's closed form can be corrected at next order; if it does not, the ridge is not
-the instanton's curve and the agreement in §86 P3 is a coincidence of the marginal.
+~~**T15-n.3, open: is there a PREDICTIVE curve?**~~ **-> §87. CLOSED, affirmatively -- and it
+corrects §86's mechanism while leaving §86's numbers standing.**
+
+The tilted-generator route works from the rate functions alone: write the 2-D WKB Hamiltonian in
+(u, s), send the FAST HAMILTONIAN FLOW to its fixed point at frozen (u, pu) via dH/dps = 0 and
+dH/ds = 0, let H = 0 fix pu(u), and integrate A = -int pu du.
+
+  * **Predicted action 1.0257 and 1.0151** against the exact first passage, at gamma = 0.40 and
+    0.44, versus the deterministic manifold's 0.9027 and 0.9348. Grid-converged
+    (1.0246 -> 1.0257 over n = 30..240). **No master equation, no stationary solve, no lattice,
+    no Omega.**
+  * The residual overshoots and shrinks toward gamma_c, consistent with finite timescale
+    separation. **No mechanism is attached to it** (rule 17), and note that §85.3's convexity
+    argument is about a DIFFERENT reduction and does not license a sign claim here.
+
+**§86's MECHANISM IS WITHDRAWN; its measurement is not.** The predicted instanton curve is
+displaced DOWNWARD (-0.00061, -0.00024) where §86's measured ridge is displaced UPWARD (+0.00254,
++0.00104): opposite sign, ~4x smaller. **The ridge of the stationary distribution is not the
+instanton's curve.** §86's ridge integration does close the deficit of the 1-D functional it was
+fed to, and that number stands; the account -- "the reduction integrates along the wrong curve, and
+the ridge is the right one" -- was wrong in its second half. Two curves displaced in OPPOSITE
+directions both land near the measured action because they are evaluated in two different
+functionals. **Fifth mechanism in this project to die to the first test aimed at it.**
+
+**T15-n.4, open: what is the remaining 1.5-2.6% overshoot?** It is grid-converged and shrinks
+toward gamma_c. **How to kill:** run the tilted reduction along §85's M axis, where the timescale
+separation is a controlled knob -- if the overshoot falls like 1/M the diagnosis is finite
+separation and the reduction is exact in the limit; if it does not, the fast-flow fixed point is
+not the right closure. Note §86.1 found the STATIONARY-distribution instrument untrustworthy at
+M > 1, but §87 needs no stationary solve, so this axis is reachable here in a way it was not there.
 
 **§86.1: the M-axis cross-check is UNRESOLVED, and was not gated until it agreed.** Reading a
 ridge off the stationary distribution at M > 1 produced three distinct contaminations -- a whole

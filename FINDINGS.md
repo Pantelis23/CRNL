@@ -9820,3 +9820,63 @@ M = 8 instead and kept it.
 > **Reported as unresolved rather than gated until it agreed.** Writing a third gate after seeing
 > which cell disagreed would have been fishing, and this project has a rule for every other way of
 > arriving at a confident wrong number. **P3 and P4 do not depend on the M axis.**
+
+---
+
+### 87 The escape curve is predictable — T15-n.3 closed, and §86's mechanism corrected
+
+§86 found the right curve by reading it off the exact stationary distribution, so it diagnosed and
+predicted nothing. The tilted-generator route does it from the rate functions alone. Write the WKB
+Hamiltonian of the full 2-D jump process in u = x−y, s = x+y, treat s as fast, and send the **fast
+Hamiltonian flow** to its fixed point at frozen (u, p_u) — `∂H/∂p_s = 0`, `∂H/∂s = 0` — then let
+`H = 0` fix p_u(u) and integrate `A = −∫p_u du`.
+
+**P1, the gate, and it is also the trap.** `H(u,s,0,0) = 0` **identically in s** — the statement
+that the zero-momentum sheet is the deterministic dynamics, verified at 0.000e+00 over 54 points,
+with `∂H/∂p_s = 0` reproducing §85's slow manifold to 3.7e−12. **That is exactly why §84/§85 got
+the right equations at zero momentum, and exactly why the naive solve collapses.**
+
+**P3 — T15-n.3 closes affirmatively:**
+
+| γ | measured | on the deterministic manifold | ratio | **tilted generator** | **ratio** |
+|---|---|---|---|---|---|
+| 0.40 | 0.032622 | 0.029448 | 0.9027 | 0.033461 | **1.0257** |
+| 0.44 | 0.012080 | 0.011292 | 0.9348 | 0.012263 | **1.0151** |
+
+Converged in the grid (1.0246 → 1.0255 → 1.0257 → 1.0257 over n = 30…240). **No master equation,
+no stationary solve, no lattice, no Ω** — three equations solved by continuation in u. The
+residual is real, not a grid artifact, and shrinks toward γ_c, consistent with a
+finite-timescale-separation error. **No mechanism is attached to it (rule 17.)**
+
+**P2 — and this corrects §86.** The predicted instanton curve is displaced **downward**
+(−0.00061, −0.00024) where §86's measured ridge is displaced **upward** (+0.00254, +0.00104):
+opposite sign, ~4× smaller.
+
+> **The ridge of the stationary distribution is not the instanton's curve.** §86's numbers stand —
+> integrating the 1-D functional along the ridge does close that functional's deficit — but the
+> *account* attached to them was wrong. Two curves displaced in opposite directions both land near
+> the measured action because they are being fed to two different functionals: §86's 1-D reduced
+> action, and §87's true 2-D one. **§86's measurement survives; §86's mechanism does not.** That is
+> the fifth time in this project a mechanism proposed alongside a sound measurement has died to
+> the first test aimed at it.
+
+### 87.1 A solve where every equation was satisfied and the answer was nothing
+
+> **The first attempt solved all three equations jointly for (s, p_s, p_u) and returned
+> p_u = 0, p_s = 0 at every u, an action of exactly 0.000000, and a "displacement" that was just
+> wherever the solver stopped drifting.** Nothing errored. Every residual was ~1e-16.
+>
+> P1 is the explanation: since `H(u,s,0,0) = 0` identically in s, the entire p = 0 sheet is a
+> **two-parameter family of exact roots** of the system, and fsolve lands on it from any starting
+> point. The fix is structural, not numerical — p_u is no longer solved for jointly. The fast pair
+> is solved at *fixed* p_u, and the energy condition becomes a scalar equation in p_u whose trivial
+> root at 0 is excluded by the bracket.
+
+**And then the sign.** The first bracketed scan swept p_u > 0 and found nothing at all. The escape
+momentum is **negative** here; the 1-D reduced chain says |p_u| ≈ |ln(μ_u/λ_u)| = 0.0828 at
+γ = 0.40, u = u\*/2, and the root sits at −0.0927. A scan that cannot reach the answer's sign
+returns "no solution" and looks like a physical result.
+
+> Both failures share a shape worth naming: **a degenerate solution and an out-of-range search
+> both report cleanly.** One satisfies every equation and means nothing; the other reports nothing
+> and means the search was wrong. Neither prints anything that looks like an error.

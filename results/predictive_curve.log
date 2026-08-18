@@ -1,0 +1,33 @@
+=== P1 GATE: is the zero-momentum sheet the deterministic dynamics?
+  max |H(u, s, 0, 0)| over 54 points          = 0.000e+00
+  max |dH/dps at p=0 on the slow manifold|    = 3.694e-12
+  -> P1 HOLDS: the p = 0 branch IS the deterministic slow manifold, so §84/§85 solved the right equations at zero momentum
+
+=== P2/P5: the PREDICTED curve against §86's measured ridge displacement
+  gamma    u/u*  b predicted     b det  displacement       pu        ps
+    0.4    0.14      0.33214   0.33234      -0.00020  -0.0326   0.00194
+    0.4    0.34      0.32683   0.32771      -0.00088  -0.0708   0.01000
+    0.4    0.54      0.31807   0.31938      -0.00131  -0.0927   0.02062
+    0.4    0.73      0.30663   0.30741      -0.00078  -0.0873   0.02638
+    0.4    0.88      0.29616   0.29614       0.00003  -0.0547   0.01966
+   mean predicted displacement -0.00061   vs §86 MEASURED +0.00254   ratio -0.241
+   0.44    0.14      0.33270   0.33276      -0.00006  -0.0153   0.00072
+   0.44    0.34      0.32981   0.33009      -0.00028  -0.0330   0.00372
+   0.44    0.54      0.32481   0.32526      -0.00045  -0.0427   0.00758
+   0.44    0.73      0.31793   0.31829      -0.00036  -0.0392   0.00945
+   0.44    0.88      0.31156   0.31169      -0.00012  -0.0236   0.00681
+   mean predicted displacement -0.00024   vs §86 MEASURED +0.00104   ratio -0.230
+  -> P2/P5 FAILS on SIGN -- the ridge is not the instantons curve and §86s agreement was a coincidence of the marginal
+
+=== P3: the action, absolute, against the exact first passage
+  gamma   measured   on b_det   ratio   PREDICTED   ratio
+    0.4   0.032622   0.029448  0.9027    0.033452  1.0255
+   0.44   0.012080   0.011292  0.9348    0.012260  1.0149
+  -> P3 HOLDS: the tilted-generator action beats the deterministic manifold and lands within 3%. The reduction is PREDICTIVE
+
+=== P4: what this cost
+  three equations (dH/dps = 0, dH/ds = 0, H = 0) solved by continuation in u.
+  No master equation, no stationary solve, no lattice, no Omega. §86 needed the
+  exact answer to find the curve; this needs only the rate functions.
+
+wrote results/predictive_curve.json

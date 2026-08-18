@@ -400,4 +400,10 @@ The measurements in this project survive. The explanations attached to them most
   > Dykman & Ryvkine 2004) — and it is algebra inside our own formula: `A = (32/9)ε²(1 − (5/3)ε)`,
   > so `ν_eff = 2 − (5/3)ε`. What survives is the closed form for reversible AM and the absolute
   > validation against exact CME first passage.
+  **§86–§87 then located and fixed the reduction's error.** The deficit is the adiabatic
+  elimination (§85), and the tilted-generator route predicts the escape curve from the rate
+  functions alone — **1.0257 and 1.0151 against the exact first passage, with no master equation,
+  no stationary solve and no Ω** (§87), where the deterministic slow manifold gives 0.9027/0.9348.
+  §86's ridge measurement stands; §86's *mechanism* was withdrawn by §87, since the instanton's
+  curve is displaced opposite to the ridge.
 * **Cascades.** Everything above is one element. The founding claim is about *composition*.

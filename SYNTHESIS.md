@@ -417,4 +417,15 @@ The measurements in this project survive. The explanations attached to them most
   > 0.1% residual is *below the resolution of the instrument that would test it*. The agreement
   > stands — to within the measurement's own resolution — but "1.0007 ± 0.0004" does not, and the
   > flatness that made it look physical was a common-mode estimator bias.
-* **Cascades.** Everything above is one element. The founding claim is about *composition*.
+* ~~**Cascades.** Everything above is one element.~~ **§91 built the chemically-coupled chain
+  the founding claim is actually about, and the answer is that composition is not a property of the
+  element at all.** Three couplings, all *exactly* neutral at the rail, using the same element and
+  rails: one does not transmit, one transmits with a noise margin of 0.88σ and amplifies per-stage
+  error 18–64×, one saturates with a 3.39σ margin and costs only 1.7–2.3×.
+  > **The figure of merit is the noise margin in units of the upstream rail width, and the penalty
+  > is exponential in it — `log(penalty) = −0.95 × margin/σ`, with two independent knobs collapsing
+  > onto one curve.** That is what a transistor's saturating gain curve supplies, and what §12/§71/
+  > §72's external channel imposed by hand as σ = f·Δ instead of deriving.
+  §76–§81's depths, computed from an isolated element's ε, are right only in the large-margin
+  limit. *(Open: whether the margin law is derivable (T-CASC-d) and whether it survives depth
+  beyond D = 2 (T-CASC-e).)*

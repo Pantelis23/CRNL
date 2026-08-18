@@ -1,0 +1,88 @@
+=== P1(a) NEUTRALITY and P1(b) TRANSMISSION -- a neutrality gate is half a gate
+     scheme   upstream                  downstream roots                   verdict
+     source      at r3            [0.15   1.     3.1827]      neutral, |err| 0e+00
+                 at r1            [0.0059 1.2169 3.1099] still bistable: NO SIGNAL
+  catalytic      at r3            [0.15   1.     3.1827]      neutral, |err| 0e+00
+                 at r1                          [0.1256]                 TRANSMITS
+       hill      at r3            [0.15   1.     3.1827]      neutral, |err| 0e+00
+                 at r1                          [0.1248]                 TRANSMITS
+
+  NOISE MARGIN: the upstream value at which the downstream loses its high rail
+     scheme  x_up critical   (r3-xc)/r3  in rail widths
+     source never loses it           --              --
+  catalytic         2.7687       0.1301            0.88
+       hill         1.5792       0.5038            3.39
+  (upstream rail width sigma = sqrt(V/Omega) = 0.4727 at Omega = 30)
+  **A cascade needs the downstream to survive ordinary upstream fluctuation.**
+  A margin of a few sigma is a noise margin; a fraction of a sigma is not.
+  -> P1(a) HOLDS for both schemes
+  -> P1(b) source DOES NOT TRANSMIT;  catalytic transmits
+  -> only ['catalytic', 'hill'] can be called a cascade. The other is measured anyway, as the control that shows what a non-transmitting chain looks like.
+
+=== P2/P3/P4: exact joint CME at Omega = 30
+  P5: |f'(r3)| = 6.619, so one stage relaxes in 0.151 time units; §80 used t = 2.0, i.e. 13 relaxation times -- ample to propagate
+
+  --- source coupling
+      t    P(s1 lo)    P(sD lo)  union 1-(1-e)^D  P(sD lo|s1 lo)  own/eps1
+    1.0  8.1116e-04  8.6668e-04       1.6217e-03          0.0017    1.0667
+    2.0  3.6449e-03  3.9924e-03       7.2764e-03          0.0086    1.0867
+    4.0  9.9600e-03  1.1136e-02       1.9821e-02          0.0263    1.0918
+    8.0  2.2535e-02  2.5824e-02       4.4562e-02          0.0637    1.0822
+   16.0  4.7120e-02  5.6154e-02       9.2020e-02          0.1355    1.0562
+
+  --- catalytic coupling
+      t    P(s1 lo)    P(sD lo)  union 1-(1-e)^D  P(sD lo|s1 lo)  own/eps1
+    1.0  8.1116e-04  5.2313e-02       1.6217e-03          0.9648   63.5268
+    2.0  3.6449e-03  1.7185e-01       7.2764e-03          0.9937   46.1562
+    4.0  9.9600e-03  3.7247e-01       1.9821e-02          0.9983   36.3987
+    8.0  2.2535e-02  6.3940e-01       4.4562e-02          0.9996   27.3744
+   16.0  4.7120e-02  8.7954e-01       9.2020e-02          0.9999   17.6660
+
+  --- hill coupling
+      t    P(s1 lo)    P(sD lo)  union 1-(1-e)^D  P(sD lo|s1 lo)  own/eps1
+    1.0  8.1116e-04  1.8248e-03       1.6217e-03          0.5442    1.7055
+    2.0  3.6449e-03  1.1049e-02       7.2764e-03          0.8672    2.1643
+    4.0  9.9600e-03  3.2266e-02       1.9821e-02          0.9522    2.2874
+    8.0  2.2535e-02  7.3601e-02       4.4562e-02          0.9798    2.2863
+   16.0  4.7120e-02  1.5088e-01       9.2020e-02          0.9911    2.2109
+
+=== P4: the decomposition is the verdict
+      source: P(down low | up low) = 0.0017, 0.0086, 0.0263, 0.0637, 0.1355
+              measured/union       = 0.534, 0.549, 0.562, 0.580, 0.610
+              -> the signal does not propagate: any 'no accumulation' here is
+                 the stages being disconnected, NOT restoration filtering.
+   catalytic: P(down low | up low) = 0.9648, 0.9937, 0.9983, 0.9996, 0.9999
+              measured/union       = 32.259, 23.618, 18.792, 14.349, 9.558
+              -> the signal propagates, so the accumulation number is about composition
+        hill: P(down low | up low) = 0.5442, 0.8672, 0.9522, 0.9798, 0.9911
+              measured/union       = 1.125, 1.519, 1.628, 1.652, 1.640
+              -> the signal propagates, so the accumulation number is about composition
+
+=== P6 (rule 17): is the NOISE MARGIN the controlling variable, or the scheme?
+    Sweep the Hill exponent AND its half-max, which move the margin without
+    touching the element, the rails, or Omega. If margin is the variable, both
+    knobs must collapse onto one curve.
+    n     K   x_crit  margin/sigma   own/eps1  meas/union
+  1.0   1.0   1.9582          2.59      4.845       2.833
+  2.0   1.0   1.9499          2.61      4.860       2.879
+  3.0   1.0   1.7543          3.02      3.159       2.025
+  4.0   1.0   1.5792          3.39      2.164       1.519
+  6.0   1.0   1.3707          3.83      1.479       1.163
+  8.0   1.0   1.2675          4.05      1.301       1.068
+ 12.0   1.0   1.1713          4.26      1.211       1.018
+  4.0   0.6   0.9620          4.70      1.063       0.786
+  4.0   0.8   1.2766          4.03      1.328       1.025
+  4.0   1.2   1.8612          2.80      4.190       2.572
+  4.0   1.4   2.1129          2.26      8.391       4.693
+  4.0   1.6   2.3282          1.81     15.987       8.505
+  6.0   1.3   1.7740          2.98      3.615       2.293
+  8.0   1.5   1.8976          2.72      5.686       3.343
+  log(own/eps1) vs margin: slope -0.952/sigma, RMS residual 0.165 in log
+    n-knob RMS 0.127   K-knob RMS 0.196   ranges overlap: True
+    margin 1.81 sigma -> 16.0x;  margin 4.70 sigma -> 1.06x
+  -> P6 HOLDS: both knobs collapse onto ONE curve in the margin -- moving the margin by changing the exponent or the half-max gives the same per-stage error, so the MARGIN is the controlling variable and not the scheme parameters
+     (strict monotonicity is NOT the test here and the first version used it,
+      failing on a tied pair 0.8% apart in margin -- and with the K points
+      outside the n range, where the collapse was never actually tested.)
+
+wrote results/chemical_cascade.json

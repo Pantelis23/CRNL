@@ -10044,3 +10044,82 @@ into agreement **to within the measurement's own resolution** — which is a cle
 **And a correction to §84/§88's published numbers (rule 7).** Their measured A carries a
 two-point bias of +0.23…+0.42%, low. The originals stand as printed; this is the size and sign of
 the correction, and no re-fit is offered because the ansatz spread is as large as the bias.
+
+---
+
+### 91 The founding claim's untested half: a cascade coupled by chemistry
+
+Every multi-stage cascade this project built couples stages through `channel()` — run for t, read
+through a Gaussian channel, **re-seed** (§12, §71, §72). §75 argued the physical cascade has no
+readout: stage i's output *species* is stage i+1's input. §76–§79 then computed ε for **one
+element** and used `D_max = c*/ε` analytically. **The chain itself was never built.**
+
+Three couplings, all **exactly neutral at the rail** — with the upstream at r₃ each reproduces the
+isolated element to 0.0e+00:
+
+| coupling | downstream when upstream is at r₁ | transmits? |
+|---|---|---|
+| **source** — drives the influx | roots [0.0059, 1.2169, 3.1099] — still bistable | **no** |
+| **catalytic** — drives the autocatalysis | root [0.1256] — monostable low | yes |
+| **hill** — saturating, half-max at the saddle | root [0.1248] — monostable low | yes |
+
+### 91.1 A neutrality gate is half a gate, and it produced a beautiful false result
+
+> **The first version of this experiment gated only neutrality** — with the upstream correct, is
+> the downstream the same element? All three pass. It then measured error accumulation under
+> *source* coupling and found it strongly **sublinear**: adding a stage cost only **0.095** of an
+> isolated element's error, total error **0.53–0.61×** the union bound. That reads exactly like
+> restoration filtering upstream errors — the founding claim, confirmed.
+>
+> It is an artifact. Decomposing the joint law exactly: **P(stage 2 low | stage 1 low) = 0.0017,
+> 0.0086, 0.026, 0.064, 0.136** at t = 1…16. **The flip never propagates.** Starving the influx by
+> r₁/r₃ = 21× leaves the downstream still bistable, because the autocatalysis carries the
+> landscape. Under source coupling these are three nearly independent elements, and "error does
+> not accumulate" is true because **nothing is connected**.
+
+A neutrality gate tests the *null* condition. A cascade must also **transmit**, and no accumulation
+number means anything without `P(down low | up low)` printed beside it.
+
+### 91.2 Under a coupling that transmits, error amplifies — and one number controls it
+
+| coupling | margin | per-stage ε vs isolated | total vs union |
+|---|---|---|---|
+| catalytic | **0.88σ** | 17.7 – 63.5 | 9.6 – 32.3 |
+| hill | **3.39σ** | 1.71 – 2.29 | 1.13 – 1.65 |
+
+where the **noise margin** is the drop in upstream concentration at which the downstream loses its
+high rail, in units of the upstream rail width σ = √(V/Ω). Catalytic coupling has a margin of
+**less than one fluctuation**, so the downstream collapses on excursions far smaller than a flip.
+
+**P6, the kill test (rule 17).** The margin was moved two independent ways — the Hill exponent and
+its half-max — over **overlapping** ranges, 14 points:
+
+> `log(per-stage penalty) = −0.952 × margin/σ + const`, RMS residual 0.165 in log, with the
+> exponent knob at 0.127 and the half-max knob at 0.196. **Both collapse onto one curve.**
+> Margin 1.81σ → **16.0×**; margin 4.70σ → **1.06×**.
+
+**So the composition penalty is exponential in the noise margin, and each added σ of margin costs
+a factor of e.** All three chains use the *same element*, the same rails, the same Ω. **What
+decides whether a cascade composes is not the element but the transfer function between stages** —
+which is precisely what a transistor's saturating gain curve supplies, and what §12/§71/§72's
+external channel *imposed by hand* as σ = f·Δ rather than deriving.
+
+**Consequence for §76–§81.** Their depths use an isolated element's ε. That is right only in the
+large-margin limit: at 3.39σ they overestimate by ~2× per stage, at 0.88σ by ~46×.
+
+**P5, answered.** |f′(r₃)| = 6.62, so a stage relaxes in 0.151 time units and §80's imported
+t = 2.0 is ~13 relaxation times — ample to propagate. The stage-time worry was real to raise and
+is not what bit here.
+
+**Scope:** D = 2, Ω = 30, one element, one saddle position. The margin law is measured, not
+derived, and its collapse is tested only against the two knobs that move it.
+
+### 91.3 Two more criteria that were wrong
+
+> **P6 first demanded strict monotonicity** of the penalty in the margin and printed FAILS on a
+> *tied pair* — margins 2.59 and 2.61 giving 4.845 and 4.860. Strict monotonicity is not the test
+> when two points are 0.8% apart in the independent variable.
+>
+> **And both half-max points fell outside the exponent sweep's margin range entirely**, so "do the
+> two knobs lie on one curve" — the whole content of P6 — was never actually tested. That is rule
+> 19's extrapolation trap wearing a different hat: a comparison that leaves the traced range.

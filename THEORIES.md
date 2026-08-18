@@ -3769,6 +3769,65 @@ lam + mu fixed while varying lam - mu, the orthogonal sweep to §83's, and see w
 constant on THAT level set. If it is, A is a functional of (lam+mu) alone and the pair collapses
 to one scalar function; if not, both halves matter and the ceiling needs the full pair.
 
+**T-CASC-c -> §91: COMPOSITION IS NOT A PROPERTY OF THE ELEMENT. It is a property of the
+transfer function between stages, and the figure of merit is the NOISE MARGIN in units of the
+upstream rail width.**
+
+The founding claim -- error does not accumulate as you compose restoring gates -- was the half of
+this project that had never been tested. Every cascade built here (§12, §71, §72) coupled stages
+through a Gaussian readout channel with sigma imposed by hand; §75 argued the physical cascade has
+no readout at all, and §76-§79 then computed epsilon for ONE element and used D_max = c*/epsilon.
+**The chain was never built.** §91 builds it.
+
+Three couplings, ALL exactly neutral at the rail (each reproduces the isolated element to 0.0e+00
+when the upstream is correct), behave completely differently:
+
+  * **source** (drives the influx): does NOT transmit. The downstream keeps its high rail when
+    the upstream is at r1, because the autocatalysis carries the landscape and the source term is
+    a correction.
+  * **catalytic** (drives the autocatalysis): transmits, margin **0.88 sigma** -- less than one
+    upstream fluctuation -- and the per-stage error is **17.7-63.5x** the isolated element's.
+  * **hill** (saturating, half-max at the saddle): transmits, margin **3.39 sigma**, per-stage
+    error **1.71-2.29x**.
+
+**The controlling variable is the margin, tested by collapse (P6, rule 17).** Moving it two
+independent ways -- Hill exponent and half-max -- over OVERLAPPING ranges, 14 points:
+log(per-stage penalty) = **-0.952 x margin/sigma**, RMS residual 0.165 in log, exponent knob 0.127
+and half-max knob 0.196. Margin 1.81 sigma -> 16.0x; 4.70 sigma -> 1.06x. **Each added sigma of
+noise margin costs a factor of e.**
+
+All three chains use the SAME element, rails and Omega. **This is what a transistor's saturating
+gain curve supplies and what the external channel imposed by hand.**
+
+**Consequence for §76-§81:** their depths use an isolated element's epsilon and are right only in
+the large-margin limit -- overestimating ~2x per stage at 3.39 sigma and ~46x at 0.88 sigma.
+
+**§91.1: A NEUTRALITY GATE IS HALF A GATE, and the missing half produced a beautiful false
+result.** The first version gated only neutrality, measured source coupling, and found accumulation
+strongly SUBLINEAR -- an added stage costing 0.095 of an isolated element's error, total 0.53-0.61x
+the union bound. That reads as restoration filtering upstream errors: the founding claim confirmed.
+Decomposing the joint law exactly gives **P(stage 2 low | stage 1 low) = 0.0017 .. 0.136**: the
+flip never propagates. **"Error does not accumulate" was true because nothing was connected.** No
+accumulation number means anything without the transmission probability printed beside it.
+
+**§91.3: two more broken criteria.** P6 first demanded STRICT monotonicity of the penalty in the
+margin and failed on a tied pair (margins 2.59 and 2.61 giving 4.845 and 4.860). And both half-max
+points fell OUTSIDE the exponent sweep's range, so the collapse -- the whole content of P6 -- was
+never tested; rule 19's extrapolation trap in a new costume.
+
+**T-CASC-d, open: is the margin law derivable?** -0.95 per sigma is measured, not derived, at
+D = 2, Omega = 30, one element. **How to kill:** the downstream barrier should fall roughly
+linearly in the upstream displacement near the collapse point, so the per-stage error should go as
+exp(-A(x_up) Omega) averaged over the upstream rail distribution. Compute that convolution from
+§87-§89's machinery -- which gives A(x_up) for a modified landscape with no CME -- and check the
+slope against -0.952. If it reproduces it, the margin law is derived and depth becomes computable
+for any transfer function; if not, the collapse is a correlate.
+
+**T-CASC-e, open: does the margin law survive depth?** §91 is D = 2. The exponential-in-margin
+penalty compounds if each stage contributes independently, which would make D_max = c*/(penalty x
+eps). **How to kill:** D = 3 is 1.77M joint states and reachable (a run was started and stopped
+for time, not feasibility). Check whether the per-stage penalty at stage 3 equals stage 2's.
+
 ## 5. Where this sits in the literature
 
 The project has run without citations. That is a defect, not a style: several results

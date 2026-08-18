@@ -2496,12 +2496,38 @@ the ridge is the right one" -- was wrong in its second half. Two curves displace
 directions both land near the measured action because they are evaluated in two different
 functionals. **Fifth mechanism in this project to die to the first test aimed at it.**
 
-**T15-n.4, open: what is the remaining 1.5-2.6% overshoot?** It is grid-converged and shrinks
-toward gamma_c. **How to kill:** run the tilted reduction along §85's M axis, where the timescale
-separation is a controlled knob -- if the overshoot falls like 1/M the diagnosis is finite
-separation and the reduction is exact in the limit; if it does not, the fast-flow fixed point is
-not the right closure. Note §86.1 found the STATIONARY-distribution instrument untrustworthy at
-M > 1, but §87 needs no stationary solve, so this axis is reachable here in a way it was not there.
+~~**T15-n.4, open: what is the remaining 1.5-2.6% overshoot?**~~ **-> §88. It IS finite timescale
+separation -- but the 1/M law predicted for it is REFUTED.**
+
+  * **P1, validation on all eight gammas §84 measured** (not §87's two): overshoot runs +5.61% at
+    gamma = 0.30 down to +1.02% at 0.46, monotone, shrinking toward gamma_c as critical slowing
+    down requires. Had it grown toward gamma_c the finite-separation diagnosis would be dead.
+  * **P2, the M axis §86.1 could not use** (the stationary instrument failed at M > 1; §87 needs
+    no stationary solve): the overshoot falls 2.56 -> 0.79% and 1.52 -> 0.59% over M = 1..16. So
+    the reduction is exact in the timescale-separation limit.
+  * **But |overshoot| x M grows by 5.0x and 6.2x** over that range, and the series is NON-MONOTONE
+    at the first step (2.56 -> 2.99 at gamma = 0.40). **The decay is slower than 1/M and its law
+    is not identified.** Reported rather than fitted (rule 15).
+
+**T15-n.5, open: what IS the decay law of the reduction error?** It falls with separation but
+slower than 1/M, and the first step rises. **How to kill:** the Assaf-Roberts-Luthey-Schulten
+estimate (§85.3) says the dropped term is int p_f dx_f ~ O(1/separation); compute that integral
+directly along §87's solved curve and compare it to the measured overshoot, rather than fitting a
+power. If it reproduces both the magnitude AND the non-monotone first step, the law is identified;
+if it reproduces only the magnitude, the first step is a separate effect.
+
+**§88's PAYOFF, and it is the reason the route was worth building.** §81/§82 could not measure
+AM's action at deep barriers -- stationary underflow (§81.1) and negative first-passage times with
+ln T saturating at ~35 (§82's scope note) -- so §82's AM arm was confined to the shallow regime.
+§87's route never builds a lattice, and reaches gamma = 0.05 (A = 0.8719), 0.10 (0.6151) and
+0.20 (0.3099). **These are EXTRAPOLATIONS and the bias runs the WRONG WAY**: it grows away from
+gamma_c, so they carry more than the validated +1.02%..+5.61% band, not less. Direction known,
+size not.
+
+**And §80's conclusion extends to barriers it was never measured at.** Against §77's measured eta
+(9.8813 at gamma = 0.05, 1.8346 at 0.20, 0.6813 at 0.30), A/eta = 0.0882, 0.1689, 0.1944 -- escape
+binds throughout. **This does not depend on the extrapolation being accurate**: A would have to be
+wrong by 415% to flip it, and P1's bias is a few percent and of the wrong sign to help.
 
 **§86.1: the M-axis cross-check is UNRESOLVED, and was not gated until it agreed.** Reading a
 ridge off the stationary distribution at M > 1 produced three distinct contaminations -- a whole

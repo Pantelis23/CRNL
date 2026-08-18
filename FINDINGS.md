@@ -9880,3 +9880,65 @@ returns "no solution" and looks like a physical result.
 > Both failures share a shape worth naming: **a degenerate solution and an out-of-range search
 > both report cleanly.** One satisfies every equation and means nothing; the other reports nothing
 > and means the search was wrong. Neither prints anything that looks like an error.
+
+---
+
+### 88 The predictive route validated on eight γ, then used where nothing else reaches
+
+§87 validated the tilted-generator action at two γ. Two is not a validation, and the interesting
+regime is the one no instrument here can reach: §81/§82 could not measure AM's action at deep
+barriers — the stationary route underflowed (§81.1) and the 2-D first-passage solve returned
+negative times with ln T saturating at ~35. **§87's route never builds a lattice.**
+
+**P1 — validation on all eight γ §84 measured:**
+
+| γ | measured | predicted | overshoot |
+|---|---|---|---|
+| 0.30 | 0.125373 | 0.132412 | **+5.61%** |
+| 0.35 | 0.071577 | 0.074435 | +3.99% |
+| 0.40 | 0.032622 | 0.033457 | +2.56% |
+| 0.44 | 0.012080 | 0.012261 | +1.50% |
+| 0.46 | 0.005460 | 0.005515 | **+1.02%** |
+
+Monotone, and shrinking toward γ_c exactly as finite timescale separation requires — the
+separation improves by critical slowing down. Had it grown toward γ_c the diagnosis would be wrong
+and P3 unlicensed.
+
+**P2 (T15-n.4) — the M axis §86.1 could not use.** §85 scaled the u-neutral pair by M, sharpening
+the separation at fixed affinity; §86.1 could not follow because the stationary instrument failed
+at M > 1, but §87 needs no stationary solve. The overshoot falls: 2.56 → 0.79% (γ=0.40) and
+1.52 → 0.59% (γ=0.44) over M = 1…16. **So the residual IS finite timescale separation, and the
+reduction is exact in the limit.**
+
+> **But the predicted 1/M law is refuted.** |overshoot|×M would be constant; it instead grows by
+> **5.0× and 6.2×** over M = 1…16, and the series is *non-monotone at the first step*
+> (2.56 → 2.99 at γ = 0.40). The decay is slower than 1/M and its law is **not identified here.**
+
+**P3 — past the measurable range, and the scope is the claim:**
+
+| γ | δ\* | A predicted | status |
+|---|---|---|---|
+| 0.05 | 0.9521 | 0.871944 | extrapolated |
+| 0.10 | 0.9071 | 0.615066 | extrapolated |
+| 0.20 | 0.8165 | 0.309865 | extrapolated |
+| 0.30 | 0.7074 | 0.132412 | **validated** |
+
+> **The extrapolation runs the wrong way.** P1 shows the bias *grows* away from γ_c (1.02% at 0.46
+> rising to 5.61% at 0.30), and γ = 0.05 is far outside the validated window — so these carry
+> **more** than the quoted band, not less. The direction is known (overshoot); the size at γ = 0.05
+> is not, and no exact instrument here can supply it.
+
+**P4 — what it buys: §80's conclusion at barriers it was never measured at.** §80 found escape
+beats readout because A < η, where both were available. §77 measured η = 9.8813 at γ = 0.05 and
+1.8346 at γ = 0.20 — deep barriers where A was not available. With A now computable:
+
+| γ | A (escape) | η (readout, §77) | A/η |
+|---|---|---|---|
+| 0.05 | 0.871944 | 9.8813 | **0.0882** |
+| 0.20 | 0.309865 | 1.8346 | 0.1689 |
+| 0.30 | 0.132412 | 0.6813 | 0.1944 |
+
+**And this conclusion does not depend on P3's accuracy.** The largest A/η is 0.1944, so A would
+have to be wrong by **415%** for readout to bind, and P1's bias is a few percent *and of the wrong
+sign to help*. It rests only on the extrapolation not being wrong by ~5×. **§80's regime has no
+boundary down to γ = 0.05.**

@@ -1,0 +1,61 @@
+=== P1 VALIDATION: all eight gammas §84 measured, not the two §87 used
+  gamma    measured   predicted    ratio  overshoot %
+    0.3    0.125373    0.132412   1.0561         5.61
+   0.35    0.071577    0.074435   1.0399         3.99
+   0.38    0.046444    0.047892   1.0312         3.12
+    0.4    0.032622    0.033457   1.0256         2.56
+   0.42    0.021153    0.021583   1.0203         2.03
+   0.44    0.012080    0.012261   1.0150         1.50
+   0.45    0.008458    0.008564   1.0125         1.25
+   0.46    0.005460    0.005515   1.0102         1.02
+  overshoot runs 5.61% at gamma=0.3 down to 1.02% at gamma=0.46
+  -> P1 HOLDS: near 1 everywhere and the overshoot SHRINKS toward gamma_c, as finite timescale separation requires
+  validated error band over gamma in [0.30, 0.46]: 5.61% to 1.02%
+
+=== P2 (T15-n.4): the M axis -- does the overshoot fall like 1/M?
+  gamma   M    measured   predicted    ratio  overshoot %      x M
+    0.4   1    0.032623    0.033457   1.0256         2.56     2.56
+    0.4   2    0.071575    0.073714   1.0299         2.99     5.98
+    0.4   4    0.096398    0.098516   1.0220         2.20     8.79
+    0.4   8    0.110381    0.111831   1.0131         1.31    10.51
+    0.4  16    0.117722    0.118653   1.0079         0.79    12.66
+   0.44   1    0.012078    0.012261   1.0152         1.52     1.52
+   0.44   2    0.041052    0.041943   1.0217         2.17     4.34
+   0.44   4    0.060867    0.061880   1.0166         1.66     6.65
+   0.44   8    0.072168    0.072904   1.0102         1.02     8.16
+   0.44  16    0.078174    0.078636   1.0059         0.59     9.45
+  gamma=0.4: |overshoot| 2.56, 2.99, 2.20, 1.31, 0.79   x M: 2.56, 5.98, 8.79, 10.51, 12.66
+  gamma=0.44: |overshoot| 1.52, 2.17, 1.66, 1.02, 0.59   x M: 1.52, 4.34, 6.65, 8.16, 9.45
+  -> P2 HOLDS in part: the overshoot FALLS with timescale separation, so it IS finite separation and the reduction is exact in the limit
+  -> but the PREDICTED 1/M LAW is REFUTED: |overshoot| x M would be constant and
+     instead grows by a factor of 5.0 and 6.2 over M = 1..16, and the series is
+     NON-MONOTONE at the first step (2.56 -> 2.99 at gamma = 0.40). The decay is
+     slower than 1/M and its law is not identified here.
+
+=== P3: past the measurable range. EVERY ROW HERE IS AN EXTRAPOLATION
+    validated only over gamma in [0.30, 0.46], where the bias is +5.61%..+1.02%
+  gamma   delta*   A predicted          status
+   0.05   0.9521      0.871944    extrapolated
+    0.1   0.9071      0.615066    extrapolated
+    0.2   0.8165      0.309865    extrapolated
+    0.3   0.7074      0.132412       VALIDATED
+  -> P3 the route reaches barriers no instrument here could measure
+  **AND THE EXTRAPOLATION RUNS THE WRONG WAY.** P1 shows the bias GROWS away from
+  gamma_c (1.02% at 0.46 rising to 5.61% at 0.30), and gamma = 0.05 is
+  far outside the validated window, so these carry MORE than the quoted band, not
+  less. The direction of the bias is known (overshoot) but its size at gamma = 0.05
+  is not, and no exact instrument here can supply it.
+
+=== P4: does §80's conclusion (escape beats readout) survive at deep barriers?
+  gamma   A (escape)   eta (readout, §77)    A/eta     binds
+   0.05     0.871944               9.8813   0.0882    ESCAPE
+    0.2     0.309865               1.8346   0.1689    ESCAPE
+    0.3     0.132412               0.6813   0.1944    ESCAPE
+  -> P4 HOLDS: A stays far below eta down to gamma = 0.05, so §80s conclusion extends to barriers it was never measured at
+  (A/eta spans 0.0882..0.1944; §81 measured this ratio only over the shallow range)
+  **ROBUST TO P3's extrapolation error**: the largest A/eta is 0.1944, so A
+  would have to be wrong by 415% for readout to bind. P1's bias
+  is a few percent and of the WRONG SIGN to help. This conclusion does not rest
+  on the extrapolation being accurate, only on it not being wrong by ~5x.
+
+wrote results/deep_barriers.json

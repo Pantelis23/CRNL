@@ -10123,3 +10123,65 @@ derived, and its collapse is tested only against the two knobs that move it.
 > **And both half-max points fell outside the exponent sweep's margin range entirely**, so "do the
 > two knobs lie on one curve" — the whole content of P6 — was never actually tested. That is rule
 > 19's extrapolation trap wearing a different hat: a comparison that leaves the traced range.
+
+---
+
+### 92 §91's margin law is a frozen-upstream statement, and the fast limit is motional narrowing
+
+§91 measured `log(penalty) = −0.952 × margin/σ` and left it as a measurement (rule 17). The
+candidate mechanism is computable: the downstream's barrier depends on the upstream concentration,
+`A = A(x_up)`, vanishing at the collapse point, and the downstream's error is that rate averaged
+over the upstream's fluctuation. **Two averages are possible and they are not the same:**
+
+    frozen upstream   penalty = < exp(-[A(x_up) - A(r3)] * Omega) >     = 4.845
+    fast upstream     penalty = exp( -[<A(x_up)> - A(r3)] * Omega )     = 1.139
+
+**P1, gate.** A(r₃) equals §80's isolated-element quadrature to **1.1e−16** for all three
+couplings — two independent routes to the same number.
+
+**P2, the shape.** A ~ (x_up − x_crit)^p with p_eff(window) = **1.452** (catalytic) and **1.214**
+(hill), bracketing the saddle-node value 3/2. Reported as p_eff(window) per rule 21, since A
+vanishes at the threshold and any fitted exponent there is window-dependent.
+
+**P3/P6, the answer, on an instrument that took three confounds to build:**
+
+| upstream speed | 0.125 | 0.5 | 1 | 2 | 4 | 8 | 32 |
+|---|---|---|---|---|---|---|---|
+| penalty | 4.244 | 4.385 | **4.442** | 4.155 | 3.302 | 2.356 | **1.645** |
+
+The slow plateau measures **4.24–4.44 against the frozen formula's 4.845** (within 10%, no fitted
+parameter), and the fast tail falls toward the mean-landscape rate **1.139**. Multiplying stage 1's
+propensities by a constant leaves its landscape, barrier, rail width and stationary law *identical*
+and changes only its clock — so this is a second control variable, and it moves the penalty by
+**2.7×** at fixed margin.
+
+> **The frozen formula is the SLOW-upstream limit, not the fast one — I had the two labels
+> backwards.** And the fall as the upstream speeds up is **motional narrowing**: fluctuations
+> faster than the downstream's response average out before it can act on them. The crossover sits
+> where the upstream correlation time meets the downstream response time, which here are the same
+> element and therefore equal — which is why speed ≈ 1 sits exactly at the top of the curve.
+>
+> **§91's margin law is a frozen-upstream statement.** All of §91's variants ran at speed 1, inside
+> the plateau, which is why one variable sufficed there. **A cascade whose upstream stages are fast
+> relative to the downstream is protected by motional narrowing** — a design principle that neither
+> the margin nor the element contains.
+
+### 92.1 Three confounds, each of which changed the answer
+
+> **(a) The seed.** Seeding stage 1 as a delta at its rail, the slow cells had not *spread* yet —
+> at speed 1/8 stage 1 had run only 0.25 of its own clock. The penalty then read 1.171 → 2.269
+> *rising* with speed. Seeded from the quasi-stationary law instead it reads 3.010 → 2.524,
+> *falling*. **The equilibration artifact reversed the sign of the trend**, and a verdict had
+> already printed HOLDS on it.
+>
+> **(b) The observable.** `P(stage 2 low, stage 1 high)` conditions on stage 1 *surviving to the
+> end*, which excludes exactly the trajectories that dipped deeply — and the exclusion grows with
+> upstream speed, i.e. it is worst where the signal is. Fixed by reflecting stage 1 at its saddle
+> so it can never escape and there is nothing to condition on.
+>
+> **(c) The pre-equilibration.** Running the joint chain to settle stage 1 ages **stage 2** at the
+> same time: at speed 1/8 it had accumulated 14.6% error before the measurement window opened.
+> Fixed by seeding stage 1 from its exact stationary law — a product formula, computed not
+> simulated, and speed-independent because scaling every rate equally leaves it unchanged.
+
+**All three produced smooth, plausible, monotone numbers.** The first two also produced a verdict.

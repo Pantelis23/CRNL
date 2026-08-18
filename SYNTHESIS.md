@@ -427,5 +427,15 @@ The measurements in this project survive. The explanations attached to them most
   > onto one curve.** That is what a transistor's saturating gain curve supplies, and what §12/§71/
   > §72's external channel imposed by hand as σ = f·Δ instead of deriving.
   §76–§81's depths, computed from an isolated element's ε, are right only in the large-margin
-  limit. *(Open: whether the margin law is derivable (T-CASC-d) and whether it survives depth
-  beyond D = 2 (T-CASC-e).)*
+  limit.
+  **§92 then found a second control the margin does not contain.** Scaling the upstream stage's
+  rates leaves its landscape, barrier, rail width and stationary law identical and changes only its
+  clock — and the penalty moves by 2.7×, from a slow plateau of 4.24–4.44 (matching the
+  frozen-upstream average `⟨exp(−ΔA·Ω)⟩ = 4.845` to 10%, unfitted) down toward the mean-landscape
+  rate 1.139. **That fall is motional narrowing**: upstream fluctuations faster than the
+  downstream's response average out before it can act on them.
+  > **So composition is governed by two numbers — the noise margin and the timescale ratio — and a
+  > cascade whose upstream stages run fast is protected by narrowing.** §91's law is the
+  > frozen-upstream case; its variants all sat at speed 1, at the top of the curve.
+  *(Open: placing the crossover independently of the landscape (T-CASC-f), and whether either law
+  survives depth beyond D = 2 (T-CASC-e).)*

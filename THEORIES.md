@@ -3815,13 +3815,51 @@ margin and failed on a tied pair (margins 2.59 and 2.61 giving 4.845 and 4.860).
 points fell OUTSIDE the exponent sweep's range, so the collapse -- the whole content of P6 -- was
 never tested; rule 19's extrapolation trap in a new costume.
 
-**T-CASC-d, open: is the margin law derivable?** -0.95 per sigma is measured, not derived, at
-D = 2, Omega = 30, one element. **How to kill:** the downstream barrier should fall roughly
-linearly in the upstream displacement near the collapse point, so the per-stage error should go as
-exp(-A(x_up) Omega) averaged over the upstream rail distribution. Compute that convolution from
-§87-§89's machinery -- which gives A(x_up) for a modified landscape with no CME -- and check the
-slope against -0.952. If it reproduces it, the margin law is derived and depth becomes computable
-for any transfer function; if not, the collapse is a correlate.
+~~**T-CASC-d, open: is the margin law derivable?**~~ **-> §92. PARTLY: it is a FROZEN-upstream
+statement, and there is a second control variable the margin does not contain.**
+
+The downstream barrier depends on the upstream concentration, A = A(x_up), vanishing at the
+collapse. Two averages are possible and they are NOT the same:
+
+    frozen upstream   <exp(-[A(x_up)-A(r3)] Omega)>   = 4.845
+    fast upstream     exp(-[<A(x_up)>-A(r3)] Omega)   = 1.139
+
+  * **P1**: A(r3) equals §80's isolated quadrature to 1.1e-16 for all three couplings.
+  * **P2**: A ~ (x_up - x_crit)^p with p_eff(window) = 1.452 (catalytic), 1.214 (hill),
+    bracketing the saddle-node 3/2. Window-dependent by construction (rule 21).
+  * **P6**: scaling stage 1's propensities leaves its landscape, barrier, rail width and
+    stationary law IDENTICAL and changes only its clock. The penalty runs
+    **4.244, 4.385, 4.442, 4.155, 3.302, 2.356, 1.645** over speed 1/8 .. 32 -- a factor of 2.7
+    at FIXED margin. The slow plateau (4.24-4.44) matches the frozen formula (4.845) to 10% with
+    no fitted parameter; the fast tail falls toward the mean-landscape rate (1.139).
+
+**The frozen formula is the SLOW limit, not the fast one -- the two labels were backwards when
+this was opened -- and the fall as the upstream speeds up is MOTIONAL NARROWING**: fluctuations
+faster than the downstream's response average out before it can act. The crossover sits where the
+upstream correlation time meets the downstream response time; here they are the same element, so
+speed ~ 1 sits at the top of the curve.
+
+**So §91's margin law holds at fixed timescale ratio.** All of §91's variants ran at speed 1,
+inside the plateau, which is why one variable sufficed there. **A cascade whose upstream stages are
+FAST relative to the downstream is protected by motional narrowing** -- a design principle
+contained in neither the element nor the margin.
+
+**§92.1: three confounds, each of which changed the answer, two of which had already printed a
+verdict.** (a) Seeding stage 1 as a delta at its rail left the slow cells un-SPREAD, and the trend
+read 1.171 -> 2.269 RISING; seeded from the quasi-stationary law it reads 3.010 -> 2.524, FALLING.
+**The equilibration artifact reversed the sign.** (b) P(s2 low, s1 high) conditions on stage 1
+surviving to the end, excluding exactly the trajectories that dipped, with the exclusion growing
+with speed -- worst where the signal is. (c) Pre-equilibrating the joint chain AGES stage 2: at
+speed 1/8 it had 14.6% error before the window opened. All three produced smooth, plausible,
+monotone numbers.
+
+**T-CASC-f, open: where is the crossover, and can it be placed?** §92 shows the penalty falls
+between the two limits but measures the crossover only for a chain whose stages are the same
+element, where the two timescales are equal by construction. **How to kill:** give the downstream a
+different relaxation rate (scale ITS propensities instead), so the ratio can be set independently
+of the landscape, and check whether the crossover tracks tau_up/tau_down = 1. If it does, cascade
+depth is a function of (margin, timescale ratio) and both are computable from single-element
+quantities -- which would make §91's D = 2 limit irrelevant.
 
 **T-CASC-e, open: does the margin law survive depth?** §91 is D = 2. The exponential-in-margin
 penalty compounds if each stage contributes independently, which would make D_max = c*/(penalty x

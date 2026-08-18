@@ -1,0 +1,56 @@
+=== P1 GATE: along the diagonal s_up = s_dn = c, the penalty must not depend on c
+    (scaling both clocks is a change of time units; at small escape probability
+     P ~ rate x t, so the ratio must be c-independent. If not, we are outside the
+     linear regime and no ratio statement means anything.)
+       c     P(s2 lo)   pinned ref   penalty
+    0.25   1.6190e-02   3.6449e-03     4.442
+    0.50   1.6190e-02   3.6449e-03     4.442
+    1.00   1.6190e-02   3.6449e-03     4.442
+    2.00   1.6190e-02   3.6449e-03     4.442
+    4.00   1.6190e-02   3.6449e-03     4.442
+  penalty along the diagonal spans 4.442..4.442 (factor 1.000)
+  -> P1 HOLDS to machine precision: identical proper time is identical physics, so the instrument is sound and the grid can be read
+
+=== P2/P3: sweep the two clocks independently. Do equal ratios agree?
+   s_up   s_dn    ratio   penalty
+   0.25   0.25   1.0000     4.442
+   0.25   1.00   0.2500     4.293
+   0.25   4.00   0.0625     4.223
+   0.25  16.00   0.0156     4.210
+   1.00   0.25   4.0000     3.302
+   1.00   1.00   1.0000     4.442
+   1.00   4.00   0.2500     4.293
+   1.00  16.00   0.0625     4.223
+   4.00   0.25  16.0000     1.835
+   4.00   1.00   4.0000     3.302
+   4.00   4.00   1.0000     4.442
+   4.00  16.00   0.2500     4.293
+  16.00   0.25  64.0000     1.580
+  16.00   1.00  16.0000     1.835
+  16.00   4.00   4.0000     3.302
+  16.00  16.00   1.0000     4.442
+
+  cells grouped by ratio:
+    ratio   n                         penalties   spread
+   0.0625   2                      4.223, 4.223    1.000
+   0.2500   3               4.293, 4.293, 4.293    1.000
+   1.0000   4        4.442, 4.442, 4.442, 4.442    1.000
+   4.0000   3               3.302, 3.302, 3.302    1.000
+  16.0000   2                      1.835, 1.835    1.000
+  worst spread within a ratio group: 1.000
+  -> P2 HOLDS exactly, as the algebra requires: Q t = t0[(s_up/s_dn) Q1 + Q2]. This is a WIRING CHECK, not a discovery -- it would have caught the coupling being placed in the wrong block
+
+=== P3: where does the fall happen, in ratio?
+   ratio   0.0156: mean penalty 4.210
+   ratio   0.0625: mean penalty 4.223
+   ratio   0.2500: mean penalty 4.293
+   ratio   1.0000: mean penalty 4.442
+   ratio   4.0000: mean penalty 3.302
+   ratio  16.0000: mean penalty 1.835
+   ratio  64.0000: mean penalty 1.580
+  (the crossover is where the penalty leaves its slow plateau -- THIS is the
+   physical content; the collapse above is an identity.)
+  plateau for ratio <= 1: 4.210..4.442 (flat to 5.5%);  peak at ratio 1;  falls to 1.580
+  -> P2b/P3 HOLD: the penalty PLATEAUS for a slow upstream, turns at ratio ~ 1 -- where the upstream correlation time meets the downstream response time -- and falls by motional narrowing above it. The crossover is not an adjustable feature: it sits at equal timescales
+
+wrote results/timescale_ratio.json

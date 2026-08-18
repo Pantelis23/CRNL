@@ -437,5 +437,13 @@ The measurements in this project survive. The explanations attached to them most
   > **So composition is governed by two numbers — the noise margin and the timescale ratio — and a
   > cascade whose upstream stages run fast is protected by narrowing.** §91's law is the
   > frozen-upstream case; its variants all sat at speed 1, at the top of the curve.
-  *(Open: placing the crossover independently of the landscape (T-CASC-f), and whether either law
-  survives depth beyond D = 2 (T-CASC-e).)*
+  **§93 placed the crossover: it sits at τ_up = τ_down**, where the upstream correlation time meets
+  the downstream response time — a plateau below it (matching the frozen formula to 10%, unfitted)
+  and a fall to 1.58 above. *(The collapse onto the ratio is an algebraic identity,
+  `Q·t = t₀[(τ ratio)·Q₁ + Q₂]`, and is labelled a wiring check rather than a result.)*
+  > **So the composition penalty is a function of two numbers — the noise margin and the timescale
+  > ratio — and both are properties of single elements.** The joint master equation validates that;
+  > it is not needed to compute it. **A cascade is safest when its upstream stages are fast and its
+  > transfer function saturates** — motional narrowing and noise margin, neither of them a property
+  > of the restoring element.
+  *(Open: whether the two-number description survives depth beyond D = 2 — T-CASC-e, T-CASC-g.)*

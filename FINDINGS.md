@@ -10185,3 +10185,52 @@ and changes only its clock — so this is a second control variable, and it move
 > simulated, and speed-independent because scaling every rate equally leaves it unchanged.
 
 **All three produced smooth, plausible, monotone numbers.** The first two also produced a verdict.
+
+---
+
+### 93 Composition is a function of two single-element numbers — T-CASC-f
+
+§92 found the upstream clock matters but swept only the upstream, on a chain whose two stages are
+the same element, so `τ_up/τ_down = 1/speed` by construction and the crossover could not be placed.
+Scaling the downstream separately makes the ratio free.
+
+**P1, the gate, and the first version failed it.** The penalty is
+`P(stage 2 low | upstream fluctuating) / P(stage 2 low | upstream pinned at r₃)`. Held at fixed
+**wall** time while scaling the downstream clock, the diagonal s_up = s_dn = c ran **26.295, 4.442,
+3.340, 2.941** instead of being flat — scaling the downstream changes how much of *its own* clock
+has elapsed. Setting the window in the **downstream's proper clock**, t = t₀/s_dn, both stages see
+identical proper time and the diagonal is constant to machine precision: **4.442 at every c.**
+Nothing was read from the grid until it was.
+
+**P2 is algebra, and saying so is the point.** The joint generator splits as `Q = s_up·Q₁ + s_dn·Q₂`
+(the coupling lives inside Q₂, since only stage 2's rates depend on n₁), so with t = t₀/s_dn
+
+    Q·t = t₀·[ (s_up/s_dn)·Q₁ + Q₂ ]
+
+**depends on the two speeds only through their ratio, exactly.** The measured collapse — every
+ratio group agreeing to spread 1.000 — is therefore a *wiring check*, not a discovery. It would
+catch the coupling being placed in the wrong block, and nothing more. §84 published its own Taylor
+term as a phenomenon; this is the same trap one level up.
+
+**P2b/P3 — the physics is the shape, which algebra does not fix:**
+
+| τ_up/τ_down | 0.0156 | 0.0625 | 0.25 | **1** | 4 | 16 | 64 |
+|---|---|---|---|---|---|---|---|
+| penalty | 4.210 | 4.223 | 4.293 | **4.442** | 3.302 | 1.835 | **1.580** |
+
+> **Plateau for a slow upstream, flat to 5.5% and matching §92's frozen-upstream formula (4.845)
+> to 10% with nothing fitted; a turn at ratio ≈ 1; and a fall to 1.58 above it.** The crossover is
+> not an adjustable feature — **it sits where the upstream correlation time meets the downstream
+> response time.** §92's curve was centred at speed 1 because its two elements were identical, and
+> that now looks like a consequence rather than a coincidence.
+
+**So the composition penalty is a function of two numbers — the noise margin (§91) and the
+timescale ratio (§92, §93) — and both are properties of single elements.** The exact joint CME is
+needed to *validate* that, not to compute it, which is what made §91's D = 2 ceiling look binding.
+
+**A cascade is safest when its upstream stages are fast and its transfer function saturates.** The
+first is motional narrowing, the second is noise margin, and neither is a property of the restoring
+element itself — which is the sharpest form the founding question's answer has taken.
+
+**Scope:** one element, Ω = 30, D = 2, one saddle position. The two-number claim is a claim about
+what the penalty depends on, not a closed formula for it.

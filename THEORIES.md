@@ -3853,13 +3853,39 @@ with speed -- worst where the signal is. (c) Pre-equilibrating the joint chain A
 speed 1/8 it had 14.6% error before the window opened. All three produced smooth, plausible,
 monotone numbers.
 
-**T-CASC-f, open: where is the crossover, and can it be placed?** §92 shows the penalty falls
-between the two limits but measures the crossover only for a chain whose stages are the same
-element, where the two timescales are equal by construction. **How to kill:** give the downstream a
-different relaxation rate (scale ITS propensities instead), so the ratio can be set independently
-of the landscape, and check whether the crossover tracks tau_up/tau_down = 1. If it does, cascade
-depth is a function of (margin, timescale ratio) and both are computable from single-element
-quantities -- which would make §91's D = 2 limit irrelevant.
+~~**T-CASC-f, open: where is the crossover, and can it be placed?**~~ **-> §93. CLOSED. It sits at
+tau_up = tau_down, and composition is a function of TWO single-element numbers.**
+
+  * **P1, and the first version failed it.** Held at fixed WALL time while scaling the downstream
+    clock, the diagonal s_up = s_dn = c ran 26.295, 4.442, 3.340, 2.941 -- because scaling the
+    downstream changes how much of ITS OWN clock has elapsed. With the window set in the
+    downstream's PROPER clock (t = t0/s_dn) both stages see identical proper time and the diagonal
+    is 4.442 at every c, to machine precision. Nothing was read from the grid until it was.
+  * **P2 is ALGEBRA and is labelled as such.** Q = s_up Q1 + s_dn Q2 with the coupling inside Q2,
+    so Q t = t0[(s_up/s_dn) Q1 + Q2] depends on the speeds only through their ratio, exactly. The
+    measured collapse (every ratio group at spread 1.000) is a WIRING CHECK -- it would catch the
+    coupling in the wrong block -- **not a discovery**. §84 published its own Taylor term as a
+    phenomenon; this is the same trap one level up.
+  * **P2b/P3, the physics, which the algebra does not fix.** Penalty against tau_up/tau_down:
+    4.210, 4.223, 4.293, **4.442**, 3.302, 1.835, **1.580** over 1/64 .. 64. **Plateau for a slow
+    upstream (flat to 5.5%, matching §92's frozen formula 4.845 to 10% unfitted), a turn at ratio
+    ~ 1, a fall above it.** The crossover is not adjustable: it sits where the upstream correlation
+    time meets the downstream response time, so §92's curve was centred at speed 1 as a consequence
+    of its two elements being identical, not by coincidence.
+
+**THE COMPOSITION RESULT, as it now stands.** The penalty is a function of the **noise margin**
+(§91) and the **timescale ratio** (§92, §93), and both are properties of SINGLE elements. The exact
+joint CME is needed to validate that, not to compute it -- which is what made §91's D = 2 ceiling
+look binding. **A cascade is safest when its upstream stages are fast and its transfer function
+saturates**: motional narrowing and noise margin, neither of them a property of the restoring
+element itself.
+
+**T-CASC-g, open: does the two-number description survive depth?** Everything above is D = 2. If
+the penalty compounds stage by stage, D_max follows immediately; if stage 3 sees a qualitatively
+different upstream -- one that is itself already modulated -- it may not. **How to kill:** D = 3 is
+1.77M joint states and reachable (§91 started one and stopped it for time, not feasibility).
+Measure whether stage 3's penalty relative to stage 2 equals stage 2's relative to stage 1, at
+matched margin and ratio. Scope everywhere: one element, Omega = 30, one saddle position.
 
 **T-CASC-e, open: does the margin law survive depth?** §91 is D = 2. The exponential-in-margin
 penalty compounds if each stage contributes independently, which would make D_max = c*/(penalty x

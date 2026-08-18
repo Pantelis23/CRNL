@@ -9754,3 +9754,69 @@ cannot be the repair. **The sign argument is weaker than §85 made it sound (rul
 > **Corrected reading: the deficit's size is expected and now measured; its sign is a coefficient
 > of this network, not a law**, and a well-documented mechanism runs the other way. §85's "the sign
 > forbids the obvious repair" holds *for this network* and must not be read as general.
+
+---
+
+### 86 The escape path leaves the slow manifold — T15-n.2
+
+§85 showed §84's action deficit *is* the adiabatic elimination but not what the elimination loses,
+and §85.3 recorded that the obvious candidate (extra lead noise) has the wrong sign. **In this
+regime the answer is readable directly**: the barrier is only 6–20 nats, so the exact stationary
+distribution does not underflow and the 2-D quasipotential `Φ(u,b) = −ln π(u,b)/Ω` can be read
+outright. The 1-D reductions integrate along the *deterministic* slow manifold `b_det(u)`; the
+curve that realises the marginal quasipotential is the **ridge**, `b_ridge(u) = argmax_b π(u,b)`.
+
+**P1/P2 — the displacement is real and resolved.** The floor sits >100 nats below every point
+read (§81.1's gate). And b is quantised at 1/Ω, so the test that separates physics from
+quantisation is whether the displacement holds in *physical* units while growing in *lattice*
+units — it does. At γ = 0.40, u = 0.38: **0.00512, 0.00474, 0.00447, 0.00436** at Ω = 200…600
+(physical), i.e. **1.02, 1.42, 2.01, 2.62 lattice units**. A quantisation artifact would be a fixed
+number of lattice units. The ridge sits *above* the manifold — more blank — everywhere.
+
+**P3 — the reduction was the right formula on the wrong curve.** Integrating the same
+`∫ln(λ_u/μ_u)du` along the ridge instead:
+
+| γ | measured | on b_det | ratio | **on b_ridge** | **ratio** |
+|---|---|---|---|---|---|
+| 0.40 | 0.032622 | 0.029447 | 0.9027 | 0.032908 | **1.0088** |
+| 0.44 | 0.012080 | 0.011292 | 0.9348 | 0.012209 | **1.0107** |
+
+A ~10% and ~6.5% deficit becomes ~0.9% and ~1.1%. **This is a diagnosis, not a prediction** — the
+ridge is read from the exact answer, so it locates the error and cannot compute anything in
+advance. What it settles is that the failure is the *curve*, not the projection: a 1-D chain of
+this form can reproduce the action, given the right b(u).
+
+**P4 — the displacement tracks the deficit toward γ_c**: 0.00254 → 0.00104 as the deficit goes
+0.0977 → 0.0651. So it is not a bystander.
+
+### 86.1 P5 is unresolved, and three instrument failures on the way there
+
+**P5 asked for the same claim along §85's M axis, and the honest answer is that the instrument
+cannot deliver it.** Three distinct contaminations appeared, each caught only by reading cells
+rather than the summary:
+
+1. **A whole slice at the floor.** At M = 8 the slice at u/u\* = 0.16 had *every* point at
+   −690.8 except one, at b = 0.025 — 43% of all states are underflowed at M = 8. That lone
+   survivor became the "argmax" and drove the mean displacement to **−0.078**, flipping the
+   verdict. My first floor gate reported the margin *at the ridge point*, which passes trivially:
+   **the margin of the point you selected says nothing about whether the slice could locate it.**
+2. **Partial underflow with a spurious peak.** At M = 4 a slice kept enough live points to pass a
+   bare count while the true peak region was gone, leaving a maximum at the edge of the survivors
+   (−0.233 against b_det). Counting live points is not enough; *where* they are matters.
+3. **`np.interp` extrapolating flat** below the first traced slice — **rule 19's own named trap,
+   from §59**, hit again in the same session the rule was quoted. P3 anchored both ends of the
+   curve; P5b did not, and read 0.6177 at M = 4 until it did.
+
+> On clean data the raw displacement does **not** shrink with M (0.00267, 0.00334, 0.00302,
+> 0.00230) while the deficit falls 4.4×. **But that criterion is wrong (rule 19):** a displacement
+> in b and a deficit in the action are not commensurate — what enters A is the displacement *times*
+> `∂ln(λ_u/μ_u)/∂b`, and nothing says that sensitivity is constant in M.
+
+The commensurate test (P3 repeated per M) gives **1.0147, 1.0095 and 0.9977 at M = 1, 2, 8** — P3
+reproduced on a second axis — and **0.7082 at M = 4, which I cannot explain.** Its slice coverage
+is no worse than M = 8's, so the coverage story is wrong: a gate written to exclude it excluded
+M = 8 instead and kept it.
+
+> **Reported as unresolved rather than gated until it agreed.** Writing a third gate after seeing
+> which cell disagreed would have been fishing, and this project has a rule for every other way of
+> arriving at a confident wrong number. **P3 and P4 do not depend on the M axis.**

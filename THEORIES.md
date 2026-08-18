@@ -2454,28 +2454,43 @@ fast-variable noise feeding the lead would ADD to its diffusion and so LOWER the
 the elimination loses, it is not captured by widening D_u -- so "add the fast variable's noise" is
 refuted before it is tried.
 
-**T15-n.2, open: what does the elimination lose, given it cannot be extra lead noise?** The
-candidate is that the true escape path leaves the slow manifold, so no 1-D reduction built from
-manifold-projected rates can be exact at any order. **How to kill:** compute the 2-D quasipotential
-by the tilted-generator route (H_eff as the principal eigenvalue of the fast generator at fixed
-conjugate momentum) and check whether it reproduces the measured action where the 1-D reduction
-does not. This is the slow-fast large-deviations problem, and §85's M-sweep gives it a calibrated
-target rather than a qualitative one. **The literature says this is the right route** -- the exact
-slow Hamiltonian IS that Perron eigenvalue (Kifer 2009; Faggionato, Gabrielli & Crivellari 2009;
-Bressloff & Faugeras arXiv:1410.2152).
+~~**T15-n.2, open: what does the elimination lose?**~~ **-> §86. ANSWERED: it integrates the
+right formula along the WRONG CURVE.**
 
-**And §85's SIGN argument is a suspect, not a law (§85.3).** Gao & Stephan (arXiv:2412.14411) prove
-a Gamma-convergence liminf in which the reduction discards non-negative cost, giving an asymptotic
-LOWER bound -- §85's direction. But the Perron-eigenvalue argument dominates the naive reduction by
-convexity (fast fluctuations open CHEAPER escape routes), predicting the barrier should come out too
-LARGE, and Assaf, Roberts & Luthey-Schulten (PRL 106:248102, 2011) and Mehta, Mukhopadhyay &
-Wingreen (Phys. Biol. 5:026005, 2008) both find reinstating fast noise SHORTENS switching times.
-The literature agrees with §85 on MAGNITUDE -- the dropped term is O(1/separation), exactly what the
-M-sweep measured -- and claims no sign. **Two further kill tests worth naming:** (i) a sign-transfer
-test, scaling a different reaction subset so which variable is fast changes independently of gamma,
-to see whether the deficit's sign is structural or a coefficient; (ii) an instrument test on the
-"exact" side, reporting A(Omega) per gamma rather than one value -- §84 held A*Omega in [6, 20] per
-gamma BY DESIGN for this reason, and that choice should be defended explicitly rather than assumed.
+In this regime the barrier is only 6-20 nats, so the exact stationary distribution does not
+underflow and the 2-D quasipotential Phi(u,b) = -ln pi(u,b)/Omega is readable outright. The 1-D
+reductions use the DETERMINISTIC slow manifold b_det(u); the curve realising the marginal
+quasipotential is the RIDGE b_ridge(u) = argmax_b pi(u,b), and they differ by a resolved amount.
+
+  * **Resolved, not quantisation.** At gamma = 0.40, u = 0.38 the displacement is 0.00512,
+    0.00474, 0.00447, 0.00436 over Omega = 200..600 -- constant in PHYSICAL units while growing
+    from 1.02 to 2.62 LATTICE units. An artifact would be a fixed number of lattice units.
+  * **Integrating along the ridge closes the deficit**: 0.9027 -> 1.0088 (gamma = 0.40) and
+    0.9348 -> 1.0107 (gamma = 0.44). So a 1-D chain of this form CAN reproduce the action given
+    the right b(u) -- the failure is the curve, not the projection. This is a DIAGNOSIS: the
+    ridge is read from the exact answer and predicts nothing in advance.
+  * **The displacement tracks the deficit toward gamma_c** (0.00254 -> 0.00104 against
+    0.0977 -> 0.0651), so it is not a bystander.
+
+**T15-n.3, open: is there a PREDICTIVE curve?** §86 shows a correct b(u) exists and identifies it
+after the fact. **How to kill:** the tilted-generator route (§85's T15-n.2 note) predicts the
+optimal b from the fast generator's Perron eigenvalue at fixed conjugate momentum, with no
+stationary solve. If it reproduces b_ridge to the resolved displacement, the reduction becomes
+predictive and §84's closed form can be corrected at next order; if it does not, the ridge is not
+the instanton's curve and the agreement in §86 P3 is a coincidence of the marginal.
+
+**§86.1: the M-axis cross-check is UNRESOLVED, and was not gated until it agreed.** Reading a
+ridge off the stationary distribution at M > 1 produced three distinct contaminations -- a whole
+slice at the 1e-300 floor (which drove the mean displacement to -0.078 and flipped the verdict);
+partial underflow leaving a spurious peak at the edge of the survivors; and np.interp
+extrapolating flat below the first traced slice, **rule 19's own named trap from §59, hit in the
+same session the rule was quoted**. After all three were fixed, M = 1, 2 and 8 give 1.0147, 1.0095
+and 0.9977 -- P3 reproduced on a second axis -- while **M = 4 gives 0.7082 and is unexplained**;
+its coverage is no worse than M = 8's, and a gate written to exclude it excluded M = 8 instead.
+**Writing a third gate after seeing which cell disagreed would have been fishing.** P3 and P4 do
+not depend on this axis.
+
+
 
 **T15-j, open (replacing T15-i): which fixed point decides when the symmetric steady state is
 not unique?** 7.4% of drawn networks had more than one symmetric steady state and are outside

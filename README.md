@@ -11,10 +11,13 @@ across a deep cascade.
 Binary did not win because 2 is a special number. It won because the transistor
 is a near-ideal restoring switch. Chemistry, given the right network motif, can
 restore too — but only by running away from equilibrium and paying free energy
-for it. CRNL runs one such motif (Approximate Majority) two ways —
-**deterministic** mass-action ODEs and **exact stochastic** Gillespie SSA — and
-measures the gap. Everything it teaches lives in that difference.
+for it. CRNL runs such motifs — **Approximate Majority**, and later **Schlögl's
+model**, which restores with no symmetry at all and is exactly solvable — two ways:
+**deterministic** mass-action ODEs and the **exact chemical master equation**.
+Everything it teaches lives in the gap between them.
 
+> **The founding question's answer as it now stands:
+> [`SYNTHESIS.md`](SYNTHESIS.md).**
 > Full rationale and derivations: [`docs/design.md`](docs/design.md).
 > **All measured results, with caveats: [`FINDINGS.md`](FINDINGS.md).**
 > Conjectures, open questions, and the disproven ones kept on purpose:
@@ -554,6 +557,111 @@ window was shallowest. [`FINDINGS.md`](FINDINGS.md) §35.
 python -m experiments.deep_tail          # the collapse to 1e-33, with the accuracy audit
 python -m experiments.pairwise_identity  # the identity, and what it does and does not cover
 python -m experiments.concatenation      # voting against pooling, everything exact
+```
+
+## What a restoring element *is* — the Symmetric Restoration Theorem
+
+For any mass-action network symmetric under exchanging two species, the drift of the
+lead `n_X − n_Y` factors exactly, so the diagonal is invariant: **the sign of a lead
+is a deterministic invariant and every reversal is a fluctuation.** The amplification
+decomposes as
+
+    P(x) = Σ_r  c_r · d_r · B_r(x),    d_r = S_X(r) − S_Y(r) ∈ ℤ,    B_r(x) ≥ 0
+
+with every bracket nonnegative and `d_r` fixed by **stoichiometry alone**. Two
+consequences: **capability is combinatorial** — the network can restore for *some*
+rates iff some `d_r > 0` — and **realisation is one linear inequality** at the
+symmetric steady state, which reproduces AM's `γ_c = 1/2` to **1.1e−15** and agrees
+with the ODE on **120/120** networks. The realising set is a cone but is **not
+convex**: two restoring rate vectors can sum to a non-restoring one, inside AM's own
+family. [`FINDINGS.md`](FINDINGS.md) §54, §56, §62, §65.
+
+**Prior art, checked late and honestly.** The invariance is a folk theorem of
+equivariant dynamics; the realisation criterion is Theorem 1 of Montoya, Cruz & Ágreda
+(2019) in the homochirality literature, stated there more generally. What was not
+found there is the sign decomposition and the combinatorial criterion — and *"not
+found in two papers"* is weaker than *"novel"*. **This project claims priority for
+nothing.**
+
+## Reliability has no thermodynamic price, and the sharpest closure runs both ways
+
+The natural hope is an exact relation between error rate and dissipation. It was
+pursued five ways and closed each time. The fifth is the one that counts, because the
+first four priced quantities later shown not to govern anything.
+
+Both networks have a **one-dimensional cycle space**, so the entire non-equilibrium
+drive is a single number that can be pinned by construction while the kinetics move:
+
+> With the affinity held fixed to **4.9e−14 nats**, the escape action spans a factor
+> of **926**. With the action held fixed to **0.0000%**, the affinity spans **0.92
+> nats**.
+
+Neither implication holds — the drive does not set the action, and the action does not
+report the drive. Earlier closures established only the first direction.
+[`FINDINGS.md`](FINDINGS.md) §82.
+
+## The exponent that governs reliability, and computing it without a master equation
+
+An element in a cascade can misread its input *or* spontaneously escape its rail.
+Both are exponential in Ω, so the smaller exponent wins outright — and **escape beats
+readout by e⁴³²**. Five sections had priced the subdominant mode (§80).
+
+The escape action turns out to be computable from the rate functions alone. Writing
+the WKB Hamiltonian and sending the *fast* Hamiltonian flow to its fixed point gives
+a prediction with **no master equation, no stationary solve, no lattice and no Ω** —
+validated against exact CME first-passage times over eight γ and ten (γ, M) cells, and
+corrected by the fast-pair term the reduction drops. §64's standing verdict —
+*"ν ≈ 2 ± 0.1, not determined more precisely by any instrument here"* — became a
+quadrature. [`FINDINGS.md`](FINDINGS.md) §80, §84–§89.
+
+> ⚠ And then §90 withdrew the precision. Varying the extrapolation ansatz spreads the
+> *measured* action by up to **0.407%**, and the candidates straddle the theory value:
+> the residual was below the resolution of the instrument that would test it. The
+> agreement stands to within the measurement's own resolution; the quoted ± did not.
+
+## Composition — and it is not a property of the element
+
+The founding claim is about *cascades*. Every cascade here coupled stages through a
+Gaussian readout channel with σ imposed by hand; the chemically-coupled chain — where
+stage i's output *species* is stage i+1's input, with no readout — was never built.
+Building it gave three couplings, **all exactly neutral at the rail** (each reproduces
+the isolated element when the upstream is correct), using the same element, the same
+rails and the same Ω:
+
+| coupling | transmits? | noise margin | per-stage error vs isolated |
+|---|---|---|---|
+| drives the influx | **no** | — | 1.06–1.09 |
+| drives the autocatalysis | yes | **0.88 σ** | **17.7 – 63.5** |
+| saturating (Hill) | yes | **3.39 σ** | 1.71 – 2.29 |
+
+The **noise margin** — the upstream drop at which the downstream loses its high rail,
+in units of the upstream rail width — controls it, with `log(penalty) ≈ −0.95 ×
+margin/σ` and two independent knobs collapsing onto one curve. A second control then
+appeared: scaling the upstream's rates leaves its landscape, barrier, rail width and
+stationary law *identical* and changes only its clock, and the penalty moves **2.7×** —
+plateauing for a slow upstream and falling by **motional narrowing** above
+`τ_up = τ_down`, exactly where the upstream's correlation time meets the downstream's
+response time.
+
+> **Composition is a function of two numbers — the noise margin and the timescale
+> ratio — and both are properties of single elements.** The joint master equation
+> validates that; it is not needed to compute it. **A cascade is safest when its
+> upstream stages are fast and its transfer function saturates** — and neither is a
+> property of the restoring element itself, which is what a transistor's saturating
+> gain curve supplies. [`FINDINGS.md`](FINDINGS.md) §91–§93.
+
+**The near-miss is the instructive part.** The first version of that experiment gated
+only *neutrality* and found error accumulation strongly **sublinear** — an added stage
+costing 0.095 of an isolated element's error, reading exactly as restoration filtering
+errors, the founding claim confirmed. The exact joint law gave
+`P(stage 2 low | stage 1 low) = 0.0017`: the flip never propagated. **"Error does not
+accumulate" was true because nothing was connected.** A neutrality gate tests only the
+null condition; a cascade must also *transmit*.
+
+```bash
+python -m experiments.chemical_cascade   # three couplings, and the transmission gate
+python -m experiments.margin_law         # frozen vs fast averaging, motional narrowing
+python -m experiments.timescale_ratio    # the crossover at tau_up = tau_down
 ```
 
 ## Verifying the base

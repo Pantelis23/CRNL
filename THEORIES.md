@@ -3904,16 +3904,38 @@ implies, **thirteen times too small**.
 at Omega = 14, 16, 20, 30 -- so it is not a small-Omega artifact. (The ACCELERATION is an Omega = 30
 statement only: the ratio-of-ratios runs 0.941, 0.954, 0.999, 1.204.)
 
-**T-CASC-h, open, and it is a SUSPECT not a result (rule 17).** The stage means drift down (3.0222,
-2.9564 against a deterministic rail at 3.1827) and the gain rises steeply as the operating point
-falls -- g^2 = 0.0065 at r3, 0.0135 at stage 2's mean, **crossing 1 at x_up ~ 1.9**, which is ABOVE
-the collapse at x_crit = 1.5792. So a runaway threshold exists inside the nominally bistable range.
-The suspect is that a stochastic mean-shift compounds down the chain, slides the operating point
-toward the collapse, flattens the landscape and raises the gain. **It is not established, and (c)'s
-factor of 13 says the linear picture is already missing something at the FIRST step.** **How to
-kill:** measure the mean and width at stage 4 -- D = 4 is ~85M joint states and out of exact reach,
-so this needs a smaller Omega or a different instrument -- and check the mean against the fixed
-point of the mean-shifted recursion.
+~~**T-CASC-h, open: a stochastic mean-shift compounds down the chain**~~ **-> §95. PARTLY
+CONFIRMED, and the problem is now localised to the MEAN.**
+
+§94's sharpest anomaly was that the deterministic gain is 13x too small to explain sigma_2/sigma_1
+at the FIRST step. The missing term is CURVATURE. The stage-to-stage map F (the downstream high
+rail given a pinned upstream) is concave near the rail because the Hill coupling is near
+saturation, so by Jensen <F(x_up)> falls short of F(<x_up>) by (1/2) F'' sigma^2, lowering the
+operating point onto a flatter part of the landscape. **Second order in sigma, which is why a
+first-order gain missed it.**
+
+  * F(r3) = r3 to 4.4e-16; F' = 0.1042 and **F'' = -0.17265**, converged in the finite-difference
+    step to five decimals over h = 1e-2..5e-4 (rule 13). Concave, so Jensen pushes the right way.
+  * **The mean, nothing fitted:** mu_2 predicted 3.00750 without Jensen, **2.98599 with**, against
+    a measured 2.95635. The residual goes -0.05115 -> -0.02964: **curvature closes 42%**, right
+    sign. The other 58% is not explained.
+  * **THE WIDTH IS NOT A SEPARATE PROBLEM.** Placed at its exactly-measured operating point the LNA
+    gives sigma_2 = 0.53385 against 0.54181 -- **1.5%** -- and the LNA's own error on stage 1,
+    whose input is a noiseless chemostat, is 2.7% the other way. **The width follows from the
+    operating point within the LNA's own accuracy, so the width sequence IS the mean sequence.**
+
+Both fractions are reported and not tuned: §22's convolution was fitted for three subsections and
+was out by 3688x against a quantity computable exactly.
+
+**T-CASC-i, open, and sharper than T-CASC-h was: what supplies the remaining 58% of the mean
+shift?** Not "why do the widths grow" -- that is answered -- but why the operating point sits lower
+than F plus one Jensen term puts it. **Candidates, none tested:** (a) the next Jensen term, i.e.
+the upstream's third moment; (b) the finite correlation time of the upstream -- §92/§93 showed the
+two stages' timescales are EQUAL here, so the static-transfer assumption behind F is exactly the
+wrong limit, and this is the candidate the rest of the arc most implicates; (c) the reflecting
+boundary at stage 1's saddle, which truncates its low tail and is worth 2.7% on sigma_1 alone.
+**How to kill (b):** re-measure the mean shift with the upstream sped up, where the static limit is
+correct by construction (§93's clock knob), and see whether the residual collapses.
 
 **SCOPE OF THE COMPOSITION RESULT, as it now stands:** depth is computable **given the widths**;
 the width sequence is open.

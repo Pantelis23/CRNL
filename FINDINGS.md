@@ -10305,3 +10305,60 @@ x_crit = 1.5792. So a runaway threshold exists and sits *inside* the nominally-b
 **So the honest scope of the composition result:** the two-number law composes stage to stage and
 predicts the next penalty from the current width to ~11%, but **the width sequence itself is not
 predicted by anything measured here.** Depth is computable given the widths; the widths are open.
+
+---
+
+### 95 The width problem is the mean problem, and 42% of the mean is curvature — T-CASC-h
+
+§94's sharpest anomaly was not about depth: the deterministic gain at the operating point is
+**thirteen times too small** to explain σ₂/σ₁ = 1.0855. Something is missing at the *first* step.
+
+**The candidate is curvature.** The stage-to-stage map `x_out = F(x_up)` — the downstream's high
+rail given a pinned upstream — is concave near the rail, because the Hill coupling is close to
+saturation there. By Jensen `⟨F(x_up)⟩ < F(⟨x_up⟩)`, short by `½F''(μ)σ²`, which lowers the
+downstream's operating point onto a flatter part of its landscape and widens it. **Second order in
+σ, which is exactly why a first-order gain misses it.**
+
+**P1/P2.** `F(r₃) = r₃` to **4.4e−16** (neutral by construction), and `F'` and `F''` are converged
+in the finite-difference step to five decimals across h = 1e−2 … 5e−4 (rule 13). **F'' = −0.17265
+— concave**, so Jensen pushes the right way.
+
+**P3, the mean, with nothing fitted:**
+
+| | |
+|---|---|
+| element's own stochastic shift, from stage 1 | −0.16048 |
+| F(μ₁) | 3.16798 |
+| Jensen term ½F''σ₁² | **−0.02151** |
+| μ₂ predicted without Jensen | 3.00750 |
+| μ₂ predicted **with** Jensen | 2.98599 |
+| μ₂ **measured** | 2.95635 |
+
+Residual −0.05115 → −0.02964: **curvature closes 42% of the gap**, with the right sign. The other
+58% is not explained.
+
+**P4/P5, and this is the useful part — the width reduces to the mean:**
+
+| operating point | x | LNA sd |
+|---|---|---|
+| gain only | 3.00750 | 0.51700 |
+| with the Jensen shift | 2.98599 | 0.52382 |
+| **at the measured mean** | 2.95635 | **0.53385** |
+| measured σ₂ | | **0.54181** |
+
+> **Placed at its exactly-measured operating point, the LNA gives the width to 1.5%** — and the
+> LNA's own error on stage 1, whose input is a noiseless chemostat, is 2.7% in the other direction
+> (0.51255 against a measured 0.49922). **So the width is determined by the operating point, within
+> the LNA's own accuracy. The width sequence is not a separate problem: it is the mean sequence.**
+
+Curvature supplies 27% of the width gap directly, because it supplies 42% of the mean shift that
+produces it. **Both fractions are reported, not tuned.** A partial mechanism named as partial is
+worth more than a fitted one — §22's convolution was fitted for three subsections and was out by
+3688× against a quantity that could be computed exactly.
+
+**What is now open, and it is sharper than T-CASC-h was.** Not "why do the widths grow" but:
+**what supplies the remaining 58% of the mean shift?** Candidates not tested here: the third moment
+of the upstream (Jensen's next term), the finite correlation time of the upstream — §92/§93 showed
+the two stages' timescales are *equal* here, so the static-transfer assumption behind F is exactly
+the wrong limit — and the reflecting boundary at stage 1's saddle, which truncates its low tail and
+is worth 2.7% on σ₁ alone.

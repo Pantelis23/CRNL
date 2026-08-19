@@ -1,0 +1,25 @@
+{
+  "ratios": {
+    "calibration": 1.7930941980610555,
+    "new": 2.1945028944694833
+  },
+  "discrimination": [
+    {
+      "variable": "A*Omega",
+      "x_new": 13.19931,
+      "inside": true,
+      "predicted": 0.638297954818178,
+      "measured": 0.6830641314457865,
+      "rel_err": -0.06553729667060042
+    },
+    {
+      "variable": "(margin/sigma)^2",
+      "x_new": 28.965923999999998,
+      "inside": true,
+      "predicted": 0.5807754167822794,
+      "measured": 0.6830641314457865,
+      "rel_err": -0.14974979647518727
+    }
+  ],
+  "better": "A*Omega"
+}

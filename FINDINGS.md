@@ -10480,3 +10480,339 @@ quantities, on an element never used to build them. The penalty is bracketed by 
 limits whose separation is the upstream's correlation time. **What is not available is a closed
 form for the penalty** — §91's slope is not it, and §92's average requires the two limits rather
 than giving one number.
+
+---
+
+### 98 The penalty closes: the position between the limits is a function of the barrier depth
+
+§97 left the composition penalty **bracketed** by two computable limits — the frozen-upstream
+average `⟨exp(−ΔA·Ω)⟩` and the fast limit `exp(−⟨ΔA⟩·Ω)` — with the measurement between them and
+no account of *where*. Two data points existed, and fitting them would have been §91's mistake
+repeated. **Ω is the clean axis**: it moves A·Ω without touching the landscape, the transfer map,
+the margin in concentration units, or the coupling. So the curve is traced on one element and the
+*other* element is checked against it, with nothing fitted.
+
+**P1.** At Ω = 30 the instrument reproduces §92's stored frozen 4.845, fast 1.139 and measured
+4.442 exactly.
+
+**P2 — the sweep on the calibration element:**
+
+| Ω | A·Ω | fast | measured | frozen | position |
+|---|---|---|---|---|---|
+| 14 | 2.66 | 1.169 | 2.807 | 2.283 | 1.3089 |
+| 30 | 5.71 | 1.139 | 4.442 | 4.845 | 0.9400 |
+| 55 | 10.46 | 1.101 | 6.317 | 12.913 | 0.7096 |
+| 85 | 16.17 | 1.085 | 8.986 | 41.409 | **0.5805** |
+
+Position is measured in log space (0 = fast, 1 = frozen) and falls monotonically: **deeper
+barriers sit further from the frozen limit**, which is what an excursion-duration argument gives —
+a deeper barrier needs a deeper, rarer, *shorter* upstream excursion, so fewer of them last long
+enough for the escape to complete and the rate-average over-counts. *(At Ω = 14 the position
+exceeds 1, i.e. the measurement is outside the bracket on the shallow side — the two "limits" are
+asymptotic and the bracket is not guaranteed at a barrier of 2.7 nats.)*
+
+**P3 — the test, out of sample, nothing fitted.** §97's element sits at A·Ω = 13.2 with a measured
+position of **0.6831**, inside the swept range. The calibration element's curve predicts
+**0.6383 — off by 6.6%.**
+
+> **A second element, with a different landscape, a different coupling and a barrier 2.3× deeper,
+> lands on the first element's curve.** So the composition penalty closes: **frozen, fast and the
+> position between them are all computable from single-element quantities**, and §97's bracket
+> becomes a number.
+
+**What this makes of §91.** Its `log(penalty) = −0.952 × margin/σ` was a one-element
+parameterisation (§97), and the missing variable is now identified and measured: the barrier depth
+A·Ω, which §91 could not see because all 14 of its points shared one element.
+
+### 98.1 A broken interpolation printed FAILS off the right data
+
+> **P3's first verdict was FAILS, with a "predicted position" of 1.3089 — which is exactly the
+> first row of the sweep.** `np.interp` requires increasing x; `aoms` already increases with Ω, and
+> I passed `aoms[::-1]`. Given decreasing x it returns the first element, so the comparison was
+> against the *shallowest* cell rather than the interpolated one, and the section would have
+> reported that the barrier depth is not the interpolation variable.
+>
+> **The tell was that the prediction was a row of the table**, not a value between rows. Same
+> family as §86.1(3) and rule 19's §59: `np.interp` is the single most frequent source of broken
+> comparisons in this project, and it has now produced a wrong verdict three times.
+
+### 99 Prior art for §91–§98, and the three corrections it forces
+
+Four literature searches were run against the composition arc. The summary: **the mechanisms are
+known, most of them for decades; the object — a directed cascade of bistable CRN elements solved by
+exact CME, and its depth ceiling — is not found.** Recorded per rule 4, with the corrections it
+forces on what §93–§98 claim.
+
+**(a) The two-limit bracket is Pechukas & Hänggi (1994), and there are three regimes, not two.**
+
+§97's bracket — average the rate `⟨exp(−ΔA·Ω)⟩` against rate at the average `exp(−⟨ΔA⟩·Ω)` — is the
+standard heuristic account of **resonant activation**, stated in those terms with the Jensen
+argument attached by Pechukas & Hänggi, PRL **73**, 2772 (1994); reviewed by Reimann & Hänggi,
+Springer LNP **484** (1997); the limits named by Boguñá et al., PRE **57**, 3990 (1998); the
+slow-modulation side is Zwanzig's dynamical disorder, Acc. Chem. Res. **23**, 148 (1990).
+
+**The correction: the limit I called "frozen" is the *intermediate* one.** Truly quenched modulation
+— the upstream never switches during a downstream escape — gives `⟨1/k⟩`, dominated by the *highest*
+barrier the upstream ever presents. A mean rate `⟨exp(−ΔA·Ω)⟩` is the plateau reached when the
+upstream re-randomises many times per downstream escape but is still slow against the downstream's
+*relaxation*. Three regimes, not two:
+
+| regime | condition | penalty |
+|---|---|---|
+| fast | τ_up ≪ τ_relax | rate at the mean, `exp(−⟨ΔA⟩·Ω)` |
+| intermediate | τ_relax ≪ τ_up ≪ τ_escape | mean rate, `⟨exp(−ΔA·Ω)⟩` |
+| quenched | τ_up ≫ τ_escape | `⟨1/k⟩⁻¹`, highest-barrier dominated |
+
+§97 wrote "bracketed by two limits" and §93 wrote "the maximum sits in the interior". **Read as a
+true bracket those are inconsistent with §98's own table**, whose shallowest cell (Ω = 14) has
+position **1.3089 — outside**. That number is not an artifact and not noise: measured 2.807 against
+a "frozen" 2.283 is the intermediate regime overshooting the mean-rate limit, which the third regime
+allows and a two-limit picture forbids. **The >1 entry was the tell and I read past it.**
+
+What §98 established is unchanged — the position is a reproducible function of A·Ω that transfers
+out of sample — but **"position between the limits" over-reads it**. It is a coordinate that happens
+to run through [0, 1] over most, not all, of the swept range.
+
+**Already done for CMEs.** Assaf, Roberts, Luthey-Schulten & Goldenfeld, PRL **111**, 058102 (2013)
+is the closest prior art in this project: bistable self-regulating gene, chemical master equation,
+WKB action, OU extrinsic noise at finite correlation time, and an optimal correlation time. Their
+adiabatic limit is my mean-rate limit. Also Spalding, Doering & Flierl, PRE **96**, 042411 (2017)
+(Verhulst birth–death master equation, resonant activation) and Flomenbom & Klafter (2004).
+
+**What is not found:** resonant activation in which the modulator is *itself a chemically-coupled
+upstream bistable stage* rather than an imposed OU or dichotomous process. In every reference above
+the modulation is exogenous and its statistics are chosen freely. Here the upstream's switching
+statistics come from the same chemistry as the downstream's, which is *why* the two timescales
+cannot be tuned independently (§93) — and that is the part of §91–§98 with no prior art attached.
+
+**(b) §93's crossover may be misidentified, and the discriminator is named in the literature.**
+
+§93 located the penalty maximum where τ_up ≈ τ_down, the two *relaxation* times matching. Reimann &
+Hänggi draw a distinction I did not: for **type-I** potentials, where the modulation moves the
+barrier *top*, the resonant-activation optimum matches the modulation rate to an **escape** time;
+matching to a *relaxation* time belongs to **type-II** ("breathing") potentials, where the modulation
+moves the well *bottom* and leaves the barrier location alone. Which type the Hill coupling produces
+here is decidable — it is a question about where the coupling enters the landscape — and it was
+never asked. **§93's crossover is a measurement and stands; "matched relaxation times" is a suspect
+(rule 17), and its kill test is to compute whether the coupling modulates the barrier top or the
+well bottom.**
+
+**(c) §94's width recursion is Thattai & van Oudenaarden (2002), and it is missing a factor.**
+
+The variance recursion `σ²_out = σ²_intr + g²σ²_in`, its fixed point, and the g < 1 stability
+condition are Thattai & van Oudenaarden, Biophys. J. **82**, 2943 (2002), Eq. 13 — 24 years old,
+with g named the *differential amplification factor* and the attenuation length given as
+n₀ = 1/ln(1/g²). §94 derived it independently. It is not new.
+
+**The correction that bites.** Their transmitted term carries a **time-averaging factor**
+τ = β_x/(β_s + β_x): the downstream averages over upstream fluctuations that are fast against its own
+relaxation, so the standard form is `σ²_out = σ²_intr + τ·g²·σ²_in`. Mine is the τ → 1 case, valid
+only when the downstream is much slower than the upstream. **§92 and §93 measured the two timescales
+here to be equal**, i.e. τ = 1/2, so my recursion over-counts the transmitted term by 2×.
+
+**That makes §94.1(c) worse rather than better — and it should be withdrawn on separate grounds.**
+
+> **Withdrawn: §94.1(c)'s "the deterministic gain is 18.6× too small".** It solved for an implied
+> g² = 0.2027 from σ₂/σ₁ and compared it to a deterministic g² = 0.0109. With the time-averaging
+> factor the deterministic side halves and the gap becomes 37×, so the correction does not rescue
+> it. But the extraction was invalid anyway: it assumed **σ_intr is the same for both stages**, when
+> §95 and §96 show the operating point moves between stages and the intrinsic width follows the
+> operating point. The "transmitted noise" being extracted was mostly stage 2's intrinsic width at a
+> *different mean*. §96's account — operating point from the exact static-transfer average
+> `⟨F(x_up)⟩`, width from the operating point — reproduces the widths with **no transmitted-noise
+> term at all**, and is the reading that survives.
+
+**(d) The Jensen shift is absent from the cascade literature; the noise margin nearly so.**
+
+The curvature mean shift `⟨F(x)⟩ < F(⟨x⟩)` is standard away from cascades — Paulsson's stochastic
+focusing (PNAS 2000), Ochab-Marcinek & Tabaka (PNAS 2010), Hernández-García & Velázquez-Castro
+(arXiv:2307.03057), whose Eq. 17 is §95's second-order truncation. But it does not appear combined
+with the variance recursion in the noise-propagation cascade literature. **§95 + §96's combination —
+take the operating point from the exact `⟨F(x_up)⟩`, then do LNA about the shifted point — is the
+piece that is not standard**, and it is exactly what makes §96 work where §94 did not.
+
+For the **noise margin**: the term is imported into synthetic biology (Weiss & Basu; Yaman et al.
+2012) but always statically and deterministically — a transfer-curve eye, never normalised by a
+fluctuation width. The closest quantitative work is Privman & Katz (arXiv:0803.4197, 2008), which
+propagates σ through gate surfaces and reaches a depth of ≈ 11 gates, but for *monostable* gates
+against an arbitrary tolerance band rather than a bistable element's own escape. A σ-normalised
+margin-to-failure for a bistable cascade out of an exact CME was not found.
+
+**(e) No prior art for the object itself.** Nothing was found combining all four of: a *directed*
+cascade (not symmetric mutual coupling), genuinely *bistable* elements, an *exact* CME, and a
+*depth* question. Nearest misses: Ungarelli et al. (1999) on QCA wires; Maity et al. (2024) on
+concatenated bistable networks, deterministic and noiseless; and a 2026 analysis of CMOS bits in
+series whose coupling is symmetric and whose bits form one collective degree of freedom — the
+opposite sign of the question asked here.
+
+### 99.1 A referee's objection to §98, tested
+
+§91's margin/σ and §98's barrier depth A·Ω are not independent quantities. Near a saddle-node the
+margin in rail-width units goes as μ^(3/4)/√D and the WKB action as (margin/σ)², so A·Ω ∝ (margin/σ)²
+is *expected* — and **§98's Ω-sweep cannot tell them apart at all**, because within one element
+margin/σ ∝ √Ω and the two are the same axis up to a constant. On the calibration sweep alone, §98 is
+a re-parameterisation of §91 and nothing more.
+
+The second element breaks the degeneracy, because the constant is element-dependent:
+(margin/σ)²/(A·Ω) is **1.7931** for the calibration element and **2.1945** for §97's — 22% apart.
+Interpolating §98's calibration curve at §97's element in each candidate variable:
+
+| interpolation variable | value at §97's element | predicted position | measured | error |
+|---|---|---|---|---|
+| A·Ω | 13.20 | 0.6383 | 0.6831 | **−6.6%** |
+| (margin/σ)² | 28.97 | 0.5808 | 0.6831 | **−15.0%** |
+
+**A·Ω transfers better, by 2.3× in error.** It is not decisive: one out-of-sample point, two
+variables that agree to 22%, and −6.6% against −15.0% separated by no error bar I have measured.
+
+**Not pre-registered.** This was run ad hoc against §98's stored results after the literature report
+raised the objection. Per rule 2 it is not a prediction, and it is recorded as a post-hoc
+discrimination rather than dressed as one. **The pre-registered version needs a third element**,
+chosen so that (margin/σ)²/(A·Ω) differs from *both* existing values; the two candidate axes then
+predict positions far enough apart that one point falsifies one of them.
+
+### 100 What the reflecting boundary costs — and T-CASC-l settled against my own prediction
+
+§92.1(b) fixed a real conditioning bias by **reflecting stage 1 at its saddle**, and §93–§98 all
+inherit that construction. It is declared in the docstrings, not smuggled in, and it was the right
+fix. But a reflecting wall is exactly rule 10's family — the harness doing what the chemistry
+cannot — and **its cost had never been measured**. §100 measures it, paired within one run (rule
+18), and the same instrument settles T-CASC-l.
+
+**P1, wiring.** The reflected chain at s_up = s_dn = 1, Ω = 30, t₀ = 2.0 reproduces §93's penalty
+**4.4419** exactly. Same code path; everything below rests on it.
+
+**P2 — the wall's net effect at t₀ = 2.0 is −10.9%, and the net is the least interesting number in
+the table.** *(§100.2 then shows the −10.9% is one cell of a strong trend and the window must be
+quoted with it. The decomposition below is what survives; the single number is not.)*
+
+| branch | probability |
+|---|---|
+| `P_free` (stage 1 free) | 1.816400e−02 |
+| `P(s2 lo, s1 lo)` — the failure channel | 7.289156e−03 |
+| `P(s2 lo, s1 hi)` — free chain, upstream survived | 1.087484e−02 |
+| `P_refl` (stage 1 walled, upstream cannot fail) | 1.619005e−02 |
+
+**The wall does two things with opposite signs.** It *removes* the failure channel (−7.29e−3) and it
+*inflates* the surviving branch by **+49%** (+5.32e−3), because probability that would have leaked
+out of the high basin is instead pushed back against the saddle, where it drives stage 2 hardest.
+The two partly cancel to a net −10.9%. **Each component is 33–45% of `P_refl` on its own**, so the
+net understates both, and a construction that changed only one of them would move the answer by a
+third. *(Rule 20: no tolerance is attached to this. The number is the scope statement.)*
+
+**So §92–§98's penalty is the transfer of the upstream's *rail fluctuations*, measured with the
+upstream's clock set partly by the wall.** §91, unreflected, measured the other thing — the
+accumulation of upstream *errors*. The depth ceiling `D_max = c*/(penalty × ε)` has been built from
+the reflected penalty alone, and is therefore **conditional on every upstream stage surviving**.
+
+**P3 — REFUTED, and the refutation is the result.** I predicted the Hill coupling's saturation
+would attenuate the transmission of a *failed* upstream, on the grounds that saturation is the whole
+point of the coupling and §91 measured it holding a 3.39σ margin. Measured:
+
+> **`P(stage 2 low | stage 1 low) = 0.9376` at t₀ = 2.0.** Once stage 1 has crossed its saddle,
+> stage 2 is low too, 94% of the time. *(This is an endpoint co-occurrence, not a transmission
+> probability, and it moves with the window — see §100.2.)*
+
+**Saturation protects against fluctuations, not against failures.** A margin measured in units of
+the upstream's rail width says nothing about what happens when the upstream leaves that rail
+altogether — the transfer function that flattens a 1σ wobble has no flat region at all once the
+input has moved to the other rail, because that is precisely what the coupling is built to
+transmit. The two protections are independent and the noise-margin law only ever priced the first.
+
+**P4 — the discriminator is decisive, and the second half of my prediction is refuted too.**
+
+| Ω | reflected gap | free gap | exp(−A·Ω) |
+|---|---|---|---|
+| 14 | 1.6173 | 7.2981e−02 | 6.9713e−02 |
+| 30 | 1.4327 | 3.8027e−03 | 3.3219e−03 |
+| 55 | 1.5536 | 4.2737e−05 | 2.8567e−05 |
+
+The reflected gap varies by **1.13×** over Ω = 14→55 and non-monotonically; the free gap varies by
+**1708×**, tracking exp(−A·Ω)'s 2440× with a slowly drifting prefactor. **The two candidate
+timescales are separated by three orders of magnitude on this axis**, which is what §93's global
+speed scaling could not do — that knob multiplies the upstream's relaxation time and its escape time
+by the same factor, so it cannot say which was matched (rule 9).
+
+> **T-CASC-l settled: §93's crossover matched a *relaxation* time, because the reflecting wall left
+> stage 1 no escape time to match.** Its escape channel is removed by construction. The
+> type-I/type-II classification (§99(b)) does not bite here — not because the coupling is of one
+> type, but because only one of the two timescales exists in this chain.
+
+**But the reflected gap is 1.43–1.62, not 6.6195.** I predicted it would approach the macroscopic
+rail relaxation rate `|f'(r₃)| = 6.6195`. It does not, and it is not converging toward it — it is
+**4.6× slower** and flat in Ω.
+
+> **The wall does not merely remove the escape channel; it installs a timescale of its own.** The
+> slowest mode of a reflected stage is diffusive relaxation across the *whole* box
+> [saddle, cap] — a domain-scale mode — not the local curvature at the rail. The box is Ω-independent
+> in concentration units (width 2.978 throughout), which is why the gap is flat in Ω and why the
+> discriminator still works. **The upstream's correlation time in §92–§98 is a property of where the
+> wall was put.**
+
+**§100.1 — what this does to §93's reading**
+
+§93 reported that the composition maximum "sits at τ_up = τ_down, where the upstream correlation
+time meets the downstream response time". The crossover itself is measured and stands, and the
+interior maximum is real — §93's grid peaks at **4.4419** at ratio 1, above both the slow plateau
+(4.2102 at ratio 0.0156) and the fast tail (1.5795 at ratio 64).
+
+> **Withdrawn: "τ_up = τ_down" as the physical identification.** At s_up = s_dn = 1, Ω = 30, the
+> upstream's correlation time is **0.6980** (box-limited, measured above) and the downstream's rail
+> relaxation time is **0.1511**. They differ by **4.62×**. The crossover sits at matched *speed
+> scalings*, not at matched *times* — and the collapse onto s_up/s_dn was already labelled an
+> algebraic identity rather than a discovery (§93 P2). The two stages carry different boundary
+> conditions, so equal speed multipliers do not give equal correlation times, and nothing in §93's
+> own axis could have revealed that.
+
+**What is still true:** the penalty falls once the upstream is fast enough, the fall is motional
+narrowing, and the plateau below matches the frozen-upstream average unfitted. **What is not
+established:** *which* downstream timescale the upstream must beat. The measured 4.62× says the
+crossover is not at the rail relaxation time; it does not say what it is at.
+
+**§100.2 — both of P2's and P3's numbers are one cell of a trend, and the single cell misleads**
+
+`P(stage 2 low | stage 1 low)` conditions on stage 1 being low **at the end of the window**. That is
+the same conditioning family §92.1(b) caught — an endpoint condition, not a statement about paths —
+and it was reported at a single t₀. Swept (rule 18: read the cells before summarising them):
+
+| t₀ | P(stage 1 low) | P(s2 lo \| s1 lo) | free/reflected |
+|---|---|---|---|
+| 0.5 | 2.8623e−03 | 0.7254 | **1.9615** |
+| 1.0 | 4.5599e−03 | 0.8860 | 1.2399 |
+| 2.0 | 7.7739e−03 | 0.9376 | 1.1219 |
+| 4.0 | 1.4106e−02 | 0.9665 | 1.0838 |
+| 8.0 | 2.6619e−02 | 0.9830 | 1.0673 |
+
+**Neither headline number is a constant of the chain.**
+
+**(a) `P(s2 lo | s1 lo)` rises monotonically toward 1** — 0.7254 → 0.9830 over a 16× window. That is
+what an endpoint co-occurrence does: the longer the window, the more time stage 2 has had to follow
+a stage 1 that fell early, and in the t₀ → ∞ limit both stages are simply in their low basins and the
+conditional goes to 1 carrying no information at all. **So 0.9376 does not measure transmission; it
+measures co-occurrence at t₀ = 2.** The claim that survives is weaker and still decisive: the
+co-occurrence is **already 0.73 at the shortest window measured**, where P(stage 1 low) is only
+2.9e−3 and stage 2 has had almost no time to follow — and it never falls. There is no window in
+which the saturation buys the downstream any protection from a failed upstream.
+
+**(b) The wall's net effect runs the other way — it is *largest* at short windows.** free/reflected
+goes **1.9615 → 1.0673** as the window grows: at t₀ = 0.5 the reflecting wall hides **half** the
+chain's stage-2 error, not 12%. The reason is the same one: at short windows the failure channel is
+almost the only way for stage 2 to be low, while at long windows stage 2's own intrinsic escape
+dominates and swamps it. **Any depth ceiling built on the reflected penalty is optimistic by a factor
+that depends on the window it is evaluated in, and that factor is between 1.07 and 1.96 over the
+range measured — not a correction that can be absorbed into a constant.**
+
+> **What §100's first pass got wrong.** P2 and P3 were pre-registered at one window and read at one
+> window, and both numbers were quoted as properties of the coupling. They are properties of
+> (coupling, window). This is rule 18 exactly — the measurement was sound, the summary across cells
+> was not — and it was caught only by sweeping an axis the prediction did not name. The original
+> t₀ = 2.0 readings stand above with the sweep beside them (rule 7).
+
+**What this does to T-CASC-n.** It sharpens it. The free-upstream channel is not a 12% correction; at
+the short windows where a cascade actually has to hold its value it is comparable to everything
+§92–§98 measured. The kill test named in T-CASC-n must therefore sweep t₀, not evaluate at one.
+
+**What §100 does not settle.** Nothing here bears on a cascade whose upstream is *allowed* to fail
+— a different chain, not built. The one number that points at it is P3's 0.9376: in such a chain
+upstream failures would transmit almost perfectly, so the depth ceiling would be set by the *worse*
+of the two channels and it is the one §92–§98 never measured.

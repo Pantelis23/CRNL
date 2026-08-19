@@ -639,9 +639,8 @@ in units of the upstream rail width — controls it, with `log(penalty) ≈ −0
 margin/σ` and two independent knobs collapsing onto one curve. A second control then
 appeared: scaling the upstream's rates leaves its landscape, barrier, rail width and
 stationary law *identical* and changes only its clock, and the penalty moves **2.7×** —
-plateauing for a slow upstream and falling by **motional narrowing** above
-`τ_up = τ_down`, exactly where the upstream's correlation time meets the downstream's
-response time.
+plateauing for a slow upstream and falling by **motional narrowing** above matched
+speeds, `s_up = s_dn`.
 
 > **Composition is a function of two numbers — the noise margin and the timescale
 > ratio — and both are properties of single elements.** The joint master equation
@@ -649,6 +648,27 @@ response time.
 > upstream stages are fast and its transfer function saturates** — and neither is a
 > property of the restoring element itself, which is what a transistor's saturating
 > gain curve supplies. [`FINDINGS.md`](FINDINGS.md) §91–§93.
+
+That crossover was originally reported as sitting at `τ_up = τ_down`, "where the
+upstream's correlation time meets the downstream's response time". **§100 withdrew
+the identification.** The knob was a *global* speed scaling on stage 1, which
+multiplies its relaxation time and its escape time by the same factor and so cannot
+say which was matched. Measured on Ω instead — an axis that moves an escape time like
+`exp(A·Ω)` and leaves a relaxation time alone — the two are separated by three orders
+of magnitude, and at `s_up = s_dn` the upstream's correlation time is **0.698** against
+the downstream's rail relaxation time **0.151**: **4.62× apart.** The crossover and the
+interior maximum are measured and stand; only the account of them is withdrawn, and
+*which* downstream timescale must be beaten is open again.
+
+**§99 also found most of the mechanisms already published.** The frozen/fast bracket is
+the standard heuristic account of **resonant activation** (Pechukas & Hänggi 1994),
+already done for master equations with a WKB action by Assaf *et al.* (2013) — and it
+has *three* regimes, not two. The width recursion `σ²_out = σ²_intr + g²σ²_in` is
+Thattai & van Oudenaarden (2002) Eq. 13, twenty-four years old, and the standard form
+carries a time-averaging factor this one lacks. What was *not* found anywhere: a
+directed cascade of genuinely bistable elements solved by exact CME, with a depth
+question — and a modulator that is itself chemistry rather than an imposed noise
+process, which is why the two timescales here cannot be tuned independently.
 
 **The near-miss is the instructive part.** The first version of that experiment gated
 only *neutrality* and found error accumulation strongly **sublinear** — an added stage
@@ -658,10 +678,29 @@ errors, the founding claim confirmed. The exact joint law gave
 accumulate" was true because nothing was connected.** A neutrality gate tests only the
 null condition; a cascade must also *transmit*.
 
+**And the sibling lesson, from the other end.** Everything from §92 on reflects the
+upstream at its saddle, so it cannot fail — a declared control, introduced to fix a real
+conditioning bias, but a wall the chemistry does not have. §100 priced it. Freeing the
+upstream adds error, and how much depends entirely on the window: **free/reflected runs
+1.96 → 1.07** as the window grows 16×, so at short windows *the wall hides half the
+chain's error*. And the prediction that failed is the useful one — the Hill coupling's
+saturation was expected to attenuate a failed upstream the way it attenuates a noisy
+one. It does not: the downstream follows a fallen upstream at **0.73 rising to 0.98**,
+never falling.
+
+> **Saturation protects against fluctuations and not at all against failures.** A
+> transfer function that flattens a 1σ wobble has no flat region once the input has
+> reached the other rail — transmitting that is what it is *for*. The noise-margin law
+> prices the first channel and never saw the second, so the depth ceiling
+> `D_max = c*/(penalty × ε)` is **conditional on every upstream stage surviving**.
+> [`FINDINGS.md`](FINDINGS.md) §99–§100.
+
 ```bash
-python -m experiments.chemical_cascade   # three couplings, and the transmission gate
-python -m experiments.margin_law         # frozen vs fast averaging, motional narrowing
-python -m experiments.timescale_ratio    # the crossover at tau_up = tau_down
+python -m experiments.chemical_cascade      # three couplings, and the transmission gate
+python -m experiments.margin_law            # frozen vs fast averaging, motional narrowing
+python -m experiments.timescale_ratio       # the crossover, at matched speeds
+python -m experiments.what_reflection_costs # what the wall hides, and the Omega discriminator
+python -m experiments.margin_vs_action      # is A*Omega really the variable, or margin/sigma?
 ```
 
 ## Verifying the base

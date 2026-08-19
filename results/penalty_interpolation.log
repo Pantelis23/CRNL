@@ -1,0 +1,23 @@
+=== P1 GATE: reproduce §92's stored numbers at Omega = 30
+  frozen 4.845 (§92: 4.845);  fast 1.139 (1.139);  measured 4.442 (4.442)
+  -> P1 HOLDS: same instrument
+
+=== P2: sweep Omega on ONE element. A*Omega moves; the landscape does not.
+  Omega   A*Omega     fast   measured   frozen   position
+     14      2.66    1.169      2.807    2.283     1.3089
+     20      3.80    1.165      3.539    3.096     1.1369
+     30      5.71    1.139      4.442    4.845     0.9400
+     40      7.61    1.118      5.199    7.251     0.8221
+     55     10.46    1.101      6.317   12.913     0.7096
+     70     13.32    1.091      7.556   22.960     0.6352
+     85     16.17    1.085      8.986   41.409     0.5805
+  position runs 1.3089 -> 0.5805  (monotone falling)
+  -> P2 HOLDS: deeper barriers sit further from the frozen limit
+
+=== P3: does §97's OTHER element land on this curve? Nothing fitted.
+  §97's element: A*Omega = 13.2, measured position = 0.6831
+  the sweep spans A*Omega = 2.66..16.17   -- INSIDE, so this is interpolation
+  curve at that depth predicts position = 0.6383   -> off by -6.6%
+  -> P3 HOLDS: a SECOND element lands on the first elements curve, so the position is a function of the barrier depth and the penalty CLOSES -- frozen, fast and position are all computable
+
+wrote results/penalty_interpolation.json

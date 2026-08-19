@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§82. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§100. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -446,11 +446,39 @@ The measurements in this project survive. The explanations attached to them most
   > it is not needed to compute it. **A cascade is safest when its upstream stages are fast and its
   > transfer function saturates** — motional narrowing and noise margin, neither of them a property
   > of the restoring element.
+  > ⚠ **§99(a)–(b): the bracket and the crossover both have prior art, and one reading is a
+  > suspect.** The frozen/fast bracket is the standard heuristic account of **resonant activation**
+  > (Pechukas & Hänggi, PRL 73, 2772, 1994), already done for master equations with a WKB action
+  > and finite-correlation-time noise by Assaf et al. (PRL 111, 058102, 2013). And there are
+  > **three** regimes, not two: `⟨exp(−ΔA·Ω)⟩` is the *intermediate* one, not the quenched limit.
+  > Separately, "τ_up = τ_down" is a suspect (rule 17) — the literature's optimum matches an
+  > *escape* time for barrier-top modulation and a *relaxation* time only for "breathing"
+  > potentials, and §93 never asked which the Hill coupling produces. **The crossover is measured
+  > and stands; its account is open (T-CASC-l).** What has no prior art is that the modulator here
+  > is a chemically-coupled upstream stage rather than an imposed process — which is exactly why
+  > the two timescales cannot be tuned independently.
+  > ⚠ **§100 settles T-CASC-l and withdraws §93's identification.** The reflecting wall at stage 1's
+  > saddle removes its escape channel, so **only one of the two timescales exists in this chain** —
+  > confirmed on the axis §93 lacked: over Ω = 14→55 the reflected gap varies **1.13×** while the
+  > free gap varies **1708×**, tracking exp(−A·Ω). But the reflected gap is **1.43–1.62, not** the
+  > rail rate |f′(r₃)| = 6.6195, and is not converging to it: **the wall installs a box-scale
+  > timescale of its own, 4.6× slower.** So at s_up = s_dn = 1 the upstream's correlation time is
+  > 0.6980 and the downstream's rail relaxation time 0.1511 — **4.62× apart. The crossover sits at
+  > matched *speeds*, not matched *times*.** The crossover and the interior maximum stand; the
+  > identification is withdrawn, and *which* downstream timescale must be beaten is open again.
   **§94 took it to D = 3.** The law *composes*: fed stage 2's measured width it predicts stage 3's
   penalty as 5.65 against a measured 6.35 — 11% low, inside §91's own scatter. But the width
   sequence it needs is not predicted by anything: unconditioned widths run 0.499, 0.542, **0.708**,
   blowing past the LNA fixed point (0.551), and the deterministic gain at the operating points is
   **13× too small** to explain even the first step.
+  > ⚠ **§99(c) withdraws that last clause and dates the recursion.** `σ²_out = σ²_intr + g²σ²_in`,
+  > its fixed point and the g < 1 condition are **Thattai & van Oudenaarden (2002), Eq. 13** — 24
+  > years old. Their form carries a **time-averaging factor** τ = β_x/(β_s+β_x) that mine lacks,
+  > valid only under separated timescales, which §92–§93 measured to be *equal* here. And the
+  > "too small by 13×" gap came from solving g² out of σ₂/σ₁ **assuming σ_intr is
+  > stage-independent** — when §95–§96 show the operating point moves and the intrinsic width
+  > follows it. §96's account reproduces the widths with **no transmitted-noise term at all**, and
+  > is what survives.
   **§95–§96 then closed the width question.** The mean shift is the *static-transfer average of a
   concave map*: computed exactly rather than to second order it predicts the operating point to
   **0.12%**, with the residue bracketed by the frozen and fast limits as the upstream clock is
@@ -462,5 +490,45 @@ The measurements in this project survive. The explanations attached to them most
   The derivation behind that slope — §92's frozen/fast average — still brackets the measurement
   (8.92 / 4.47 / 1.01), so **the margin law was a one-element parameterisation, and the barrier
   depth A·Ω enters too**. §91's 14-point collapse was real but every point shared one element:
-  rule 9 at the top level. *(Two instrument bugs were found and corrected on the way, one of which had
+  rule 9 at the top level.
+  **§98 then closed it.** Ω moves the barrier depth without touching the landscape, so the curve
+  could be traced on one element and the other checked against it: the position between the two
+  limits falls monotonically with A·Ω, and §97's element — different landscape, different coupling,
+  barrier 2.3× deeper — lands on that curve to **6.6%**, nothing fitted.
+  > **So the composition penalty is computable from single-element quantities after all**, with
+  > A·Ω as the variable §91's margin law could not see. What began as "the chain was never built"
+  > ends with mean, width and penalty all predicted out of sample. *(Two instrument bugs were found and corrected on the way, one of which had
   > reversed §94's headline; the originals stand in FINDINGS §94 with the correction beside them.)*
+  > ⚠ **§99.1 tests the obvious objection and does not fully settle it.** Near a saddle-node
+  > A·Ω ∝ (margin/σ)², and §98's Ω-sweep **cannot separate them at all** — within one element
+  > margin/σ ∝ √Ω. Only the second element breaks the tie, where the ratio differs by 22%: A·Ω
+  > transfers to −6.6% and (margin/σ)² to −15.0%. That is **one out-of-sample point with no error
+  > bar, run post-hoc**, and it is recorded as a discrimination rather than a prediction. A third
+  > element settles it (T-CASC-m).
+
+**§100 then priced the reflecting boundary that §92–§98 all rest on**, and found the arc's scope
+narrower than its sentences. Freed, the chain carries 12.2% more stage-2 error at t₀ = 2.0 — but that
+net hides two effects of opposite sign, each 33–45% of the reflected error: the wall *removes* the
+upstream failure channel and *inflates* the surviving branch by **+49%**, pushing back probability
+that would have leaked out. **And the 12.2% is one cell of a trend**: swept over the window,
+free/reflected runs **1.9615 → 1.0673** for t₀ = 0.5 → 8, so at the short windows where a cascade
+actually has to hold its value **the wall hides half the error**.
+  > **So §92–§98 measure the transfer of the upstream's *rail fluctuations*, not the accumulation of
+  > its *errors*, and `D_max = c*/(penalty × ε)` is conditional on every upstream stage surviving.**
+  And the prediction that mattered was refuted: **`P(stage 2 low | stage 1 low)` is 0.7254 at the
+  shortest window and rises monotonically to 0.9830, never falling.** *(An endpoint co-occurrence,
+  not a transmission probability — it must reach 1 eventually. What survives is that no window buys
+  the downstream any protection.)* **Saturation protects
+  against fluctuations and not at all against failures** — a transfer function that flattens a 1σ
+  wobble has no flat region once the input has reached the other rail, because transmitting that is
+  what it is built to do. The noise-margin law prices the first channel and never saw the second,
+  which is now the arc's largest open question (T-CASC-n).
+
+**What §99 leaves standing.** The composition arc's *measurements* survive intact; its
+*mechanisms* took the damage, which is now the project's most reliable pattern (rule 17, and
+§99(a)–(c) are the fourth, fifth and sixth instances). The arc's genuinely unclaimed ground is
+narrower than it looked and sharper: **a directed cascade of bistable elements solved by exact CME,
+where the modulator is itself chemistry rather than an imposed noise process, and where the
+operating point is taken from the exact static-transfer average before the LNA is applied.** No
+reference was found combining a directed cascade, genuine bistability, an exact CME and a depth
+question.

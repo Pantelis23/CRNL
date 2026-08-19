@@ -456,5 +456,11 @@ The measurements in this project survive. The explanations attached to them most
   **0.12%**, with the residue bracketed by the frozen and fast limits as the upstream clock is
   swept 256×. And the width follows from the operating point within the LNA's own accuracy.
   > **So the chain is predicted end to end** — mean, then width, then penalty — from single-element
-  > quantities. *(Two instrument bugs were found and corrected on the way, one of which had
+  > quantities.
+  **§97 ran it forward on an element it was never built from**, and split the result cleanly: the
+  **mean is right to −0.00%** and the width to 2.76%, while **§91's fitted slope is 74% wrong**.
+  The derivation behind that slope — §92's frozen/fast average — still brackets the measurement
+  (8.92 / 4.47 / 1.01), so **the margin law was a one-element parameterisation, and the barrier
+  depth A·Ω enters too**. §91's 14-point collapse was real but every point shared one element:
+  rule 9 at the top level. *(Two instrument bugs were found and corrected on the way, one of which had
   > reversed §94's headline; the originals stand in FINDINGS §94 with the correction beside them.)*

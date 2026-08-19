@@ -1,0 +1,40 @@
+=== P1 GATE: is this a different element, and does the coupling TRANSMIT?
+  rails (0.2, 1.0, 4.3505)  (calibration element was 0.15/1.0/3.1827)
+  Hill n=6.0, K=1.3  (calibration was n=4, K=1)
+  escape action A = 0.439977   (calibration element: 0.190241)
+  F(r3) = 4.3505000000 vs r3 = 4.3505   -> neutral at the rail
+  downstream roots at r1: [0.1598]
+  collapse point x_crit = 1.6495621249999999
+  -> P1 HOLDS: neutral at the rail AND it transmits
+
+  stage 1 (exact, 1-D): mean 4.27101  sd 0.50185  intrinsic shift -0.07949  margin 5.382 sd
+
+=== the PREDICTIONS, made before the joint solve, from single-element quantities
+  mu_2      predicted = 4.26779
+  sigma_2   predicted = 0.51622   (margin 5.232 sd)
+  penalty   predicted = 1.1532   using §91's slope -0.952, NOT re-fitted
+
+=== the exact joint solve
+  mu_2    measured = 4.26781
+  sigma_2 measured = 0.50236
+  penalty measured = 4.4742   (eps_iso = 5.1395e-06)
+
+=== P2/P3/P4/P5: the three residuals, reported whatever they are
+    quantity   predicted    measured    ratio    error
+        mean     4.26779     4.26781   1.0000   -0.00%
+       width     0.51622     0.50236   1.0276    2.76%
+     penalty     1.15325     4.47424   0.2578  -74.22%
+  -> P2 HOLDS: the mean is 0.00% off
+  -> P3 HOLDS: the width is 2.76% off
+  -> P4 FAILS: the slope -0.952 does NOT transfer -- §91s law is a fit calibrated on one element, not a law: the penalty is 74.2% off
+  -> P5 all three reported; the slope was NOT re-fitted to this element.
+
+=== P6: the DERIVATION behind §91's fit -- §92's frozen-upstream average
+  A(r3) = 0.439977;  A*Omega = 13.2  (calibration element: 5.7)
+  frozen-upstream average <exp(-dA*Om)> = 8.9247
+  fast limit exp(-<dA>*Om)              = 1.0081
+  measured penalty                      = 4.4742
+  frozen/measured = 1.995;  fast/measured = 0.225
+  -> P6 HOLDS: the derivation brackets the measurement on an element it was never calibrated on, so §91s slope is a ONE-ELEMENT PARAMETERISATION of it and the margin alone is not the controlling variable -- the barrier depth A*Omega enters too
+
+wrote results/cascade_out_of_sample.json

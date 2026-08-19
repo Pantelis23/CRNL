@@ -3967,12 +3967,47 @@ end** -- which is exactly what §94.1(b) wrongly denied.
 (c) -- the deterministic gain is **18.6x** too small, was 13x; and §95's structure, with curvature
 closing 40% of the mean shift instead of 42%.
 
-**T-CASC-j, open: does the end-to-end prediction hold at a second element?** Everything above is
-one Schloegl landscape with one Hill coupling at Omega = 30. The chain of reasoning -- exact
-static-transfer average for the mean, LNA at that operating point for the width, §91's law for the
-penalty -- is now closed, so it can be run forward on a network it was not built from. **How to
-kill:** a different saddle position and a different Hill exponent, predicting mu_2, sigma_2 and the
-penalty with nothing measured on the chain itself, checked against one exact D = 2 solve.
+~~**T-CASC-j, open: does the end-to-end prediction hold at a second element?**~~ **-> §97. THE
+DERIVATIONS TRANSFER; THE FITTED SLOPE DOES NOT.**
+
+Run forward on roots 0.20/1.0/4.3505 (A = 0.439977 vs 0.190241) with Hill n = 6, K = 1.3 (vs
+n = 4, K = 1), nothing measured on the cascade, against one exact joint solve:
+
+    mean      predicted 4.26779   measured 4.26781    -0.00%
+    width     predicted 0.51622   measured 0.50236    +2.76%
+    penalty   predicted 1.15325   measured 4.47424   -74.2%
+
+**The mean is right to five decimals on an element it was never calibrated on and the width is
+inside the LNA's own accuracy. §91's slope -0.952 is 74% wrong, so it is a FIT and not a law.**
+
+**But the derivation behind the fit does transfer.** §92's frozen average carries Omega and the
+barrier explicitly where §91's slope carries only the margin, and this element's barrier is
+A*Omega = 13.2 against the calibration's 5.7:
+
+    frozen 8.92   |   measured 4.47   |   fast 1.01
+
+The two limits bracket it, exactly as in §92. **So §91's margin law is a ONE-ELEMENT
+PARAMETERISATION of §92's average, and the margin alone is not the controlling variable -- the
+barrier depth A*Omega enters too.**
+
+**§91's headline needs that qualification, and it is rule 9 at the top level.** The 14-point
+collapse onto log(penalty) = -0.952 x margin/sigma was real, but every one of those points had the
+SAME ELEMENT and therefore the same A*Omega. **Constancy along the axes swept is not constancy, and
+the axis not swept was the barrier depth.** It is also rule 19's extrapolation trap: the new
+element's margin is 5.38 sigma against a calibrated range of 1.81-4.70.
+
+**WHERE THE COMPOSITION ARC STANDS.** Mean and width are predicted end to end from single-element
+quantities, out of sample. The penalty is BRACKETED by two computable limits whose separation is
+the upstream's correlation time. **There is no closed form for the penalty**: §91's slope is not
+it, and §92's average gives two numbers rather than one.
+
+**T-CASC-k, open: is there a closed form for the penalty?** The frozen and fast limits differ by a
+factor of 8.8 on the new element and 4.3 on the old, and the measurement sits between. **How to
+kill:** the interpolation between them should be governed by the ratio of the upstream correlation
+time to the DOWNSTREAM ESCAPE time (not its relaxation time -- §93's ratio was relaxation, and it
+is the wrong clock for a rare event). Compute that ratio for both elements and check whether a
+single interpolation function in it reproduces both measurements. If it does, the penalty closes;
+if not, report the bracket and stop.
 
 **SCOPE OF THE COMPOSITION RESULT, as it now stands:** depth is computable **given the widths**;
 the width sequence is open.

@@ -10428,3 +10428,55 @@ the remaining 0.12% is made of.
 > limits. Since §95 showed the width follows from the operating point within the LNA's own
 > accuracy, **the width sequence is now predicted end to end** — which is what §94.1(b) wrongly
 > denied.
+
+---
+
+### 97 Out of sample: the derivations transfer, the fitted slope does not — T-CASC-j
+
+§91–§96 assembled a three-link prediction chain for a chemically-coupled cascade, every link using
+only single-element quantities: the **mean** from the exact static-transfer average (§96), the
+**width** from the LNA at that operating point (§95), the **penalty** from `log(penalty) =
+−0.952 × margin/σ` (§91). All three were calibrated on **one** Schlögl landscape with **one** Hill
+coupling. A chain of three steps checked only on the data it was built from is what rule 16 exists
+to stop.
+
+Run forward on a different element (roots 0.20/1.0/4.3505, A = 0.439977 against 0.190241) with a
+different coupling (Hill n = 6, K = 1.3 against n = 4, K = 1), **with nothing measured on the
+cascade**, against one exact joint solve:
+
+| quantity | predicted | measured | error |
+|---|---|---|---|
+| **mean** | 4.26779 | 4.26781 | **−0.00%** |
+| **width** | 0.51622 | 0.50236 | +2.76% |
+| **penalty** | 1.15325 | 4.47424 | **−74.2%** |
+
+> **The two derivations transfer; the one fitted coefficient does not.** The mean is right to five
+> decimals on an element it was never calibrated on, and the width to inside the LNA's own
+> accuracy. **§91's slope −0.952 is 74% wrong, so it is a fit and not a law.**
+
+**P6 — and the derivation behind the fit does transfer.** §92's frozen-upstream average carries Ω
+and the barrier explicitly where §91's slope carries only the margin, and **this element's barrier
+is A·Ω = 13.2 against the calibration's 5.7**:
+
+    frozen  <exp(-[A(x_up) - A(r3)] Omega)>  =  8.92
+    fast     exp(-[<A(x_up)> - A(r3)] Omega) =  1.01
+    measured                                  =  4.47
+
+The two limits bracket the measurement on an element the formula was never calibrated on, exactly
+as they did in §92. **So §91's margin law is a one-element parameterisation of §92's average, and
+the margin alone is not the controlling variable — the barrier depth A·Ω enters too.**
+
+> ⚠ **§91's headline needs this qualification.** `log(penalty) = −0.952 × margin/σ` collapsed 14
+> points from two knobs onto one curve — but every one of those points had the *same element* and
+> therefore the same A·Ω. **The collapse was real and its generality was assumed.** This is rule 9
+> at the top level: constancy along the axes swept is not constancy, and the axis not swept there
+> was the barrier depth.
+>
+> It is also rule 19's extrapolation trap: the new element's margin is **5.38σ**, outside §91's
+> calibrated range of 1.81–4.70σ, so the slope was being applied past the range it was traced on.
+
+**What the composition arc now says.** Mean and width are predicted end to end from single-element
+quantities, on an element never used to build them. The penalty is bracketed by two computable
+limits whose separation is the upstream's correlation time. **What is not available is a closed
+form for the penalty** — §91's slope is not it, and §92's average requires the two limits rather
+than giving one number.

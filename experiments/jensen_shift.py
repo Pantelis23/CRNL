@@ -51,8 +51,12 @@ from experiments.margin_law import R1, R2, R3
 
 C = schlogl_consts(R1, R2, R3)
 # §94's exact values, quoted as stored numbers (rule 16).
-MU1, SD1 = 3.02222, 0.49922
-MU2, SD2 = 2.95635, 0.54181
+# **CORRECTED in §96.** The originals were MU1, SD1 = 3.02222, 0.49922 and MU2, SD2 = 2.95635,
+# 0.54181, computed with a high-side filter that a REFLECTED stage does not need -- it merely
+# dropped the boundary lattice site. Unconditioned, which is correct for a stage that cannot
+# escape, the values are below. The originals stand in FINDINGS §94; these supersede them.
+MU1, SD1 = 3.02117, 0.50120
+MU2, SD2 = 2.95165, 0.54965
 
 
 def F(x_up):

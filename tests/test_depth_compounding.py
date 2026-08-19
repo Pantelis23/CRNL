@@ -63,29 +63,17 @@ class TestTheWidthSequence:
         assert sd[1] > sd[0] and sd[2] > sd[1]
         assert mu[1] < mu[0] and mu[0] < R3          # drifting down from the rail
 
-    def test_sigma3_overshoots_the_LNA_fixed_point(self):
-        """§94.1(b). The overshoot grows with Omega (1.015, 1.034, 1.086, 1.286 at
-        Omega = 14, 16, 20, 30); at this small Omega it is present but small."""
+    def test_the_LNA_recursion_predicts_sigma3(self):
+        """§96.1(a) corrected this. The original test asserted that sigma_3 OVERSHOOTS the
+        fixed point, which was the seed bug: the last stage was being seeded at its saddle and
+        relaxing upward, inflating its width. With every stage seeded at its rail the recursion
+        predicts sigma_3 to 1.3% here and 4.3% at Omega = 30, and sigma_3 sits essentially AT
+        the fixed point rather than far past it."""
         p, ref, dims, strides = _run(3, all_reflected=True)
         sd = [stage_stats(p, OM, ref, dims, strides, k, all_reflected=True)[1]
               for k in range(3)]
         g2 = (sd[1] / sd[0]) ** 2 - 1.0
-        assert g2 < 1.0
-        assert sd[2] > sd[0] / np.sqrt(1 - g2)       # past the fixed point
-
-
-class TestTheDeterministicGain:
-    def test_it_is_far_too_small_to_explain_the_width_growth(self):
-        """§94.1(c): g^2 at the operating point is ~0.01, against the ~0.18 the width ratio
-        implies at Omega = 30. The growth is not linear transmission."""
-        assert _g(3.0222) ** 2 < 0.03
-        assert _g(3.1827) ** 2 < 0.01
-
-    def test_the_gain_crosses_one_above_the_collapse_point(self):
-        """A runaway threshold exists, and it sits INSIDE the nominally bistable range."""
-        xs = np.linspace(R1, R3, 2001)
-        xc = next(float(x) for x in xs[::-1]
-                  if len(cc.downstream_roots(x, C, R3, "hill")) < 3)
-        assert _g(1.9) > 1.0
-        assert _g(2.5) < 1.0
-        assert 1.9 > xc
+        assert 0 < g2 < 1.0
+        pred = sd[0] * np.sqrt(1.0 + g2 + g2 ** 2)
+        assert pred == pytest.approx(sd[2], rel=0.05)
+        assert sd[2] < 1.05 * sd[0] / np.sqrt(1 - g2)      # at the fixed point, not past it

@@ -1,35 +1,35 @@
 === P1 GATE: neutrality at the rail, and are F', F'' converged in h?
   F(r3) = 3.1827000000   r3 = 3.1827   diff 4.44e-16
          h     F1(mu1)     F2(mu1)
-     1e-02    0.104208   -0.172659
-     5e-03    0.104203   -0.172654
-     2e-03    0.104202   -0.172653
-     1e-03    0.104202   -0.172652
-     5e-04    0.104202   -0.172652
+     1e-02    0.104389   -0.173021
+     5e-03    0.104385   -0.173016
+     2e-03    0.104384   -0.173014
+     1e-03    0.104383   -0.173014
+     5e-04    0.104383   -0.173014
   -> P1 HOLDS: neutral at the rail and the second derivative is converged
 
 === P2: is the map CONCAVE at the operating point?
-  F'(mu1) = 0.104202   F''(mu1) = -0.172652
+  F'(mu1) = 0.104383   F''(mu1) = -0.173014
   -> P2 HOLDS: concave, so Jensen lowers the downstream operating point
 
 === P3: the mean, absolute. Nothing fitted.
-  element's own shift, from stage 1:  delta_intr = -0.16048
-  F(mu1)                             = 3.16798
-  Jensen term (1/2) F'' sigma_1^2    = -0.02151
-  mu_2 predicted WITHOUT Jensen      = 3.00750
-  mu_2 predicted WITH Jensen         = 2.98599
-  mu_2 measured                      = 2.95635
-  residual without Jensen -0.05115;  with Jensen -0.02964   -> closes 42% of it
+  element's own shift, from stage 1:  delta_intr = -0.16153
+  F(mu1)                             = 3.16787
+  Jensen term (1/2) F'' sigma_1^2    = -0.02173
+  mu_2 predicted WITHOUT Jensen      = 3.00634
+  mu_2 predicted WITH Jensen         = 2.98461
+  mu_2 measured                      = 2.95165
+  residual without Jensen -0.05469;  with Jensen -0.03296   -> closes 40% of it
   -> P3 the curvature term has the right SIGN but closes only part of the gap -- reported as partial
 
 === P4/P5: the width, and how much of the factor of 13 this accounts for
                    operating point         x    LNA sd
-          gain only (no curvature)   3.00750   0.51700
-             with the Jensen shift   2.98599   0.52382
-              at the MEASURED mean   2.95635   0.53385
-                  measured sigma_2             0.54181
-  sigma_1 measured = 0.49922;  LNA at stage 1's own mean = 0.51255
-  gap to close from the gain-only width: +0.02481;  curvature supplies +0.00682  (27%)
+          gain only (no curvature)   3.00634   0.51736
+             with the Jensen shift   2.98461   0.52427
+              at the MEASURED mean   2.95165   0.53552
+                  measured sigma_2             0.54965
+  sigma_1 measured = 0.50120;  LNA at stage 1's own mean = 0.51286
+  gap to close from the gain-only width: +0.03229;  curvature supplies +0.00691  (21%)
   -> P4/P5 the curvature moves the width the right way but explains only part -- named as partial, not fitted
   **Whatever fraction this is, it is reported and not tuned. A partial mechanism
     named as partial is worth more than a fitted one (rule 17).**

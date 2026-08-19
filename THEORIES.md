@@ -3927,15 +3927,52 @@ first-order gain missed it.**
 Both fractions are reported and not tuned: §22's convolution was fitted for three subsections and
 was out by 3688x against a quantity computable exactly.
 
-**T-CASC-i, open, and sharper than T-CASC-h was: what supplies the remaining 58% of the mean
-shift?** Not "why do the widths grow" -- that is answered -- but why the operating point sits lower
-than F plus one Jensen term puts it. **Candidates, none tested:** (a) the next Jensen term, i.e.
-the upstream's third moment; (b) the finite correlation time of the upstream -- §92/§93 showed the
-two stages' timescales are EQUAL here, so the static-transfer assumption behind F is exactly the
-wrong limit, and this is the candidate the rest of the arc most implicates; (c) the reflecting
-boundary at stage 1's saddle, which truncates its low tail and is worth 2.7% on sigma_1 alone.
-**How to kill (b):** re-measure the mean shift with the upstream sped up, where the static limit is
-correct by construction (§93's clock knob), and see whether the residual collapses.
+~~**T-CASC-i, open: what supplies the remaining 58% of the mean shift?**~~ **-> §96. 89% of it was
+the SECOND-ORDER TRUNCATION, not physics.**
+
+§95 used F(mu) + (1/2) F'' sigma^2 -- the frozen-upstream limit, truncated. Computing the frozen
+average EXACTLY over stage 1's own law:
+
+    §95's truncation      mu_2 = 2.98461
+    <F(x_up)> exact       mu_2 = 2.94799      measured 2.95165
+    G(<h>) fast limit     mu_2 = 2.96416
+
+**The residual falls from -0.03296 to +0.00366 -- 0.12% of the mean -- and changes sign.** The two
+limits are genuinely different objects (the coupling enters only through the Hill factor h, so the
+rail is G(h); frozen averages the OUTPUT <G(h)>, fast averages the INPUT G(<h>), and Jensen applies
+to a different function in each), and **all eight measured means lie between them** as the upstream
+clock is swept 256x. So the finite correlation time is what the remaining 0.12% is made of.
+
+**Consequence:** since §95 showed the width follows from the operating point within the LNA's own
+accuracy, and §96 predicts the operating point to 0.12%, **the width sequence is predicted end to
+end** -- which is exactly what §94.1(b) wrongly denied.
+
+**§96.1: TWO INSTRUMENT BUGS in §94/§95, one of which reversed a headline.**
+
+  * **(a) THE SEED.** `seed()` indexed the last stage by its raw molecule count -- right for a FREE
+    stage (range from 0), wrong when every stage is reflected (indexed by position in the reflected
+    range). The all-reflected run seeded stage 3 at a mean of **1.1333 against a rail at 3.1827**,
+    essentially at its saddle, and it relaxed UPWARD through the window. **§94's sigma_3 = 0.70814
+    and the Omega-scaling table built on it are artifacts.** Corrected: widths 0.50120, 0.54965,
+    0.58375, and the LNA recursion predicts sigma_3 to 4.3%. ~~§94.1(b): "the widths do not
+    converge and BOTH simple readings are refuted; the width sequence is not predicted by anything
+    here"~~ -- **WITHDRAWN.** §94's own P4, which had been marked superseded, was right.
+  * **(b) THE STATISTIC.** `stage_stats` applied a high-side filter to every stage. Right for a
+    free stage (condition on not having escaped), wrong for a reflected one, where it merely drops
+    the boundary lattice site: stage 1 read 3.02222 against an exact stationary 3.02117. **Caught
+    by a P1 gate in §96 that FAILED** -- two independent builds of the same two-stage system
+    disagreed, including on stage 1, which is provably invariant.
+
+**What survives unchanged:** the one-way coupling; §94 P3 (now 8.5% low, was 11%); §94.1(a) and
+(c) -- the deterministic gain is **18.6x** too small, was 13x; and §95's structure, with curvature
+closing 40% of the mean shift instead of 42%.
+
+**T-CASC-j, open: does the end-to-end prediction hold at a second element?** Everything above is
+one Schloegl landscape with one Hill coupling at Omega = 30. The chain of reasoning -- exact
+static-transfer average for the mean, LNA at that operating point for the width, §91's law for the
+penalty -- is now closed, so it can be run forward on a network it was not built from. **How to
+kill:** a different saddle position and a different Hill exponent, predicting mu_2, sigma_2 and the
+penalty with nothing measured on the chain itself, checked against one exact D = 2 solve.
 
 **SCOPE OF THE COMPOSITION RESULT, as it now stands:** depth is computable **given the widths**;
 the width sequence is open.

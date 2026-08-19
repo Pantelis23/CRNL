@@ -10362,3 +10362,69 @@ of the upstream (Jensen's next term), the finite correlation time of the upstrea
 the two stages' timescales are *equal* here, so the static-transfer assumption behind F is exactly
 the wrong limit — and the reflecting boundary at stage 1's saddle, which truncates its low tail and
 is worth 2.7% on σ₁ alone.
+
+---
+
+### 96 The mean shift *is* the static-transfer average — and two instrument bugs in §94/§95
+
+### 96.1 ⚠ Two corrections, one of which reverses §94's headline
+
+> **(a) THE SEED. §94's σ₃ = 0.70814 is an artifact, and with it §94.1(b) and the Ω-scaling table.**
+> `seed()` indexed the last stage by its raw molecule count — correct when that stage is *free*
+> (its range starts at 0) and wrong when every stage is reflected (indexed by position within the
+> reflected range). In the all-reflected run stage 3 was therefore seeded at a mean of **1.1333
+> against a rail at 3.1827 — essentially at its saddle** — and relaxed *upward* through the whole
+> window, inflating its width.
+>
+> Corrected, the widths are **0.50120, 0.54965, 0.58375**, and the LNA recursion predicts σ₃ to
+> **4.3%**. **So §94.1(b)'s "refuted by measurement" is withdrawn: the recursion works, the widths
+> converge, the per-stage penalty tends to a constant, and there is no hard depth limit from
+> erosion.** §94's own P4 — which I had marked provisional and superseded — was right.
+>
+> ~~§94: "the widths do not converge to the LNA fixed point and BOTH simple readings are refuted;
+> the width sequence is not predicted by anything here"~~ — **WITHDRAWN.**
+
+> **(b) THE STATISTIC.** `stage_stats` filtered to `counts > R₂Ω` for every stage. That is right
+> for a *free* stage — its high-rail statistics must condition on it not having escaped — and
+> wrong for a *reflected* one, which cannot escape and whose whole support is already the high
+> side; there it merely drops the boundary lattice site. Stage 1's mean was 3.02222 against an
+> exact stationary 3.02117, its sd 0.49922 against 0.50120.
+>
+> Caught by a **P1 gate in this section that failed**: two independent builds of the same
+> two-stage system disagreed, and stage 1 — seeded from its own stationary law, so provably
+> invariant — was among the disagreements.
+
+**What survives §94/§95 unchanged.** P1's one-way coupling; §94 P3 (the law predicts stage 3's
+penalty, now 8.5% low instead of 11%); §94.1(a) and (c) — the deterministic gain is **18.6×** too
+small (was 13×) to explain the width ratio; and §95's structure, with curvature closing **40%** of
+the mean shift instead of 42% and supplying 21% of the width instead of 27%.
+
+### 96.2 Most of §95's residual was the expansion, not the physics
+
+§95 predicted the operating point as `F(μ) + ½F''σ²` — the **frozen-upstream** limit, truncated at
+second order. Two things were conflated in its 58% residual, and separating them was the point:
+
+| | μ₂ |
+|---|---|
+| §95's second-order truncation | 2.98461 |
+| **⟨F(x_up)⟩ exact** over stage 1's law | **2.94799** |
+| G(⟨h⟩) — the fast-upstream limit | 2.96416 |
+| measured (speed 1) | 2.95165 |
+
+> **The truncation accounted for 89% of §95's residual.** Against the exact frozen average the
+> residual falls from −0.03296 to **+0.00366** — 0.12% of the mean — and changes sign.
+
+**And the two limits are different objects, both computable.** The coupling enters only through the
+Hill factor h, so the rail is G(h): the frozen limit averages the *output*, `⟨G(h(x_up))⟩`; the fast
+limit averages the *input*, `G(⟨h(x_up)⟩)`. Jensen applies to a different function in each.
+
+**P2/P3, sweeping the upstream clock** (§93's knob — landscape, barrier, rail width and stationary
+law all unchanged): the mean moves by 0.00810 across a **256×** change in speed, and **all eight
+measured means lie between the two limits.** So the finite correlation time is live, and it is what
+the remaining 0.12% is made of.
+
+> **The mean shift is the static-transfer average of a concave map.** Compute it exactly rather
+> than to second order and it is right to 0.12%, with the residue bracketed by the frozen and fast
+> limits. Since §95 showed the width follows from the operating point within the LNA's own
+> accuracy, **the width sequence is now predicted end to end** — which is what §94.1(b) wrongly
+> denied.

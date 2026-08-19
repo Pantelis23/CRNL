@@ -126,11 +126,21 @@ def build_chain(om, D, cap_mult=1.25, all_reflected=False):
     return Q, ref, dims, strides, cap
 
 
-def seed(om, ref, dims, strides, pi1):
-    """Stage 1 from its exact stationary law; every later stage starts at its rail."""
+def seed(om, ref, dims, strides, pi1, all_reflected=False):
+    """Stage 1 from its exact stationary law; every later stage starts at its rail.
+
+    **The index of the rail differs by stage type and the first version got it wrong.** A FREE
+    stage is indexed by its raw count (its range starts at 0); a REFLECTED stage is indexed by its
+    position within `ref`. The original used the raw count for the last stage unconditionally,
+    which is right when the last stage is free and wrong when `all_reflected=True` -- it then
+    seeded the last stage at ref[n_hi], i.e. a mean of 1.1333 against a rail at 3.1827, essentially
+    AT ITS SADDLE. That stage then relaxed upward through the whole window, inflating its width,
+    and produced §94's sigma_3 = 0.70814 and the Omega-scaling table built on it.
+    """
     p = np.zeros(int(np.prod(dims)))
     n_hi = int(round(R3 * om))
-    rest = sum(strides[i] * (list(ref).index(n_hi) if i < len(dims) - 1 else n_hi)
+    pos = list(ref).index(n_hi)
+    rest = sum(strides[i] * (pos if (i < len(dims) - 1 or all_reflected) else n_hi)
                for i in range(1, len(dims)))
     for a, w in enumerate(pi1):
         p[a * strides[0] + rest] = w
@@ -144,11 +154,20 @@ def last_low(p, om, dims, strides):
 
 
 def stage_stats(p, om, ref, dims, strides, k, all_reflected=False):
-    """Mean and sd of stage k's count on its high side, from the exact joint law."""
+    """Mean and sd of stage k's count, from the exact joint law.
+
+    **The high-side filter applies only to a FREE stage.** A free stage can escape, so its
+    high-rail statistics must condition on it not having done so. A REFLECTED stage cannot escape
+    and its whole support is the high side already -- applying `counts > R2*om` there merely drops
+    the boundary lattice site, which shifted stage 1's mean from its exact stationary value
+    3.02117 to 3.02222 and its sd from 0.50120 to 0.49922. Small, but §95 compares these against
+    predictions with nothing fitted, so a systematic of that size is not free.
+    """
     idx = np.arange(len(p))
     n = (idx // strides[k]) % dims[k]
-    counts = ref[n] if (k < len(dims) - 1 or all_reflected) else n
-    m = counts > R2 * om
+    reflected = k < len(dims) - 1 or all_reflected
+    counts = ref[n] if reflected else n
+    m = np.ones(len(p), bool) if reflected else (counts > R2 * om)
     w = p[m] / p[m].sum()
     c = counts[m].astype(float)
     mu = float((w * c).sum())
@@ -240,7 +259,7 @@ def main() -> None:
     print("       its width DOWN -- and the free-stage sigma_3 above came out BELOW sigma_2,")
     print("       which the recursion cannot produce).")
     Qa, refa, dimsa, stridesa, _ = build_chain(om, 3, all_reflected=True)
-    pa = seed(om, refa, dimsa, stridesa, pi1)
+    pa = seed(om, refa, dimsa, stridesa, pi1, all_reflected=True)
     pa = spla.expm_multiply(Qa.T * t, pa)
     sds = [stage_stats(pa, om, refa, dimsa, stridesa, k, all_reflected=True)[1]
            for k in range(3)]

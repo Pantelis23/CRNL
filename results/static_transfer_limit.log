@@ -1,0 +1,33 @@
+=== P1 GATE: reproduce §94/§95's stored stage-2 mean and width at speed 1
+  stage 1: mean 3.02117 sd 0.50120   (§94: 3.02117, 0.5012)
+  stage 2: mean 2.95165 sd 0.54965   (§94: 2.95165, 0.54965)
+  -> P1 HOLDS: same chain
+
+=== the two limits, both computed from stage 1's exact distribution
+  <F(x_up)> exact over stage 1's law   = 3.10952   (+ intrinsic -0.16153 -> 2.94799)
+  §95's 2nd-order truncation of it     = 3.14614   (+ intrinsic -> 2.98461)
+  <h(x_up)> = 0.99148  ->  G(<h>) = 3.12569   (+ intrinsic -> 2.96416)
+
+=== P2/P3: sweep the upstream clock. Does the mean move, and do the limits bracket?
+    s_up     mean_2      sd_2   vs frozen   vs fast
+   0.125    2.95547   0.55233     0.00748  -0.00869
+   0.250    2.95478   0.55167     0.00679  -0.00938
+   0.500    2.95356   0.55074     0.00557  -0.01060
+   1.000    2.95165   0.54965     0.00366  -0.01251
+   2.000    2.94958   0.54766     0.00159  -0.01458
+   4.000    2.94925   0.54247     0.00126  -0.01491
+   8.000    2.95172   0.53372     0.00373  -0.01243
+  32.000    2.95735   0.52004     0.00936  -0.00681
+  the mean moves by 0.00810 across a 256x change in the upstream clock
+  -> P2 HOLDS: the clock DOES move the operating point, so the correlation time is live
+  limits: frozen 2.94799, fast 2.96416;  8/8 measured means lie between them
+  -> P3 HOLDS: the two limits bracket the measurement
+
+=== P4: how much of §95's 58% was the second-order truncation?
+  residual against §95's truncated frozen formula: -0.03296
+  residual against the EXACT frozen average:       +0.00366
+  -> the truncation itself accounted for 89% of §95's residual
+  residual against the fast limit:                 -0.01251
+  **Separating the expansion error from the physics BEFORE crediting either.**
+
+wrote results/static_transfer_limit.json

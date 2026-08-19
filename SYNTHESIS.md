@@ -451,6 +451,10 @@ The measurements in this project survive. The explanations attached to them most
   sequence it needs is not predicted by anything: unconditioned widths run 0.499, 0.542, **0.708**,
   blowing past the LNA fixed point (0.551), and the deterministic gain at the operating points is
   **13× too small** to explain even the first step.
-  > **Depth is computable given the widths; the widths are open.** A runaway threshold does exist
-  > — the gain crosses 1 at x_up ≈ 1.9, *inside* the nominally bistable range — and the stage means
-  > drift toward it, but that mechanism is a suspect (T-CASC-h), not a result.
+  **§95–§96 then closed the width question.** The mean shift is the *static-transfer average of a
+  concave map*: computed exactly rather than to second order it predicts the operating point to
+  **0.12%**, with the residue bracketed by the frozen and fast limits as the upstream clock is
+  swept 256×. And the width follows from the operating point within the LNA's own accuracy.
+  > **So the chain is predicted end to end** — mean, then width, then penalty — from single-element
+  > quantities. *(Two instrument bugs were found and corrected on the way, one of which had
+  > reversed §94's headline; the originals stand in FINDINGS §94 with the correction beside them.)*

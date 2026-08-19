@@ -446,4 +446,11 @@ The measurements in this project survive. The explanations attached to them most
   > it is not needed to compute it. **A cascade is safest when its upstream stages are fast and its
   > transfer function saturates** — motional narrowing and noise margin, neither of them a property
   > of the restoring element.
-  *(Open: whether the two-number description survives depth beyond D = 2 — T-CASC-e, T-CASC-g.)*
+  **§94 took it to D = 3.** The law *composes*: fed stage 2's measured width it predicts stage 3's
+  penalty as 5.65 against a measured 6.35 — 11% low, inside §91's own scatter. But the width
+  sequence it needs is not predicted by anything: unconditioned widths run 0.499, 0.542, **0.708**,
+  blowing past the LNA fixed point (0.551), and the deterministic gain at the operating points is
+  **13× too small** to explain even the first step.
+  > **Depth is computable given the widths; the widths are open.** A runaway threshold does exist
+  > — the gain crosses 1 at x_up ≈ 1.9, *inside* the nominally bistable range — and the stage means
+  > drift toward it, but that mechanism is a suspect (T-CASC-h), not a result.

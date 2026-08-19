@@ -3880,12 +3880,43 @@ look binding. **A cascade is safest when its upstream stages are fast and its tr
 saturates**: motional narrowing and noise margin, neither of them a property of the restoring
 element itself.
 
-**T-CASC-g, open: does the two-number description survive depth?** Everything above is D = 2. If
-the penalty compounds stage by stage, D_max follows immediately; if stage 3 sees a qualitatively
-different upstream -- one that is itself already modulated -- it may not. **How to kill:** D = 3 is
-1.77M joint states and reachable (§91 started one and stopped it for time, not feasibility).
-Measure whether stage 3's penalty relative to stage 2 equals stage 2's relative to stage 1, at
-matched margin and ratio. Scope everywhere: one element, Omega = 30, one saddle position.
+~~**T-CASC-g, open: does the two-number description survive depth?**~~ **-> §94. The LAW composes;
+the WIDTH SEQUENCE it needs does not, and three readings of that sequence are all wrong.**
+
+  * **P1**: stage 1's (mean, sd) is identical at D = 2 and D = 3 to 1e-9 -- the coupling is
+    one-way as built.
+  * **P3, and it HOLDS.** §91's law, fed stage 2's measured width, predicts stage 3's penalty as
+    5.6514 against a measured 6.3494 -- **11% low, inside §91's own 18% scatter**. So the
+    two-number description composes stage to stage.
+  * **The penalty GROWS with depth**: 4.4419 -> 6.3494, because the margin is measured in units of
+    the upstream rail width and each output is wider than its input.
+
+**§94.1: three readings of the width sequence, all refuted.** (a) Geometric erosion --
+sigma_2/sigma_1 = 1.0855 extrapolated per stage, giving a hard depth cap -- refuted BEFORE running,
+since it contradicts what a restoring element is (LNA: sigma_out^2 = sigma_intr^2 + g^2 sigma_in^2
+with g < 1). (b) Convergence to the LNA fixed point -- refuted by measurement: unconditioned widths
+are **0.49922, 0.54181, 0.70814**, and sigma_3 blows past both the recursion (0.54904) and the
+fixed point (0.55071). (c) That the DETERMINISTIC gain explains the growth -- it does not:
+g^2 = 0.0109 and 0.0135 at the measured operating points against the 0.1783 the width ratio
+implies, **thirteen times too small**.
+
+**Robustness**: the overshoot of the fixed point grows with Omega -- 1.015, 1.034, 1.086, **1.286**
+at Omega = 14, 16, 20, 30 -- so it is not a small-Omega artifact. (The ACCELERATION is an Omega = 30
+statement only: the ratio-of-ratios runs 0.941, 0.954, 0.999, 1.204.)
+
+**T-CASC-h, open, and it is a SUSPECT not a result (rule 17).** The stage means drift down (3.0222,
+2.9564 against a deterministic rail at 3.1827) and the gain rises steeply as the operating point
+falls -- g^2 = 0.0065 at r3, 0.0135 at stage 2's mean, **crossing 1 at x_up ~ 1.9**, which is ABOVE
+the collapse at x_crit = 1.5792. So a runaway threshold exists inside the nominally bistable range.
+The suspect is that a stochastic mean-shift compounds down the chain, slides the operating point
+toward the collapse, flattens the landscape and raises the gain. **It is not established, and (c)'s
+factor of 13 says the linear picture is already missing something at the FIRST step.** **How to
+kill:** measure the mean and width at stage 4 -- D = 4 is ~85M joint states and out of exact reach,
+so this needs a smaller Omega or a different instrument -- and check the mean against the fixed
+point of the mean-shifted recursion.
+
+**SCOPE OF THE COMPOSITION RESULT, as it now stands:** depth is computable **given the widths**;
+the width sequence is open.
 
 **T-CASC-e, open: does the margin law survive depth?** §91 is D = 2. The exponential-in-margin
 penalty compounds if each stage contributes independently, which would make D_max = c*/(penalty x

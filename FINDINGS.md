@@ -10234,3 +10234,74 @@ element itself — which is the sharpest form the founding question's answer has
 
 **Scope:** one element, Ω = 30, D = 2, one saddle position. The two-number claim is a claim about
 what the penalty depends on, not a closed formula for it.
+
+---
+
+### 94 The two-number law composes; the width sequence it needs does not — T-CASC-g
+
+§91–§93 gave the composition penalty as a function of the noise margin and the timescale ratio, at
+D = 2. The margin is measured **in units of the upstream rail width**, and each stage's output is
+wider than its input — so the question is whether the description survives depth, and that turns
+the law into a *prediction*: measure stage 2's output width, convert to stage 3's effective margin,
+push it through §91's `log(penalty) = −0.952 × margin/σ`, and check against an exact D = 3 solve.
+
+**Design.** Every stage but the last is reflected at its saddle — it fluctuates with whatever width
+it has inherited but cannot itself flip — so the last stage's error is purely its own and nothing
+is conditioned (§92.1(b) is why that matters). Stage 1 is seeded from its exact stationary law.
+
+**P1 gate.** Stage 1's (mean, sd) is identical at D = 2 and D = 3 to **1e−9**: the coupling is
+one-way as built, and a downstream stage changes nothing upstream.
+
+**P3, and it holds.** With σ₁ = 0.49922 and σ₂ = 0.54189, stage 3's effective margin drops from
+3.212σ to 2.959σ, and §91's law predicts
+
+| | penalty |
+|---|---|
+| stage 2, measured | 4.4419 |
+| stage 3, **predicted** from §91's law | **5.6514** |
+| stage 3, measured | 6.3494 |
+
+**11% low — inside §91's own 18% scatter.** So the two-number description *composes*: given the
+width at each stage, it predicts the next stage's penalty.
+
+### 94.1 Three readings of the width sequence, and all three are wrong
+
+> **(a) Geometric erosion.** σ₂/σ₁ = 1.0855 extrapolated per stage gives a margin halving every
+> 8.5 stages and a hard depth cap independent of Ω. **Refuted before running**, on the grounds that
+> it contradicts what a restoring element *is*: the LNA gives σ_out² = σ_intr² + g²σ_in², and a
+> restoring element attenuates its input, g < 1.
+>
+> **(b) Convergence to the LNA fixed point.** From σ₂/σ₁ the implied g² = 0.1783, so widths should
+> rise to σ_∞ = 1.1032σ₁ and the per-stage penalty should tend to a constant. **Refuted by the
+> measurement.** With the last stage reflected too — no escape-conditioning anywhere — the widths
+> are **0.49922, 0.54181, 0.70814**. The third is far above both the recursion's 0.54904 and the
+> fixed point 0.55071, and the erosion *accelerates*: 1.085 then **1.307**.
+>
+> **(c) That the deterministic gain explains the growth.** It does not. `g = dx_out/dx_up` at the
+> measured operating points is **g² = 0.0109 and 0.0135** — thirteen times too small to produce
+> σ₂/σ₁ = 1.0855, which needs 0.1783. The width growth is not linear transmission of the upstream
+> fluctuation.
+
+**The overshoot is not a small-Ω artifact, and it grows.** σ₃ against the LNA fixed point it is
+supposed to approach, at four population sizes: **1.015, 1.034, 1.086, 1.286** at Ω = 14, 16, 20,
+30. *(At Ω ≤ 20 the erosion does not yet accelerate — the ratio-of-ratios runs 0.941, 0.954, 0.999
+and only exceeds 1 by Ω = 30, at 1.204. So the acceleration in (b) is an Ω = 30 statement, and the
+overshoot is the robust one.)*
+
+**What the data does show.** The stage means drift **down** — 3.0222, 2.9564 against a
+deterministic rail at 3.1827 — and the gain rises steeply as the operating point falls: g² runs
+0.0065 at r₃, 0.0135 at stage 2's mean, and **crosses 1 at x_up ≈ 1.9**, well above the collapse at
+x_crit = 1.5792. So a runaway threshold exists and sits *inside* the nominally-bistable range.
+
+> **The mechanism is a suspect, not a result (rule 17):** a stochastic mean-shift compounds down
+> the chain, the operating point slides toward the collapse, the landscape flattens, the gain
+> rises, and the width grows faster — which would make the erosion accelerate as measured. **It is
+> not established**, and the factor-of-13 discrepancy in (c) says something is missing from the
+> linear picture even at the first step. **Kill test:** measure the mean and width at stage 4 (D = 4
+> is 96⁴ ≈ 85M joint states and out of reach exactly, so this needs either a smaller Ω or a
+> different instrument), and check whether the mean tracks the deterministic fixed point of the
+> mean-shifted recursion.
+
+**So the honest scope of the composition result:** the two-number law composes stage to stage and
+predicts the next penalty from the current width to ~11%, but **the width sequence itself is not
+predicted by anything measured here.** Depth is computable given the widths; the widths are open.

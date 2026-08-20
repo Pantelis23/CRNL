@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§109. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§110. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -695,6 +695,19 @@ seeding no cell is materially below `k(⟨x⟩)`, so the averaging family is not
   rate runs from **at the fast limit** at Ω = 14 to **past the frozen limit** at Ω = 70, traversing
   and exiting the whole bracket — while the naive timescale argument predicts the opposite, since the
   escape time grows exponentially in Ω and the upstream's correlation time is macroscopic.
+
+**§110 retired the last inherited explanation.** The drift was posed as a position running from the
+fast limit to past the frozen one; the §92/§93 framing says that position is set by a timescale
+ratio. Measured, **the position rises toward frozen while the ratio falls** — monotone in both,
+opposite directions, in all five cells. The ratio turns over because the *crossing* time rises 1.97×
+(a sharper instanton lingers near the saddle), not because the upstream's clock moves.
+  > **So the drift has no candidate left from anything this arc inherited**: not an averaging
+  > prescription, not a seeding artifact, not a timescale ratio. Three families retired by
+  > measurement. "Position" is now a coordinate between two computable limits and nothing more.
+
+  §110 also failed its own P1 — the upstream clock spans 1.34× and is non-monotone where I predicted
+  it constant to 20%. It does not drive the result, but the framing that treats it as a single
+  macroscopic number is looser than it sounded.
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

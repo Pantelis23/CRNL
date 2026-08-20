@@ -11791,3 +11791,57 @@ QSD seed that a model comparison requires.
 > corrections recentre without flattening. The point is narrower: **the known-wrong model is no
 > longer what you get by default, and the four defects that were only documented are now enforced by
 > tests.**
+
+### 110 (T-CASC-x) The position is *anti*-correlated with the timescale ratio it is named for
+
+§109 left the drift sharply posed: with matched seeding, stage 2's effective escape rate runs from
+**at** the fast limit at Ω = 14 to **past** the frozen limit at Ω = 70. The framing inherited from
+§92/§93 says that position is set by a timescale ratio — how fast the upstream fluctuates against how
+long the downstream takes to cross. §110 measures both clocks. Neither needs a joint solve.
+
+**The naive version of the argument was already known to have the wrong sign** (the escape *waiting*
+time grows like exp(A·Ω) while the upstream's clock is macroscopic, so the upstream should look
+relatively faster and the position should move toward *fast*). But the waiting time is the wrong
+comparator: what the upstream must be fast against is the **traversal** of one crossing, during
+which a fluctuating input can help or hinder. That is a conditional first-passage time and it is not
+obviously Ω-independent.
+
+| Ω | τ_up | λ₁ (escape) | λ₂ | τ_cross | ratio τ_up/τ_cross | position |
+|---|---|---|---|---|---|---|
+| 14 | 0.2384 | 1.0558e−01 | 4.3008 | 0.6277 | **0.3797** | **−0.0123** |
+| 20 | 0.2866 | 3.3986e−02 | 3.5234 | 0.7795 | 0.3677 | 0.2565 |
+| 30 | 0.3198 | 5.3200e−03 | 3.1324 | 0.9295 | 0.3440 | 0.4658 |
+| 55 | 0.2998 | 4.9470e−05 | 3.3361 | 1.1514 | 0.2603 | 0.8444 |
+| 70 | 0.2861 | 2.9198e−06 | 3.4951 | 1.2343 | **0.2318** | **1.1633** |
+
+**P2 holds.** τ_cross rises monotonically, 0.6277 → 1.2343 (**1.97×**), consistent with the slow
+logarithmic growth predicted — a sharper instanton lingers longer near the saddle where the drift
+vanishes.
+
+**P1 fails, mildly and worth recording.** I predicted τ_up would be Ω-independent to ~20% because it
+is a macroscopic relaxation. It spans **1.3416×** and is **non-monotone**, peaking at Ω = 30
+(0.2384, 0.2866, 0.3198, 0.2998, 0.2861). So "the upstream clock" is not quite a single number.
+It does not drive the result — the ratio falls because τ_cross *rises*, not because τ_up moves — but
+the prediction was wrong and the framing that treats τ_up as a constant is looser than it sounded.
+
+**P3 refutes the framing, and P4 shows it is not an endpoint artifact.**
+
+> **The position rises toward FROZEN (−0.0123 → 1.1633) while the ratio FALLS (0.3797 → 0.2318).
+> Both are monotone. They move in opposite directions in all five cells.**
+
+Resonant activation says a position near *frozen* means the upstream is **slow** relative to the
+crossing. Here the upstream becomes **relatively faster** at every step — and the position moves the
+other way, all the way across the bracket and out of it. This is not a weak correlation or a
+three-of-five pattern; it is a clean anti-correlation over the whole swept range.
+
+> **So the §92/§93 timescale framing does not carry over to the escape rate.** Together with
+> §108/§109 retiring the averaging family, **the drift now has no candidate explanation from
+> anything inherited in this arc** — not an averaging prescription, not a seeding artifact, not a
+> timescale ratio.
+
+**Scope, stated carefully.** This says nothing against §92/§93's own measurements, which are about
+the composition *penalty* and were made on their own axis. §110 refutes only the transfer of that
+framing to stage 2's escape rate — which is the transfer §102.1 made and §106/§107 relied on when
+they called the residual an "averaging position". **That label should be read from here on as a
+coordinate between two computable limits, not as a statement about which limit the system is near
+and why.**

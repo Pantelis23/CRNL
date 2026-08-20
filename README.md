@@ -874,8 +874,28 @@ seeding the two-state model predicts a free stage's escape to 3–5% at every Ω
 > whole bracket, while the naive timescale argument predicts the opposite.
 > [`FINDINGS.md`](FINDINGS.md) §109.
 
-The goal was not met, and one intermediate explanation had to be withdrawn a commit after it
-was written. So the arc ends with its headline
+**§110 then retired the last inherited explanation.** The drift was posed as a *position*
+running from the fast limit to past the frozen one, and the §92/§93 framing says that
+position is set by a timescale ratio. Measured — both clocks 1-D, no joint solve:
+
+| Ω | 14 | 20 | 30 | 55 | 70 |
+|---|---|---|---|---|---|
+| τ_up / τ_cross | 0.3797 | 0.3677 | 0.3440 | 0.2603 | 0.2318 |
+| position | −0.0123 | 0.2565 | 0.4658 | 0.8444 | 1.1633 |
+
+> **The position rises toward frozen while the ratio falls** — monotone in both, opposite
+> directions, in all five cells. Resonant activation says *frozen* means the upstream is slow
+> relative to the crossing; here it gets relatively faster at every step while the position
+> moves the other way and exits the bracket. [`FINDINGS.md`](FINDINGS.md) §110.
+
+So the drift has **no candidate left from anything this arc inherited**: not an averaging
+prescription (§108/§109), not a seeding artifact (§109), not a timescale ratio (§110). Three
+families retired by measurement. "Position" is now a coordinate between two computable limits
+and nothing more — which is a smaller claim than the arc was making, and a true one.
+
+The goal was not met, one intermediate explanation had to be withdrawn a commit after it was
+written, and §110 failed its own P1 as well (the upstream clock spans 1.34× and is
+non-monotone where I predicted it constant to 20%). So the arc ends with its headline
 intact, its scope stated honestly, and one open question that is now sharp enough to name what
 it is *not*.
 
@@ -905,6 +925,7 @@ python -m experiments.where_the_expansion_frays   # sweep Omega; what bounds the
 python -m experiments.the_corrected_closure       # every correction, folded back in
 python -m experiments.two_mechanisms              # the argument §109 then withdrew
 python -m experiments.it_was_the_seed             # ...because it was the seed all along
+python -m experiments.does_the_ratio_move         # and the timescale framing goes too
 ```
 
 ## Verifying the base

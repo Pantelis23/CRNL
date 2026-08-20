@@ -4872,3 +4872,42 @@ silent default. The seed mismatch is handled the other way round on purpose: the
 seed is §101's intended initial condition and both its arms share it, so the default stands, but
 `solve()` now carries a SEEDING WARNING with the measured cost and `matched_seed=True` supplies the
 QSD seed any stationary-model comparison needs. No published number changes.
+
+**T-CASC-x -> §110: THE LAST INHERITED EXPLANATION IS REFUTED TOO.** §109 left the drift posed as a
+position running from the fast limit at Ω = 14 to past the frozen limit at Ω = 70. The §92/§93
+framing says that position is set by a timescale ratio. Measured — both clocks 1-D, no joint solve:
+
+| Ω | 14 | 20 | 30 | 55 | 70 |
+|---|---|---|---|---|---|
+| τ_up / τ_cross | 0.3797 | 0.3677 | 0.3440 | 0.2603 | 0.2318 |
+| position | −0.0123 | 0.2565 | 0.4658 | 0.8444 | 1.1633 |
+
+> **The position rises toward FROZEN while the ratio FALLS — monotone in both, opposite directions,
+> in all five cells.** Resonant activation says frozen means the upstream is *slow* relative to the
+> crossing; here it becomes relatively *faster* at every step while the position moves the other way
+> and exits the bracket. The framing does not carry over to the escape rate.
+
+The ratio turns over because **τ_cross rises 1.97×** (0.6277 → 1.2343, the logarithmic growth P2
+predicted — a sharper instanton lingers near the saddle), not because τ_up moves. **P1 failed
+mildly**: τ_up spans 1.3416× and is non-monotone, peaking at Ω = 30, where I had predicted <20%
+variation. It does not drive the result, but "the upstream clock" is not the single macroscopic
+number the framing assumes.
+
+> **So the drift has no candidate left from anything inherited in this arc**: not an averaging
+> prescription (§108/§109 — excluded by measurement once the seeds are matched), not a seeding
+> artifact (§109 — fixed, drift survives at span 2.048×), and not a timescale ratio (§110 —
+> anti-correlated). Three families retired by measurement.
+
+**Scope.** This says nothing against §92/§93's own results, which are about the composition
+*penalty* on its own axis. What §110 refutes is the *transfer* of that framing to stage 2's escape
+rate — the transfer §102.1 made and §106/§107 leaned on. **"Position" should now be read as a
+coordinate between two computable limits, not as a claim about which limit the system is near or
+why.**
+
+**T-CASC-aa, open: what does the position track?** It is now a measured, smooth, monotone curve over
+five Ω, anti-correlated with the one quantity it was supposed to follow. **How to kill:** rule 15 —
+report every candidate, not the flattering one. The available scalars are A·Ω, √Ω, the rail width
+σ = √(V/Ω), π_low, the bracket width itself (2.39 → 1.83, which *falls* as the position rises), and
+τ_cross (which rises with it). τ_cross is the only one already known to co-move; testing it means
+moving τ_cross at fixed Ω, which the reflecting-boundary knob of §100 can do — the box width sets a
+stage's clock without touching its landscape.

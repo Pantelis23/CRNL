@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§102. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§103. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -566,6 +566,32 @@ factor-of-two gate and closest at D = 3. Wiring was exact: pinned at the rail, a
   every cell, at position 0.09–0.22, near the fast end; the limits separate 2.44× at Ω = 14 and 4.76×
   at Ω = 30, which is exactly where the residual is worst. *(That it is bracketed is measured; what
   the position means is a suspect with a kill test — T-CASC-q.)*
+
+**§103 closed the arc.** §102 still read its operating points off the joint CME, so it had not shown
+the chain is computable without one. §103 predicts them instead — stage 1's law from a 1-D restricted
+generator, each later mean from the exact static-transfer average plus the stage's own finite-Ω
+depression, each width from the LNA, every escape rate from a 1-D pinned generator — and **builds no
+joint generator at all.** The contaminated/pure split lands at **1.184 / 1.059 / 1.370 / 1.169** times
+measured across four (Ω, D) cells, all inside §102's own gate. **Discarding the joint master equation
+costs about two percent.**
+  > **So the depth ceiling of a chemically-coupled bistable cascade is computable from one element's
+  > rate functions.** §101: the contaminated channel is the majority of the error by D = 3. §102: that
+  > channel is set by escape rates. §80–§90: the escape action follows from the rate functions alone.
+  > §103: so do the operating points those rates are evaluated at. The prediction side runs in under a
+  > second against a joint solve costing ~25 minutes and 1.77M states.
+
+  Two honest limits. `p_transmit` remains empirical — but swept over its whole measured range
+  (0.7254–0.9830) every cell stays inside the gate, so it does not carry the result. And the scheme is
+  an **expansion in Ω**: P1 and P2 held at Ω = 30 (0.13%, 0.50%) and failed at Ω = 14 (up to 4.32%),
+  every miss one-signed toward a less degraded chain. §103 found where it frays.
+
+  **§103.1 is the one that would have been embarrassing.** The first version composed the operating
+  point from the transfer map alone and predicted the chain getting *better* with depth —
+  2.8501 → 3.0946 → 3.1173 against a measured sequence that falls. The cause was structural and
+  visible: §91 built the coupling neutral at the rail, so **`F(r₃) = r₃` exactly and the rail is a
+  fixed point of the transfer map** — iterating it can only climb toward the rail, never degrade. What
+  degrades a chain is each stage's own finite-Ω depression below its rail. **Caught by a sign, not a
+  magnitude**; no tolerance would have flagged it.
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

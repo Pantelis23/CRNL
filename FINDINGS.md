@@ -11069,3 +11069,97 @@ upstream speed, the bracket is a coincidence of two numbers rather than an avera
 **not yet a CME-free prediction of the chain** — it shows escape rates *at* the operating points
 account for the split, not that the operating points themselves need no joint solve. §96 predicts
 those from single-element quantities, and closing that gap is the follow-up (T-CASC-q).
+
+### 103 (T-CASC-r) The chain from one element's rate functions, with no joint solve anywhere
+
+§102 showed escape rates *at* the operating points account for §101's contaminated/pure split — but
+it read those operating points off §101's joint CME, so it did not show the chain is computable
+without one. §103 closes that. Every ingredient is single-element and 1-D: stage 1's law from
+`upstream_qsd` (one free stage, restricted generator), each later stage's mean from the exact
+static-transfer average `⟨F(x)⟩` plus the intrinsic term, its width from `lna_width`, and every
+escape rate from a 1-D pinned generator. **No joint generator is built on the prediction side.** The
+joint solves appear only as §101's stored measured numbers.
+
+**P1/P2 — the operating points, and both predictions are half-refuted in the same direction.**
+
+| Ω | D | stage | predicted | measured | rel err |
+|---|---|---|---|---|---|
+| 30 | 2 | 1 | 3.0319 | 3.0280 | **+0.13%** |
+| 30 | 2 | 2 | 2.9908 | 2.9759 | **+0.50%** |
+| 14 | 2 | 1 | 2.8501 | 2.8042 | +1.64% |
+| 14 | 3 | 2 | 2.7619 | 2.6698 | +3.45% |
+| 14 | 3 | 3 | 2.7240 | 2.6113 | +4.32% |
+
+P1 predicted stage 1 within 1% and P2 predicted stages 2–3 within 2%. **Both hold at Ω = 30 and
+both fail at Ω = 14**, and the failure is one-signed — every prediction sits *above* the
+measurement, i.e. predicts a less degraded chain than the one measured. That pattern is coherent
+rather than mysterious: the QSD, the LNA width and the static-transfer average are all asymptotic in
+Ω, and Ω = 14 is the shallow-barrier cell (A·Ω = 2.66) that §98 already flagged as the one whose
+penalty position read outside its own bracket. **The scheme is an expansion in Ω and §103 has found
+where it starts to fray.**
+
+**P3 — it survives, and replacing the joint-CME operating points costs almost nothing.**
+
+| Ω | D | contam/pure predicted | measured | pred/meas | §102, reading the joint solve |
+|---|---|---|---|---|---|
+| 14 | 2 | 1.0645 | 0.8987 | 1.184 | 1.159 |
+| 14 | 3 | 2.3287 | 2.2000 | **1.059** | 1.040 |
+| 30 | 2 | 0.9184 | 0.6703 | 1.370 | 1.359 |
+| 30 | 3 | 1.8550 | 1.5869 | **1.169** | — (not run in §102) |
+
+All four inside §102's own pre-registered factor-of-two gate — the same gate, so the two sections
+are directly comparable. P3 also predicted the residual would be *larger* than §102's, and it is, in
+all three cells §102 covered. **But only barely: 1.159 → 1.184, 1.040 → 1.059, 1.359 → 1.370.** Throwing away the
+joint master equation and predicting the operating points instead costs about two percent.
+
+> **So for this cascade the contaminated channel — which §101 showed is the majority of the total
+> error by D = 3 — is computable from a single element's rate functions.** With §102's result that
+> the split is set by escape rates, and §80–§90's result that the escape action follows from the rate
+> functions alone, the depth ceiling of a chemically-coupled bistable cascade closes on
+> single-element quantities. That is what the composition arc has been reaching for since §91.
+
+**The one empirical input, and it does not carry the result.** `p_transmit` is still §100's measured
+0.9376 rather than a predicted quantity, so the model is not parameter-free. Swept across its entire
+measured range (§100.2 gives 0.7254 to 0.9830 over a 16× window):
+
+| p_transmit | (14, 2) | (14, 3) | (30, 2) |
+|---|---|---|---|
+| 0.7254 | 0.9164 | 0.8189 | 1.0601 |
+| 0.8860 | 1.1192 | 1.0002 | 1.2948 |
+| 0.9376 | 1.1844 | 1.0585 | 1.3702 |
+| 0.9830 | 1.2418 | 1.1097 | 1.4366 |
+
+**Every cell stays inside the gate at every value.** The conclusion does not rest on the particular
+number, which is what makes it worth stating despite the parameter.
+
+### 103.1 The first version predicted the chain getting *better* with depth, and the fixed point was the tell
+
+> **Withdrawn before publication: §103's first operating-point sequence, 2.8501 → 3.0946 → 3.1173.**
+> It predicted each stage sitting *closer* to its rail than the one feeding it, against a measured
+> 2.8042 → 2.6698 → 2.6113 that falls. Not a 16% error — **the wrong direction**.
+
+The cause is structural and was sitting in plain sight. The coupling was built so that a correct
+upstream reproduces the isolated element exactly — §91's neutrality condition — which means
+
+> **`F(r₃) = 3.1827000000` against `r₃ = 3.1827`: the rail is a FIXED POINT of the transfer map.**
+
+So iterating `⟨F(x)⟩` down a chain can only converge *toward* the rail. It can never degrade, at any
+depth, for any input distribution. What supplies the degradation is each stage's own depression
+below its deterministic rail at finite Ω — the term §96 writes as `d_intr = μ₁ − r₃` and adds to
+`⟨F⟩`, and which the first version omitted. Restoring it turns +15.9% and +19.4% into +3.45% and
++4.32%, and turns the direction around.
+
+**Same family as §96.1: a term dropped from a composition.** The difference is what caught it. §96.1
+was caught by a number that looked wrong; this was caught by a *sign* — the prediction disagreed with
+the measurement about which way the chain moves, which no amount of tuning could have fixed and no
+tolerance would have flagged. **A neutral coupling makes its own rail a fixed point, and any
+composition rule built only from the transfer map inherits that degeneracy.**
+
+**A generalisation, and it is tested here for the first time.** §96 validated `d_intr` at D = 2
+only; applying it once per stage is the natural extension and is not separately justified. The
+Ω = 14, D = 3 operating point (+4.32%) is the weakest cell in the table, so on its own it would be
+poor evidence that the term composes. **The Ω = 30, D = 3 cell settles it where the expansion is
+healthy**: predicted operating points 3.0319, 2.9908, 2.9784 with no joint solve, giving
+contam/pure = 1.8550 against a measured 1.5869 — **1.169, inside the gate**. §101 stored that
+cell's split but not its stage means, so it tests the composed prediction end to end without
+supplying a per-stage comparison.

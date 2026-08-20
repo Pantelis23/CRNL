@@ -1363,6 +1363,7 @@ functional form that was never derived and never compared against a rival.
 | **"The reflected upstream's correlation time is its rail relaxation time"** — implicit wherever §92–§98 called stage 1's clock a relaxation time. | The slowest mode of a stage reflected at its saddle is **diffusive relaxation across the whole box [saddle, cap]**, not the local curvature at the rail: measured gap 1.43–1.62 against |f'(r₃)| = 6.6195, flat in Ω and **not converging** to it. The wall does not merely delete the escape channel, it installs a timescale of its own — 4.6× slower — and that timescale is a property of where the boundary was put. §100 P4, predicted to converge to 6.6195 and refuted. |
 | **"The reflected chain measures the fluctuation-transfer channel"** — implicit throughout §92–§98, and the basis for reading its penalty as a per-stage cost. | It **overstates that channel by 1.49× at D = 2 and 2.22× at D = 3** (Ω = 30, t₀ = 2.0; 1.63× and 2.64× at Ω = 14), because the wall bounces back probability that would have escaped and parks it against the saddle where it drives the next stage hardest. Separately it omits the failure channel entirely, which is 61–69% of the true error at D = 3. **The two errors have opposite signs and cancel to a 16–21% net**, which is why the construction looked sound: §94 reports 6.349 against a true total of 7.388. The inflation grows with depth and so does the omission; nothing makes the cancellation persist. §101. |
 | **"P(last stage low) is comparable across depths at any window"** — assumed wherever §94 and §101 compare D = 2 with D = 3. | False below t₀ ≈ 2. Stage 1 seeds from its quasi-stationary law and is already spread; every later stage seeds as a **delta at its rail**, so until that delta propagates a deeper chain hands its last stage a *cleaner* input. At Ω = 30, t₀ = 0.5 the reflected D = 3 error is **ten times smaller** than D = 2's, and at Ω = 14, D = 3 stage 3 reads (2.7450, 0.6846) against stage 2's (2.6542, 0.7643) — the last stage cleaner than the one feeding it. §92.1(a) one level up: there the artifact reversed a trend in upstream speed, here it reverses the trend in **depth**. It removed §101's first headline (a 6.66× ratio at 91.8% contamination) before it was written down. §101.1. |
+| **"The chain's operating point can be composed from the transfer map alone"** — §103's first version, withdrawn before publication. | It predicted 2.8501 → 3.0946 → 3.1173, each stage sitting *closer* to its rail than the one feeding it, against a measured 2.8042 → 2.6698 → 2.6113 that falls. **Not a 16% error but the wrong direction**, and the cause is structural: §91 built the coupling to be neutral at the rail, so `F(r₃) = 3.1827000000` against `r₃ = 3.1827` — **the rail is a fixed point of the transfer map**, and iterating `⟨F(x)⟩` can only converge toward it at any depth for any input. The degradation comes from each stage's own finite-Ω depression `d_intr = μ₁ − r₃`, which §96 includes and this omitted. Restoring it gives +3.45% and +4.32%. Same family as §96.1 — a term dropped from a composition — but caught by a **sign** rather than a magnitude, which no tolerance would have flagged. §103.1. |
 
 **A second pattern, from the depth-ceiling correction.** A threshold observable
 (the first *integer* depth below I=0.5) reported two different states as identical,
@@ -4568,3 +4569,44 @@ quantities to 0.12%. **How to kill:** feed §96's predicted operating points int
 and compare the resulting contaminated/pure against §101's measured values. If it survives the same
 factor-of-two gate, **the depth ceiling of a chemically-coupled bistable cascade is computable from
 one element's rate functions**, which is what the whole composition arc has been reaching for.
+
+~~**T-CASC-r, open: can the chain be predicted with no joint solve at all?**~~ **-> §103. YES, and
+the composition arc closes on single-element quantities.** Stage 1's law from a 1-D restricted
+generator, each later mean from `⟨F(x)⟩ + d_intr`, each width from the LNA, every escape rate from a
+1-D pinned generator — **no joint generator is built on the prediction side.** The contaminated/pure
+split comes out at **1.184 / 1.059 / 1.370 / 1.169** times measured across (Ω, D) = (14,2), (14,3),
+(30,2), (30,3), all inside §102's own pre-registered factor-of-two gate.
+
+**And discarding the joint master equation costs about two percent.** §102, which read its operating
+points off the joint CME, got 1.159 / 1.040 / 1.359 on the same cells; predicting them instead gives
+1.184 / 1.059 / 1.370.
+
+> **So the depth ceiling of a chemically-coupled bistable cascade is computable from one element's
+> rate functions.** §101 showed the contaminated channel is the majority of the error by D = 3; §102
+> showed that channel is set by escape rates; §80–§90 computes the escape action from the rate
+> functions alone; §103 supplies the operating points those rates are evaluated at. The whole
+> prediction side runs in under a second against a joint solve that costs ~25 minutes at Ω = 30,
+> D = 3 and 1,771,561 states.
+
+**One empirical input, and it cannot carry the result.** `p_transmit` is §100's measured 0.9376.
+Swept over its entire measured range (0.7254–0.9830 across a 16× window, §100.2), **every cell stays
+inside the gate** — 0.82 to 1.44. The model is not parameter-free and does not claim to be.
+
+**T-CASC-s, open: where does the Ω-expansion break, and does the one-signed miss have a name?**
+§103's P1 and P2 predicted the operating points within 1% and 2%; both **held at Ω = 30 (0.13%,
+0.50%) and failed at Ω = 14 (1.64%, 3.45%, 4.32%)**, and every miss is in the same direction —
+predicting a *less* degraded chain than the one measured. The QSD, the LNA width and the
+static-transfer average are all asymptotic in Ω, and Ω = 14 is the A·Ω = 2.66 cell §98 already flagged
+for reading outside its own bracket. **How to kill:** sweep Ω at fixed D and fit the residual's decay.
+If it falls like 1/Ω the miss is the leading LNA correction and is nameable; if it saturates, one of
+the three ingredients is wrong rather than merely truncated, and the conditioning choice (dropping
+inputs where F has no high rail) is the first suspect since it biases the mean upward by exactly this
+sign.
+
+**T-CASC-t, open: can `p_transmit` be predicted too?** It is the last empirical number in the chain.
+§100 measured it as an *endpoint co-occurrence* that rises 0.7254 → 0.9830 with the window and must
+reach 1 as t → ∞, so it is not a constant of the coupling and a predicted version has to be a
+function of the window. **How to kill:** it should follow from the same 1-D machinery — the
+probability that a stage whose input has collapsed to the low rail has itself crossed its saddle by
+time t is `1 − exp(−k(x_low)·t)` with `k` read off §102's curve at the *low* rail rather than the
+high one. If that reproduces the measured window dependence, the model becomes parameter-free.

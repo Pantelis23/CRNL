@@ -4767,3 +4767,49 @@ gets worse (1.01 at Ω = 30, 1.47 at Ω = 70). **How to kill:** the drift is mon
 σ = √(V/Ω), π_low itself) and see whether any reproduces it. If none does, the missing term is not a
 finite-size correction to anything already in the model, and the honest scope statement is the
 calibrated one. **Report every candidate, not the flattering one (rule 15).**
+
+**T-CASC-x, open -> §108: NOT CLOSED, but reduced from "no candidate" to "two mechanisms, one of
+them provably outside the family of fixes tried."** The goal was to explain and remove the drift or
+prove it irreducible; neither was achieved, and this records how far it got.
+
+**The drift is entirely in one channel.** With §107's corrections applied, `contam` measured/model is
+**flat to 0.4%** across Ω = 14–70 (1.1988 … 1.2151) while `pure` runs **0.9474 → 1.7604**. The one
+thing stage 2 has that stage 1 does not is a fluctuating input.
+
+**Six candidates cleared**, each by measurement: the operating points (exact to 0.0001%), the
+predicted input law and the averaging of λ (both 0.4% against the measured law), splitting π_low from
+λ (1.3% → 0.4%), `p_transmit` (flat), and **return trips** — pre-registered, and refuted. `pure`
+conditions on stage 1 being high *at the end*, so dip-and-return trajectories count as pure while
+having dragged stage 2 down, and π_low falling 0.906 → 0.525 makes returns go from rare to common:
+right sign, right Ω-dependence. Making stage 1 **absorbing** below its saddle removes them outright.
+**The drift survives, 0.5926 → 1.2142, span 2.05×.**
+
+**The result: one mechanism cannot be enough, and this is an inequality rather than a fit.**
+Inverting stage 2's effective rate from the absorbing run gives true/k(⟨x⟩) = **0.7880, 0.9599,
+1.0784, 1.1380, 1.2459, 1.4138** over Ω = 14–70. And `ln k` is **convex in the input at every Ω**
+(d²/dx² ∈ [+0.408, +2.230] at Ω = 14, [+2.779, +14.493] at Ω = 70).
+
+> **By Jensen, convexity of `ln k` puts both `exp⟨ln k⟩` and `⟨k⟩` at or above `k(⟨x⟩)`. No average
+> of the rate over the input can land below `k(⟨x⟩)`. The Ω = 14 and Ω = 20 cells are below it.**
+> Those cells are outside the reach of *any* averaging prescription — not the ones tried, the whole
+> family, by an inequality.
+
+**So there are at least two mechanisms**: one suppressing, dominant at small Ω and provably not an
+averaging effect, and the averaging enhancement, dominant at large Ω. **That is why §107's four
+corrections recentred without flattening** — every one addresses the enhancing mechanism and none can
+reach below `k(⟨x⟩)`. The whole class of fixes §102.1–§107 were drawn from is retired.
+
+**T-CASC-y, open: what suppresses stage 2's escape at small Ω?** It must be something that does *not*
+act on stage 1, since `contam` is flat. Candidates worth a kill test, in order: (i) the delta seed —
+stage 2 starts at its rail and has to spread, which suppresses early flux, though the deficit is a
+fixed absolute time and so should be Ω-independent as a fraction of the window; (ii) correlation
+between stage 2's position and its input, which every averaging treatment here assumes away by
+evaluating a rate against a *static* input law; (iii) the finite response time of stage 2 to input
+excursions — the input's deep excursions are exactly the ones that are brief, which is §92's motional
+narrowing acting on the escape rather than on the penalty. **(ii) and (iii) are the same suspect
+stated two ways and neither is an average over a static law, which is what §108 proves is needed.**
+
+**T-CASC-z, open: the flat 21.5%.** `contam`'s measured/model sits at 1.215 at every Ω — the model
+under-predicts stage 1's escape by that much with an *exact* gap, an *exact* stationary law and no
+coupling at all. It does not drift, so §108 set it aside, but it is unexplained, and a transient from
+the delta-seeded start would have the wrong sign.

@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§107. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§108. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -661,6 +661,23 @@ ablation credits the geometric term with almost all of it, exactly where §106 l
   > calibrated near Ω ≈ 30, not an asymptotically correct one**, and the last candidate for the drift
   > has the wrong sign (§102.1's position moves *toward* the fast end as Ω grows, which would make
   > the geometric mean better at large Ω, not worse).
+
+**§108 chased the drift and did not catch it — but proved the chase was in the wrong family.** The
+drift is entirely in one channel: `contam` measured/model is **flat to 0.4%** across Ω = 14–70 while
+`pure` runs 0.9474 → 1.7604. Six candidates were cleared by measurement, including a pre-registered
+one that deserved its test — dip-and-return trajectories, which the endpoint conditioning counts as
+"pure" and which become common as π_low falls 0.906 → 0.525. Making stage 1 absorbing removes them
+outright; **the drift survives, span 2.05×**.
+  > **Then an inequality closed off the whole approach.** Stage 2's measured effective escape rate is
+  > 0.7880 × k(⟨x⟩) at Ω = 14, and `ln k` is **convex in the input at every Ω**. By Jensen, convexity
+  > puts every average of the rate at or above k(⟨x⟩) — so **no averaging prescription whatsoever can
+  > produce the small-Ω cells.** Not the ones tried; the entire family.
+
+  **So there are at least two mechanisms** — one suppressing, dominant at small Ω and provably not an
+  averaging effect, and the averaging enhancement, dominant at large Ω. That is exactly why §107's
+  four corrections recentred the model without flattening it. The goal was not met; what it bought
+  was the retirement of a whole class of fixes, which is a better reason to stop than a fifth
+  recentring would have been.
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

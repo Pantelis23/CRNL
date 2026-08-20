@@ -11546,3 +11546,82 @@ across a 5× change in Ω, and no identified correction removes that.
 > should become *more* accurate at large Ω. The measured ratio does the opposite — 1.01 at Ω = 30,
 > 1.47 at Ω = 70. **The position argument has the wrong sign for the residual**, so whatever drives
 > the drift is not the fast/frozen interpolation, and the arc has no candidate left for it.
+
+### 108 (T-CASC-x) Chasing the drift: six candidates cleared, and a proof that one mechanism cannot be enough
+
+**The goal, set before any of this ran: explain and remove §107's residual Ω-drift, or prove it
+irreducible. It was not achieved.** What follows is the localisation, six refutations, and one
+structural result that explains why every single-correction attempt has failed.
+
+**§108.1 — the drift is entirely in one channel**
+
+With §107's four corrections applied, the two channels behave completely differently across
+Ω = 14–70:
+
+| | 14 | 20 | 24 | 30 | 40 | 55 | 70 |
+|---|---|---|---|---|---|---|---|
+| **contaminated**, meas/model | 1.1988 | 1.2153 | 1.2179 | 1.2171 | 1.2140 | 1.2130 | 1.2151 |
+| **pure**, meas/model | 0.9474 | 1.0531 | 1.1338 | 1.2339 | 1.3670 | 1.5475 | 1.7604 |
+
+**`contam` is flat to 0.4% — a pure prefactor.** Every bit of the drift is in `pure`, i.e. stage 2's
+own escape. The one thing stage 2 has that stage 1 does not is a **fluctuating input**.
+
+**§108.2 — six candidates, each cleared by measurement**
+
+| candidate | verdict |
+|---|---|
+| the operating points | exact to 0.0001% by Ω = 70 (§106) |
+| the predicted input law | model vs measured geometric mean agrees to **0.4%** |
+| the averaging of λ | same check, same 0.4% |
+| splitting π_low from λ | averaging `k_fwd = π_low·λ` as one quantity moves it 1.3% → 0.4% |
+| `p_transmit` | measured flat, 0.9466 → 0.9445 (§106) |
+| **return trips** | **pre-registered and refuted** — see below |
+
+The return-trip candidate deserved its test. `pure` conditions on stage 1 being high *at the end*,
+so a trajectory that dipped low and came back counts as pure while having dragged stage 2 down — and
+π_low falls 0.906 → 0.525, so returns go from rare to common, which is the right sign and the right
+Ω-dependence. §101 flagged exactly this. Making stage 1 **absorbing** below its saddle removes them
+entirely, so that "high at t" means "never crossed".
+
+> **The drift survives: 0.5926 → 1.2142, span 2.05×.** Removing returns lowers `pure` at every Ω —
+> they do contribute — but it does not flatten anything.
+
+**§108.3 — the proof, and it is the section's result**
+
+Inverting stage 2's effective escape rate from the absorbing-upstream run and comparing it against
+every candidate average of the rate over the input distribution:
+
+| Ω | λ_true | k(⟨x⟩) | exp⟨ln k⟩ | ⟨k⟩ | true / k(⟨x⟩) |
+|---|---|---|---|---|---|
+| 14 | 6.3611e−02 | 8.0721e−02 | 1.1258e−01 | 1.9322e−01 | **0.7880** |
+| 20 | 2.5256e−02 | 2.6310e−02 | 3.5037e−02 | 6.9407e−02 | **0.9599** |
+| 30 | 4.4897e−03 | 4.1632e−03 | 5.1694e−03 | 1.0213e−02 | 1.0784 |
+| 55 | 5.6095e−05 | 4.5023e−05 | 5.3033e−05 | 9.1271e−05 | 1.2459 |
+| 70 | 4.6127e−06 | 3.2625e−06 | 3.7989e−06 | 5.9854e−06 | 1.4138 |
+
+The true rate starts **below** the smallest candidate and rises through the geometric mean toward
+the frozen limit. And `ln k` is **convex in the input at every Ω** — measured d²/dx² runs
+[+0.408, +2.230] at Ω = 14 and [+2.779, +14.493] at Ω = 70, positive throughout.
+
+> **By Jensen, convexity of `ln k` puts both `exp⟨ln k⟩` and `⟨k⟩` at or above `k(⟨x⟩)`. So no
+> average of the rate over the input can produce a value below `k(⟨x⟩)` — and the measurement at
+> Ω = 14 is 0.7880 × k(⟨x⟩), with Ω = 20 also below at 0.9599.**
+
+**Those two cells are outside the reach of any averaging prescription whatsoever.** Not outside the
+reach of the ones tried — outside the reach of the entire family, by an inequality.
+
+> **Therefore at least two distinct mechanisms are in play: one suppressing, dominant at small Ω and
+> provably not an averaging effect, and the averaging enhancement, dominant at large Ω.** That is
+> why §107's four corrections recentred the model without flattening it — every one of them
+> addresses the enhancing mechanism, and none of them can reach below `k(⟨x⟩)`.
+
+**What §108 does and does not deliver.** It does not identify the suppressing mechanism and it does
+not remove the drift; **the goal was not met.** What it does is convert "an unexplained drift with no
+candidate" into "two mechanisms, one of them provably outside the family of fixes §102.1–§107 were
+all drawn from". That retires a whole class of attempts, which is worth more than another
+recentring — and it is the reason to stop trying corrections of that kind rather than trying a fifth.
+
+*(A note on the constant that is left. `contam`'s flat 1.215 means the model under-predicts stage 1's
+escape by 21.5% at every Ω — with an exact gap, an exact stationary law and no coupling at all. It
+does not drift, so it is not §108's subject, but it is not explained either, and a transient from the
+delta-seeded start would have the wrong sign.)*

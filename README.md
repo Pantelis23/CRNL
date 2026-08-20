@@ -838,8 +838,29 @@ residual.
 
 And the last candidate for that drift has the *wrong sign*: §102.1's position moves toward
 the fast end as Ω grows, which would make the geometric mean more accurate at large Ω, not
-less. So the arc ends with its headline intact, its scope stated honestly, and one clean
-open question.
+less. **§108 chased that open question hard and did not catch it — but proved the chase was in
+the wrong family.** The drift is entirely in one channel: `contam` measured/model is **flat
+to 0.4%** across Ω = 14–70 while `pure` runs 0.9474 → 1.7604. Six candidates were cleared by
+measurement, including a pre-registered one that genuinely deserved its test — dip-and-return
+trajectories, which the endpoint conditioning counts as "pure" and which become common as
+π_low falls 0.906 → 0.525. Making stage 1 absorbing removes them outright; **the drift
+survives, span 2.05×.**
+
+Then an inequality closed off the whole approach. Stage 2's measured effective escape rate is
+**0.7880 × k(⟨x⟩)** at Ω = 14, and `ln k` is **convex in the input at every Ω** (d²/dx²
+positive throughout, +0.408 to +14.493).
+
+> **By Jensen, convexity puts every average of the rate at or above k(⟨x⟩). So no averaging
+> prescription whatsoever can produce the small-Ω cells** — not the ones tried, the entire
+> family, by an inequality. **There are at least two mechanisms**: one suppressing, dominant
+> at small Ω and provably not an averaging effect, and the averaging enhancement, dominant at
+> large Ω. That is exactly why §107's four corrections recentred the model without flattening
+> it. [`FINDINGS.md`](FINDINGS.md) §108.
+
+The goal was not met. What it bought was the retirement of a whole class of fixes — a better
+reason to stop than a fifth recentring would have been. So the arc ends with its headline
+intact, its scope stated honestly, and one open question that is now sharp enough to name what
+it is *not*.
 
 **And §101.1 deleted the section's own headline before it was written.** The first reading
 was a 6.66× ratio at 91.8% contamination. The tell was that the *reflected* chain's D = 3
@@ -865,6 +886,7 @@ python -m experiments.predicting_transmission      # and the last free parameter
 python -m experiments.the_head_start              # a withdrawal that was itself wrong
 python -m experiments.where_the_expansion_frays   # sweep Omega; what bounds the closure
 python -m experiments.the_corrected_closure       # every correction, folded back in
+python -m experiments.two_mechanisms              # why one correction can never be enough
 ```
 
 ## Verifying the base

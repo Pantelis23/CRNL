@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§106. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§107. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -648,6 +648,19 @@ model, which spans 1.71× and **crosses 1 near Ω = 35 — where §102 validated
   > in a way that cancels; what actually bounds the result is the **averaging of the escape rate over
   > a fluctuating input** — §102.1's rate-at-the-mean approximation, whose two limits separate 2.44×
   > at Ω = 14 and 8.80× at Ω = 55. That was filed as a residual and is now the binding constraint.
+
+**§107 folded every correction back in.** The right fast-limit average turns out to be the
+**geometric mean** of the escape rate — `exp(−Ω⟨A⟩) = exp(⟨ln k⟩)` — not the rate at the mean input;
+it reproduces §102.1's measured effective rate to ±9% where the rate-at-the-mean is 21% low. With
+indexing, two-state occupancy, the geometric average and §105's derived head start all applied, the
+closure **recentres**: it crosses 1 near Ω = 30 instead of sitting above 1 everywhere, and the
+ablation credits the geometric term with almost all of it, exactly where §106 localised the residual.
+  > **But the drift survives all four.** The span goes 1.533× → 1.880× across Ω = 14–70 and stays
+  > monotone. Every cell is still inside §102's factor-of-two gate (0.78–1.47), so the closure holds
+  > across the whole range at the criterion it was registered against — but **it is a model
+  > calibrated near Ω ≈ 30, not an asymptotically correct one**, and the last candidate for the drift
+  > has the wrong sign (§102.1's position moves *toward* the fast end as Ω grows, which would make
+  > the geometric mean better at large Ω, not worse).
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

@@ -11484,3 +11484,65 @@ rate's convexity in the operating point is amplified by Ω in the exponent.
 > that cancels, and the *averaging* of the escape rate over a fluctuating input is the term that
 > actually bounds the result.** T-CASC-q named that term in §102.1 and it is now the arc's binding
 > constraint rather than a residual.
+
+### 107 (T-CASC-w) The closure with every known correction applied — the level is fixed, the drift is not
+
+§106 left three identified defects unfolded back into the model. §107 applies all of them, plus
+§105's derived head start, and sweeps Ω:
+
+1. **Indexing** (§106.3) — each stage keyed to its *upstream's* operating point; stage 1 to `r₃`.
+2. **Two-state occupancy** (§106.2) — `P(low) = π_low(1 − e^{−λt})`, not `1 − e^{−λt}`.
+3. **The averaging** (§102.1) — with `A(x) = −ln k(x)/Ω`, the fast-limit average is
+   `exp(−Ω⟨A⟩) = exp(⟨ln k⟩)`, the **geometric mean** of the rate. §102.1 used `k(⟨x⟩)`, a
+   different and smaller number.
+4. **`p_transmit`** from §105's derived head start rather than §100's measured constant.
+
+*(Disclosed, rule 2: correction 3 was checked before this file was written — the geometric mean gives
+1.0927 / 0.9372 / 0.9344 times §102.1's measured effective rate at Ω = 14 / 30 / 55, against
+`k(⟨x⟩)`'s 0.822 / 0.757 / 0.792 and the frozen limit's 2.0 / 3.6 / 7.0. The *average* was known to be
+right to ~9%. What it does to the closure was not.)*
+
+**P1 holds exactly.** With the indexing fixed, stage 1's rate equals the free spectral gap to
+solver tolerance at every Ω, and the geometric average correctly does not touch it — stage 1 has no
+upstream to average over.
+
+**P3 holds, and the ablation puts credit where §106 said it would:**
+
+| Ω | uncorrected | + indexing | + two-state | + geometric | + derived p_t |
+|---|---|---|---|---|---|
+| 14 | 1.1845 | 1.0998 | 1.0687 | **0.7903** | 0.7811 |
+| 24 | 1.3064 | 1.2219 | 1.1944 | 0.9309 | 0.9283 |
+| 30 | 1.3702 | 1.2879 | 1.2575 | **1.0138** | 1.0142 |
+| 40 | 1.4648 | 1.3914 | 1.3530 | 1.1261 | 1.1314 |
+| 70 | 1.8158 | 1.7733 | 1.6870 | **1.4488** | 1.4688 |
+
+The geometric mean carries almost all of it, exactly as predicted — it is the only correction that
+touches `pure`, and §106 localised the entire residual there. **Two-state is nearly invisible in the
+ratio** (1.2879 → 1.2575), also as predicted, because π_low cancels between the stages.
+
+**P4 holds on direction**, and its stated failure mode fired: the geometric mean raises `pure` and
+pulls the ratio down from above, and at Ω = 14 it **undershoots to 0.7903** — which is where §102.1
+measured the system furthest from the fast limit (position 0.2200), i.e. exactly where a
+fast-limit average should over-correct.
+
+**P2 is refuted on the half that matters.**
+
+> The corrected model is now *centred* — it crosses 1 near Ω = 30 instead of sitting above 1
+> everywhere — but it **still trends monotonically with Ω, and the span gets slightly worse**:
+> 1.533× uncorrected → 1.880× corrected.
+
+P2 asked for two things and explicitly said the trend mattered more than the range. The range
+improved (4/7 → 6/7 cells inside [0.7, 1.4]); **the trend did not budge.** Four corrections, each
+independently justified and one of them verified exact, recentre the model without flattening it.
+
+**What survives, stated precisely.** Every cell across Ω = 14–70 sits inside §102's pre-registered
+factor-of-two gate under the corrected model (0.78 to 1.47), so **§103's closure holds across the
+whole swept range at the criterion it was registered against.** What does not hold is any claim that
+the model is asymptotically correct: it is calibrated near Ω ≈ 30 and drifts by a factor of 1.88
+across a 5× change in Ω, and no identified correction removes that.
+
+> **And the residual drift is not explained by the remaining known approximation.** §102.1's position
+> moves *toward* the fast end as Ω grows (0.2200 → 0.1072 over Ω = 14 → 55), so the geometric mean
+> should become *more* accurate at large Ω. The measured ratio does the opposite — 1.01 at Ω = 30,
+> 1.47 at Ω = 70. **The position argument has the wrong sign for the residual**, so whatever drives
+> the drift is not the fast/frozen interpolation, and the arc has no candidate left for it.

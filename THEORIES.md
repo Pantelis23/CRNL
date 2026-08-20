@@ -4733,3 +4733,37 @@ interpolated rate and re-run §106's sweep. If the closure ratio then flattens t
 model is complete and its only approximation is a named, measured interpolation; if it does not, the
 position itself is Ω-dependent in a way §102.1's three cells could not see — which is the same
 mistake §106 just caught, one level down.
+
+~~**T-CASC-w, open: does §103's closure survive once the escape rate is properly averaged?**~~
+**-> §107. THE LEVEL IS FIXED; THE DRIFT IS NOT.**
+
+Four corrections applied — §106.3's indexing, §106.2's two-state occupancy, §102.1's averaging, and
+§105's derived head start. **The correct fast-limit average is the GEOMETRIC mean of the rate**:
+with `A(x) = −ln k(x)/Ω`, `exp(−Ω⟨A⟩) = exp(⟨ln k⟩)`. §102.1 used `k(⟨x⟩)`, which is a different and
+smaller number; the geometric mean reproduces §102.1's measured effective rate to **±9% at Ω = 14,
+30 and 55** where `k(⟨x⟩)` is ~21% low and the frozen limit is 2–7× off.
+
+**The ablation lands where §106 said it would.** At Ω = 30 the ratio runs 1.3702 → 1.2879
+(indexing) → 1.2575 (two-state) → **1.0138** (geometric) → 1.0142 (derived p_t). The geometric
+correction carries almost all of it — it is the only one that touches `pure`, where §106 localised
+the entire residual — and two-state is nearly invisible, as predicted, because π_low cancels.
+
+**But the drift survives every correction.** The model is now *centred*, crossing 1 near Ω = 30
+instead of sitting above 1 everywhere, and 6/7 cells land in [0.7, 1.4] against 4/7. **It still
+trends monotonically and the span gets slightly worse: 1.533× → 1.880× over Ω = 14–70.**
+
+> **WHAT SURVIVES, precisely.** Every cell across Ω = 14–70 is inside §102's pre-registered
+> factor-of-two gate under the corrected model (0.78 to 1.47), so §103's closure holds across the
+> whole swept range at the criterion it was registered against. **What does not hold is any claim of
+> asymptotic correctness**: the model is calibrated near Ω ≈ 30 and drifts 1.88× across a 5× change
+> in Ω.
+
+**T-CASC-x, open: what drives the residual Ω-drift?** Every identified approximation has now been
+corrected or shown to cancel, and the drift is unchanged. **The last remaining candidate has the
+wrong sign**: §102.1's position moves *toward* the fast end as Ω grows (0.2200 → 0.1072 over
+Ω = 14 → 55), so a fast-limit average should get *more* accurate at large Ω, while the measured ratio
+gets worse (1.01 at Ω = 30, 1.47 at Ω = 70). **How to kill:** the drift is monotone and smooth over
+1.88× — fit it against the candidate scalings that are actually available (A·Ω, √Ω, the rail width
+σ = √(V/Ω), π_low itself) and see whether any reproduces it. If none does, the missing term is not a
+finite-size correction to anything already in the model, and the honest scope statement is the
+calibrated one. **Report every candidate, not the flattering one (rule 15).**

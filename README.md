@@ -821,6 +821,26 @@ So the scope is now precise: the transfer model is superb, the escape model was 
 way that cancels, and what actually bounds the result is the **averaging of the escape rate
 over a fluctuating input** — filed as a residual in §102.1, now the binding constraint.
 
+**§107 folded every correction back in, and the result is a clean half-success.** The right
+fast-limit average turns out to be the **geometric mean** of the escape rate —
+`exp(−Ω⟨A⟩) = exp(⟨ln k⟩)` — not the rate at the mean input; it reproduces §102.1's measured
+effective rate to ±9% where the rate-at-the-mean is 21% low. With indexing, two-state
+occupancy, the geometric average and §105's derived head start all applied, the closure
+**recentres** — it crosses 1 near Ω = 30 instead of sitting above 1 everywhere — and the
+ablation credits the geometric term with almost all of it, exactly where §106 localised the
+residual.
+
+> **But the drift survives all four corrections.** The span goes 1.533× → 1.880× across
+> Ω = 14–70 and stays monotone. Every cell is still inside the pre-registered factor-of-two
+> gate (0.78–1.47), so the closure holds across the whole range at the criterion it was
+> registered against — **but it is a model calibrated near Ω ≈ 30, not an asymptotically
+> correct one.** [`FINDINGS.md`](FINDINGS.md) §107.
+
+And the last candidate for that drift has the *wrong sign*: §102.1's position moves toward
+the fast end as Ω grows, which would make the geometric mean more accurate at large Ω, not
+less. So the arc ends with its headline intact, its scope stated honestly, and one clean
+open question.
+
 **And §101.1 deleted the section's own headline before it was written.** The first reading
 was a 6.66× ratio at 91.8% contamination. The tell was that the *reflected* chain's D = 3
 error came out **ten times smaller** than its D = 2 error — a longer chain cannot be more
@@ -844,6 +864,7 @@ python -m experiments.chain_without_a_joint_solve  # the whole chain, no joint C
 python -m experiments.predicting_transmission      # and the last free parameter
 python -m experiments.the_head_start              # a withdrawal that was itself wrong
 python -m experiments.where_the_expansion_frays   # sweep Omega; what bounds the closure
+python -m experiments.the_corrected_closure       # every correction, folded back in
 ```
 
 ## Verifying the base

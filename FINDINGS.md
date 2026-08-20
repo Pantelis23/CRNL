@@ -11625,3 +11625,169 @@ recentring — and it is the reason to stop trying corrections of that kind rath
 escape by 21.5% at every Ω — with an exact gap, an exact stationary law and no coupling at all. It
 does not drift, so it is not §108's subject, but it is not explained either, and a transient from the
 delta-seeded start would have the wrong sign.)*
+
+### 109 §108's central claim was a seeding artifact — withdrawn, with both seed mismatches fixed
+
+**Rule 14, on a claim one commit old.** §108 argued: stage 2's measured effective escape rate is
+0.7880 × k(⟨x⟩) at Ω = 14; `ln k` is convex at every Ω; therefore by Jensen no average over the
+input can land that low; therefore **at least two mechanisms**, one provably outside the averaging
+family. The algebra is right. **The premise is not a stationary escape rate.**
+
+**§109.1 — the delta seed carries a 25× transient, with no averaging available at all**
+
+A *single* stage, upstream **pinned** — no fluctuating input, nothing to average — at Ω = 30,
+P(low at t)/t:
+
+| t | 0.5 | 1.0 | 2.0 | 4.0 | 8.0 | → π_low·λ |
+|---|---|---|---|---|---|---|
+| delta seed | 1.2501e−04 | 8.9201e−04 | 2.0236e−03 | 2.7775e−03 | 3.1459e−03 | 3.5902e−03 |
+| QSD seed | 3.1076e−03 | 3.2713e−03 | 3.4005e−03 | 3.4719e−03 | 3.4875e−03 | 3.5902e−03 |
+
+**Spread over a 16× window: delta 25.2×, QSD 1.12×.** P1 holds — the QSD seed converges to the
+two-state forward rate π_low·λ, and the delta seed is nowhere near it at t = 2. §108 compared a
+transient against a stationary average and read the gap as physics.
+
+> **Withdrawn: §108.3's "at least two mechanisms, one of them provably not an averaging effect."**
+> With matched (QSD) seeding, `true/k(⟨x⟩)` runs **0.9893, 1.2825, 1.5190, 1.8161, 2.0257** over
+> Ω = 14–70. The single sub-unity cell is 1.1% below, and the QSD instrument **itself under-reads at
+> t = 2** — and that shortfall is Ω-dependent, measured at **12.1% (Ω = 14), 7.7% (Ω = 20), 5.3%
+> (Ω = 30), 3.8% (Ω = 55), 3.3% (Ω = 70)**. Corrected per cell, the sequence is **1.1259, 1.3892,
+> 1.6038, 1.8869, 2.0956** — no cell materially below k(⟨x⟩), and the Ω = 14 cell is 12.6% above it
+> rather than marginal. The averaging family is not excluded, and §108's structural conclusion does
+> not stand.
+>
+> **The first version of this correction was itself sloppy, and it is the same error one level down.**
+> It measured the transient fraction at Ω = 30 alone and applied that single 5.3% to every cell,
+> giving 1.0445 at Ω = 14 — a *marginal* rescue of the very cell the argument turns on. The fraction
+> is not a constant: it is 12.1% at Ω = 14, more than twice the value extrapolated onto it. Caught on
+> review, before publication. **Rule 9 again: constancy along the axis you happened to measure.**
+
+**A sixth broken criterion, mine, in the check that was supposed to settle this.** P3 was coded as
+"below 0.99 ⇒ premise survives" and duly printed *survives* off the single 0.9893 cell — **a fixed
+tolerance on a quantity whose own instrument carries a five-times-larger residual.** That is rule 20
+exactly, in the test written to adjudicate a rule-14 withdrawal. (§99.1, §101's P1, §102's P4,
+§104's P2, §104's refutation, now this.)
+
+**§109.2 — the second seed mismatch closes T-CASC-z**
+
+§108 left a flat 21.5%: `contam` measured/model sat at 1.215 at every Ω with an *exact* gap, an
+*exact* stationary law and no coupling — and §108 noted a transient would have the wrong sign. True
+of stage 2's delta; **false of stage 1's seed**, which is a different mismatch in the other
+direction. Stage 1 is seeded from `stage1_stationary`, the **reflected** stage's stationary law,
+while the model assumes the **free** stage's QSD. The reflected law is not depleted near the saddle,
+so it escapes faster:
+
+| Ω | 14 | 20 | 30 | 55 | 70 |
+|---|---|---|---|---|---|
+| reflected / QSD | 1.2460 | 1.2770 | 1.2768 | 1.2493 | 1.2402 |
+| **QSD / two-state model** | 0.9529 | 0.9499 | 0.9533 | 0.9639 | 0.9677 |
+
+> **With matched seeding the two-state model predicts a free stage's escape to 3–5% at every Ω,
+> spanning 1.0188× across Ω = 14–70.** The flat 21.5% was entirely the reflected-vs-QSD seed
+> mismatch. **T-CASC-z closed**, and T-CASC-y's candidate (i) — the seed — is confirmed as a real
+> suppressor rather than dismissed on a sign argument that applied to the wrong seed.
+
+**§109.3 — and the drift still survives both fixes**
+
+**P4 holds.** With matched seeding the span is **2.048×** (against the delta-seeded 1.794×) — fixing
+seeds does not remove a trend that runs across five barrier depths, which is the outcome that keeps
+§106–§108's localisation intact. What falls is only §108's *explanation*.
+
+> **Where the drift now stands, cleanly posed.** With matched seeding the effective rate runs from
+> **at the fast limit** at Ω = 14 (0.9893, bracket top 2.3937) to **past the frozen limit** at Ω = 70
+> (2.0257 against a bracket top of 1.8346). So the system traverses the entire fast-to-frozen bracket
+> as Ω grows — and exits it. That is a sharper statement than §108's and it does not require a second
+> mechanism; what it requires is an account of why the position moves that way, when the naive
+> timescale argument says the upstream becomes *relatively faster* as the escape time grows
+> exponentially.
+
+**What §109 delivers, and what it does not.** It withdraws a wrong explanation, identifies and fixes
+two real instrument defects, closes T-CASC-z, and confirms T-CASC-y(i). **It does not explain the
+drift.** The hard goal set at §108 remains unmet, and it is now one commit further from being
+explained by anything already in the model.
+
+### 109.4 An accounting of the "six broken criteria" — the count is right, my categorisation was not
+
+§102 through §109 each carried a running banner: "fourth/fifth/sixth broken criterion in this arc",
+listing §99.1, §101's P1, §102's P4, §104's P2, §104's refutation and §109's P3. **The count is
+correct and the banner is not** — it flattens three distinct failure modes into one, which makes the
+pattern look more uniform than it is and points at the wrong fix.
+
+**Class A — a gate that cannot be satisfied by the thing it claims to test (rule 19). Three.**
+
+* **§101's P1** demanded `max|ΔQ| = 0` between a scalar loop and a vectorised expression. Two
+  formulations of the same arithmetic cannot agree bitwise; it printed FAILS on a correct agreement
+  with a residual of 1.8e−12.
+* **§102's P4** compared measured contaminated/pure against `k₁/k_last` across *different depths*,
+  when the model's own formula sums over the upstream stages so the quantity depends on D and the
+  comparator does not. Read literally it kills the suspect its own section confirms.
+* **§104's P2** compared a computed rate against a rate obtained by **inverting the model's own
+  closed form on the data**. That tests form × rate jointly and reports the verdict as a test of the
+  rate.
+
+**Class B — a fixed tolerance on a quantity whose own instrument carries a larger residual
+(rule 20). One, and it is worse than it was first reported.**
+
+* **§109's P3**: "below 0.99 ⇒ §108's premise survives", on a quantity whose QSD instrument
+  under-reads by **12.1% at Ω = 14, the very cell the verdict turned on**. The instrument residual is
+  **12× the gate**, not the 5× first quoted — because that 5% was itself measured at Ω = 30 and
+  extrapolated. *(Rule 20's other instances — §63's P1(c), §75's P1, §76's P1 and P3 — predate this
+  arc and are catalogued there.)*
+
+**Class C — not criterion failures at all. Two, and calling them that was itself a reporting
+error.**
+
+* **§104's refutation** modelled a head start as a longer window, `form(k, t + Δ)`, instead of the
+  convolution. Verified numerically: against a direct quadrature of `(1/t)∫₀ᵗ[1 − e^{−k(t−s+Δ)}]ds`
+  at k = 5.5169, Δ = 0.0686, t = 2, §105's closed form agrees to **0.00e+00** and §104's form is off
+  by **2.56e−02**. That is arithmetic, not a badly shaped criterion, and filing it under "broken
+  criteria" hid a plain algebra error behind a methodological label.
+* **§99.1** was a post-hoc discrimination that needed labelling as post-hoc — a rule-2 disclosure
+  issue. It *was* labelled correctly at publication. It is not a broken gate and should never have
+  been in the list.
+
+> **So the real tally is three rule-19 gates, one rule-20 tolerance, one algebra error and one
+> mislabelled disclosure.** The banner made it read as one recurring methodological fault with one
+> fix. It is not: Class A needs the kill-test-the-criterion habit rule 19 already prescribes, Class B
+> needs the instrument's own residual measured *before* a gate is chosen, and Class C needs neither —
+> it needed the arithmetic checked, which takes a quadrature and thirty seconds.
+
+### 109.5 The defects are now fixed in the code, not only recorded
+
+§99–§108 found eight defects and **fixed four**; the other four were written up, demonstrated in
+separate functions, and left live in the code anyone would actually call. "It is in `FINDINGS.md`"
+is not a fix — it is a trap with a paper trail. All eight are now closed:
+
+| defect | where | state |
+|---|---|---|
+| `np.interp` on reversed x | §98.1 | fixed, with an assertion that fires |
+| off-by-one absorbing boundary | §104.1(a) | fixed (in the *unflattering* direction) |
+| missing intrinsic depression `d_intr` | §103.1 | fixed in `chain_operating_points` |
+| Ω-extrapolated transient fraction | §109 | fixed before publication |
+| **stage keyed to its own operating point** | §106.3 | **now fixed; legacy behind a flag** |
+| **one-way occupancy, no π_low** | §106.2 | **now fixed; legacy behind a flag** |
+| **rate at the mean, not the geometric average** | §102.1/§107 | **now fixed; legacy behind a flag** |
+| **seed mismatch (delta rail / reflected law)** | §109.1–2 | **documented at the call site + `matched_seed=True`** |
+
+**The design, and the tradeoff it makes.** `escape_accounts_for_it.predict` and
+`chain_without_a_joint_solve.split_from` now **default to the corrected model** and take
+`legacy=True` for the original. Rule 7 says published numbers stand, so every caller that
+reproduces a published table — §102's, §103's and §106's `main()`, and the tests that pin their
+values — passes `legacy=True` **explicitly, with a comment saying which section it reproduces**. The
+reproducibility is preserved and it is now visible at each call site rather than being the silent
+default. Both docstrings name all three defects with their measured sizes, and a test asserts they
+keep doing so.
+
+**The seeding is handled differently, and deliberately.** The delta-at-the-rail seed is *not* a bug
+in §101 — it is that section's intended initial condition, "the chain starts correct", and both of
+its arms share it. The defect was comparing it against a stationary-law model (§108). So the default
+is unchanged, `solve()` now carries a **SEEDING WARNING** giving the measured cost (25.2× transient;
+1.24–1.28× the other way for stage 1), §101's own section docstring carries an amendment saying the
+paragraph that called it "its quasi-stationary law" was wrong, and `matched_seed=True` supplies the
+QSD seed that a model comparison requires.
+
+> **What this does not do.** It does not change a single published number, and it does not remove
+> §107's Ω-drift — `legacy=False` is the model §107 measured, and §107's finding is that the
+> corrections recentre without flattening. The point is narrower: **the known-wrong model is no
+> longer what you get by default, and the four defects that were only documented are now enforced by
+> tests.**

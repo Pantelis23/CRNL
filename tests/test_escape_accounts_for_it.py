@@ -37,7 +37,7 @@ def test_escape_rate_rises_steeply_as_the_operating_point_degrades(om):
 def test_suspect_predicts_the_split_within_the_registered_gate(om, D, want):
     """P3's gate was a factor of two, pre-registered and deliberately loose."""
     mus, tot, pure, contam = operating_points(om, D, 2.0)
-    _, cp, pp = predict(om, mus, 2.0)
+    _, cp, pp = predict(om, mus, 2.0, legacy=True)   # §102's published values
     ratio = (cp / pp) / (contam / pure)
     assert ratio == pytest.approx(want, abs=0.02)
     assert 0.5 < ratio < 2.0, "the pre-registered gate"
@@ -77,7 +77,7 @@ def test_p4_as_written_is_ill_posed_across_depths():
     k_ratios, measured = [], []
     for om, D in ((14, 2), (14, 3), (30, 2)):
         mus, tot, pure, contam = operating_points(om, D, 2.0)
-        ks, _, _ = predict(om, mus, 2.0)
+        ks, _, _ = predict(om, mus, 2.0, legacy=True)   # §102's P4 as written
         k_ratios.append(ks[0] / ks[-1])
         measured.append(contam / pure)
     assert max(k_ratios) / min(k_ratios) < 1.10, "k1/k_last barely moves"

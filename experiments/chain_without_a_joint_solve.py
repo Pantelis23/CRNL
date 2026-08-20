@@ -123,7 +123,19 @@ def chain_operating_points(om, D):
     return mus, kept
 
 
-def split_from(om, mus, t, p_transmit=P_TRANSMIT):
+def split_from(om, mus, t, p_transmit=P_TRANSMIT, legacy=False):
+    """DEFAULT = the model that survives §106-§109.
+
+    `legacy=True` restores the original, which is KNOWN WRONG IN THE SAME THREE WAYS as
+    `escape_accounts_for_it.predict` (see its docstring) and is kept only so §103's published
+    numbers stay reproducible (rule 7). The maintained model is `the_corrected_closure.closure`;
+    §107 measures what the corrections buy: the level recentres, the Omega-drift does not.
+    """
+    if not legacy:
+        from experiments.the_corrected_closure import closure
+        ratio, ks, _ = closure(om, t, indexing=True, two_state=True, geometric=True)
+        c = ratio / (1.0 + ratio)
+        return ks, c, 1.0 - c
     ks = [escape_rate(om, x) for x in mus]
     surv = float(np.prod([np.exp(-k * t) for k in ks[:-1]]))
     return ks, (1.0 - surv) * p_transmit, surv * (1.0 - np.exp(-ks[-1] * t))
@@ -156,7 +168,8 @@ def main():
     for r in out:
         om, D = r["omega"], r["D"]
         ref = MEASURED[(om, D)]
-        ks, cp, pp = split_from(om, r["pred_mus"], t)
+        # legacy=True: this main() reproduces §103's PUBLISHED table (rule 7).
+        ks, cp, pp = split_from(om, r["pred_mus"], t, legacy=True)
         pred, meas = cp / pp, ref["contam"] / ref["pure"]
         r.update({"ks": ks, "pred_ratio": pred, "meas_ratio": meas,
                   "pred_over_meas": pred / meas})

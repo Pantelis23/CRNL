@@ -100,7 +100,7 @@ def test_chain_stays_inside_the_gate_with_no_free_parameter():
     assert pt_pred == pytest.approx(0.9094, abs=2e-3)
     for (om, D), ref in CHAIN_MEASURED.items():
         mus, _ = chain_operating_points(om, D)
-        _, c, p = split_from(om, mus, 2.0, p_transmit=pt_pred)
+        _, c, p = split_from(om, mus, 2.0, p_transmit=pt_pred, legacy=True)
         ratio = (c / p) / (ref["contam"] / ref["pure"])
         assert 0.5 < ratio < 2.0, f"Om={om} D={D}: {ratio}"
 
@@ -113,7 +113,7 @@ def test_the_improvement_is_a_cancellation_not_an_improvement():
     for (om, D), ref in CHAIN_MEASURED.items():
         mus, _ = chain_operating_points(om, D)
         meas = ref["contam"] / ref["pure"]
-        _, c1, p1 = split_from(om, mus, 2.0)
-        _, c2, p2 = split_from(om, mus, 2.0, p_transmit=pt_pred)
+        _, c1, p1 = split_from(om, mus, 2.0, legacy=True)
+        _, c2, p2 = split_from(om, mus, 2.0, p_transmit=pt_pred, legacy=True)
         assert (c1 / p1) / meas > 1.0, "the model runs high with the measured p_t"
         assert (c2 / p2) / meas < (c1 / p1) / meas, "and lowering p_t moves it toward 1"

@@ -78,3 +78,37 @@ def test_every_cell_still_inside_the_registered_gate(rows):
     """What survives: §102's factor-of-two gate holds across the whole swept range."""
     for r in rows:
         assert 0.5 < r["ratios"][-1] < 2.0, f"Omega={r['omega']}: {r['ratios'][-1]}"
+
+
+def test_corrected_keyword_matches_the_maintained_model(rows):
+    """The `corrected=True` escape hatch must agree with §107's own numbers, not drift."""
+    from experiments.chain_without_a_joint_solve import chain_operating_points, split_from
+    import json
+    import pathlib
+    meas = {r["omega"]: r["meas_ratio"] for r in json.loads(
+        pathlib.Path("results/where_the_expansion_frays.json").read_text())["cells"]}
+    for r in rows:
+        om = r["omega"]
+        mus, _ = chain_operating_points(om, 2)
+        _, c, p = split_from(om, mus, 2.0)   # corrected is now the default
+        # §107's table is pred/meas; split_from returns the raw predicted ratio
+        assert (c / p) / meas[om] == pytest.approx(r["ratios"][3], rel=1e-6)
+
+
+def test_legacy_default_is_unchanged(rows):
+    """Rule 7: §103's published numbers must stay reproducible from the default path."""
+    from experiments.chain_without_a_joint_solve import chain_operating_points, split_from
+    mus, _ = chain_operating_points(30, 2)
+    _, c, p = split_from(30, mus, 2.0, legacy=True)
+    assert c / p == pytest.approx(0.9184, abs=1e-3)
+
+
+def test_both_call_sites_document_the_defects():
+    """A known-wrong default must say so where it is called, not only in FINDINGS."""
+    import inspect
+    from experiments.chain_without_a_joint_solve import split_from
+    from experiments.escape_accounts_for_it import predict
+    for fn in (predict, split_from):
+        d = inspect.getdoc(fn) or ""
+        assert "KNOWN WRONG" in d.upper(), fn.__name__
+        assert "the_corrected_closure" in d, fn.__name__

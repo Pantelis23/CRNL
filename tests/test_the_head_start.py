@@ -93,6 +93,6 @@ def test_chain_closure_survives_every_variant():
     for pt in (0.9376, p_headstart(K, 2.0, 0.0), p_headstart(K, 2.0, d)):
         for (om, D), ref in CH.items():
             mus, _ = chain_operating_points(om, D)
-            _, c, p = split_from(om, mus, 2.0, p_transmit=pt)
+            _, c, p = split_from(om, mus, 2.0, p_transmit=pt, legacy=True)
             ratio = (c / p) / (ref["contam"] / ref["pure"])
             assert 0.5 < ratio < 2.0, f"p_t={pt} Om={om} D={D}: {ratio}"

@@ -71,7 +71,8 @@ def cell(om, t=T0):
     """Measured operating points and split (joint solve, D = 2) against §103's prediction."""
     meas_mus, tot, pure, contam = operating_points(om, 2, t)
     pred_mus, _ = chain_operating_points(om, 2)
-    _, cp, pp = split_from(om, pred_mus, t)
+    # legacy=True: §106's published sweep was measured with the uncorrected model.
+    _, cp, pp = split_from(om, pred_mus, t, legacy=True)
     return {
         "omega": om,
         "meas_mus": meas_mus,

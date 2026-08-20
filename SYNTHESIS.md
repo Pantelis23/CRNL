@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§108. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§109. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -678,6 +678,23 @@ outright; **the drift survives, span 2.05×**.
   four corrections recentred the model without flattening it. The goal was not met; what it bought
   was the retirement of a whole class of fixes, which is a better reason to stop than a fifth
   recentring would have been.
+
+**§109 withdrew §108's central claim one commit later — it was a seeding artifact.** §108's Jensen
+argument was sound and its premise was not a stationary escape rate. In a *single* stage with the
+upstream **pinned** — no fluctuating input, nothing to average — the delta seed carries a **25.2×
+transient** over a 16× window against a QSD seed's 1.12×, suppressing by 1.68× at t = 2. With matched
+seeding no cell is materially below `k(⟨x⟩)`, so the averaging family is not excluded after all.
+  > And §108's other leftover closed with it. The flat 21.5% on the contam side was the *second*
+  > seed mismatch: stage 1 is seeded from the **reflected** stationary law while the model assumes
+  > the **free** QSD, and the reflected law is not depleted near the saddle, so it escapes
+  > 1.24–1.28× faster — flatly, which is why the residual was flat. **With matched seeding the
+  > two-state model predicts a free stage's escape to 3–5% at every Ω.** T-CASC-z closed.
+
+  **The drift survives both fixes** (span 2.048×), so §106–§108's localisation stands and only §108's
+  explanation falls. It is now posed more sharply than before: with matched seeding the effective
+  rate runs from **at the fast limit** at Ω = 14 to **past the frozen limit** at Ω = 70, traversing
+  and exiting the whole bracket — while the naive timescale argument predicts the opposite, since the
+  escape time grows exponentially in Ω and the upstream's correlation time is macroscopic.
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

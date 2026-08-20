@@ -857,8 +857,25 @@ positive throughout, +0.408 to +14.493).
 > large Ω. That is exactly why §107's four corrections recentred the model without flattening
 > it. [`FINDINGS.md`](FINDINGS.md) §108.
 
-The goal was not met. What it bought was the retirement of a whole class of fixes — a better
-reason to stop than a fifth recentring would have been. So the arc ends with its headline
+**And then §109 withdrew that.** §108's Jensen argument was sound; its premise was not a
+stationary escape rate. In a *single* stage with the upstream **pinned** — no fluctuating
+input, nothing whatsoever to average — the delta seed carries a **25.2× transient** against a
+QSD seed's 1.12×. §108 had compared a transient against a stationary average. With matched
+seeding, no cell is materially below k(⟨x⟩) and the averaging family is not excluded.
+
+§108's other leftover went the same way: the flat 21.5% was a *second* seed mismatch — stage 1
+seeded from the **reflected** stationary law where the model assumes the **free** QSD, which
+is not depleted near the saddle and so escapes 1.24–1.28× faster, flatly. **With matched
+seeding the two-state model predicts a free stage's escape to 3–5% at every Ω.**
+
+> **The drift survives both fixes** (span 2.048×), so the localisation stands and only the
+> explanation falls. It is now sharper: with matched seeding the effective rate runs from *at*
+> the fast limit at Ω = 14 to *past* the frozen limit at Ω = 70 — traversing and exiting the
+> whole bracket, while the naive timescale argument predicts the opposite.
+> [`FINDINGS.md`](FINDINGS.md) §109.
+
+The goal was not met, and one intermediate explanation had to be withdrawn a commit after it
+was written. So the arc ends with its headline
 intact, its scope stated honestly, and one open question that is now sharp enough to name what
 it is *not*.
 
@@ -886,7 +903,8 @@ python -m experiments.predicting_transmission      # and the last free parameter
 python -m experiments.the_head_start              # a withdrawal that was itself wrong
 python -m experiments.where_the_expansion_frays   # sweep Omega; what bounds the closure
 python -m experiments.the_corrected_closure       # every correction, folded back in
-python -m experiments.two_mechanisms              # why one correction can never be enough
+python -m experiments.two_mechanisms              # the argument §109 then withdrew
+python -m experiments.it_was_the_seed             # ...because it was the seed all along
 ```
 
 ## Verifying the base

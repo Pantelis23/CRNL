@@ -139,3 +139,35 @@ def test_stored_run_shows_the_crossing_in_every_admitted_cell():
         d2, d3 = idx[(om, 2, t)], idx[(om, 3, t)]
         frac = (d3["ratio"] - 1) / (2 * (d2["ratio"] - 1))
         assert 0.55 < frac < 0.75, f"{om} {t}: {frac}"
+
+
+def test_matched_seed_is_a_valid_law_and_differs_from_the_default():
+    """§109: the matched seed exists, is normalised, and is not the delta seed."""
+    for om, D in ((14, 2), (30, 2), (14, 3)):
+        Q, ref, dims, strides, cap, walled = fud.build_gen(om, D, 0)
+        s = fud.seed_matched(om, ref, dims, strides, walled)
+        assert s.sum() == pytest.approx(1.0, abs=1e-9)
+        assert (s >= 0).all()
+        d = fud.seed_gen(om, ref, dims, strides, walled,
+                         __import__("experiments.margin_law", fromlist=["x"])
+                         .stage1_stationary(om)[1])
+        assert np.abs(s - d).max() > 1e-6, "the two seeds must actually differ"
+
+
+def test_solve_accepts_matched_seed_and_it_changes_the_answer():
+    pd, ref, dims, strides, walled = fud.solve(30, 2, 0, 2.0)
+    pq, *_ = fud.solve(30, 2, 0, 2.0, matched_seed=True)
+    a = fud.last_low(pd, 30, dims, strides, walled, ref)
+    b = fud.last_low(pq, 30, dims, strides, walled, ref)
+    assert a != b
+    assert 0.9 < b / a < 1.15, "same physics, different initial condition"
+
+
+def test_seeding_mismatch_is_documented_where_it_is_used():
+    """A known IC mismatch must be visible at the call site, not only in FINDINGS."""
+    import inspect
+    d = inspect.getdoc(fud.solve) or ""
+    assert "SEEDING WARNING" in d
+    assert "matched_seed=True" in d
+    mod = inspect.getdoc(fud) or ""
+    assert "§109 AMENDS" in mod, "the section docstring must carry the amendment too"

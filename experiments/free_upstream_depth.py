@@ -59,6 +59,16 @@ quasi-stationary law above the saddle, later stages at their rails -- so both ar
 CORRECT and this measures degradation from a correct start. A chain seeded from the true
 joint stationary law would start with some stages already failed; that is a different
 question and it is not asked here.
+
+*** §109 AMENDS THAT PARAGRAPH. *** Calling stage 1's seed "its quasi-stationary law" is
+wrong: `stage1_stationary` is the REFLECTED stage's stationary law, and the free stage's QSD
+is depleted near the saddle where that one is not -- so the seed escapes 1.24-1.28x faster
+than a free QSD, flat in Omega. And the later stages' delta-at-the-rail seed carries a 25.2x
+transient (measured in a single stage with the upstream PINNED, so no averaging is even
+available). Neither is a defect of THIS section -- both arms share the seed and §101's
+comparison is between arms -- but §108 compared this construction against a model built from
+stationary laws and drew a wrong structural conclusion from the gap. `solve(matched_seed=True)`
+gives the seed such a comparison requires.
 """
 
 from __future__ import annotations
@@ -133,6 +143,45 @@ def seed_gen(om, ref, dims, strides, walled, pi1):
     return p
 
 
+def seed_matched(om, ref, dims, strides, walled):
+    """Every stage from its own quasi-stationary law -- the seed a stationary model assumes.
+
+    §109: the default seed is NOT this, and the gap is large enough to have produced a wrong
+    structural conclusion in §108. Stage 1 uses the free QSD; each later stage uses the QSD of
+    a stage whose upstream is pinned at the previous stage's predicted operating point.
+    """
+    from experiments.chain_without_a_joint_solve import chain_operating_points
+
+    D = len(dims)
+    mus, _ = chain_operating_points(om, D)
+    p = np.ones(1)
+    for k in range(D):
+        x_up = 0.0 if k == 0 else mus[k - 1]
+        cap = int(ref[-1])
+        m = cap + 1
+        rows, cols, vals = [], [], []
+        for s in range(m):
+            tot = 0.0
+            lam, mu = cc.rates_stage(float(s), x_up * om, om, C, R3, k == 0, "hill")
+            if s < cap and lam > 0:
+                rows.append(s); cols.append(s + 1); vals.append(lam); tot += lam
+            if s > 0 and mu > 0:
+                rows.append(s); cols.append(s - 1); vals.append(mu); tot += mu
+            rows.append(s); cols.append(s); vals.append(-tot)
+        Qk = sp.csr_matrix((vals, (rows, cols)), shape=(m, m))
+        keep = np.where(np.arange(m) > R2 * om)[0]
+        _, v = spla.eigs(Qk[keep][:, keep].T.tocsc(), k=1, which="LR")
+        w = np.abs(np.real(v[:, 0])); w = w / w.sum()
+        row = np.zeros(dims[k])
+        for j, wj in zip(keep, w):
+            idx = list(ref).index(j) if walled[k] else int(j)
+            if 0 <= idx < dims[k]:
+                row[idx] = wj
+        row = row / row.sum()
+        p = np.outer(p, row).ravel()
+    return p
+
+
 def last_low(p, om, dims, strides, walled, ref):
     idx = np.arange(len(p))
     n = (idx // strides[-1]) % dims[-1]
@@ -140,10 +189,30 @@ def last_low(p, om, dims, strides, walled, ref):
     return float(p[counts < R2 * om].sum())
 
 
-def solve(om, D, n_reflected, t):
+def solve(om, D, n_reflected, t, matched_seed=False):
+    """Evolve the chain to time t.
+
+    *** SEEDING WARNING (§109). *** The default seed is §101's intended initial condition --
+    "the chain starts correct": stage 1 from `stage1_stationary` (the REFLECTED stage's
+    stationary law) and every later stage as a DELTA at its rail. That is a legitimate IC and
+    §101-§107's published numbers are measured with it. **It is not a quasi-stationary state,
+    and comparing it against a model built from stationary laws is what §108 did wrong.**
+
+    Measured cost of the mismatch, in a single stage with the upstream PINNED so no averaging
+    is even available: the delta seed carries a **25.2x transient** over t = 0.5..8 against a
+    QSD seed's 1.12x, and at t = 2 it under-reads by 12.1% (Omega=14), 7.7% (20), 5.3% (30).
+    Stage 1's reflected-law seed errs the other way, escaping 1.24-1.28x faster than the free
+    QSD -- flat in Omega, which is why §108's residual there looked like a constant.
+
+    Pass matched_seed=True to seed every stage from its quasi-stationary law instead, which is
+    what any comparison against a stationary-law model requires.
+    """
     Q, ref, dims, strides, cap, walled = build_gen(om, D, n_reflected)
     _, pi1 = stage1_stationary(om)
-    p = seed_gen(om, ref, dims, strides, walled, pi1)
+    if matched_seed:
+        p = seed_matched(om, ref, dims, strides, walled)
+    else:
+        p = seed_gen(om, ref, dims, strides, walled, pi1)
     p = spla.expm_multiply(Q.T * t, p)
     return p, ref, dims, strides, walled
 

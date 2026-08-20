@@ -1366,6 +1366,8 @@ functional form that was never derived and never compared against a rival.
 | **"The chain's operating point can be composed from the transfer map alone"** — §103's first version, withdrawn before publication. | It predicted 2.8501 → 3.0946 → 3.1173, each stage sitting *closer* to its rail than the one feeding it, against a measured 2.8042 → 2.6698 → 2.6113 that falls. **Not a 16% error but the wrong direction**, and the cause is structural: §91 built the coupling to be neutral at the rail, so `F(r₃) = 3.1827000000` against `r₃ = 3.1827` — **the rail is a fixed point of the transfer map**, and iterating `⟨F(x)⟩` can only converge toward it at any depth for any input. The degradation comes from each stage's own finite-Ω depression `d_intr = μ₁ − r₃`, which §96 includes and this omitted. Restoring it gives +3.45% and +4.32%. Same family as §96.1 — a term dropped from a composition — but caught by a **sign** rather than a magnitude, which no tolerance would have flagged. §103.1. |
 | **"The early-start account is refuted — the offset needed grows in proportion to t, so it is a rescaling of the rate and not a shifted clock"** (§104). | **The refutation, not the account, was wrong.** §104 inverted `p(t) = form(k, t + Δ)`, modelling a head start as a **longer window**; a head start is the convolution `p(t) = 1 − e^{−kΔ}(1 − e^{−kt})/(kt)`. Under §104's form the required Δ spans **18.90×** across the five windows and does grow with t — a true reading of the wrong function. Under the correct one it spans **2.17×**, and a single Δ reconciles the curve. §105 then *derived* that Δ: rate-weighting the conditional occupation time below the saddle-node at x_up\* = 1.5795 (where the downstream descends 8.7× slower) gives **0.0686 against a fitted 0.0486**. The parameter-free worst residual falls 8.95% → 5.80% and the one-signed bias vanishes. **Rule 14 exactly — a withdrawal is a claim, and this one discarded a correct account.** §105. |
 | **"P(stage 1 low at t) = 1 − e^{−k₁t}"** — §102's first ingredient, inherited by §103–§105. | A free stage has **no absorbing boundary**: its low-basin occupancy saturates at the stationary weight π_low, not at 1. π_low falls **0.9057 → 0.5247** over Ω = 14–70, and the one-way model correspondingly runs from 7% low to **59% high**, spanning 1.71× and crossing 1 near Ω = 35 — where §102 happened to validate it, accidentally accurate to 2.5%. Not a transient: at Ω = 55 the error *grows* with the window (1.2453 → 1.4267 over t₀ = 2 → 8). With `P = π_low(1 − e^{−λt})` the model is flat to **2.5% across four decades of probability**. Rule 9 on the axis the whole arc is parameterised by. §106.2. |
+| **"At least two mechanisms are in play, one of them provably not an averaging effect"** (§108.3, withdrawn one commit later). | The Jensen argument was sound and the premise was an artifact. §108 measured stage 2 in a chain that seeds it as a **delta at its rail** and compared that against averages built from **stationary** laws. In a single stage with the upstream *pinned* — no fluctuating input, nothing to average — the delta seed carries a **25.2× transient** over a 16× window against the QSD seed's 1.12×, suppressing by 1.68× at t = 2. With matched seeding `true/k(⟨x⟩)` runs 0.9893 → 2.0257, and the one sub-unity cell is 1.1% below while the instrument itself under-reads a measured 5.3%; corrected, **1.0445 → 2.1387, none below**. The averaging family is not excluded. §109.1. |
+| **"below 0.99 ⇒ §108's premise survives"** — §109's own P3 check. | A **fixed tolerance on a quantity whose own instrument carries a five-times-larger residual**. It printed *survives* off a single cell at 0.9893 when the QSD seed at t = 2 is 5.3% short of its converged value. Rule 20, in the test written to adjudicate a rule-14 withdrawal. Sixth broken criterion of the arc (§99.1, §101 P1, §102 P4, §104 P2, §104's refutation, this). §109.1. |
 | **"stage i's escape rate is `escape_rate(Ω, mus[i])`"** — §102's `predict`, inherited by §103–§105. | `escape_rate(Ω, x_up)` is the rate of a stage whose **upstream** sits at x_up, so each stage was keyed to its own operating point rather than its input's. **Stage 1 has no upstream at all** — its rate is the free spectral gap, which §102's own P1 showed equals `escape_rate(Ω, r₃)`. The corrected indexing reproduces the measured gap **exactly at all seven Ω**; the as-coded one is **12.7% high at Ω = 14**. Correcting it improves the closure at every Ω without removing §106's divergence, so the published agreements were slightly lucky and the conclusions survive. §106.3. |
 
 **A second pattern, from the depth-ceiling correction.** A threshold observable
@@ -4813,3 +4815,60 @@ stated two ways and neither is an average over a static law, which is what §108
 under-predicts stage 1's escape by that much with an *exact* gap, an *exact* stationary law and no
 coupling at all. It does not drift, so §108 set it aside, but it is unexplained, and a transient from
 the delta-seeded start would have the wrong sign.
+
+~~**T-CASC-z, open: the flat 21.5%.**~~ **-> §109.2. CLOSED. It was a seed mismatch.** Stage 1 is
+seeded from `stage1_stationary`, the **reflected** stage's stationary law, while the model assumes
+the **free** stage's QSD. The reflected law is not depleted near the saddle, so it escapes
+**1.2460 / 1.2770 / 1.2768 / 1.2493 / 1.2402** times faster across Ω = 14–70 — flat, which is why
+the residual was flat. **With matched seeding the two-state model predicts a free stage's escape to
+3–5% at every Ω, spanning 1.0188×.**
+
+**T-CASC-y(i) CONFIRMED, and §108's dismissal of it was reasoned from the wrong seed.** §108 argued
+a delta-seed transient "would have the wrong sign". True of stage 1's reflected law; **false of stage
+2's delta**, which is the other mismatch and runs the other way. In a *single* stage with the
+upstream **pinned** — no fluctuating input, nothing to average — the delta seed carries a **25.2×**
+transient over a 16× window against the QSD seed's **1.12×**, and at t = 2 it suppresses by 1.68×.
+
+> **§108.3's central claim is WITHDRAWN (see §4).** Its Jensen argument was sound; its premise —
+> that the measured rate lies below `k(⟨x⟩)` — holds only for a delta-seeded chain. With matched
+> seeding the sequence is 0.9893, 1.2825, 1.5190, 1.8161, 2.0257, and the one sub-unity cell is 1.1%
+> below while the QSD instrument itself under-reads by a measured **5.3%** at t = 2. Transient
+> corrected: **1.0445, 1.3540, 1.6038, 1.9175, 2.1387.** No cell is materially below `k(⟨x⟩)`; the
+> averaging family is **not** excluded.
+
+**But the drift survives both seed fixes** — span **2.048×** with matched seeding against the
+delta-seeded 1.794×. §106–§108's *localisation* stands; only §108's explanation falls.
+
+**T-CASC-x, restated more sharply than §108 left it.** With matched seeding the effective rate runs
+from **at the fast limit** at Ω = 14 (0.9893 against a bracket top of 2.3937) to **past the frozen
+limit** at Ω = 70 (2.0257 against 1.8346). The system traverses the entire fast-to-frozen bracket as
+Ω grows, and exits it. **The naive timescale argument predicts the opposite**: the escape time grows
+exponentially in Ω while the upstream's correlation time is macroscopic, so the upstream should
+become *relatively faster* and the position should move *toward* the fast limit. **How to kill:** the
+position is now a measured curve over five Ω; compute the upstream correlation time and the
+downstream instanton traversal time independently (both 1-D, both available from §100 and §105's
+h-transform) and check whether their ratio moves the way the position does. If it moves the other
+way, the position is not set by that ratio and the resonant-activation framing inherited from
+§92/§93 does not apply to the escape rate at all.
+
+**A correction to this arc's own running commentary (§109.4).** §102–§109 each carried a banner
+counting "broken criteria" and listing §99.1, §101's P1, §102's P4, §104's P2, §104's refutation and
+§109's P3. **The count is right; the category is not.** Three are rule-19 gates that cannot be
+satisfied by what they test (§101's P1, §102's P4, §104's P2). **One** is a rule-20 fixed tolerance
+against a larger instrument residual (§109's P3 — and it is 12× the gate, not the 5× first quoted,
+because that 5% was measured at Ω = 30 and extrapolated onto Ω = 14). **One is plain arithmetic**
+(§104's refutation: `form(k, t+Δ)` for a head start instead of the convolution — verified against
+quadrature, §105's form agrees to 0.00e+00 and §104's is off 2.56e−02). **One was never a broken
+gate at all** (§99.1, a rule-2 disclosure that was correctly disclosed). Grouping them made one
+recurring fault out of four different ones, and pointed at the wrong remedy for three of them.
+
+**§109.5 -- the four documented-but-unfixed defects are now closed in code.** §106.3's indexing,
+§106.2's one-way occupancy and §102.1's rate-at-the-mean were written up and demonstrated in separate
+functions while `predict` and `split_from` kept carrying all three as their default. They now
+**default to the corrected model**, with `legacy=True` for the original; every caller reproducing a
+published table (§102's, §103's and §106's `main()`, and the tests pinning their values) passes it
+**explicitly, naming the section it reproduces**, so rule 7 is honoured *visibly* rather than by a
+silent default. The seed mismatch is handled the other way round on purpose: the delta-at-the-rail
+seed is §101's intended initial condition and both its arms share it, so the default stands, but
+`solve()` now carries a SEEDING WARNING with the measured cost and `matched_seed=True` supplies the
+QSD seed any stationary-model comparison needs. No published number changes.

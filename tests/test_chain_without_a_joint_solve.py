@@ -40,7 +40,7 @@ def test_operating_points_degrade_with_depth():
 @pytest.mark.parametrize("om,D", sorted(MEASURED))
 def test_predicted_split_is_inside_the_registered_gate(om, D):
     mus, _ = chain_operating_points(om, D)
-    _, cp, pp = split_from(om, mus, 2.0)
+    _, cp, pp = split_from(om, mus, 2.0, legacy=True)   # §103's published gate
     ref = MEASURED[(om, D)]
     ratio = (cp / pp) / (ref["contam"] / ref["pure"])
     assert GATE[0] < ratio < GATE[1], f"Om={om} D={D}: {ratio}"
@@ -50,7 +50,7 @@ def test_predicted_split_is_inside_the_registered_gate(om, D):
                                        (14, 2, 1.1844), (14, 3, 1.0585)))
 def test_predicted_split_reproduces_the_recorded_values(om, D, want):
     mus, _ = chain_operating_points(om, D)
-    _, cp, pp = split_from(om, mus, 2.0)
+    _, cp, pp = split_from(om, mus, 2.0, legacy=True)   # §103's published values
     ref = MEASURED[(om, D)]
     assert (cp / pp) / (ref["contam"] / ref["pure"]) == pytest.approx(want, abs=2e-3)
 
@@ -71,7 +71,7 @@ def test_conclusion_survives_the_whole_measured_range_of_p_transmit():
     for pt in (0.7254, 0.8860, 0.9376, 0.9830):
         for (om, D), ref in MEASURED.items():
             mus, _ = chain_operating_points(om, D)
-            _, cp, pp = split_from(om, mus, 2.0, p_transmit=pt)
+            _, cp, pp = split_from(om, mus, 2.0, p_transmit=pt, legacy=True)
             ratio = (cp / pp) / (ref["contam"] / ref["pure"])
             assert GATE[0] < ratio < GATE[1], f"p_t={pt} Om={om} D={D}: {ratio}"
 

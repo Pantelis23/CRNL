@@ -116,9 +116,37 @@ def operating_points(om, D, t):
     return mus, tot, pure, contam
 
 
-def predict(om, mus, t, p_transmit=P_TRANSMIT):
-    """Rates at the measured operating points -> the contaminated/pure split."""
-    ks = [escape_rate(om, x) for x in mus]
+def predict(om, mus, t, p_transmit=P_TRANSMIT, legacy=False):
+    """Rates at the measured operating points -> the contaminated/pure split.
+
+    DEFAULT = the model that survives §106-§109. `legacy=True` restores the ORIGINAL model,
+    which is KNOWN WRONG IN THREE WAYS and is kept only so §102's and §103's published
+    numbers stay reproducible (rule 7). The maintained model is `the_corrected_closure.closure`.
+    Every caller that reproduces a published table passes legacy=True explicitly; new work
+    should not.
+
+      (1) INDEXING (§106.3). `escape_rate(om, x_up)` is the rate of a stage whose UPSTREAM
+          sits at x_up. The line below keys each stage to ITS OWN operating point. Stage 1
+          has no upstream: its rate is escape_rate(om, R3), which equals the free spectral
+          gap exactly at every Omega. As coded this is 12.7% high at Omega = 14.
+      (2) ONE-WAY OCCUPANCY (§106.2). A free stage has no absorbing boundary, so
+          P(low at t) = pi_low * (1 - exp(-lambda t)). pi_low falls 0.9057 -> 0.5247 over
+          Omega = 14-70; taking it as 1 spans 1.71x and crosses 1 near Omega = 35, which is
+          where §102 validated it.
+      (3) RATE AT THE MEAN (§102.1, §107). The escape rate must be averaged over the
+          fluctuating input; the fast-limit average is the GEOMETRIC mean exp(<ln k>), which
+          is ~21% larger than the k(<x>) used here.
+
+    A fourth defect is upstream of this function and cannot be fixed here: the joint chains
+    that supply `mus` seed stage 2 as a delta at its rail and stage 1 from the REFLECTED
+    stationary law rather than the free QSD (§109).
+    """
+    if not legacy:
+        from experiments.the_corrected_closure import closure
+        ratio, ks, p_t = closure(om, t, indexing=True, two_state=True, geometric=True)
+        surv_contam = ratio / (1.0 + ratio)
+        return ks, surv_contam, 1.0 - surv_contam
+    ks = [escape_rate(om, x) for x in mus]          # legacy: see the three defects above
     surv = float(np.prod([np.exp(-k * t) for k in ks[:-1]]))   # no upstream stage failed
     contam = (1.0 - surv) * p_transmit
     pure = surv * (1.0 - np.exp(-ks[-1] * t))
@@ -188,7 +216,8 @@ def main():
           f"{'measured':>11}{'pred/meas':>11}")
     for om, D in cells:
         mus, tot, pure, contam = operating_points(om, D, 2.0)
-        ks, cp, pp = predict(om, mus, 2.0)
+        # legacy=True: this main() reproduces §102's PUBLISHED table (rule 7).
+        ks, cp, pp = predict(om, mus, 2.0, legacy=True)
         r_pred, r_meas = cp / pp, contam / pure
         out.append({"omega": om, "D": D, "mus": mus, "ks": ks,
                     "pred_contam": cp, "pred_pure": pp, "pred_ratio": r_pred,

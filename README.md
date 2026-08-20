@@ -797,6 +797,30 @@ time gives **0.0686 against a fitted 0.0486**, taking nothing from the measured 
 The curve stays parameter-free and improves: **worst residual 8.95% → 5.80%**, the one-signed
 bias gone, three of five windows inside 0.3%. [`FINDINGS.md`](FINDINGS.md) §105.
 
+**§106 swept Ω and bounded the whole thing.** The operating points converge
+*super-algebraically* — local exponents steepening −2.53 → −11.43, reaching 0.0001% at
+Ω = 70 — so the transfer model is far better than the 1/Ω expansion predicted. **But the
+closure ratio built from them runs away from 1** (1.1845 → 1.8158). Three candidates
+cleared; one convicted, and it is the crudest term in the model: `P(stage 1 low) =
+1 − e^{−k₁t}`, one free stage, no coupling. It spans 1.71× and **crosses 1 near Ω = 35 —
+which is where §102 validated it.**
+
+> **A free stage has no absorbing boundary.** Its low-basin occupancy saturates at the
+> stationary weight π_low — falling 0.9057 → 0.5247 across the sweep — not at 1. With
+> `P = π_low(1 − e^{−λt})` the model is flat to **2.5% across four decades of probability**.
+> But π_low cancels in contaminated/pure: a correct fix to a real error that the reported
+> quantity happens to be blind to. [`FINDINGS.md`](FINDINGS.md) §106.
+
+§106 also turned up an **indexing error** in §102/§103 — each stage's escape rate was keyed
+to its own operating point rather than its upstream's, when stage 1 has no upstream and its
+rate is simply the free gap. The corrected version reproduces the measured gap *exactly* at
+all seven Ω. It improves the closure everywhere without removing the divergence, so those
+sections' published agreements were slightly lucky and their conclusions survive.
+
+So the scope is now precise: the transfer model is superb, the escape model was wrong in a
+way that cancels, and what actually bounds the result is the **averaging of the escape rate
+over a fluctuating input** — filed as a residual in §102.1, now the binding constraint.
+
 **And §101.1 deleted the section's own headline before it was written.** The first reading
 was a 6.66× ratio at 91.8% contamination. The tell was that the *reflected* chain's D = 3
 error came out **ten times smaller** than its D = 2 error — a longer chain cannot be more
@@ -819,6 +843,7 @@ python -m experiments.escape_accounts_for_it # and whether escape rates account 
 python -m experiments.chain_without_a_joint_solve  # the whole chain, no joint CME
 python -m experiments.predicting_transmission      # and the last free parameter
 python -m experiments.the_head_start              # a withdrawal that was itself wrong
+python -m experiments.where_the_expansion_frays   # sweep Omega; what bounds the closure
 ```
 
 ## Verifying the base

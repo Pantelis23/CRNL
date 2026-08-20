@@ -11370,3 +11370,117 @@ better.**
 > criteria in this arc now (§99.1, §101's P1, §102's P4, §104's P2, and §104's refutation) — and
 > this is the first one that discarded a *correct* account rather than merely mislabelling a
 > correct number.
+
+### 106 (T-CASC-s) Where §103's closure degrades — and it is the crudest ingredient, not the sophisticated ones
+
+§103 predicted the chain's operating points to +0.13% and +0.50% at Ω = 30 but +1.64% / +3.45% /
++4.32% at Ω = 14, every miss one-signed high. The natural reading was that §103 is an expansion in
+Ω. **That reading rested on two barrier depths and it is wrong in an interesting way.** Sweeping Ω
+at fixed depth (D = 2, t₀ = 2.0):
+
+| Ω | stage 1 | stage 2 | closure ratio pred/meas | P_free |
+|---|---|---|---|---|
+| 14 | +1.63% | +3.45% | 1.1845 | 2.921e−01 |
+| 20 | +0.66% | +1.67% | 1.2560 | 1.085e−01 |
+| 24 | +0.35% | +1.01% | 1.3064 | 5.381e−02 |
+| 30 | +0.13% | +0.50% | 1.3702 | 1.816e−02 |
+| 40 | +0.02% | +0.14% | 1.4648 | 2.873e−03 |
+| 55 | +0.00% | +0.03% | 1.6203 | 1.785e−04 |
+| 70 | +0.00% | +0.01% | 1.8158 | 1.115e−05 |
+
+**P1 holds** (Ω = 30 reproduces §103). **P3 holds** — every residual positive at every Ω.
+
+**P2 is refuted, and in the flattering direction.** I predicted a 1/Ω decay. The fitted exponents are
+−6.02 (stage 1) and −3.64 (stage 2) over Ω = 14–70, and the *local* exponents steepen monotonically —
+stage 1: **−2.53, −3.50, −4.47, −6.05, −8.49, −11.43**. That is not a power law at all; the operating
+points converge **super-algebraically**, reaching 0.0001% at Ω = 70. §103's transfer model is far
+better than an expansion in 1/Ω.
+
+**P4 is refuted, and it is the finding.** The closure ratio does not approach 1 — it **runs away from
+it**, 1.1845 → 1.8158. The operating points become essentially exact while the quantity built from
+them gets steadily worse.
+
+**§106.1 — localising it: three candidates cleared, one convicted**
+
+| candidate | verdict |
+|---|---|
+| the operating points | **cleared** — exact to 0.0001% by Ω = 70 |
+| the rate ratio k₁/k₂ | **cleared** — 0.9374 → 0.9905, heading to 1 |
+| `p_transmit` | **cleared** — measured 0.9466 → 0.9445, flat to 1% across Ω = 14–55 |
+| `P(stage 1 low) = 1 − e^{−k₁t}` | **convicted** |
+
+*(An unplanned confirmation fell out of clearing the third: §105's derived-Δ model predicts
+p_transmit as 0.9267 → 0.9468 across the same sweep, tracking the measurement to within 2% at every
+Ω **and reproducing its non-monotone shape** — both have a shallow minimum near Ω = 24–30 and rise on
+both sides. §105 was built and closed at Ω = 30 alone.)*
+
+**The convicted term is the crudest thing in the whole model** — one free stage, no coupling, no
+transfer map:
+
+| Ω | 1 − e^{−k₁t} | measured | model/meas |
+|---|---|---|---|
+| 14 | 1.3581e−01 | 1.4604e−01 | 0.9300 |
+| 30 | 7.5765e−03 | 7.7739e−03 | **0.9746** |
+| 40 | 1.2410e−03 | 1.1781e−03 | 1.0534 |
+| 55 | 8.5470e−05 | 6.8633e−05 | 1.2453 |
+| 70 | 6.3139e−06 | 3.9756e−06 | 1.5882 |
+
+**It spans 1.71× and crosses 1 near Ω = 35 — and §102 validated it at Ω = 30 alone, where it is
+accidentally accurate to 2.5%.** Rule 9 once more, and this time the axis nobody checked was the one
+the whole arc is parameterised by.
+
+**Not a transient.** At Ω = 55 the error *grows* with the window — model/meas 1.2453 at t₀ = 2 and
+1.4267 at t₀ = 8 — so the spectral gap is not merely being applied too early.
+
+**§106.2 — the fix: the chain is ergodic, so the escape is two-state, not one-way**
+
+`1 − e^{−k₁t}` is the occupancy of an **absorbing** low state. A free stage has no absorbing
+boundary: it relaxes toward a stationary distribution with weight in *both* basins, so
+
+    P(low at t) = π_low · (1 − e^{−λt})
+
+with λ the gap and π_low the stationary weight below the saddle. The one-way model is the π_low = 1
+case, and π_low is **not** 1 — it falls 0.9057 → 0.5247 over Ω = 14 → 70, which is exactly the
+missing 1.71×.
+
+| Ω | 14 | 24 | 30 | 40 | 55 | 70 |
+|---|---|---|---|---|---|---|
+| two-state / measured | 0.8422 | 0.8213 | 0.8216 | 0.8256 | 0.8305 | 0.8333 |
+
+**Flat to 2.5% across a 5× change in Ω and four decades of probability**, against the one-way model's
+1.71×. The remaining factor of 0.82 is a constant prefactor and does not degrade with Ω. *The
+Ω-drift is entirely the missing π_low.*
+
+**But it does not repair the closure**, because π_low(stage 1) ≈ π_low(stage 2) and the factor
+**cancels in contaminated/pure**: 1.1845 → 1.1624 and 1.8158 → 1.7927. A correct fix to a real error
+that the reported quantity happens to be blind to.
+
+**§106.3 — an indexing error in §102 and §103, found on the way**
+
+`escape_rate(Ω, x_up)` is the rate of a stage whose **upstream** sits at `x_up`. §102's `predict`
+uses `ks[i] = escape_rate(Ω, mus[i])` — each stage keyed to **its own** operating point rather than
+its upstream's. Stage 1 has no upstream at all; its rate is the free spectral gap, which §102's own
+P1 established equals `escape_rate(Ω, r₃)`.
+
+> **The corrected indexing reproduces the measured gap exactly at all seven Ω** (7.2981e−02,
+> 2.3713e−02, 1.1369e−02, 3.8027e−03, 6.2089e−04, 4.2737e−05, 3.1570e−06). The as-coded version uses
+> `escape_rate(mu₁)`, which is **12.7% high at Ω = 14** and 3.3% high at Ω = 70.
+
+Correcting it improves the closure at every Ω (1.0416 → 0.9714 at Ω = 14; 0.9287 → 0.9073 at Ω = 70)
+but **does not remove the divergence** — the measured ratio still falls to 0.5116 while every model
+variant sits near 0.9. §102's and §103's published agreements were therefore slightly lucky, and
+their conclusions survive the correction.
+
+**What is left, and where it belongs.** With the two-state form in place the split decomposes as:
+`contaminated` is then predicted well (measured/model ≈ 1.12 at Ω = 70), and the entire residual sits
+in **`pure` — stage 2's own escape — under-predicted by about 2× at Ω = 70.** That is §102.1's known
+problem, not a new one: the model evaluates the escape rate **at the mean** operating point, and
+§102.1 measured the two averaging limits separating **2.44× at Ω = 14 and 8.80× at Ω = 55**. The
+approximation that was worth ~30% at Ω = 30 is worth a factor of two at Ω = 70, because the escape
+rate's convexity in the operating point is amplified by Ω in the exponent.
+
+> **So §103's closure is validated near Ω ≈ 30 and degrades away from it, and the scope statement is
+> now precise: the transfer model is superb (super-algebraic), the escape model was wrong in a way
+> that cancels, and the *averaging* of the escape rate over a fluctuating input is the term that
+> actually bounds the result.** T-CASC-q named that term in §102.1 and it is now the arc's binding
+> constraint rather than a residual.

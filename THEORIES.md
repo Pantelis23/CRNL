@@ -1365,6 +1365,8 @@ functional form that was never derived and never compared against a rival.
 | **"P(last stage low) is comparable across depths at any window"** — assumed wherever §94 and §101 compare D = 2 with D = 3. | False below t₀ ≈ 2. Stage 1 seeds from its quasi-stationary law and is already spread; every later stage seeds as a **delta at its rail**, so until that delta propagates a deeper chain hands its last stage a *cleaner* input. At Ω = 30, t₀ = 0.5 the reflected D = 3 error is **ten times smaller** than D = 2's, and at Ω = 14, D = 3 stage 3 reads (2.7450, 0.6846) against stage 2's (2.6542, 0.7643) — the last stage cleaner than the one feeding it. §92.1(a) one level up: there the artifact reversed a trend in upstream speed, here it reverses the trend in **depth**. It removed §101's first headline (a 6.66× ratio at 91.8% contamination) before it was written down. §101.1. |
 | **"The chain's operating point can be composed from the transfer map alone"** — §103's first version, withdrawn before publication. | It predicted 2.8501 → 3.0946 → 3.1173, each stage sitting *closer* to its rail than the one feeding it, against a measured 2.8042 → 2.6698 → 2.6113 that falls. **Not a 16% error but the wrong direction**, and the cause is structural: §91 built the coupling to be neutral at the rail, so `F(r₃) = 3.1827000000` against `r₃ = 3.1827` — **the rail is a fixed point of the transfer map**, and iterating `⟨F(x)⟩` can only converge toward it at any depth for any input. The degradation comes from each stage's own finite-Ω depression `d_intr = μ₁ − r₃`, which §96 includes and this omitted. Restoring it gives +3.45% and +4.32%. Same family as §96.1 — a term dropped from a composition — but caught by a **sign** rather than a magnitude, which no tolerance would have flagged. §103.1. |
 | **"The early-start account is refuted — the offset needed grows in proportion to t, so it is a rescaling of the rate and not a shifted clock"** (§104). | **The refutation, not the account, was wrong.** §104 inverted `p(t) = form(k, t + Δ)`, modelling a head start as a **longer window**; a head start is the convolution `p(t) = 1 − e^{−kΔ}(1 − e^{−kt})/(kt)`. Under §104's form the required Δ spans **18.90×** across the five windows and does grow with t — a true reading of the wrong function. Under the correct one it spans **2.17×**, and a single Δ reconciles the curve. §105 then *derived* that Δ: rate-weighting the conditional occupation time below the saddle-node at x_up\* = 1.5795 (where the downstream descends 8.7× slower) gives **0.0686 against a fitted 0.0486**. The parameter-free worst residual falls 8.95% → 5.80% and the one-signed bias vanishes. **Rule 14 exactly — a withdrawal is a claim, and this one discarded a correct account.** §105. |
+| **"P(stage 1 low at t) = 1 − e^{−k₁t}"** — §102's first ingredient, inherited by §103–§105. | A free stage has **no absorbing boundary**: its low-basin occupancy saturates at the stationary weight π_low, not at 1. π_low falls **0.9057 → 0.5247** over Ω = 14–70, and the one-way model correspondingly runs from 7% low to **59% high**, spanning 1.71× and crossing 1 near Ω = 35 — where §102 happened to validate it, accidentally accurate to 2.5%. Not a transient: at Ω = 55 the error *grows* with the window (1.2453 → 1.4267 over t₀ = 2 → 8). With `P = π_low(1 − e^{−λt})` the model is flat to **2.5% across four decades of probability**. Rule 9 on the axis the whole arc is parameterised by. §106.2. |
+| **"stage i's escape rate is `escape_rate(Ω, mus[i])`"** — §102's `predict`, inherited by §103–§105. | `escape_rate(Ω, x_up)` is the rate of a stage whose **upstream** sits at x_up, so each stage was keyed to its own operating point rather than its input's. **Stage 1 has no upstream at all** — its rate is the free spectral gap, which §102's own P1 showed equals `escape_rate(Ω, r₃)`. The corrected indexing reproduces the measured gap **exactly at all seven Ω**; the as-coded one is **12.7% high at Ω = 14**. Correcting it improves the closure at every Ω without removing §106's divergence, so the published agreements were slightly lucky and the conclusions survive. §106.3. |
 
 **A second pattern, from the depth-ceiling correction.** A threshold observable
 (the first *integer* depth below I=0.5) reported two different states as identical,
@@ -4685,3 +4687,49 @@ replace the uniform fall-time density with the exact conditional density `k₁e^
 and add stage 2's independent-escape channel, both already computable from §102's curve. If the
 5.80% closes, the account is complete; if it does not, the head start is absorbing an error that
 belongs elsewhere.
+
+~~**T-CASC-s, open: where does the Ω-expansion break, and does the one-signed miss have a name?**~~
+**-> §106. IT IS NOT AN Ω-EXPANSION PROBLEM AT ALL, and the scope statement is now precise.**
+
+Swept over Ω = 14–70 at D = 2, the operating-point residuals converge **super-algebraically** —
+local exponents −2.53, −3.50, −4.47, −6.05, −8.49, **−11.43**, reaching 0.0001% at Ω = 70. §103's
+transfer model is far better than the 1/Ω decay predicted. **But the closure ratio built from those
+points runs AWAY from 1**, 1.1845 → 1.8158.
+
+**Three candidates cleared, one convicted.** Not the operating points (exact), not the rate ratio
+k₁/k₂ (→ 1), not `p_transmit` (measured flat to 1% across the sweep — and §105's derived-Δ model
+tracks it to 2% *including its non-monotone shape*, an unplanned confirmation of a section built at
+Ω = 30 alone). The convicted term is the crudest in the model: `P(stage 1 low) = 1 − e^{−k₁t}`, one
+free stage, no coupling. **It spans 1.71× and crosses 1 near Ω = 35 — and §102 validated it at
+Ω = 30, where it is accidentally accurate to 2.5%.** Rule 9, on the axis the whole arc is
+parameterised by. Not a transient either: at Ω = 55 the error grows with the window (1.2453 → 1.4267
+over t₀ = 2 → 8).
+
+**The fix, and why it does not help.** A free stage has no absorbing boundary, so its low-occupancy
+saturates at the stationary weight below the saddle, not at 1: `P(low at t) = π_low(1 − e^{−λt})`.
+π_low falls 0.9057 → 0.5247 over the sweep, which **is** the missing 1.71×; with it the model is flat
+to **2.5% across four decades of probability**. But π_low(stage 1) ≈ π_low(stage 2), so it
+**cancels in contaminated/pure** — a correct fix to a real error that the reported quantity is blind
+to.
+
+**§106.3, an indexing error in §102/§103.** `escape_rate(Ω, x_up)` is the rate of a stage whose
+*upstream* sits at x_up, but `predict` keys each stage to **its own** operating point. Stage 1 has no
+upstream: its rate is the free gap, i.e. `escape_rate(Ω, r₃)` — which §102's own P1 established.
+**The corrected indexing reproduces the measured gap exactly at all seven Ω**; the as-coded version
+is 12.7% high at Ω = 14. Correcting it improves the closure everywhere (1.0416 → 0.9714 at Ω = 14)
+without removing the divergence, so §102's and §103's published agreements were slightly lucky and
+their conclusions survive.
+
+> **SCOPE, now precise.** The transfer model is superb, the escape model was wrong in a way that
+> cancels, and what actually bounds §103's closure is the **averaging of the escape rate over a
+> fluctuating input** — §102.1's rate-at-the-mean approximation, whose two limits separate 2.44× at
+> Ω = 14 and 8.80× at Ω = 55. With the two-state form in place the whole residual sits in `pure`,
+> under-predicted ~2× at Ω = 70. **T-CASC-q is no longer a residual; it is the binding constraint.**
+
+**T-CASC-w, open: does §103's closure survive once the escape rate is properly averaged?** §102.1
+showed the effective rate is bracketed by `k(⟨x⟩)` and `⟨k(x)⟩` at position 0.09–0.22, and §106 shows
+the bracket widens with Ω. **How to kill:** replace `k(⟨x⟩)` in `split_from` with the position-
+interpolated rate and re-run §106's sweep. If the closure ratio then flattens toward 1, the arc's
+model is complete and its only approximation is a named, measured interpolation; if it does not, the
+position itself is Ω-dependent in a way §102.1's three cells could not see — which is the same
+mistake §106 just caught, one level down.

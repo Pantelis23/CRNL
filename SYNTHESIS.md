@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§105. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§106. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -627,6 +627,27 @@ convolution, `p(t) = 1 − e^{−kΔ}(1 − e^{−kt})/(kt)`; under it the requi
   0.0486**, with nothing taken from the measured p_transmit. The curve stays parameter-free and
   improves: **worst residual 8.95% → 5.80%, the one-signed bias gone, three of five windows inside
   0.3%.**
+
+**§106 then swept Ω and bounded the whole closure.** The operating points converge
+**super-algebraically** — local exponents steepening −2.53 → −11.43, reaching 0.0001% at Ω = 70 —
+so §103's transfer model is far better than the 1/Ω expansion I predicted. **But the closure ratio
+built from them runs away from 1**, 1.1845 → 1.8158. Three candidates cleared (operating points,
+rate ratio, p_transmit), one convicted: `P(stage 1 low) = 1 − e^{−k₁t}`, the crudest term in the
+model, which spans 1.71× and **crosses 1 near Ω = 35 — where §102 validated it.**
+  > **A free stage has no absorbing boundary.** Its low-basin occupancy saturates at the stationary
+  > weight π_low (0.9057 → 0.5247 across the sweep), not at 1. With `P = π_low(1 − e^{−λt})` the
+  > model is flat to **2.5% across four decades of probability**. But π_low cancels in
+  > contaminated/pure — a correct fix to a real error the reported quantity is blind to.
+
+  §106 also found an **indexing error** in §102/§103: each stage's escape rate was keyed to its own
+  operating point rather than its upstream's, when stage 1 has no upstream and its rate is the free
+  gap. The corrected version reproduces the measured gap *exactly* at all seven Ω. It improves the
+  closure everywhere without removing the divergence, so the published agreements were slightly
+  lucky and their conclusions survive.
+  > **The scope statement is now precise.** The transfer model is superb; the escape model was wrong
+  > in a way that cancels; what actually bounds the result is the **averaging of the escape rate over
+  > a fluctuating input** — §102.1's rate-at-the-mean approximation, whose two limits separate 2.44×
+  > at Ω = 14 and 8.80× at Ω = 55. That was filed as a residual and is now the binding constraint.
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

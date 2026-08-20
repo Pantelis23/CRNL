@@ -10971,3 +10971,101 @@ convention that §94 and §100 also use, so it applies to their cells too and no
 > on upstream survival (§100) — the term it omits overtakes the term it keeps within one added
 > stage. What limits depth here is upstream *escape*, which is the quantity §80–§90 already computes
 > exactly from the rate functions alone.
+
+### 102 (T-CASC-o) The contaminated channel *is* upstream escape — the suspect survives its kill test
+
+§101 named a suspect for why the failure channel takes over with depth (rule 17): the cheapest route
+to a downstream error is one upstream escape followed by near-certain propagation, not the last stage
+escaping its own barrier. §101 also named the kill test. **The instrument is 1-D generators only** —
+one stage at a time with its upstream pinned — so nothing on the prediction side touches a joint
+master equation.
+
+**Disclosed, and therefore not a prediction (rule 2).** Before this file existed I checked that the
+free stage-1 spectral gap reproduces the joint chain's `P(stage 1 low at t)` through `1 − exp(−kt)`:
+at Ω = 30, **7.5765e−3 against a measured 7.7739e−3** at t₀ = 2.0, a 2.5% miss — and it misses by
+−34% at t₀ = 0.5 and +13% at t₀ = 8.0. So the exponential is known to work at t₀ = 2 and known to
+fail at both ends. Everything about depth and about the split was written before running.
+
+**P1 — exact, and it had to be.** The Hill map is normalised so `h(r₃) = 1`, so a downstream stage
+with its upstream pinned *at the rail* has propensities identical to stage 1's. Measured:
+`escape_rate(Ω, r₃)` equals §100's free stage-1 spectral gap with **relative difference 0.00e+00** at
+both Ω = 14 and Ω = 30. Same element, two routes, no daylight.
+
+**P2 — the escape rate is a steep function of the operating point**, which is the whole reason a
+degraded stage is more fragile than a fresh one:
+
+| x_up | Ω = 14 | Ω = 30 |
+|---|---|---|
+| 3.1827 (rail) | 7.2981e−02 | 3.8027e−03 |
+| 2.8000 | 8.2401e−02 | 5.0693e−03 |
+| 2.4000 | 1.0599e−01 | 9.5031e−03 |
+| 2.0000 | 1.8168e−01 | 3.6280e−02 |
+
+Monotone and **steeper at the deeper barrier** — 9.5× across the range at Ω = 30 against 2.5× at
+Ω = 14. That asymmetry is what §102.1 turns out to need.
+
+**P3 — the suspect survives.** Reading each stage's escape rate off that curve at its *measured*
+operating point in the free chain, and predicting
+`contaminated ≈ P(any upstream failed) × p_transmit`, `pure ≈ P(none failed) × (1 − e^{−k_last t})`:
+
+| Ω | D | operating points | contam/pure predicted | measured | pred/meas |
+|---|---|---|---|---|---|
+| 14 | 2 | 2.8042, 2.6698 | 1.0416 | 0.8987 | **1.159** |
+| 14 | 3 | 2.8042, 2.6698, 2.6113 | 2.2880 | 2.2001 | **1.040** |
+| 30 | 2 | 3.0280, 2.9759 | 0.9108 | 0.6703 | **1.359** |
+
+**All three inside 36%, against a pre-registered gate of a factor of two** — and the closest agreement
+(4%) is at D = 3, the cell the whole question is about. The gate was deliberately loose because the
+exponential already carries tens of percent at this window; a tight one would have been testing the
+approximation rather than the mechanism (rule 20).
+
+> **So the channel §92–§98 never measured is accounted for, to tens of percent, by escape rates at
+> the operating points — computed from 1-D generators, with no joint solve on the prediction side.**
+> That is what T-CASC-o asked for, and it is the reconnection §101 predicted: what limits depth in
+> this cascade is the escape action, which §80–§90 computes from the rate functions alone.
+
+**P4 was a broken criterion and could not have done its job.** It asked whether the measured
+contaminated/pure "tracks `k_upstream/k_last`" across Ω. But the model's own formula sums over the
+upstream stages — `contam/pure ≈ p_t · Σ_{i<D} k_i / k_last` — so the quantity depends on D while
+`k_upstream/k_last` does not, and the comparison is ill-posed the moment two depths are in the table.
+Measured, `k₁/k_last` sits at **0.9374 / 0.9066 / 0.9632** across the three cells while contaminated/
+pure runs **0.8987 / 2.2001 / 0.6703**; read literally, P4 prints "does not track" and kills a suspect
+that P3 confirms.
+
+> **Third broken criterion this session** (§101's P1 demanded bitwise agreement between two different
+> formulations; §99.1 needed a post-hoc label). Rule 19's kill test — *name the data that would make
+> it print the other verdict, and check that data is the thing you meant* — would have caught this
+> one: the data that makes P4 print "tracks" is a table at fixed D, and I wrote a table across depths.
+
+### 102.1 The residual is one-signed, and it is the frozen/fast bracket one level up
+
+P3's three misses are **all in the same direction**: the measured `pure` always exceeds a model that
+evaluates the escape rate *at* the mean operating point. That is not noise, and it has a cause
+already in this project. `escape_rate(x_up)` is steeply convex (P2), so **the rate at the average and
+the average of the rate are different numbers** — §92's frozen/fast pair, applied to a rate instead
+of to a penalty.
+
+| Ω | D | `k(⟨x⟩)` — upstream fast | `k_eff` measured | `⟨k(x)⟩` — upstream frozen | position |
+|---|---|---|---|---|---|
+| 14 | 2 | 8.22521e−02 | 1.00042e−01 | 2.00302e−01 | 0.2200 |
+| 14 | 3 | 8.77461e−02 | 9.67287e−02 | 2.70558e−01 | 0.0866 |
+| 30 | 2 | 4.17441e−03 | 5.51329e−03 | 1.98676e−02 | 0.1783 |
+
+**The measurement is bracketed in all three cells**, and sits at position **0.09–0.22** — near the
+*fast* end, meaning the last stage sees a largely averaged input rather than a frozen one. That is
+motional narrowing (§92) arriving at the escape rate, and it explains the sign of P3's residual and
+why the residual is worst at Ω = 30, where P2's curve is steepest and the two limits are 4.76× apart
+rather than 2.44×.
+
+**Suspect, not result (rule 17).** That the measurement is bracketed is measured — both limits are
+computed and the value lies between them in every cell. That the *position* means "the upstream is
+fast relative to the downstream's escape" is an interpretation, and §100 already showed that the
+upstream's correlation time in this chain is set partly by where a boundary was put. **How to kill:**
+the position should move toward 1 as the upstream is slowed, using §93's speed knob at fixed
+landscape — and §98 gives the variable it should organise against. If the position does not move with
+upstream speed, the bracket is a coincidence of two numbers rather than an averaging limit.
+
+**What §102 does not settle.** The operating points are taken from §101's joint solve, so this is
+**not yet a CME-free prediction of the chain** — it shows escape rates *at* the operating points
+account for the split, not that the operating points themselves need no joint solve. §96 predicts
+those from single-element quantities, and closing that gap is the follow-up (T-CASC-q).

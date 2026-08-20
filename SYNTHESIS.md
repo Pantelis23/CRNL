@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§101. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§102. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -549,6 +549,29 @@ persist.
   entire subject.** The gate that follows — admit a cell only if P(last low) increases with D — is a
   necessary condition rather than a tolerance, and it applies to §94's cells too, which nothing in
   §94 records.
+
+**§102 then closed the loop §101 opened.** §101's suspect — that the failure channel is upstream
+escape followed by near-certain propagation — was given its kill test, and survived it. Reading each
+stage's escape rate off a **1-D pinned generator** at its operating point predicts the
+contaminated/pure split to **1.16 / 1.04 / 1.36** of the measured value, inside a pre-registered
+factor-of-two gate and closest at D = 3. Wiring was exact: pinned at the rail, a downstream stage
+*is* stage 1, agreeing to 0.00e+00.
+  > **So what limits depth in this cascade is the escape action — which §80–§90 already computes from
+  > the rate functions alone, with no master equation.** The composition arc's ceiling turns out to be
+  > set by the arc's own earlier machinery rather than by the noise-margin law that replaced it.
+
+  And the residual is one-signed with a named cause: the escape rate is steeply convex in the
+  operating point, so the rate at the average and the average of the rate differ — **§92's frozen/fast
+  pair, arriving at a rate instead of a penalty.** The measurement is bracketed by both limits in
+  every cell, at position 0.09–0.22, near the fast end; the limits separate 2.44× at Ω = 14 and 4.76×
+  at Ω = 30, which is exactly where the residual is worst. *(That it is bracketed is measured; what
+  the position means is a suspect with a kill test — T-CASC-q.)*
+
+  **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
+  the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise
+  agreement between two formulations of the same arithmetic, and §102's P4 was ill-posed across
+  depths and would have killed a suspect its own section confirms. That is rule 19's class, three
+  times in five sections, and in each case the numbers were right and the sentence about them was not.
 
 **What §99 leaves standing.** The composition arc's *measurements* survive intact; its
 *mechanisms* took the damage, which is now the project's most reliable pattern (rule 17, and

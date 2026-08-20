@@ -4524,3 +4524,47 @@ which is the entire subject.** It removed §101's first headline (Ω = 30, D = 3
 > are forced toward 1 there. At Ω = 14 only t₀ = 2.0 survives both bounds. **§94's own D = 3 result
 > was taken at t₀ = 2.0 — admissible, but one step from the lower edge of the band**, and nothing in
 > §94 records that the band exists.
+
+~~**T-CASC-o, open: is the depth ceiling just the upstream escape rate?**~~ **-> §102. THE SUSPECT
+SURVIVES ITS KILL TEST.** Reading each stage's escape rate off a **1-D** pinned generator at its
+measured operating point, and predicting `contaminated ≈ P(any upstream failed) × p_transmit` and
+`pure ≈ P(none failed) × (1 − e^{−k_last·t})`, the contaminated/pure ratio comes out at
+**1.159 / 1.040 / 1.359** times the measured value across (Ω, D) = (14, 2), (14, 3), (30, 2) —
+**all inside the pre-registered factor-of-two gate, and closest at D = 3**, the cell the question is
+about. Wiring was exact: `escape_rate(Ω, r₃)` equals §100's free stage-1 gap to **0.00e+00**, because
+`h(r₃) = 1` makes a pinned downstream stage literally the same element.
+
+> **So the channel §92–§98 never measured is accounted for, to tens of percent, by escape rates —
+> with no joint master equation on the prediction side.** What limits depth in this cascade is the
+> escape action, which §80–§90 computes from the rate functions alone. §101 predicted this
+> reconnection and §102 supplies it.
+
+**§102's P4 was a broken criterion — the third this session.** It asked whether the measured
+contaminated/pure tracks `k₁/k_last` across Ω, but the model's own formula sums over the upstream
+stages, so the quantity depends on D while `k₁/k_last` does not. Measured, `k₁/k_last` is
+0.9374 / 0.9066 / 0.9632 while contaminated/pure runs 0.8987 / 2.2001 / 0.6703 — **read literally,
+P4 kills a suspect that P3 confirms.** Rule 19's own kill test would have caught it: the data that
+makes P4 print "tracks" is a table at fixed D, and the table written spans depths. (§101's P1
+demanded bitwise agreement between two formulations of the same arithmetic; §99.1 needed a post-hoc
+label. The measurements in this session all survived; three of the criteria attached to them did
+not.)
+
+**T-CASC-q, open: is the frozen/fast bracket the whole of §102's residual?** P3's three misses are
+all one-signed — measured `pure` always exceeds a rate-at-the-mean model — and `escape_rate(x_up)` is
+steeply convex, so the rate at the average and the average of the rate differ. **Measured, the
+effective rate is bracketed by those two limits in every cell**, at position **0.2200 / 0.0866 /
+0.1783** in log space (0 = fast, 1 = frozen) — near the *fast* end. The limits separate by 2.44× at
+Ω = 14 and **4.76× at Ω = 30**, which is why the residual is worst there. **That the value is
+bracketed is measured; that the position means "the upstream is fast against the downstream's escape"
+is a suspect (rule 17)** — and §100 showed the upstream's correlation time here is set partly by
+where a boundary was put. **How to kill:** slow the upstream with §93's speed knob at fixed
+landscape; the position must move toward 1. If it does not move, the bracket is a coincidence of two
+numbers rather than an averaging limit.
+
+**T-CASC-r, open: can the chain be predicted with no joint solve at all?** §102 takes the operating
+points from §101's joint solve, so it shows escape rates *at* the operating points account for the
+split — not that the operating points need no CME. §96 already predicts them from single-element
+quantities to 0.12%. **How to kill:** feed §96's predicted operating points into §102's rate curve
+and compare the resulting contaminated/pure against §101's measured values. If it survives the same
+factor-of-two gate, **the depth ceiling of a chemically-coupled bistable cascade is computable from
+one element's rate functions**, which is what the whole composition arc has been reaching for.

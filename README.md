@@ -710,6 +710,24 @@ grow with depth and nothing makes the cancellation persist.
 > already computes exactly from the rate functions alone. That is a reconnection rather
 > than a demolition: the machinery the ceiling needs was built earlier in the same project.
 
+**§102 put that to the test and it held.** §101 stated the mechanism as a *suspect* with a
+kill test attached — the cheapest route to a downstream error is one upstream escape
+followed by near-certain propagation — and §102 ran it using **1-D generators only**, one
+stage at a time with its upstream pinned, nothing joint on the prediction side. Reading
+each stage's escape rate off that curve at its operating point predicts the
+contaminated/pure split to **1.16, 1.04 and 1.36** times the measured value, inside a
+pre-registered factor-of-two gate and closest at depth 3. The wiring was exact: because the
+Hill map is normalised so `h(r₃) = 1`, a downstream stage pinned at the rail *is* stage 1,
+and the two routes agree to **0.00e+00**.
+
+And the leftover has a familiar shape. The escape rate is steeply convex in the operating
+point, so *the rate at the average* and *the average of the rate* are different numbers —
+**§92's frozen/fast pair, arriving at a rate instead of a penalty.** The measurement is
+bracketed by both in every cell, sitting at position 0.09–0.22, near the fast end; the two
+limits separate by 2.44× at Ω = 14 and 4.76× at Ω = 30, which is exactly where the residual
+is worst. *(That it is bracketed is measured. What the position means is a suspect with its
+own kill test — slow the upstream and the position must move toward 1.)*
+
 **And §101.1 deleted the section's own headline before it was written.** The first reading
 was a 6.66× ratio at 91.8% contamination. The tell was that the *reflected* chain's D = 3
 error came out **ten times smaller** than its D = 2 error — a longer chain cannot be more
@@ -728,6 +746,7 @@ python -m experiments.timescale_ratio       # the crossover, at matched speeds
 python -m experiments.what_reflection_costs # what the wall hides, and the Omega discriminator
 python -m experiments.margin_vs_action      # is A*Omega really the variable, or margin/sigma?
 python -m experiments.free_upstream_depth   # the failure channel, with depth
+python -m experiments.escape_accounts_for_it # and whether escape rates account for it
 ```
 
 ## Verifying the base

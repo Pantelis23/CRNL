@@ -1364,6 +1364,7 @@ functional form that was never derived and never compared against a rival.
 | **"The reflected chain measures the fluctuation-transfer channel"** — implicit throughout §92–§98, and the basis for reading its penalty as a per-stage cost. | It **overstates that channel by 1.49× at D = 2 and 2.22× at D = 3** (Ω = 30, t₀ = 2.0; 1.63× and 2.64× at Ω = 14), because the wall bounces back probability that would have escaped and parks it against the saddle where it drives the next stage hardest. Separately it omits the failure channel entirely, which is 61–69% of the true error at D = 3. **The two errors have opposite signs and cancel to a 16–21% net**, which is why the construction looked sound: §94 reports 6.349 against a true total of 7.388. The inflation grows with depth and so does the omission; nothing makes the cancellation persist. §101. |
 | **"P(last stage low) is comparable across depths at any window"** — assumed wherever §94 and §101 compare D = 2 with D = 3. | False below t₀ ≈ 2. Stage 1 seeds from its quasi-stationary law and is already spread; every later stage seeds as a **delta at its rail**, so until that delta propagates a deeper chain hands its last stage a *cleaner* input. At Ω = 30, t₀ = 0.5 the reflected D = 3 error is **ten times smaller** than D = 2's, and at Ω = 14, D = 3 stage 3 reads (2.7450, 0.6846) against stage 2's (2.6542, 0.7643) — the last stage cleaner than the one feeding it. §92.1(a) one level up: there the artifact reversed a trend in upstream speed, here it reverses the trend in **depth**. It removed §101's first headline (a 6.66× ratio at 91.8% contamination) before it was written down. §101.1. |
 | **"The chain's operating point can be composed from the transfer map alone"** — §103's first version, withdrawn before publication. | It predicted 2.8501 → 3.0946 → 3.1173, each stage sitting *closer* to its rail than the one feeding it, against a measured 2.8042 → 2.6698 → 2.6113 that falls. **Not a 16% error but the wrong direction**, and the cause is structural: §91 built the coupling to be neutral at the rail, so `F(r₃) = 3.1827000000` against `r₃ = 3.1827` — **the rail is a fixed point of the transfer map**, and iterating `⟨F(x)⟩` can only converge toward it at any depth for any input. The degradation comes from each stage's own finite-Ω depression `d_intr = μ₁ − r₃`, which §96 includes and this omitted. Restoring it gives +3.45% and +4.32%. Same family as §96.1 — a term dropped from a composition — but caught by a **sign** rather than a magnitude, which no tolerance would have flagged. §103.1. |
+| **"The early-start account is refuted — the offset needed grows in proportion to t, so it is a rescaling of the rate and not a shifted clock"** (§104). | **The refutation, not the account, was wrong.** §104 inverted `p(t) = form(k, t + Δ)`, modelling a head start as a **longer window**; a head start is the convolution `p(t) = 1 − e^{−kΔ}(1 − e^{−kt})/(kt)`. Under §104's form the required Δ spans **18.90×** across the five windows and does grow with t — a true reading of the wrong function. Under the correct one it spans **2.17×**, and a single Δ reconciles the curve. §105 then *derived* that Δ: rate-weighting the conditional occupation time below the saddle-node at x_up\* = 1.5795 (where the downstream descends 8.7× slower) gives **0.0686 against a fitted 0.0486**. The parameter-free worst residual falls 8.95% → 5.80% and the one-signed bias vanishes. **Rule 14 exactly — a withdrawal is a claim, and this one discarded a correct account.** §105. |
 
 **A second pattern, from the depth-ceiling correction.** A threshold observable
 (the first *integer* depth below I=0.5) reported two different states as identical,
@@ -4650,3 +4651,37 @@ and reports the verdict as a rate test; if the form carries a systematic error t
 absorbs it. P3, against the measured values themselves, is the independent test — and it puts the
 disagreement at 0.6–9.0% rather than 22–37%. Both describe the same shortfall; only one is a
 measurement. (§99.1, §101's P1, §102's P4, now this.)
+
+~~**T-CASC-u, open: why is the descent rate ~30% too slow?**~~ **-> §105. IT IS NOT. `k_low` was
+never wrong; the clock was, and §104's refutation of that account was itself an algebra error
+(rule 14).**
+
+§104 modelled a head start as `form(k, t + Δ)` — a **longer window** — and concluded from the
+resulting 18.90× spread in required Δ that "the offset grows in proportion to t, so it is a
+rescaling of the rate and not a shifted clock". A head start is a different convolution:
+`p(t) = 1 − e^{−kΔ}(1 − e^{−kt})/(kt)`. Under it the required Δ spans **2.17×** across the same 16×
+window, and the early-start account was never refuted.
+
+**And the head start turns out to be derivable.** The naive candidate fails twice — the conditional
+traversal below the bistability edge is **τ = 0.4464**, 9.19× the fitted Δ and *longer than stage 2's
+entire descent time* 1/k = 0.1813, which would put p_transmit at 0.9711 where the measurement says
+0.7254. But x_up\* = 1.5795 is a **saddle-node**, so just below it the downstream descends 8.7×
+slower than at the low rail, and time spent there cannot count at full rate. Rate-weighting the
+conditional occupation time gives **Δ_eff = 0.0686 against a fitted 0.0486 — ratio 1.414**, inside
+the pre-registered factor-of-two gate, with nothing taken from the measured p_transmit.
+
+> **With that derived Δ the curve stays parameter-free and improves**: worst residual **8.95% →
+> 5.80%**, the one-signed bias gone, and three of five windows inside 0.3%. §104's published Δ = 0
+> numbers stand as printed (rule 7); §105 supplies the missing term without adding a parameter.
+
+**§103's closure is untouched** — all four (Ω, D) cells stay inside §102's gate under §100's measured
+p_transmit, under §104's Δ = 0, and under §105's derived Δ.
+
+**T-CASC-v, open: is the remaining 5.8% at the shortest window the near-uniform-fall approximation?**
+That is the one large residual left, and §104's own P3 predicted the shortest window would be worst
+for exactly this reason: there `k₁t` is smallest but stage 2's own independent escape and stage 1's
+chance of returning are least negligible *relative to the transmitted signal*. **How to kill:**
+replace the uniform fall-time density with the exact conditional density `k₁e^{−k₁s}/(1 − e^{−k₁t})`
+and add stage 2's independent-escape channel, both already computable from §102's curve. If the
+5.80% closes, the account is complete; if it does not, the head start is absorbing an error that
+belongs elsewhere.

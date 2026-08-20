@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§104. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§105. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -610,6 +610,23 @@ at the shortest window as predicted. Fed back into §103, all four cells stay in
   monostable when the upstream merely reaches its saddle, so the clock starts late — is refuted in
   its simplest form, because the offset needed grows in proportion to t rather than staying fixed.
   T-CASC-u carries it.
+
+**§105 corrected §104 — and the thing that needed correcting was a *withdrawal*.** §104 named the
+right mechanism for its 30% shortfall (stage 2 starts descending before stage 1 formally crosses)
+and then refuted it, because the required offset appeared to grow in proportion to the window.
+**It grew because §104 modelled a head start as a longer window.** A head start is a different
+convolution, `p(t) = 1 − e^{−kΔ}(1 − e^{−kt})/(kt)`; under it the required Δ spans 2.17× rather than
+18.90×, and the account was never refuted.
+  > **`k_low` was never wrong. The clock was.**
+
+  And Δ is derivable. The naive candidate fails twice — the conditional traversal below the
+  bistability edge is 0.4464, nine times too big and *longer than stage 2's whole descent*, which
+  would put p_transmit at 0.9711 where the measurement says 0.7254. But x_up\* = 1.5795 is a
+  **saddle-node**, so just below it the downstream descends 8.7× slower and that time cannot count
+  at full rate. Rate-weighting the conditional occupation time gives **0.0686 against a fitted
+  0.0486**, with nothing taken from the measured p_transmit. The curve stays parameter-free and
+  improves: **worst residual 8.95% → 5.80%, the one-signed bias gone, three of five windows inside
+  0.3%.**
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

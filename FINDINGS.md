@@ -11264,3 +11264,109 @@ measurement. §104's p_transmit is ~3% low and §103's model runs ~15–37% high
 opposite signs and partly cancel. **The agreement improved for the same reason §100's net looked
 small and §101's did: two errors pointing opposite ways.** The honest statement is that the model is
 now parameter-free and still inside the gate, not that it got better.
+
+### 105 (T-CASC-u) §104's refutation was itself wrong — and the head start turns out to be derivable
+
+**Rule 14 in its intended form.** §104 named a suspect for its 30% rate shortfall — stage 2 begins
+descending *before* stage 1 formally crosses its saddle, so the model starts its clock late — and
+then **refuted it**, on the grounds that "the offset needed grows in proportion to t, which is a
+rescaling of the rate and not a shifted clock". **That refutation is wrong, and the error is
+algebraic.**
+
+> **§104 inverted `p(t) = form(k, t + Δ)` — it modelled a head start as a *longer window*.** A head
+> start is not a longer window. If stage 2 begins its descent Δ before stage 1 crosses, then given a
+> crossing at s the descent has run for (t − s + Δ), and averaging over a near-uniform s gives
+>
+>     p(t) = (1/t) ∫₀ᵗ [1 − e^{−k(t−s+Δ)}] ds = 1 − e^{−kΔ}·(1 − e^{−kt})/(kt)
+>
+> which is **not** `form(k, t + Δ)`.
+
+| t₀ | Δ required — head start (correct) | Δ required — §104's form |
+|---|---|---|
+| 0.5 | 0.0385 | 0.1409 |
+| 1.0 | 0.0833 | 0.5898 |
+| 2.0 | 0.0676 | 0.9048 |
+| 4.0 | 0.0548 | 1.4108 |
+| 8.0 | 0.0521 | 2.6624 |
+
+**Across a 16× window the required Δ spans 18.90× under §104's form and 2.17× under the correct
+one.** "Grows in proportion to t" was a true reading *of the wrong function*. The early-start account
+was never refuted.
+
+**A single fitted Δ = 0.0486 across all five windows** gives +2.05%, −2.72%, −0.74%, −0.12%, −0.03%,
+against §104's one-signed −8.95% → −0.58%.
+
+**The premise, confirmed independently.** The pinned downstream loses its high rail at
+**x_up\* = 1.5795** — a saddle-node well *above* stage 1's own saddle at 1.0. So stage 2 is indeed
+already sliding while stage 1 is still inside its own high basin. That is not a fitted claim; it is a
+root count.
+
+**§105.1 — the naive head start is 9× too big and internally inconsistent**
+
+The obvious candidate for Δ is the time stage 1 spends below x_up\* on its way out — the
+**conditional** traversal time from x_up\* to the saddle, given the trajectory gets there rather than
+falling back to the rail. From the h-transform of stage 1's own generator (two absorbing boundaries,
+splitting probability 0.1506): **τ = 0.4464**.
+
+> **P2 fails: τ/Δ_fitted = 9.19.** And **P3 fails harder** — τ = 0.4464 exceeds stage 2's entire
+> descent time 1/k = 0.1813. If the head start really were τ, stage 2 would essentially always have
+> finished descending before stage 1 crossed, giving p_transmit = **0.9711** at t₀ = 0.5 against a
+> measured **0.7254**. The naive account is not merely wrong in magnitude, it is inconsistent with
+> the data it was invented to explain.
+
+**§105.2 — the head start is rate-weighted, and then it is derived**
+
+x_up\* is a **saddle-node**, so just below it the downstream's descent is *critically slow*. Time
+spent there cannot be counted at full rate:
+
+| upstream pinned at | downstream descent rate |
+|---|---|
+| 1.5795 (the edge) | 0.4435 |
+| 1.5000 | 0.7595 |
+| 1.3000 | 2.6554 |
+| 1.0000 | 3.2284 |
+| 0.1500 (low rail) | 3.8556 |
+
+**8.7× slower at the edge than at the low rail.** Weighting the conditional occupation time at each
+state by the local descent rate — same h-transform, plus the Green's function of the interior —
+
+> **Δ_eff = 0.0686 against the fitted 0.0486. Ratio 1.414 — P4 holds inside its pre-registered
+> factor-of-two gate.**
+
+Nothing in that calculation touches the measured p_transmit: the occupation times come from stage 1's
+generator and the weights from §104's descent instrument.
+
+**The curve with the derived Δ, nothing fitted:**
+
+| t₀ | Δ = 0 (§104) | **Δ derived** | measured | residual |
+|---|---|---|---|---|
+| 0.5 | 0.6605 | 0.7675 | 0.7254 | **+5.80%** |
+| 1.0 | 0.8195 | 0.8764 | 0.8860 | −1.09% |
+| 2.0 | 0.9094 | 0.9379 | 0.9376 | **+0.04%** |
+| 4.0 | 0.9547 | 0.9690 | 0.9665 | +0.26% |
+| 8.0 | 0.9773 | 0.9845 | 0.9830 | +0.15% |
+
+**Worst residual 8.95% → 5.80%, and the one-signed bias is gone** — three of five windows now land
+inside 0.3%, and the only large miss is at the shortest window, exactly where §104's own P3 said the
+near-uniform-fall approximation is weakest. **The model remains parameter-free and is strictly
+better.**
+
+**What this does and does not change.**
+
+* **§104's published numbers stand as printed** (rule 7). Its Δ = 0 curve is a correct
+  parameter-free result that sits 0.6–9.0% low; §105 supplies the missing term and halves the worst
+  residual without adding a parameter.
+* **§103's closure is untouched.** All four (Ω, D) cells stay inside §102's gate under every variant
+  — §100's measured p_transmit (1.1844 / 1.0585 / 1.3702 / 1.1689), §104's Δ = 0 (1.1488 / 1.0266 /
+  1.3290 / 1.1337), and §105's derived Δ.
+* **§104's 30% rate shortfall is explained, not by a faster descent but by an earlier start.**
+  `k_low` was never wrong; the clock was.
+
+> **The lesson is the one rule 14 exists for.** §104 measured correctly, proposed the right
+> mechanism, and then killed it with a wrong criterion — a withdrawal is a claim and this one was
+> not checked as carefully as an assertion would have been. **The tell was available at the time:**
+> a "delay" that has to grow in proportion to the window is not a delay, and that should have
+> prompted a check of the delay's own algebra rather than a refutation of the physics. Five broken
+> criteria in this arc now (§99.1, §101's P1, §102's P4, §104's P2, and §104's refutation) — and
+> this is the first one that discarded a *correct* account rather than merely mislabelling a
+> correct number.

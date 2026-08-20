@@ -780,6 +780,23 @@ reaches its saddle, so the model starts its clock late — is refuted in its sim
 because the offset needed grows in proportion to the window rather than staying fixed. That
 shortfall is open.
 
+**§105 closed it — and what needed correcting was a *withdrawal*.** §104 named the right
+mechanism and then refuted it, because the required offset seemed to grow in proportion to
+the window. **It grew because §104 modelled a head start as a longer window.** A head start
+is a different convolution, `p(t) = 1 − e^{−kΔ}(1 − e^{−kt})/(kt)`; under it the required Δ
+spans 2.17× rather than 18.90×, and the account was never refuted.
+
+> **`k_low` was never wrong. The clock was.**
+
+And Δ turns out to be *derivable*. The naive candidate fails twice — the conditional
+traversal below the bistability edge is 0.4464, nine times too big and longer than stage 2's
+whole descent, which would put `p_transmit` at 0.9711 where the measurement says 0.7254. But
+the edge at x\* = 1.5795 is a **saddle-node**, so just below it the downstream descends 8.7×
+slower and that time cannot count at full rate. Rate-weighting the conditional occupation
+time gives **0.0686 against a fitted 0.0486**, taking nothing from the measured `p_transmit`.
+The curve stays parameter-free and improves: **worst residual 8.95% → 5.80%**, the one-signed
+bias gone, three of five windows inside 0.3%. [`FINDINGS.md`](FINDINGS.md) §105.
+
 **And §101.1 deleted the section's own headline before it was written.** The first reading
 was a 6.66× ratio at 91.8% contamination. The tell was that the *reflected* chain's D = 3
 error came out **ten times smaller** than its D = 2 error — a longer chain cannot be more
@@ -801,6 +818,7 @@ python -m experiments.free_upstream_depth   # the failure channel, with depth
 python -m experiments.escape_accounts_for_it # and whether escape rates account for it
 python -m experiments.chain_without_a_joint_solve  # the whole chain, no joint CME
 python -m experiments.predicting_transmission      # and the last free parameter
+python -m experiments.the_head_start              # a withdrawal that was itself wrong
 ```
 
 ## Verifying the base

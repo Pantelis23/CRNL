@@ -4610,3 +4610,43 @@ function of the window. **How to kill:** it should follow from the same 1-D mach
 probability that a stage whose input has collapsed to the low rail has itself crossed its saddle by
 time t is `1 − exp(−k(x_low)·t)` with `k` read off §102's curve at the *low* rail rather than the
 high one. If that reproduces the measured window dependence, the model becomes parameter-free.
+
+~~**T-CASC-t, open: can `p_transmit` be predicted too?**~~ **-> §104. PARTLY, and the model is now
+parameter-free.** The window dependence follows from a one-parameter closed form —
+`p_transmit(t) = 1 − (1 − e^{−k_low·t})/(k_low·t)`, stage 1 falling at a near-uniform time in [0, t]
+and stage 2 then descending at rate `k_low` — with `k_low` computed from the same 1-D pinned
+generator §102 used, evaluated at the **low** rail. Predicted against §100.2's five measured
+windows, nothing fitted: **−8.95%, −7.51%, −3.01%, −1.22%, −0.58%**, one-signed and worst at the
+shortest window exactly as predicted.
+
+**The payoff (§104.1).** Feeding that predicted `p_transmit` into §103 in place of §100's measured
+number leaves all four cells inside §102's gate: **1.1488 / 1.0266 / 1.3290 / 1.1337**.
+
+> **So the depth ceiling of a chemically-coupled bistable cascade is computable from one element's
+> rate functions, with no free parameter and no joint master equation anywhere.**
+
+**Do not read the improvement as improvement.** Every cell is closer to measured with the predicted
+`p_transmit` than with the measured one, because §104's value is ~3% low while §103's model runs
+15–37% high — **two errors of opposite sign, partly cancelling**, which is the third time that
+structure has appeared in this arc (§100's net, §101's net, now this).
+
+**T-CASC-u, open: why is the descent rate ~30% too slow?** §104's P2 was **refuted**: the computed
+`k_low` is 5.5169 against 7.07–8.77 implied by the windows, and against the measured curve the
+disagreement is 0.6–9.0%. Two candidates were tested and neither suffices — an off-by-one in the
+absorbing boundary, fixed in the *unflattering* direction (5.7660 → 5.5169), and starting the descent
+from §103's degraded operating point rather than the pristine rail (**+3%**). **The remaining
+suspect** is P1's second finding: the downstream is already monostable when the upstream merely
+reaches its *saddle* (one root at 0.1351), so stage 2 begins descending **before** stage 1 formally
+falls and the model starts its clock late. Right sign — **but a fixed delay is refuted too**: the
+offset needed grows as 0.13, 0.78, 2.2 over t₀ = 0.5, 2, 8, i.e. roughly proportional to t, which is
+a rescaling of the rate and not a shifted clock. **How to kill:** replace the indicator "upstream
+below its saddle" with the continuous Hill factor and compute the descent under a *moving* landscape;
+if that closes the 30% the account holds, and if it does not, the near-uniform-fall approximation
+itself is the suspect rather than the rate.
+
+**A criterion note, the fourth in this arc.** §104's P2 compared the computed rate against a rate
+obtained by **inverting the model's own closed form on the data**. That tests form × rate jointly
+and reports the verdict as a rate test; if the form carries a systematic error the implied interval
+absorbs it. P3, against the measured values themselves, is the independent test — and it puts the
+disagreement at 0.6–9.0% rather than 22–37%. Both describe the same shortfall; only one is a
+measurement. (§99.1, §101's P1, §102's P4, now this.)

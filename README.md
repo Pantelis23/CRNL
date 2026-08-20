@@ -758,6 +758,28 @@ can only climb toward the rail, never degrade. What degrades a chain is each sta
 finite-Ω depression below its rail. Caught by a *sign*, not a magnitude; no tolerance would
 have flagged it.
 
+**§104 removed the last free parameter.** `p_transmit` was the one empirical input §103
+still needed. Its window dependence follows from a one-parameter closed form whose rate is
+the **descent** rate of a stage whose input has collapsed — the same 1-D pinned generator,
+read at the low rail instead of the high one. Against §100.2's five measured windows with
+nothing fitted, the residuals run **−8.95% to −0.58%**, one-signed and worst at the shortest
+window exactly as predicted. Fed back into §103, all four cells stay inside the gate.
+
+> **So the depth ceiling of a chemically-coupled bistable cascade is computable from one
+> element's rate functions — no free parameter, and no joint master equation anywhere.**
+> [`FINDINGS.md`](FINDINGS.md) §104.
+
+Two things deliberately not over-read. The cells came out *closer* with the predicted
+`p_transmit` than with the measured one — but that is two errors of opposite sign partly
+cancelling, the third time that structure has shown up in this arc, so it is not evidence
+the prediction beats the measurement. And the rate behind the form is **~30% too slow**
+(5.5169 against the 7.07–8.77 the windows imply). An off-by-one was found and fixed *in the
+unflattering direction*; starting the descent from the degraded operating point is worth 3%;
+and the natural suspect — that the downstream is already monostable when the upstream merely
+reaches its saddle, so the model starts its clock late — is refuted in its simplest form,
+because the offset needed grows in proportion to the window rather than staying fixed. That
+shortfall is open.
+
 **And §101.1 deleted the section's own headline before it was written.** The first reading
 was a 6.66× ratio at 91.8% contamination. The tell was that the *reflected* chain's D = 3
 error came out **ten times smaller** than its D = 2 error — a longer chain cannot be more
@@ -778,6 +800,7 @@ python -m experiments.margin_vs_action      # is A*Omega really the variable, or
 python -m experiments.free_upstream_depth   # the failure channel, with depth
 python -m experiments.escape_accounts_for_it # and whether escape rates account for it
 python -m experiments.chain_without_a_joint_solve  # the whole chain, no joint CME
+python -m experiments.predicting_transmission      # and the last free parameter
 ```
 
 ## Verifying the base

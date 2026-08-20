@@ -11163,3 +11163,104 @@ healthy**: predicted operating points 3.0319, 2.9908, 2.9784 with no joint solve
 contam/pure = 1.8550 against a measured 1.5869 — **1.169, inside the gate**. §101 stored that
 cell's split but not its stage means, so it tests the composed prediction end to end without
 supplying a per-stage comparison.
+
+### 104 (T-CASC-t) Predicting the last empirical number — the model becomes parameter-free, and the rate behind it does not close
+
+§103 closed the composition arc on single-element quantities except for one input: `p_transmit`,
+taken from §100's measurement. It is not a constant of the coupling — §100.2 measured it running
+0.7254 → 0.9830 as the window grows 16×, and it must reach 1 as t → ∞ — so a predicted version has
+to be a function of the window.
+
+**The structure.** Stage 1 falls at some time s in [0, t]; stage 2 then has only (t − s) left to
+follow. With the upstream escape rate tiny (k₁t ≤ 0.03 over every window here) the fall time is
+near-uniform, giving a **one-parameter** closed form
+
+    p_transmit(t) = 1 − (1 − e^{−k_low·t}) / (k_low·t)
+
+where `k_low` is the rate at which a stage whose input has collapsed crosses its own saddle — the
+same 1-D pinned generator §102 used, evaluated at the **low** rail instead of the high one.
+
+**Disclosed (rule 2).** I inverted that form on each of §100.2's five windows *before* writing the
+experiment: it gives k_low = 7.071, 8.771, 8.013, 7.463, 7.353 — a spread of 1.24× across a 16×
+change in window. **The one-parameter form was therefore already known to work.** What was open, and
+is the test, is whether an independently computed rate lands there.
+
+**P1 holds, and says more than it was asked to.** With the upstream pinned at its low rail the
+downstream has a single positive root at 0.1248 — monostable-low, no barrier to cross. **And already
+at the upstream's *saddle* it is monostable** (one root, 0.1351): the downstream loses its high rail
+before the upstream formally fails.
+
+**P4 holds, and is what makes this a prediction rather than a refit.** `k_low` is 5.2013 / 5.5169 /
+5.6248 at Ω = 14 / 30 / 55 — a spread of **1.08× across a 4× change in Ω**, against escape rates in
+§102 that move three orders over the same range. It is a macroscopic descent, as the picture
+requires.
+
+**P3 — the curve, nothing fitted.**
+
+| t₀ | predicted | measured | residual |
+|---|---|---|---|
+| 0.5 | 0.6605 | 0.7254 | **−8.95%** |
+| 1.0 | 0.8195 | 0.8860 | −7.51% |
+| 2.0 | 0.9094 | 0.9376 | −3.01% |
+| 4.0 | 0.9547 | 0.9665 | −1.22% |
+| 8.0 | 0.9773 | 0.9830 | −0.58% |
+
+Every residual negative, monotone in the window, and **worst at the shortest — exactly the shape P3
+predicted**, for the stated reason that the near-uniform-fall approximation is weakest there.
+
+**P2 — refuted, and the criterion was the wrong shape anyway.** The computed rate is **5.5169**
+against the implied interval [7.071, 8.771]: low by 22–37%.
+
+> **P2 compared the computed rate against a rate obtained by inverting the model's own closed form
+> on the data.** That tests *form × rate* jointly and then reports the verdict as if it were a test
+> of the rate. If the form carries a systematic error the implied interval absorbs it, and the
+> comparison cannot separate the two. **P3, against the measured values themselves, is the
+> independent test** — and it puts the disagreement at 0.6–9.0%, not 22–37%. Both numbers describe
+> the same shortfall; only one of them is a measurement. **Fourth broken criterion in this arc**
+> (§99.1, §101's P1, §102's P4), and again the numbers were right.
+
+**§104.1 — two candidate causes, both tested, neither sufficient**
+
+**(a) An off-by-one, fixed in the unflattering direction.** `last_low` counts states with
+`n < R₂·Ω`, so the first absorbing state is one *below* `ceil(R₂·Ω)`; the first version absorbed one
+site high. Fixing it lengthens the descent and lowers `k_low` from 5.7660 to **5.5169** — it makes
+the disagreement *worse*. Recorded because a correction that hurts is the one worth trusting.
+
+**(b) The descent starts from the wrong place — worth about 3%.** Stage 2 does not sit at its
+pristine rail when its input collapses; it sits at the degraded operating point §103 predicts
+(2.9759 at Ω = 30). Starting the descent there instead gives k_low = 5.9391 rather than 5.7660 —
+**+3%, against a 22–37% gap.** Largely refuted as the cause.
+
+**What is left, stated as a suspect (rule 17).** P1's second finding is the natural candidate: the
+downstream is already monostable when the upstream merely reaches its *saddle*, so stage 2 begins
+descending **before** stage 1 formally falls, and the model starts its clock too late. That has the
+right sign. **But a fixed delay does not reconcile it**: the offset needed to match is 0.13, 0.78
+and 2.2 at t₀ = 0.5, 2 and 8 — it grows roughly in proportion to t, which is a *rescaling of the
+rate*, not a shifted clock. So the early-start account, in its simplest form, is refuted too, and
+the ~30% shortfall is **unexplained**.
+
+### 104.1 The payoff: §103 without a free parameter
+
+Feeding the **predicted** p_transmit (0.9094 at t₀ = 2.0) into §103's model in place of §100's
+measured 0.9376:
+
+| Ω | D | with measured p_t | with **predicted** p_t |
+|---|---|---|---|
+| 14 | 2 | 1.1844 | **1.1488** |
+| 14 | 3 | 1.0585 | **1.0266** |
+| 30 | 2 | 1.3702 | **1.3290** |
+| 30 | 3 | 1.1689 | **1.1337** |
+
+**All four inside §102's pre-registered factor-of-two gate.**
+
+> **So the depth ceiling of a chemically-coupled bistable cascade is computable from one element's
+> rate functions with no free parameter and no joint master equation.** §101 located the dominant
+> channel, §102 showed it is set by escape rates, §103 supplied the operating points, §104 supplies
+> the last input.
+
+**One thing not to read into that table.** Every cell is *closer* to measured with the predicted
+p_transmit than with the measured one. That is not evidence the prediction is better than the
+measurement. §104's p_transmit is ~3% low and §103's model runs ~15–37% high, so the two errors have
+opposite signs and partly cancel. **The agreement improved for the same reason §100's net looked
+small and §101's did: two errors pointing opposite ways.** The honest statement is that the model is
+now parameter-free and still inside the gate, not that it got better.

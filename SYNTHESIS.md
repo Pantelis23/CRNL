@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§103. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§104. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -592,6 +592,24 @@ costs about two percent.**
   fixed point of the transfer map** — iterating it can only climb toward the rail, never degrade. What
   degrades a chain is each stage's own finite-Ω depression below its rail. **Caught by a sign, not a
   magnitude**; no tolerance would have flagged it.
+
+**§104 removed the last free parameter.** `p_transmit` was §103's one empirical input. Its window
+dependence follows from a one-parameter closed form whose rate is the *descent* rate of a stage whose
+input has collapsed — the same 1-D pinned generator, read at the low rail instead of the high one.
+Predicted against §100.2's five windows with nothing fitted: −8.95% to −0.58%, one-signed and worst
+at the shortest window as predicted. Fed back into §103, all four cells stay inside the gate at
+**1.1488 / 1.0266 / 1.3290 / 1.1337**.
+  > **So the depth ceiling of a chemically-coupled bistable cascade is computable from one element's
+  > rate functions — no free parameter, no joint master equation.**
+
+  Two things not to over-read. The cells got *closer* with the predicted `p_transmit` than with the
+  measured one, but that is two errors of opposite sign partly cancelling — the third time that
+  structure has appeared in this arc. And the rate behind the form is **~30% too slow** (5.5169
+  against 7.07–8.77 implied): an off-by-one was found and fixed in the unflattering direction, the
+  degraded-start correction is worth 3%, and the natural suspect — that the downstream is already
+  monostable when the upstream merely reaches its saddle, so the clock starts late — is refuted in
+  its simplest form, because the offset needed grows in proportion to t rather than staying fixed.
+  T-CASC-u carries it.
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

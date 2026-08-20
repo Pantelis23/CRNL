@@ -695,12 +695,39 @@ never falling.
 > `D_max = c*/(penalty × ε)` is **conditional on every upstream stage surviving**.
 > [`FINDINGS.md`](FINDINGS.md) §99–§100.
 
+**§101 took that to depth 3, and it is not a correction — it is a change of which term
+matters.** With every stage free to fail, the failure channel is the **minority at D = 2
+(32.6%, 40.1%, 47.3%) and the majority at D = 3 (55.7%, 61.3%, 68.8%)**, across two
+barrier depths and two windows. One added stage moves the majority from the channel
+§91–§98 priced to the channel it never saw. And the reflecting construction turns out to
+be wrong in *two* directions at once, which is why the damage stayed invisible: it
+understates the total by 16–21% while **overstating the very channel it claims to isolate
+by 2.2–2.6×**. §94's 6.349 against a true 7.388 reads as a minor correction; the same
+number is more than double the fluctuation transfer it is supposed to measure. Both errors
+grow with depth and nothing makes the cancellation persist.
+
+> **So what limits depth here is upstream *escape*** — which is the quantity §80–§90
+> already computes exactly from the rate functions alone. That is a reconnection rather
+> than a demolition: the machinery the ceiling needs was built earlier in the same project.
+
+**And §101.1 deleted the section's own headline before it was written.** The first reading
+was a 6.66× ratio at 91.8% contamination. The tell was that the *reflected* chain's D = 3
+error came out **ten times smaller** than its D = 2 error — a longer chain cannot be more
+reliable in steady state. Stage 1 seeds from its quasi-stationary law and is already
+spread; every later stage seeds as a delta at its rail, so until that delta propagates a
+deeper chain hands its last stage a *cleaner* input. **This is §92.1(a) one level up:
+there an equilibration artifact reversed a trend in upstream speed, here it reverses the
+trend in depth, which is the entire subject.** The gate that follows — admit a cell only
+if P(last low) increases with D — is a necessary condition rather than a tolerance, and it
+applies to §94's own cells, which nothing in §94 records.
+
 ```bash
 python -m experiments.chemical_cascade      # three couplings, and the transmission gate
 python -m experiments.margin_law            # frozen vs fast averaging, motional narrowing
 python -m experiments.timescale_ratio       # the crossover, at matched speeds
 python -m experiments.what_reflection_costs # what the wall hides, and the Omega discriminator
 python -m experiments.margin_vs_action      # is A*Omega really the variable, or margin/sigma?
+python -m experiments.free_upstream_depth   # the failure channel, with depth
 ```
 
 ## Verifying the base

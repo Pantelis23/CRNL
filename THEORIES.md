@@ -1361,6 +1361,8 @@ functional form that was never derived and never compared against a rival.
 | **"The deterministic gain is 18.6× too small to explain the width growth"** (§94.1(c)). | Two independent faults. (1) The implied g² was solved out of σ₂/σ₁ **assuming σ_intr is stage-independent**, when §95–§96 show the operating point moves between stages and the intrinsic width follows it — so the "transmitted noise" being extracted was mostly stage 2's intrinsic width at a *different mean*. (2) The recursion itself is Thattai & van Oudenaarden (2002) Eq. 13 and carries a **time-averaging factor** τ = β_x/(β_s+β_x) that mine lacks; since §92–§93 measured the two timescales *equal*, τ = 1/2 and the deterministic side halves, making the gap 37× rather than rescuing it. §96's account reproduces the widths with **no transmitted-noise term at all**. §99(c). |
 | **"The composition maximum sits at τ_up = τ_down, where the upstream correlation time meets the downstream response time"** (§93). | The knob was a **global speed scaling on stage 1**, which multiplies its relaxation time *and* its escape time by the same factor — so it could not say which was matched (rule 9), and the collapse onto s_up/s_dn was already an algebraic identity. Measured on Ω instead: at s_up = s_dn = 1 the upstream's correlation time is **0.6980** and the downstream's rail relaxation time **0.1511**, **4.62× apart**. The crossover sits at matched *speed scalings*, not matched *times*, because the two stages carry different boundary conditions. The crossover and the interior maximum (4.4419 at ratio 1, against 4.2102 slow and 1.5795 fast) are measured and stand; only the identification is withdrawn. §100.1. |
 | **"The reflected upstream's correlation time is its rail relaxation time"** — implicit wherever §92–§98 called stage 1's clock a relaxation time. | The slowest mode of a stage reflected at its saddle is **diffusive relaxation across the whole box [saddle, cap]**, not the local curvature at the rail: measured gap 1.43–1.62 against |f'(r₃)| = 6.6195, flat in Ω and **not converging** to it. The wall does not merely delete the escape channel, it installs a timescale of its own — 4.6× slower — and that timescale is a property of where the boundary was put. §100 P4, predicted to converge to 6.6195 and refuted. |
+| **"The reflected chain measures the fluctuation-transfer channel"** — implicit throughout §92–§98, and the basis for reading its penalty as a per-stage cost. | It **overstates that channel by 1.49× at D = 2 and 2.22× at D = 3** (Ω = 30, t₀ = 2.0; 1.63× and 2.64× at Ω = 14), because the wall bounces back probability that would have escaped and parks it against the saddle where it drives the next stage hardest. Separately it omits the failure channel entirely, which is 61–69% of the true error at D = 3. **The two errors have opposite signs and cancel to a 16–21% net**, which is why the construction looked sound: §94 reports 6.349 against a true total of 7.388. The inflation grows with depth and so does the omission; nothing makes the cancellation persist. §101. |
+| **"P(last stage low) is comparable across depths at any window"** — assumed wherever §94 and §101 compare D = 2 with D = 3. | False below t₀ ≈ 2. Stage 1 seeds from its quasi-stationary law and is already spread; every later stage seeds as a **delta at its rail**, so until that delta propagates a deeper chain hands its last stage a *cleaner* input. At Ω = 30, t₀ = 0.5 the reflected D = 3 error is **ten times smaller** than D = 2's, and at Ω = 14, D = 3 stage 3 reads (2.7450, 0.6846) against stage 2's (2.6542, 0.7643) — the last stage cleaner than the one feeding it. §92.1(a) one level up: there the artifact reversed a trend in upstream speed, here it reverses the trend in **depth**. It removed §101's first headline (a 6.66× ratio at 91.8% contamination) before it was written down. §101.1. |
 
 **A second pattern, from the depth-ceiling correction.** A threshold observable
 (the first *integer* depth below I=0.5) reported two different states as identical,
@@ -4466,3 +4468,59 @@ coupling and fixed downstream. If the crossover tracks the *upstream* correlatio
 at the peak is a constant of the downstream alone and that constant names the timescale. This is
 the same confound-breaking move as §100 itself: a knob that moves the nuisance against the
 suspected cause.
+
+~~**T-CASC-n, open: what is the depth ceiling when upstream stages are allowed to fail?**~~
+**-> §101. ANSWERED for D = 3, and the answer moves the arc's centre of gravity.** With every stage
+free, the failure channel is the **majority in every admitted cell at D = 3 — 55.7%, 61.3%, 68.8%** —
+against a **minority in every one at D = 2 — 32.6%, 40.1%, 47.3%** (two barrier depths, two
+windows). **One added stage moves the majority from the channel §91–§98 priced to the channel it
+never saw, and it does so everywhere it was measured.** The exact share is window-dependent and
+falls as the window lengthens (61.3% → 55.7% at D = 3 over t₀ = 2 → 8); the crossing does not move.
+
+**And the reflecting construction is wrong in two directions at once**, which is why the damage was
+invisible. At Ω = 30, D = 3 it reports 6.349 where the true total is 7.388 — 16% low, a minor-looking
+correction — while **overstating the fluctuation-transfer channel it claims to isolate by 2.22×**
+(2.64× at Ω = 14). The inflation grows with depth, 1.49× → 2.22×, and so does the omission; the
+small net is a cancellation of two ~120–160% errors and there is no reason for it to persist further
+along the chain.
+
+> **SCOPE, restated again.** `D_max = c*/(penalty × ε)` is not merely conditional on upstream
+> survival (§100). **The term it omits overtakes the term it keeps within one added stage.** What
+> limits depth here is upstream *escape* — the quantity §80–§90 already computes exactly from the
+> rate functions alone, with no master equation.
+
+**T-CASC-o, open: is the depth ceiling just the upstream escape rate?** The suspect (rule 17, NOT
+confirmed): at depth the cheapest route to a downstream error is one upstream escape followed by
+near-certain propagation (§100 measured transmission at 0.73–0.98), rather than the last stage
+escaping its own barrier. It predicts the contaminated share grows with the number of upstream
+stages, which it does. **It is not confirmed and the naive version predicts the wrong Ω-dependence**,
+since both routes cost one escape. **How to kill:** the suspect gives
+`contaminated/pure ≈ (D−1) × [upstream escape rate] / [last-stage escape rate at its degraded
+operating point]`. Both rates follow from §80–§90's escape action with no CME at all, and §96
+already supplies the degraded operating point. A mismatch kills the account while leaving §101's
+measurement standing.
+
+**T-CASC-p, open: does the depth trend have a shape?** §101 has two depths. D = 4 at Ω = 14 is
+10,556,001 joint states; it was started and abandoned after ~50 minutes without completing a single
+window. **No `D_max` is extrapolated from two points** (§90 and rule 15 are why), so the *shape* of
+the growth — and therefore any ceiling — is open. **How to kill:** the free chain is a product-form
+candidate if the suspect above holds, in which case D = 4 is unnecessary and the ceiling follows in
+closed form; if it does not hold, D = 4 is required and needs a solver that does not build the joint
+generator explicitly.
+
+**§101.1 is a methodological result and constrains §94 itself.** A cell is only admissible for a
+depth comparison if P(last low) *increases* with D — a necessary condition, not a tolerance. At
+t₀ = 0.5 it fails at both Ω: the reflected chain's D = 3 error is **ten times smaller** than its
+D = 2 error, because stage 1 seeds from its quasi-stationary law while every later stage seeds as a
+delta at its rail, so until that delta spreads a deeper chain hands its last stage a *cleaner* input.
+Measured at Ω = 14, D = 3, t₀ = 0.5: stage 3 is (2.7450, 0.6846) against stage 2's (2.6542, 0.7643)
+— the last stage cleaner than the one feeding it. **This is §92.1(a) one level up: there the
+equilibration artifact reversed a trend in upstream speed, here it reverses the trend in depth,
+which is the entire subject.** It removed §101's first headline (Ω = 30, D = 3, t₀ = 0.5: a
+6.66× ratio at 91.8% contamination) before it was written down.
+
+> **The usable window band is squeezed between equilibration below and saturation above**, and cells
+> with P_free > 0.5 are excluded from both the ratio and the contaminated-share readings, since both
+> are forced toward 1 there. At Ω = 14 only t₀ = 2.0 survives both bounds. **§94's own D = 3 result
+> was taken at t₀ = 2.0 — admissible, but one step from the lower edge of the band**, and nothing in
+> §94 records that the band exists.

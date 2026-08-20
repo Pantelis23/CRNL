@@ -10816,3 +10816,158 @@ the short windows where a cascade actually has to hold its value it is comparabl
 — a different chain, not built. The one number that points at it is P3's 0.9376: in such a chain
 upstream failures would transmit almost perfectly, so the depth ceiling would be set by the *worse*
 of the two channels and it is the one §92–§98 never measured.
+
+### 101 (T-CASC-n) The channel §92–§98 never measured, at depth — and an equilibration gate that removes the headline
+
+§100 found a second error channel: the Hill coupling's saturation attenuates a *noisy* upstream and
+does not attenuate a *failed* one. §101 takes it to depth. A generalised builder runs the same chain
+with the first `n_reflected` stages walled at their saddles, so `n_reflected = D−1` is §94's
+published construction and `n_reflected = 0` is a chain in which every stage can fail. Everything
+else — rates, clock, coupling, and the seed (stage 1 from its quasi-stationary law, later stages at
+their rails) — is shared between the arms, paired within one run.
+
+**P1, wiring, and one broken criterion of my own.** The generalised generator and seed reproduce
+§94's `build_chain` **bit-exactly** (max |ΔQ| = 0 and max |Δseed| = 0) at Ω = 14 and 30, D = 2 and 3,
+for both `n_reflected = D−1` and `D`. Against §100's independently written `build_free` the residual
+is **1.8×10⁻¹²**, which is scalar-loop versus vectorised arithmetic and not a wiring difference.
+
+> **P1 as pre-registered demanded "max |ΔQ| = 0 in every case" and therefore printed FAILS on a
+> correct agreement.** Two different formulations of the same arithmetic cannot agree bitwise. This
+> is rule 19's class — a criterion that cannot be satisfied by the thing it claims to test — caught
+> here only because the failure was in the safe direction. The gate against `build_chain`, which
+> shares the propensity code, is legitimately exact; the gate against `build_free` should have been
+> at float tolerance from the start.
+
+Two further wiring confirmations, both unplanned and both load-bearing: at Ω = 30, D = 2 the
+free/reflected ratios reproduce §100's **1.9615 / 1.1219 / 1.0673** exactly, and at Ω = 30, D = 3,
+t₀ = 2.0 the reflected arm's penalty is **6.349** against §94's published **6.35**.
+
+**§101.1 — the equilibration gate, which removes the number I was about to lead with**
+
+The first reading of the table had a headline: at Ω = 30, D = 3, t₀ = 0.5 the free chain carries
+**6.66×** the reflected chain's error with **91.8%** of it failure-contaminated. It is not usable.
+
+> **The tell: the reflected chain's error at D = 3 is 1.5353e−4 against D = 2's 1.5149e−3 — ten times
+> SMALLER.** A longer chain cannot be more reliable than a shorter one in steady state, so the
+> comparison is not in steady state.
+
+Measured directly, at Ω = 14, in the reflected chain:
+
+| D | t₀ | stage 1 (mean, sd) | stage 2 | stage 3 |
+|---|---|---|---|---|
+| 3 | 0.5 | (2.7093, 0.7607) | (2.6542, 0.7643) | **(2.7450, 0.6846)** |
+| 3 | 1.0 | (2.7093, 0.7607) | (2.5008, 0.8322) | (2.6063, 0.7476) |
+| 3 | 2.0 | (2.7093, 0.7607) | (2.4079, 0.8563) | (2.5639, 0.7627) |
+| 3 | 4.0 | (2.7093, 0.7607) | (2.3868, 0.8601) | (2.5547, 0.7663) |
+
+At t₀ = 0.5 stage 3's mean sits **above** stage 2's and its sd **below** it: the last stage is
+cleaner than the stage feeding it. **Stage 1 seeds from its quasi-stationary law and is already
+spread; every later stage seeds as a delta at its rail.** Until that delta propagates, a deeper
+chain hands its last stage a *cleaner* input than a shallower one does, and P(last low) falls with
+depth. This is §92.1(a) one level up — there the equilibration artifact reversed the sign of a trend
+in upstream speed, here it reverses the sign of the trend in **depth**, which is the whole subject.
+
+**The gate, and it is a necessary condition rather than a tolerance (rule 20).** A cell is admitted
+to the depth comparison only if P(last low) *increases* with D. That excludes t₀ = 0.5 at both Ω and
+t₀ = 1.0 at Ω = 14 (reflected D = 3 is 1.1246e−1 against D = 2's 1.1338e−1, still inverted).
+Separately, cells with P_free > 0.5 are excluded from **both** readings. The ratio is forced toward
+1 there because both arms run to 1 — which is exactly why it appears to stop growing with depth at
+t₀ = 8 (1.0652 → 1.0528) — and the contaminated *share* is forced toward 1 for the same reason,
+since once almost everything has failed, "some upstream stage is also low" is almost certain. The
+83.5% share at Ω = 14, D = 3, t₀ = 8 is that artifact and is not read. **The usable band is squeezed
+between equilibration below and saturation above**, and at Ω = 14 only t₀ = 2.0 survives both.
+**Ω = 30 is the only operating point here with room in the band.**
+
+**P2 — the ratio grows with depth, sub-additively, in every admitted non-saturated cell**
+
+| Ω | t₀ | free/refl at D = 2 | at D = 3 | independent channels | fraction of it |
+|---|---|---|---|---|---|
+| 30 | 2.0 | 1.1219 | 1.1635 | 1.2438 | 0.671 |
+| 30 | 8.0 | 1.0673 | 1.0824 | 1.1346 | 0.612 |
+| 14 | 2.0 | 1.1612 | 1.2121 | 1.3224 | 0.658 |
+
+If each added upstream stage contributed a failure channel independently, `ratio(D=3) − 1` would be
+twice `ratio(D=2) − 1`. It is **0.61–0.67 of that in every admitted cell** — sub-additive, as
+predicted, and for the obvious reason: the two channels overlap, since a chain in which an upstream
+stage has already failed is not also available to fail the other way.
+
+**P3 — REFUTED at depth, and this is the result**
+
+I predicted that pure fluctuation transfer — the thing §92–§98 measured — would still dominate at
+t₀ = 2. Splitting the free chain's P(last low) by whether every upstream stage ended high:
+
+| Ω | D | t₀ | total | pure (fluctuation) | contaminated | contaminated share |
+|---|---|---|---|---|---|---|
+| 30 | 2 | 2.0 | 1.8164e−02 | 1.0875e−02 | 7.2892e−03 | 40.1% |
+| 30 | 3 | 2.0 | 2.6927e−02 | 1.0409e−02 | 1.6518e−02 | **61.3%** |
+| 30 | 2 | 8.0 | 8.0343e−02 | 5.4177e−02 | 2.6166e−02 | 32.6% |
+| 30 | 3 | 8.0 | 1.4177e−01 | 6.2804e−02 | 7.8966e−02 | **55.7%** |
+| 14 | 2 | 2.0 | 2.9208e−01 | 1.5383e−01 | 1.3825e−01 | 47.3% |
+| 14 | 3 | 2.0 | 4.0064e−01 | 1.2520e−01 | 2.7544e−01 | **68.8%** |
+
+**At D = 2 the prediction holds — fluctuation transfer is 60% of the error at Ω = 30. At D = 3 it is
+refuted at both Ω: the failure channel is 61–69% of the total.** Adding one stage moves the
+majority from one channel to the other, and it is the channel the noise-margin law never priced.
+
+**The result is not read off one window (§100.2's lesson).** The contaminated share does fall as the
+window lengthens — 40.1% → 32.6% at D = 2, 61.3% → 55.7% at D = 3, over t₀ = 2 → 8 at Ω = 30 — so
+the exact percentage is window-specific and is quoted with its window throughout. **What does not
+move is the crossing:** at D = 2 the failure channel is the minority in all three admitted cells
+(32.6%, 40.1%, 47.3%) and at D = 3 it is the majority in all three (55.7%, 61.3%, 68.8%), across two
+barrier depths and two windows. **One added stage moves the majority from one channel to the other,
+and it does so everywhere it was measured.**
+
+**The structure that matters: two large errors of opposite sign, partly cancelling**
+
+The reflecting wall does not simply omit the failure channel. It also *inflates* the channel it does
+measure, by bouncing back probability that would have escaped:
+
+| Ω | D | t₀ | wall overstates the fluctuation channel | wall understates the total |
+|---|---|---|---|---|
+| 30 | 2 | 2.0 | **1.49×** | 1.12× |
+| 30 | 3 | 2.0 | **2.22×** | 1.16× |
+| 30 | 2 | 8.0 | 1.39× | 1.07× |
+| 30 | 3 | 8.0 | **2.08×** | 1.08× |
+| 14 | 2 | 2.0 | 1.64× | 1.16× |
+| 14 | 3 | 2.0 | **2.64×** | 1.21× |
+
+> **The net is small because two errors of 120–160% cancel, not because the construction is sound.**
+> §94 reports 6.349 at Ω = 30, D = 3 where the true total is 7.388 — 16% low, which reads as a
+> minor correction. The same number overstates the fluctuation-transfer channel it claims to
+> isolate by **2.22×**. The inflation grows with depth (1.49 → 2.22 at Ω = 30) and so does the
+> omission, and there is no reason for the cancellation to persist further along the chain.
+
+**A caveat that runs in the safe direction.** "Pure" conditions on every upstream stage being high
+*at the end of the window*, so a trajectory that dipped below a saddle and returned is counted as
+pure. Contamination is therefore **under**-counted and the wall's inflation **under**-estimated. The
+effect is at least as large as measured, not at most.
+
+**The suspect, labelled as one (rule 17).** At depth the cheapest route to a downstream error looks
+like *one upstream escape followed by near-certain propagation* (§100 measured transmission at
+0.73–0.98) rather than the last stage escaping its own barrier. That would make the contaminated
+share grow with the number of upstream stages, which it does. **It is not confirmed**, and the naive
+version of it predicts the wrong Ω-dependence, since both routes cost one escape. **How to kill:**
+the suspect predicts `contaminated/pure ≈ (D−1) × [upstream escape rate] / [last-stage escape rate
+at its degraded operating point]`, and both rates are computable exactly from §80–§90's escape
+action with no master equation at all. If the ratio does not match, the account is wrong even though
+the measurement stands.
+
+**P4 — the depth trend, and what is deliberately not extrapolated.** Reflected penalties run
+4.442 → 6.349 (Ω = 30) and 2.807 → 3.689 (Ω = 14) over D = 2 → 3 at t₀ = 2.0; free penalties run
+4.983 → 7.388 and 3.260 → 4.472. **No `D_max` is extrapolated from two depths.** D = 4 at Ω = 14
+(10,556,001 joint states) was started and abandoned after ~50 minutes without completing its first
+window; it is reported as not run rather than omitted silently, and with it goes any three-point
+statement about the shape of the growth.
+
+**Everything this section did not run, in one place** (no silent caps): D = 4 at any Ω; t₀ = 1.0 and
+4.0 at Ω = 30, dropped by the resource note before anything was seen. And t₀ = 0.5 everywhere plus
+t₀ = 1.0 at Ω = 14 were run but are **excluded by §101.1's equilibration gate rather than by cost**;
+t₀ = 4.0 and 8.0 at Ω = 14 were run but are saturated. The gate is a property of the seeding
+convention that §94 and §100 also use, so it applies to their cells too and not only to these.
+
+> **What §101 does to the arc.** §91–§98's noise-margin law describes a real channel and, at D = 2
+> and Ω = 30, the larger one. **By D = 3 it is the minority channel**, and the construction that
+> measured it overstates it by 2.2×. `D_max = c*/(penalty × ε)` is therefore not merely conditional
+> on upstream survival (§100) — the term it omits overtakes the term it keeps within one added
+> stage. What limits depth here is upstream *escape*, which is the quantity §80–§90 already computes
+> exactly from the rate functions alone.

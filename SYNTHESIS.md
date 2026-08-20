@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§100. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§101. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -523,6 +523,32 @@ actually has to hold its value **the wall hides half the error**.
   wobble has no flat region once the input has reached the other rail, because transmitting that is
   what it is built to do. The noise-margin law prices the first channel and never saw the second,
   which is now the arc's largest open question (T-CASC-n).
+
+**§101 took the free-upstream chain to depth 3, and the arc's centre of gravity moved.** With every
+stage able to fail, the failure channel is the **majority in every admitted cell at D = 3 — 55.7%,
+61.3%, 68.8% across two barrier depths and two windows — against a minority in every one at D = 2**
+(32.6%, 40.1%, 47.3%). **One added stage moves the majority from the channel
+§91–§98 priced to the channel it never saw.** And the reflecting construction turns out to be wrong
+in two directions at once, which is why the damage stayed invisible: it *understates the total* by
+16–21% while **overstating the very channel it claims to isolate by 2.2–2.6×**. §94's 6.349 against
+a true 7.388 reads as a minor correction; the same number is more than double the fluctuation
+transfer it is supposed to measure. Both errors grow with depth and nothing makes the cancellation
+persist.
+  > **So `D_max = c*/(penalty × ε)` is not merely conditional on upstream survival (§100) — the term
+  > it omits overtakes the term it keeps within one added stage.** What limits depth here is upstream
+  > *escape*, the quantity §80–§90 already computes exactly from the rate functions alone. That is a
+  > reconnection, not a demolition: the arc's own earlier machinery is what the ceiling needs.
+
+  **§101.1 is the methodological half, and it deleted the headline before it was written.** The first
+  reading was a 6.66× ratio at 91.8% contamination (Ω = 30, D = 3, t₀ = 0.5). The tell was that the
+  *reflected* chain's D = 3 error was **ten times smaller** than its D = 2 error — a longer chain
+  cannot be more reliable in steady state. Stage 1 seeds from its quasi-stationary law and is already
+  spread; every later stage seeds as a delta at its rail, so until that delta propagates a deeper
+  chain hands its last stage a cleaner input. **§92.1(a) one level up: there the equilibration
+  artifact reversed a trend in upstream speed, here it reverses the trend in depth, which is the
+  entire subject.** The gate that follows — admit a cell only if P(last low) increases with D — is a
+  necessary condition rather than a tolerance, and it applies to §94's cells too, which nothing in
+  §94 records.
 
 **What §99 leaves standing.** The composition arc's *measurements* survive intact; its
 *mechanisms* took the damage, which is now the project's most reliable pattern (rule 17, and

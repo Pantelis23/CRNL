@@ -4911,3 +4911,53 @@ report every candidate, not the flattering one. The available scalars are A·Ω,
 τ_cross (which rises with it). τ_cross is the only one already known to co-move; testing it means
 moving τ_cross at fixed Ω, which the reflecting-boundary knob of §100 can do — the box width sets a
 stage's clock without touching its landscape.
+
+## §111 -- the pooled vote is a majority only if the rails are symmetric
+
+**§32's and §33's headlines are AM-specific, and §34's derivation is not.** §34's crossover law
+contains `m`, the number of failures that flips the merge, and takes `m = ceil((k+1)/2)` -- a
+MAJORITY. The pool merge is a majority vote only when the two rails sit symmetrically about the
+saddle. AM is exchange symmetric by construction; **Schlögl is not**, so a merged pool crosses the
+saddle only when `j > k(r₃−r₂)/(r₃−r₁) = 0.71972 k`.
+
+Measured on real merged tanks, no free comparison anywhere: the step lands at **3, 4, 5** for
+k = 3, 5, 7 against the majority's **2, 3, 4** — off by at least a full unit at every k.
+
+> **k = 3 is the sharp case and it inverts §32.** There m = k: a merged Schlögl trio fails only on
+> UNANIMOUS failure, so `L_remerge ∝ T³` grows at 3c — **the same exponent as `L_hold = T(3Ω)`**.
+> The two never cross, and the ratio is a volume-independent constant:
+> `ln(L_hold/L_remerge) = 2(ln τ − a)` = **−3.4131 predicted, −3.4236 measured, 0.31%**, with c and
+> a from the hold protocol alone. Re-merging beats holding by a constant **30.7× at every volume,
+> forever.** §32's *"voting squares the error, pooling cubes the exponent"* counts a majority vote;
+> asymmetric rails make the vote stricter, and unanimity is exactly pooling's exponent.
+
+**What transfers and what does not.** §34's derivation transfers intact — at k = 5 the predicted
+crossover is **19.131 against a measured 17.904 (6.9%)**, an absolute test with nothing fitted to a
+crossover. Its k-INDEPENDENCE does not: predicted crossovers here are ∞ / 19.131 / 35.899 across
+k = 3, 5, 7, against §34's AM spread of 3.00% / 3.61% / 4.39%. **The derivation is
+substrate-independent; its most quotable consequence is a symmetry accident** — the same lesson §42
+recorded for the theorem's Clause 1.
+
+**§111.2, two instrument findings.** (a) The exact MFPT solve returns **negative** lifetimes above
+N ≈ 150 — T(150) = 1.25e+12, T(200) = **−5.38e+12** — silently, and was caught only because it
+entered a logarithm. `hold_lifetime` now raises rather than returning a non-positive number, and
+crossover volumes are capped at k·N ≤ 150. This is §34's own N ≤ 72 ceiling, rediscovered on a
+different substrate and solver. (b) The merge threshold is **soft**: at k = 7, j = 5 the pool lands
+1.6% above the saddle and P(high) = **0.4930**, a coin flip rather than a step. §111's own P2
+criterion ("first j with P < 0.5") was a hard gate on a soft quantity — rule 20 again, mine.
+
+**T16-c, open: is `m` from the rails the whole story, or does the merge threshold move with Ω?**
+§111 computes m deterministically from the rail positions and confirms it at k = 3 and 5, but the
+k = 7 cell straddles. The soft width should shrink like 1/√Ω, so the deterministic m should become
+exact as the pool grows. **How to kill:** sweep Ω at k = 7 and watch P(high | j = 5) — it must go to
+1, since x_merged sits 1.6% ABOVE the saddle. If it instead goes to 0, the merged tank's commitment
+is not decided by which basin its initial mean lies in, and every m in this section is wrong for a
+reason that has nothing to do with symmetry.
+
+**T16-d, open: does the unanimity coincidence survive off k = 3?** `m = k` at k = 3 is exactly what
+makes re-merging never lose on Schlögl, and it happens because 0.71972 × 3 = 2.16 rounds up to 3.
+That is arithmetic about one element's rails, not a principle. **How to kill:** the merge fraction is
+`(r₃−r₂)/(r₃−r₁)`, computable for any bistable element, so find or construct a rail geometry where
+`m = k` at some k and check whether re-merging is again unbeatable there — and one where the fraction
+falls below 0.5 (rails skewed the other way), where the vote should be LOOSER than majority and
+pooling should win by more than §32 measured.

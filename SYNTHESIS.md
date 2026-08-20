@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§110. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§111. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -708,6 +708,24 @@ opposite directions, in all five cells. The ratio turns over because the *crossi
   §110 also failed its own P1 — the upstream clock spans 1.34× and is non-monotone where I predicted
   it constant to 20%. It does not drive the result, but the framing that treats it as a single
   macroscopic number is looser than it sounded.
+
+**§111 went back to the concatenation arc and found a symmetry accident in its headline.** §32
+concluded *"voting squares the error, pooling cubes the exponent"*, and §34 derived the crossover in
+closed form with a structurally surprising k-independence. Both count a **majority** merge — and the
+pool merge is a majority vote only if the rails sit symmetrically about the saddle. AM's do by
+construction; **Schlögl's do not**, so a merged pool crosses only when j > 0.72 k. Measured on real
+tanks the step lands at 3, 4, 5 for k = 3, 5, 7 against the majority's 2, 3, 4.
+  > **At k = 3 that means unanimity, and it inverts §32.** `L_remerge ∝ T³` then grows at the *same
+  > exponent* as `L_hold = T(3Ω)`, so they never cross:
+  > `ln(L_hold/L_remerge) = 2(ln τ − a)` = **−3.4131 predicted against −3.4236 measured, 0.31%**,
+  > nothing fitted. Re-merging beats holding by a constant **30.7× at every volume, forever**.
+  > Asymmetric rails make the vote *stricter*, and unanimity is exactly pooling's exponent.
+
+  **§34's derivation transfers; its k-independence does not.** At k = 5 the predicted crossover is
+  19.131 against a measured 17.904 — 6.9%, absolute, with c and a from the hold protocol alone. But
+  the predicted crossovers span ∞ / 19.131 / 35.899 across k = 3, 5, 7 where AM's spread was 3–4%.
+  **The derivation is substrate-independent and its most quotable consequence is a symmetry
+  accident** — the same lesson §42 recorded for the theorem's Clause 1.
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

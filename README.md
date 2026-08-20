@@ -928,6 +928,44 @@ python -m experiments.it_was_the_seed             # ...because it was the seed a
 python -m experiments.does_the_ratio_move         # and the timescale framing goes too
 ```
 
+## Concatenation, and a symmetry accident in its headline
+
+§32–§34 built the project's most externally-legible result: a chemistry-only **pool merge**
+(k tanks commit, their contents are physically combined into one k·Ω tank which runs the
+element itself — no free `sign()`, nothing the chemistry could not do), and from it a closed
+form for when concatenating beats simply using a bigger tank. §32: *voting squares the error,
+pooling cubes the exponent.* §33: re-merging's advantage occupies a **bounded window** and then
+reverses, because the physical error rate here falls exponentially in Ω — **chemistry has a
+knob QEC lacks, and the code wins only until that knob is turned far enough.** §34 then derived
+the crossover, with a surprising k-independence, and tested it absolutely across three γ.
+
+**§111 asked whether any of that leaves AM.** The crossover law contains `m`, the number of
+failures that flips the merge, and takes `m = ceil((k+1)/2)` — a **majority**. But a pooled
+merge is a majority vote only if the two rails sit symmetrically about the saddle. AM's do by
+construction. **Schlögl's do not** (r₁ = 0.15, r₂ = 1.0, r₃ = 3.1827), so a merged pool crosses
+only when `j > (r₃−r₂)/(r₃−r₁) · k = 0.72 k`. Measured on real merged tanks, the step lands at
+**3, 4, 5** for k = 3, 5, 7 against the majority's **2, 3, 4**.
+
+> **At k = 3 that means unanimity, and it inverts §32.** `L_remerge ∝ T³` then grows at the
+> *same exponent* as `L_hold = T(3Ω)`, so the two never cross and the ratio is a constant:
+> `ln(L_hold/L_remerge) = 2(ln τ − a)` — **−3.4131 predicted, −3.4236 measured, 0.31%**, with
+> c and a from the hold protocol alone. Re-merging beats holding by **30.7× at every volume,
+> forever**. Asymmetric rails make the vote *stricter*, and unanimity is exactly pooling's
+> exponent. [`FINDINGS.md`](FINDINGS.md) §111.
+
+**§34's derivation transfers; its k-independence does not.** At k = 5 the predicted crossover is
+19.131 against a measured 17.904 — 6.9%, absolute, nothing fitted to a crossover. But predicted
+crossovers span ∞ / 19.131 / 35.899 across k = 3, 5, 7, where AM's spread was 3–4%. The
+derivation is substrate-independent and its most quotable consequence is a **symmetry
+accident** — the same lesson §42 recorded for the restoration theorem's Clause 1.
+
+```bash
+python -m experiments.concatenation           # the pool merge, no free majority gate
+python -m experiments.remerge_hold            # time-extended: re-merging vs holding
+python -m experiments.crossover_law           # the closed form, tested absolutely
+python -m experiments.is_the_vote_a_majority  # ...and what happens off AM
+```
+
 ## Verifying the base
 
 `experiments/verify_base.py` re-derives 26 load-bearing closed forms from the

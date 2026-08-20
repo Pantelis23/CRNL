@@ -11845,3 +11845,94 @@ framing to stage 2's escape rate — which is the transfer §102.1 made and §10
 they called the residual an "averaging position". **That label should be read from here on as a
 coordinate between two computable limits, not as a statement about which limit the system is near
 and why.**
+
+### 111 The pooled vote is a majority only if the rails are symmetric — and §32's headline is AM-specific
+
+§34 derived the concatenation crossover in closed form and tested it absolutely on AM:
+
+    Ω_x = [ (m−1)(a − ln τ) − ln C(k,m) ] / [ c (k − m) ],   m = ceil((k+1)/2)
+
+reporting a structurally surprising confirmation — **the leading term contains no k**, because
+`m−1 = k−m = (k−1)/2` for every odd k. That identity is a statement about **majority**, and the pool
+merge is a majority vote only if the two rails sit symmetrically about the saddle. **That is an AM
+fact, not a restoration fact.** Schlögl's rails are r₁ = 0.15 and r₃ = 3.1827 about a saddle at
+r₂ = 1.0, so a merged pool's count-weighted mean is pulled hard to the high side, and it drops below
+the saddle only when
+
+    j > k (r₃ − r₂)/(r₃ − r₁) = **0.71972 k**,   not k/2.
+
+**P1 holds.** The Schlögl hold lifetime is exponential in volume: `ln T = 0.183476 N − 0.1835`,
+**R² = 0.999980**, max residual 0.0132 over N = 10–42. §34's derivation applies.
+
+**P2 — the merge is not a majority, measured on a real tank with no free comparison anywhere.**
+
+| k | predicted m | majority m | first j with P(high) < 0.5 |
+|---|---|---|---|
+| 3 | 3 | 2 | **3** |
+| 5 | 4 | 3 | **4** |
+| 7 | 6 | 4 | 5 |
+
+**At no k does the step land on the majority value**, and it misses by at least a full unit
+everywhere. k = 3 is the sharp case: **a merged Schlögl trio fails only if all three tanks fail** —
+unanimity, not majority.
+
+> **The threshold is SOFT, and k = 7 shows why that matters.** A pool landing within a fluctuation
+> of the saddle is a coin flip, not a step: at k = 7, j = 5 the merged concentration is 1.0165 — 1.6%
+> above the saddle — and P(high) = **0.4930**. The deterministic prediction m = 6 is right about
+> which side of the saddle j = 5 lands on; the *stochastic* threshold is smeared across it. **My P2
+> criterion, "first j with P < 0.5", is a hard gate on a soft quantity** — rule 20, in my own test,
+> and the margins are now quoted with every cell.
+
+**§111.1 — the k = 3 case inverts §32's headline, and the closed form lands at 0.31%**
+
+§32 concluded: *"voting squares the error, pooling cubes the exponent"* — so pooling wins. That
+counts a **majority** vote. On Schlögl at k = 3 the pooled vote requires **unanimity**, m = k, and
+then
+
+    ln L_remerge = m(cN + a) − (m−1)ln τ = 3cN + 3a − 2ln τ    → growth **3c**
+    ln L_hold    = c(3N) + a                                    → growth **3c**
+
+**The same exponent.** The difference is independent of volume:
+
+> **ln(L_hold / L_remerge) = 2(ln τ − a) = −3.4131 predicted, −3.4236 measured — 0.31%**, with c and
+> a taken from the hold protocol alone and no crossover measurement entering anywhere.
+
+So on Schlögl at k = 3, re-merging beats holding by a **constant 30.7×, at every volume, forever**.
+§33's AM conclusion — *"growing the tank eventually outruns the code"* — does not hold here, and the
+reason is countable: **asymmetric rails make the pooled vote stricter, and unanimity is exactly the
+exponent pooling has.** The vote does not lose the race because it is not running the shorter one.
+
+**P3/P4 — the derivation transfers, the k-independence does not**
+
+| k | m | predicted Ω_x | measured Ω_x |
+|---|---|---|---|
+| 3 | 3 | **∞** (no crossover: m = k) | none — ratio flat at −3.42 → −3.00 |
+| 5 | 4 | 19.131 | **17.904** |
+| 7 | 6 | 35.899 | out of reach (k·N ≤ 150) |
+
+**P4 holds where it can be tested: 19.131 against 17.904, 6.9%**, an absolute test in §34's sense —
+c and a from the hold protocol, nothing fitted to a crossover.
+
+**P3 holds.** Predicted crossovers span **∞ / 19.131 / 35.899** across k = 3, 5, 7 — strongly
+k-dependent, the two finite ones a factor 1.88 apart — against §34's measured AM spread of
+**3.00% / 3.61% / 4.39%**. §34's k-independence is an accident of exchange symmetry, exactly as
+§42 found for the restoration theorem's Clause 1. *Symmetry keeps doing more work in this project
+than the sentences around it admit.*
+
+**§111.2 — two instrument findings, one of which would have propagated silently**
+
+**(a) The exact MFPT solve returns NEGATIVE lifetimes above N ≈ 150.** Measured: T(150) = 1.2531e+12,
+T(200) = **−5.3791e+12**, T(294) = **−3.9657e+13**. The dense solve loses conditioning and reports a
+negative mean first-passage time without complaint; it entered a `math.log` and raised a domain
+error, which is the only reason it was caught. `hold_lifetime` now refuses to return a non-positive
+value, and every crossover volume is capped at k·N ≤ 150. **This is §34's own ceiling — it hit
+N ≤ 72 on AM — rediscovered on a different substrate and a different solver.**
+
+**(b) The soft merge threshold**, above. Both are recorded because a negative lifetime that reaches
+a fit rather than a logarithm would have produced a confident wrong slope with nothing looking wrong.
+
+> **What this does to §32 and §33.** Their numbers stand (rule 7); what §111 corrects is their
+> *generality*. §32's exponent count and §33's bounded-window conclusion are consequences of a
+> **majority** merge, and the merge is a majority only when the rails are symmetric about the saddle.
+> §34's derivation, by contrast, transfers intact — it never assumed symmetry, only a value of m.
+> **The derivation is substrate-independent; its most quotable consequence is not.**

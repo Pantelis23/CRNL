@@ -4946,7 +4946,7 @@ different substrate and solver. (b) The merge threshold is **soft**: at k = 7, j
 1.6% above the saddle and P(high) = **0.4930**, a coin flip rather than a step. §111's own P2
 criterion ("first j with P < 0.5") was a hard gate on a soft quantity — rule 20 again, mine.
 
-**T16-c, open: is `m` from the rails the whole story, or does the merge threshold move with Ω?**
+**~~T16-c, open~~ → CLOSED by §112.2, see the entry below: is `m` from the rails the whole story, or does the merge threshold move with Ω?**
 §111 computes m deterministically from the rail positions and confirms it at k = 3 and 5, but the
 k = 7 cell straddles. The soft width should shrink like 1/√Ω, so the deterministic m should become
 exact as the pool grows. **How to kill:** sweep Ω at k = 7 and watch P(high | j = 5) — it must go to
@@ -4954,10 +4954,124 @@ exact as the pool grows. **How to kill:** sweep Ω at k = 7 and watch P(high | j
 is not decided by which basin its initial mean lies in, and every m in this section is wrong for a
 reason that has nothing to do with symmetry.
 
-**T16-d, open: does the unanimity coincidence survive off k = 3?** `m = k` at k = 3 is exactly what
+**~~T16-d, open~~ → CLOSED by §112, see the entry below: does the unanimity coincidence survive off k = 3?** `m = k` at k = 3 is exactly what
 makes re-merging never lose on Schlögl, and it happens because 0.71972 × 3 = 2.16 rounds up to 3.
 That is arithmetic about one element's rails, not a principle. **How to kill:** the merge fraction is
 `(r₃−r₂)/(r₃−r₁)`, computable for any bistable element, so find or construct a rail geometry where
 `m = k` at some k and check whether re-merging is again unbeatable there — and one where the fraction
 falls below 0.5 (rails skewed the other way), where the vote should be LOOSER than majority and
 pooling should win by more than §32 measured.
+
+**T16-c → §112.2: CLOSED, and it survives its kill test.** §111's straddling cell was swept in Ω
+along with every other unsaturated cell across six elements — 18 in all — and **every one moves
+monotonically toward the sign of its own margin.** The two hardest have negative margins under 5%
+and go to 0.047 and 0.038; the hardest positive one (margin +0.03) climbs 0.4536 → 0.6239. The
+merged tank's commitment *is* decided by which basin its count-weighted mean lies in, so m from the
+rails is the whole story and the softness is a finite-Ω width, not a different mechanism. The kill
+test as written ("if it instead goes to 0, every m in this section is wrong") did not fire.
+
+**T16-d → §112: CLOSED, and it generalises further than it was posed.** The unanimity coincidence
+is not a coincidence and not about k = 3: `m = k` holds exactly when **f ≥ 1 − 1/k**, and `m = 1`
+exactly when **f < 1/k**, both pure rail geometry. Constructed elements confirm the whole map —
+E-084 (f = 0.84) is unanimous at k = 3 and 5 and has a finite crossover at k = 7, *within one
+element*, because the boundary 1 − 1/k moves through its f. E-021 (f = 0.21) is the requested
+mirror case: one failure flips the pool and pooling wins at every volume. **The measured merge step
+lands on ⌊fk⌋+1 in 18/18 rows, and in the 11 rows where that disagrees with a majority, the rails
+win 11/11.**
+
+**~~T16-e, open: what sets the ~5% floor on the absolute crossover?~~ — WITHDRAWN BEFORE
+PUBLICATION, and the kill test I wrote for it was circular.** As first drafted this asked what
+accounts for §112.5's residual and proposed, as the kill test, "use measured ln T(Ω) and ln T(kΩ)
+directly in the crossover condition instead of c and a, and see whether the residual collapses."
+**That test cannot fail.** The measured crossover is *defined* as the volume where the exact
+ln(L_hold/L_remerge) vanishes, and the exact condition is the linearised one plus a remainder:
+writing ln T(N) = cN + a + g(N), the exact crossover solves the linear condition with
+`g(kΩ) − m·g(Ω)` added. So the measured-vs-predicted gap **is** the linearisation error, as an
+algebraic identity — computing it and confirming it reproduces the residual is arithmetic dressed
+as a test, which is precisely what rule 21's second half was bought with. It was drafted in the
+same session as §112.6(c), which is about a criterion that could print only one verdict.
+
+Two things survive the withdrawal, and both are worth keeping:
+
+  **(i) The 5% is not a mystery and not a measurement error — it is the linearisation, exactly.**
+  §34's law is a closed form purchased by assuming ln T is straight over a range spanning a factor
+  of k, and its accuracy is bounded by how straight that is. Nothing else is identifiable in it.
+  §112.5's window refit demonstrates the size of that bound (18.5 percentage points on the worst
+  cell); it does not need a mechanism attached.
+
+  **(ii) The approximation that this comparison does NOT test is τ ≪ T**, and I nearly attributed
+  the residual to it. τ ≪ T enters the *definition* of `L_remerge = T^m / (C(k,m) τ^(m−1))`, which
+  **both** the measured and predicted crossovers use — so it cancels out of their ratio entirely
+  and cannot show up as a residual. It is the approximation §34's own P2 failed over its full grid,
+  §111 inherited, and §112 inherited again, and **nothing in §112 bears on it.** A rank correlation
+  against T/τ at the crossover (n = 5) gives +0.300 with the wrong sign for that account, and
+  against the window sensitivity gives +0.000 — five cells identify neither, and quoting either
+  would be rule 18's error.
+
+**T16-h, open: is `L_remerge = T^m / (C(k,m) τ^(m−1))` right, or only right when τ ≪ T?** This is
+what T16-e should have asked. The closed form treats the re-merge as instantaneous and the m
+failures as independent, and every crossover in §32, §34, §111 and §112 rests on it while none of
+them measures it. **How to kill:** simulate the actual protocol — k tanks running, merged on a
+schedule, the merged pool redistributed — and compare its measured lifetime against the closed form
+at a volume where T/τ is small (§112 has cells at T/τ = 17.4) and at one where it is large
+(T/τ = 1864.6). If the closed form tracks both, τ ≪ T was never load-bearing; if it fails at the
+small one, every absolute crossover in the arc has a floor that no amount of fit-window care will
+remove. §112's exact log-domain MFPT makes the reference side of this cheap; the protocol side is
+the work.
+
+**T16-f, open: does the count-weighted mean survive more than one species?** Every element in §112
+is one species with a cubic drift, where pooling k tanks gives the arithmetic mean of their
+concentrations and `f` follows from three roots. In a two-species element the merged state is the
+mean of two coordinates and the separatrix is a curve, not a point, so `f` is replaced by *where a
+chord between the two attractors crosses the separatrix* — which need not be a single number, and
+need not be crossed at all if the chord runs parallel to it. **How to kill:** AM is already
+two-species and conservative, and its chord crosses at exactly ½ by exchange symmetry; take a
+two-species element *without* that symmetry — the simplest is AM at γ ≠ γ_c, which §14 already
+has — compute where the chord crosses, predict m, and measure the merge step. If the measured step
+does not follow the chord crossing, §112's law is one-species only and says so.
+
+**T16-g, open, and it is a reading of the record rather than a measurement.** §42 found the
+restoration theorem's Clause 1 to be exchange-symmetry-dependent; §111 found §32's headline to be;
+§112 found §34's k-independence to require |f − ½| < 1/(2k). Three separate generality claims in
+this project have collapsed onto the same hidden premise. **How to kill:** it is a pattern claim, so
+the test is adversarial — go through the surviving general claims in `SYNTHESIS.md` and ask of each
+whether it was ever measured on anything but AM or on Schlögl at its published rails. Any claim that
+was not is a candidate, and the cheapest check is now to re-run it on §112's constructed elements,
+which sweep the one parameter AM holds fixed by construction.
+
+**T-BOX, closed on arrival: the reflecting box was never converged, and it had been inherited.**
+§112.7 swept `cap_mult`, the truncation width of the CME state space, which the cascade code and
+§111 both fixed at 1.25 without sweeping. ln T is off by up to **0.249** there; successive
+differences shrink and 3.0 versus 4.0 is **exactly zero** on all six elements, so 3.0 is converged
+and §112 runs there. The wall can only shorten an escape (it truncates excursions above the rail),
+so the bias is one-signed and the error is worst for shallow wells at small Ω — where the crossovers
+are. **Consequences:** §111's headline loosens from 0.31% to 1.77% (its numbers stand, rule 7; its
+*precision* was the wall), and §112's own crossover residuals get **worse**, median 3.3% → 8.4%.
+The commitment probability is a splitting probability between two rails inside every box and is
+exactly box-independent (0.0e+00 over 90 cells), which is why §112's central claim survives intact.
+
+**T-BOX-a, open but now scoped and bounded: which other published numbers move under a converged
+box?** `cap_mult` appears in **28 experiment files** and 1.25 is the dominant default, so most of the
+§91–§111 cascade arc inherits it. A first probe on `escape_accounts_for_it.escape_rate`, the quantity
+that arc is built from (converged by cap_mult 1.6 there, unlike the MFPT):
+
+| Ω | absolute rate error at 1.25 | error in the **ratio** k(2.4)/k(r₃) |
+|---|---|---|
+| 14 | **6.88%** | **1.95%** |
+| 30 | 2.23% | 0.97% |
+| 55 | 0.47% | 0.25% |
+
+**The suspected cancellation is real but partial.** Most cascade results are ratios between arms
+sharing a box, and the one-signed bias does largely cancel — by a factor of ~3.5 at Ω = 14 — but not
+to nothing, and what survives is worst exactly where the arc's tightest claims live (§102's bracket
+position, §106–§109's model comparisons, all quoted at Ω = 14). **So: any published cascade number
+quoted to better than ~2% at Ω = 14 is a candidate; anything quoted as a direction, an exponent, or
+an effect larger than a few percent is safe.** §112's own spans (1.71×, 12.7%, 3688×) are far above
+this floor and do not move.
+
+**How to kill, in priority order:** re-run at cap_mult 3.0 (a) §102's `rate_limits` bracket position,
+which is a *position between two limits* and so may not cancel the way a plain ratio does, (b) §107's
+closure residuals, and (c) §109's transient fractions. Each is a one-line change and the log-domain
+MFPT makes the reference side cheap at any volume. **Do not assume the direction**: §112 found the
+fix making its own agreement worse, not better, and the ratio probe above shows the bias does not
+simply divide out.

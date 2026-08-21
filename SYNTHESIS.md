@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§111. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§112. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -726,6 +726,33 @@ tanks the step lands at 3, 4, 5 for k = 3, 5, 7 against the majority's 2, 3, 4.
   the predicted crossovers span ∞ / 19.131 / 35.899 across k = 3, 5, 7 where AM's spread was 3–4%.
   **The derivation is substrate-independent and its most quotable consequence is a symmetry
   accident** — the same lesson §42 recorded for the theorem's Clause 1.
+
+**§112 then showed that `0.72` was never the point: the merge threshold is rail geometry, and it
+decides which protocol wins.** For any one-species bistable element, pooling conserves counts, so the
+pool crosses the saddle at `m(k) = ⌊f·k⌋ + 1` with **f = (r₃−r₂)/(r₃−r₁)** — three roots, no
+dynamics. Substituting into §34's law gives three regimes whose boundaries are pure geometry:
+**f ≥ 1 − 1/k** → re-merging wins at *every* volume; **f < 1/k** → pooling wins at every volume; in
+between, §34's finite crossover.
+  > **So §32's crossover is not generic — it exists only in a window of rail geometry**, and AM sits
+  > at f = ½ by construction, inside that window for every k ≥ 3, which is why §32 found one at all.
+  > Six constructed elements (r₁, r₃ fixed, the saddle moved; escape actions differing 75×) land on
+  > `⌊fk⌋+1` in **18/18** rows, and **11/11** where it disagrees with a majority. E-084 straddles the
+  > boundary *inside one element*: unanimous at k = 3 and 5, a finite crossover at k = 7. Shifting
+  > one root by **0.228** inverts which protocol is correct at every volume simultaneously.
+
+  **And §34's k-independence needs |f − ½| < 1/(2k)** — a band that shrinks like 1/k and closes on
+  the symmetric point. The derivation itself transfers to the six new elements **at the ~5% level,
+  and that 5% is fit-window ambiguity, not measurement error**: refitting c and a over a window
+  covering the *pooled* volumes moves one cell 18.5 percentage points. §112 also replaced two
+  instruments — an exact log-domain MFPT that removes §111's negative-lifetime ceiling entirely
+  (agreeing with the old solve to 4e−10 where the old one was sound, and running to Ω = 1000), and a
+  splitting probability that removes the 20τ settle-time knob — and found a third: **the reflecting
+  box at `cap_mult = 1.25`, inherited from the cascade code through §111, was never converged.** ln T
+  is off by up to 0.249 there and the bias is one-signed. Correcting it loosens §111's headline from
+  0.31% to **1.77%** and makes §112's own crossover residuals *worse* (3.3% → 8.4%) — which is the
+  honest direction for an instrument fix and the reason it is reported rather than quietly adopted.
+  **Three generality claims in this project — §42's Clause 1, §32's headline, §34's k-independence —
+  have now collapsed onto the same unwritten premise of exchange symmetry.**
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

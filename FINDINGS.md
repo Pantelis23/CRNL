@@ -11936,3 +11936,223 @@ a fit rather than a logarithm would have produced a confident wrong slope with n
 > **majority** merge, and the merge is a majority only when the rails are symmetric about the saddle.
 > §34's derivation, by contrast, transfers intact — it never assumed symmetry, only a value of m.
 > **The derivation is substrate-independent; its most quotable consequence is not.**
+
+### 112 The merge threshold is rail geometry, and it decides which protocol wins — with three instruments replaced
+
+*Scope: six constructed one-species Schlögl elements, r₁ = 0.15 and r₃ = 3.0 held fixed and the
+saddle r₂ moved to sweep f = (r₃−r₂)/(r₃−r₁) over 0.21–0.84; k ∈ {3, 5, 7}; exact CME throughout
+(log-domain MFPT and splitting probabilities, no sampling, no free time parameter). **Reflecting box
+at cap_mult = 3.0, converged — not the 1.25 inherited from §111, which is not (§112.7).** Volume
+grids are per element, stated with every number. `experiments/where_pooling_stops_winning.py`.*
+
+§111 found that a merged Schlögl pool crosses the saddle at j > 0.71972 k rather than at a
+majority, and left `0.71972` looking like a Schlögl fact. It is not. For any bistable one-species
+element the pool merge conserves counts, so the merged concentration is the count-weighted mean
+`x_merged(k,j) = [(k−j)r₃ + j r₁]/k`, which falls below the saddle exactly when `j > f k`. So
+
+> **m(k) = ⌊f·k⌋ + 1,  with  f = (r₃−r₂)/(r₃−r₁) — three roots, no dynamics, no fitting.**
+
+Substituting into §34's law `Ω_x = [(m−1)(a − ln τ) − ln C(k,m)] / [c(k−m)]` and expanding gives
+**three regimes whose boundaries are pure rail geometry**:
+
+| regime | condition | ln(L_hold/L_remerge) | who wins |
+|---|---|---|---|
+| unanimity | **f ≥ 1 − 1/k** | `(k−1)(ln τ − a)`, constant in Ω | re-merging, at every volume |
+| finite crossover | in between | `c·Ω(k−m) − (m−1)(a−ln τ) + ln C(k,m)` | pooling above Ω_x |
+| one failure flips it | **f < 1/k** | `ln T(kΩ) − ln T(Ω) + ln k`, positive and rising | pooling, at every volume |
+
+**So §32's crossover between pooling and re-merging is not generic.** It exists only in a window of
+rail geometry, and outside that window one protocol wins at every volume. AM sits at f = ½ by
+construction — inside the window for every k ≥ 3, which is why §32 found a crossover at all.
+
+**§112.1 — m tracks the rails, not the majority: 18/18 rows, and 11/11 where the two disagree**
+
+Measured on real merged tanks — a tank of volume kΩ, its splitting probability between its own two
+rails, no free comparison anywhere — and read at the largest volume of each element's own sweep:
+
+| element | r₂ | f | m(3) / m(5) / m(7) | majority would be | measured step |
+|---|---|---|---|---|---|
+| E-021 | 2.4000 | 0.21053 | 1 / 2 / 2 | 2 / 3 / 4 | 1 / 2 / 2 |
+| E-045 | 1.7175 | 0.45000 | 2 / 3 / 4 | 2 / 3 / 4 | 2 / 3 / 4 |
+| E-050 | 1.5750 | 0.50000 | 2 / 3 / 4 | 2 / 3 / 4 | 2 / 3 / 4 |
+| E-062 | 1.2330 | 0.62000 | 2 / 4 / 5 | 2 / 3 / 4 | 2 / 4 / 5 |
+| E-070 | 1.0050 | 0.70000 | 3 / 4 / 5 | 2 / 3 / 4 | 3 / 4 / 5 |
+| E-084 | 0.6060 | 0.84000 | 3 / 5 / 6 | 2 / 3 / 4 | 3 / 5 / 6 |
+
+**18 of 18 rows land on m = ⌊fk⌋+1. In the 11 rows where rail geometry and the majority disagree,
+rail geometry is right in all 11.** The elements are not one element reparametrised: their escape
+actions differ by **75×** across the set (c = 0.004562 to 0.342995, asymptotic-window fits).
+
+**§112.2 — T16-c closed: the pool commits to whichever basin its mean lies in**
+
+§111 left a cell it could not resolve (k = 7, j = 5, pool 1.6% *above* the saddle, P(high) = 0.4930
+— a coin flip). The criterion is the limit, not a tolerance (rule 20): every unsaturated cell was
+swept in Ω and must move toward the sign of its own margin. **All 18 such cells do, monotonically.**
+The two hardest, both with *negative* margins under 5%:
+
+| cell | margin | P(high) across Ω |
+|---|---|---|
+| E-070 k=7 j=5 | −0.0407 | 0.3049 → 0.2549 → 0.1923 → 0.1154 → **0.0472** |
+| E-084 k=7 j=6 | −0.0489 | 0.2792 → 0.2459 → 0.1719 → 0.0979 → **0.0377** |
+| E-021 k=5 j=1 | **+0.0300** | 0.4536 → 0.4552 → 0.4943 → 0.5575 → **0.6239** |
+
+That last row is the one that matters most, and it is why the criterion was rewritten: see §112.6.
+
+**§112.3 — the phase boundary, crossed inside a single element**
+
+The unanimity condition `f ≥ 1 − 1/k` is k-dependent, so one element can sit on both sides of it.
+E-084 (f = 0.84) has 1−1/3 = 0.667 and 1−1/5 = 0.800 below it but 1−1/7 = 0.857 above it. Same
+rails, same c, same a, nothing cross-run (rule 18):
+
+| k | m | regime | measured slope of ln(L_hold/L_remerge) | verdict |
+|---|---|---|---|---|
+| 3 | 3 | unanimity | +0.0361 (predicted 0) | flat; ratio −3.38, re-merging wins at every volume |
+| 5 | 5 | unanimity | +0.0692 (predicted 0) | flat; ratio −6.61, re-merging wins at every volume |
+| 7 | 6 | crossover | +0.4354 (predicted c(k−m) = 0.3430) | **crosses zero at Ω = 18.13** |
+
+The "flat" slopes are 8.3% and 15.9% of the k = 7 slope; they are flat *relative to* c(k−m), not
+absolutely — ln T carries curvature, the same curvature §111 reported as its ratio drifting
+−3.42 → −3.00. The flat *values* miss `(k−1)(ln τ − a)` by 0.187 (k=3) and 0.513 (k=5), which are
+**+0.0933 and +0.1281 per factor of (k−1)** — i.e. a single error in the prefactor `a`, not a
+structural one. E-070's k = 3 unanimity gives +0.0180 by the same reckoning.
+
+**§112.4 — the other edge, and the straddling pair**
+
+E-021 (f = 0.2105 < 1/3) has m = 1 at k = 3: one failed tank flips the pool. ln(L_hold/L_remerge)
+runs **+1.95 → +2.72** over Ω = 18–293, positive at every volume, no crossover. Pooling wins
+everywhere — the mirror image of unanimity, and equally parameter-free.
+
+E-062 (f = 0.62, m = 2) and E-070 (f = 0.70, m = 3) differ in r₂ by **0.228** and land either side
+of 2/3. At k = 3 the first is positive at every volume (+0.53 → +8.94, pooling takes over) and the
+second is negative at every volume (−3.13 → −2.79, re-merging never loses). **A 0.228 shift in one
+root inverts which protocol is correct at every volume simultaneously.**
+
+**§112.5 — §34's law transfers absolutely, at the ~5–10% level, and that is the fit window**
+
+Five cells have a crossover inside the swept range. c and a come from the hold protocol alone over
+a stated asymptotic window; nothing is fitted to a crossover (§34's standard). Measured crossovers
+are bisected down to **adjacent integer volumes**. Interpolating across grid points instead costs
+0.1–3.9% on the final grid (worst: E-084 k=7, 17.42 against 18.13) and cost **15%** on an earlier
+coarser one — the error rule 19 was written for, and it is a function of the grid you happened to
+choose, so the bisection is kept rather than the tolerance argued about.
+
+| cell | measured Ω_x | predicted (asymptotic window) | residual | refit over a window covering Ω…kΩ |
+|---|---|---|---|---|
+| E-062 k=5 | 34.29 | 31.76 | −7.4% | −5.7% |
+| E-062 k=7 | 17.84 | 16.35 | −8.4% | **+2.0%** |
+| E-070 k=5 | 21.18 | 19.85 | −6.3% | −4.4% |
+| E-070 k=7 | 11.59 | 10.29 | **−11.2%** | **−0.8%** |
+| E-084 k=7 | 18.13 | 20.30 | **+12.0%** | −8.0% |
+
+**The right reading is the last column, and it is a caution rather than a confirmation.** §34's law
+needs T at both Ω and kΩ, but c and a are fitted over Ω alone; for E-084 at k = 7 the asymptotic
+window is 19–29 while the pooled tank spans 56–203, entirely outside it. Refitting over a window
+that covers the pooled volumes moves that cell **20.0 percentage points**, and moves the two other
+k = 7 cells by ~10 points each — to +2.0% and −0.8%, the two best residuals in the table. The k = 5
+cells barely move (1.7 and 1.9 points), which is what one expects if the effect is the fit window
+failing to reach kΩ: **the larger k is, the further kΩ sits outside a window fitted on Ω.**
+
+Median |residual| is **8.4%** under the asymptotic fit and **4.4%** under the covering fit. **No cell
+is resolved below the window ambiguity, and quoting any single cell would be over-claiming.** The
+honest claim is that §34's derivation transfers off AM to constructed rail geometries **at the
+~5–10% level, window-limited**. Four of the five asymptotic residuals are *negative* — the law
+under-predicts the crossover volume — which is a systematic bias, not scatter, and is reported as
+such rather than explained. A first account of the E-084 outlier, that k−m = 1 makes the
+denominator sensitive, was killed on sight: E-062 at k = 5 also has k−m = 1.
+
+**And the residual needs no account at all, which is worth stating because I drafted one.** Writing
+ln T(N) = cN + a + g(N), the exact crossover condition is the linearised one with `g(kΩ) − m·g(Ω)`
+added, so **the measured-vs-predicted gap *is* the linearisation error, identically.** There is
+nothing left in it to explain and no mechanism to attach (rule 21's second half). In particular it
+does **not** bear on §34's τ ≪ T assumption: that enters the definition of `L_remerge`, which both
+the measured and predicted crossovers use, so it cancels out of their comparison entirely. The kill
+test first drafted for this — "use measured ln T directly and see whether the residual collapses" —
+could only ever print one verdict, and is withdrawn in THEORIES §T16-e with what replaces it.
+
+**§112.6 — two instruments replaced, and a criterion changed after seeing output** (the third,
+the reflecting box, is §112.7)
+
+**(a) The MFPT.** §111 found its dense solve returning *negative* lifetimes above N ≈ 150 and capped
+every volume at k·N ≤ 150. A 1-D birth–death MFPT has an exact all-positive downward recursion,
+`d_{n−1} = (λ_n d_n + 1)/μ_n` from `d_{cap−1} = 1/μ_cap` with `T = Σ d_n`, which in log domain
+cannot lose conditioning. It agrees with the dense solve to **4.13e−10** for N ≤ 60 and stays finite
+and positive to N = 1000, where the escape action has converged to 0.19020 (local slopes 0.189832,
+0.190050, 0.190165, 0.190200 across 150→200→400→700→1000, agreeing to 0.19% end to end and 0.08%
+above N = 200). **It is the dense solve that degrades** — off 3.9e−4 at N = 120 and 0.085
+at N = 150, before it turns negative. The cap is gone. §111's headline reproduces exactly on the new
+instrument, *under §111's own box*: predicted **−3.4130** against §111's published −3.4131, measured
+**−3.4236** against §111's published −3.4236 — its 0.31% reproduced exactly. **Under a converged box
+the same comparison reads −3.6272 / −3.6915, or 1.77%** (rule 7: §111's numbers stand; what §112.7
+corrects is their *precision*, not their direction).
+
+**(b) The commitment probability.** §111 measured commitment by evolving `expm_multiply` for a
+settle time of 20 τ. That is a free knob, and it is wrong for a shallow well, where the tank escapes
+*during* the settle — precisely the regime E-021 lives in. In 1-D the answer is the splitting
+probability between the two rails, exact and with no time parameter at all. `commit_high` now takes
+`(k, j, N)` and nothing else, and a test asserts that signature so a time parameter cannot creep back.
+
+**(c) A criterion was changed after seeing output, which rule 19 is about.** P2 as first coded read
+the step at a single Ω and scored "first j with P < 0.5". Run once, it printed **MISMATCH** for
+E-021 at k = 5 — a cell whose margin is +0.03 and which gave P = 0.454. That is a hard gate on a
+quantity a fluctuation wide: the rule-20 error this section was written to avoid, committed inside
+it. The scoring was replaced with the limit test **P2b had already specified in writing**, before
+P3–P7 were read; the replacement is strictly more conservative, since it can no longer pass on a
+coin-flip cell. Swept in Ω, that same cell runs 0.4536 → **0.6239** toward 1, as its positive margin
+requires. **The original criterion would have recorded a false refutation of the section's central
+claim from a correct measurement.**
+
+**(d) A sign error, caught by the pre-registered instrument check.** `ln_remerge` was first coded
+with `+(m−1)ln τ`; τ^(m−1) is in the *denominator*. P1 printed a 226% residual against §111's
+published headline and a sign flip (+4.32 against −3.42). This is the entire reason P1 exists — it
+compares a new instrument against a published number before anything downstream is read.
+
+**§112.7 — the reflecting box was never converged, and it is in 28 experiment files**
+
+Rule 13 says an approximation's own numerical parameter is a second axis. The CME here is solved on
+a truncated state space with a reflecting wall at `cap_mult · r₃ · Ω`, and `cap_mult = 1.25` came
+from the cascade code by way of §111 without anyone sweeping it. **It is not converged.** Measured
+on all six elements at Ω = 20 and 60:
+
+| cap_mult | 1.25 | 1.5 | 2.0 | 3.0 | 4.0 |
+|---|---|---|---|---|---|
+| E-021, Ω=20 | −1.2871315 | −1.0722106 | −1.0381529 | −1.0381154 | −1.0381154 |
+| E-070, Ω=20 | 2.8828174 | 2.9396863 | 2.9416560 | 2.9416560 | 2.9416560 |
+| E-084, Ω=60 | 20.6788739 | 20.6824364 | 20.6824365 | 20.6824365 | 20.6824365 |
+
+Successive differences shrink on every element and **3.0 versus 4.0 is exactly zero everywhere**, so
+the box is genuinely irrelevant by 3.0 and §112 runs there. At the inherited 1.25 the error in ln T
+reaches **0.249** — the wall truncates excursions above the rail, so it can only *shorten* the
+escape, and ln T rises monotonically with the box on every element. The error is worst for the
+shallowest element and at small Ω, which is exactly where the crossovers live.
+
+**What it costs.** §111's headline reproduces exactly under §111's own box — **−3.4130 predicted,
+−3.4236 measured, 0.31%**. Under a converged box the same comparison reads **−3.6272 / −3.6915,
+1.77%**: both numbers move by 6–8% and the agreement loosens by a factor of six. §111's conclusions
+are unaffected — unanimity at k = 3, re-merging winning at every volume, the k-dependence — but
+**its quoted precision was partly the wall.** Rule 7: §111's numbers stand as printed, with these
+beside them. §112's own crossover residuals get *worse* under the correct box, from a median 3.3%
+to 8.4%, which is the honest direction for an instrument fix to move a result and the reason it is
+reported rather than quietly adopted.
+
+**What it does not touch.** The commitment probability is a splitting probability between the two
+rails, both of which sit inside any of these boxes, so it is *exactly* box-independent — measured
+difference 0.0e+00 across all 90 cells between cap_mult 1.25 and 3.0. **§112.1's 18/18 and 11/11 and
+§112.2's closure of T16-c are therefore untouched by any of this.** That the section's central claim
+is carried by the one quantity with no box in it is luck, not design.
+
+> A third instrument replaced in one section, after the negative MFPT and the settle-time knob. What
+> they share is only the kind of defect — a number the harness supplied that the chemistry did not: a
+> conditioning failure, a free time, a wall. **They do not share how they were caught**, and it is
+> worth not pretending they do. The negative lifetime was caught because it happened to enter a
+> logarithm and raise; the settle time was caught by reasoning about what 20 τ means in a shallow
+> well; only the box was caught by the convergence sweep rule 13 tells you to run. Two of the three
+> were luck, and the rule that would have caught all three was already written down.
+
+> **What §112 does to §111 and §34.** §111's numbers stand and are reproduced exactly. What §112
+> adds is that `0.71972` was never the point: **m is a function of the rails alone, the boundaries
+> between "pooling always wins", "a crossover exists" and "re-merging always wins" are pure rail
+> geometry, and §34's k-independent headline requires `|f − ½| < 1/(2k)` — a band that shrinks
+> like 1/k and closes on the symmetric point.** §34's *derivation* survives on six new elements at
+> the 5–10% level; its most quotable consequence needs exchange symmetry, which AM has by construction
+> and nothing else here does. That is the third time in this project (§42, §111, §112) that a
+> result's generality turned out to rest on a symmetry nobody had written down.

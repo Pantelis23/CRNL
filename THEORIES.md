@@ -5120,3 +5120,76 @@ to exactly the same window effect, over a range its N ≤ 72 ceiling makes it un
 over two disjoint N windows the way §112.5 did and report the spread. The second is cheap and can
 be done today; it will not extend the range, but it will say whether §34's absolute agreement is
 window-limited in the same way §112's is.
+
+## §114 -- a second axis for the position
+
+**T-CASC-m → §114.2: CLOSED, and A·Ω wins its out-of-sample test.** T-CASC-m asked for "a THIRD
+element chosen so the ratio differs from both existing values… the element must move the landscape
+and the coupling together — Ω will not do it." §112's rail construction supplies six. At matched
+A·Ω, three *different* rail geometries agree on the position to **0.0000, 0.0041 and 0.0041** — four
+decimal places, nothing fitted, A's own window sensitivity under 1.5%. §99.1's single undecisive
+point is superseded: A·Ω predicts the position within a regime, and (margin/σ)² cannot be separated
+from it by ordering alone (both give identical Spearman on both axes), so the discrimination
+T-CASC-m wanted is settled in A·Ω's favour only in the sense that A·Ω *works*; the two remain
+degenerate as orderings. **That degeneracy is now the open part, and it is T-CASC-ab.**
+
+**T-CASC-aa → §114: NOT CLOSED, but correctly posed for the first time, and two families are dead.**
+§114.1 kills every volume-only candidate (√Ω among them) by moving the position at fixed Ω. §114.3
+kills A·Ω as *sufficient*: E-084 at Ω = 14 has A·Ω bracketed by two cells agreeing to four decimals
+and a position 3.2× theirs. §114.4 kills π_low as sufficient by the identical test at matched π_low
+(gap 0.637 with π_low matched to 1.2%). **So the position requires at least two variables**, which
+is exactly why five Ω points could not resolve it: along Ω every candidate moves together. The
+remaining open question is which pair, and §114.7 adds a constraint nobody had — the coordinate is
+only defined on 5 of 18 cells, so the question presumes a portability the quantity does not have.
+
+**T-CASC-ab, open: A·Ω or (margin/σ)², and can anything separate them?** §114's Spearman table gives
+the two candidates *identical* rank correlations on both axes (0.4286 rail, 1.0000 Ω), because along
+a one-parameter family of rails they are monotone in each other just as they are along Ω. §99.1's
+22% split between them rested on one point. **How to kill:** the elements here move only r₂. Move r₁
+or r₃ instead — `schlogl_consts` accepts any three roots — and choose the geometry so that A·Ω is
+held FIXED while (margin/σ)² changes, which a two-parameter family permits and a one-parameter
+family does not. That is the same trick §114 used on Ω, one level down, and the instrument already
+exists.
+
+**T-CASC-ac, open: what is the second variable, given that π_low is not it?** §114 establishes that
+E-084 is off the A·Ω curve and that its residual grows monotonically as π_low falls (+0.39 → +0.53 →
++1.09 → +6.73 as π_low goes 0.58 → 0.24 → 0.05), **but within one element π_low and the bracket width
+move together**, so that sweep cannot say which. π_low then fails its own matched test across
+elements. The suspect (rule 17 — a suspect, not a result) is the *occupancy regime* rather than π_low
+as a number: E-084 is the only element whose downstream holds its high state, and its bracket is
+about to invert. **How to kill:** construct an element with π_low ≈ 0.9 but a near-inverted bracket,
+or π_low ≈ 0.25 with a healthy convex bracket. §114.5's curvature measurement says the bracket's
+sign is set by where the Hill coupling saturates relative to the input law, and the Hill exponent is
+a free knob (§91 swept it), so the two can be separated.
+
+**T-CASC-ad, open, and it is a limit on §102 rather than a question about it: the frozen/fast bracket
+is a convex-regime statement.** §114.5 measured the escape rate's curvature over the input range:
+convex on 97%/95%/92% of it for the working cells, and on **20%** for E-084 at Ω = 30, whose bracket
+duly inverts (k_avg/k_mean = 0.9849). Jensen is the whole content of "k(⟨x⟩) ≤ k_eff ≤ ⟨k⟩", so where
+convexity fails the framing has no meaning — not a measurement problem, a definitional one.
+**How to kill / how to use:** the boundary is computable without any joint solve, from the curvature
+of k(x_up) against the input law's support. Map it in (rails, Ω) and every future cascade measurement
+can be sited inside the valid region in advance instead of discovered to be outside it.
+
+**T-CASC-ae, open: §103.1's intrinsic depression changes sign.** `d_intr = μ₁ − r₃` is **positive**
+for E-021 (+0.603, +0.389, +0.244) and for E-045 at Ω = 14 (+0.084): the QSD above a shallow saddle
+has its mean *above* the deterministic rail. §103.1's argument needs d_intr < 0 — the rail is a fixed
+point of the map, so only a depression can make a chain degrade. It holds for the four deeper
+elements. **How to kill:** the sign should flip where the QSD's skew above the saddle changes, which
+is a single-stage 1-D calculation and needs no chain at all; find the locus in (r₂, Ω) and check
+whether §103's closure fails on the positive side or merely changes sign harmlessly.
+
+**T-NUM-a, open, and it is about the instrument rather than the chemistry: the escape-rate solver is
+not bit-reproducible.** §114 found the escape rate at Ω = 70 to be an eigenvalue of ~3e−6 extracted
+from a generator of norm ~1e4 — a dynamic range of 3e9 — resolved by a dense QR solve to about 1e−6
+relative, with repeated evaluations differing in the 7th digit. It was then confirmed from the other
+direction: a §113 test asserting bit-equality between two identical `rate_limits` calls failed on a
+one-ulp difference in `k_avg`. **Consequences:** any published escape rate at large Ω carries ~1e−6,
+which is harmless for every conclusion in the arc (they concern factors of 2 and more) but means no
+reproduction check can be tighter than that, and any `==` on these quantities is a latent flake.
+**How to fix, not merely how to kill:** §112's exact all-positive log-domain MFPT recursion computes
+1/T for a 1-D birth–death chain with no cancellation at all, and §102's P1 already established that
+`escape_rate(om, r3)` equals the spectral gap exactly — so the two are the same object and the
+well-conditioned route to it exists. Replacing the eigensolve with the recursion where the stage is
+1-D would remove this floor entirely. The reason not to do it blindly is rule 7: it would move
+published numbers at the 1e−6 level, so it needs a section that prints both.

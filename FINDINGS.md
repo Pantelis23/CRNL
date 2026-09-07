@@ -12280,3 +12280,175 @@ to a 2-D simplex. That is T-BOX-d, and it is not a box question.
 > empty). The measurements held; the story I attached to them in advance did not, which is rule 17
 > arriving one level down — not about a mechanism this time, but about which of my own instruments I
 > expected to be fragile.
+
+### 114 A second axis for the position: A·Ω is confirmed out of sample, and shown to be insufficient
+
+*Scope: six constructed Schlögl elements (r₁ = 0.15, r₃ = 3.0 fixed, saddle r₂ swept over
+0.606–2.400) × three volumes (Ω = 14, 30, 55), against the published element's own Ω-sweep
+(14–70). Two-stage cascades, exact CME, matched QSD seeding throughout, `cap_mult` = 2.0 for the
+grid and 1.25 for the reproduction check. Everything is a parameterised re-implementation verified
+against the published pipeline, not an edit to it. `experiments/two_axes_for_the_position.py`.*
+
+The fast/frozen **position** is the cascade arc's central unsolved quantity: §109 measured it as a
+smooth monotone curve from ~0.0 at Ω = 14 to ~1.16 at Ω = 70, and three explanatory families have
+been retired — averaging prescriptions (§108), seeding artifacts (§109), and the timescale ratio the
+framing is named for (§110, whose refutation §113 showed survives a converged box).
+
+**Every one of those attempts swept Ω, and Ω is the axis that cannot decide this.** Both open
+entries said so: T-CASC-m asked for *"a THIRD element… Ω will not do it"*, T-CASC-aa for *"moving
+τ_cross at fixed Ω"*. §112 built that instrument — `schlogl_consts(r1, r2, r3)` returns exact
+constants for any three roots — without noticing what it was for. Verified before use: all six
+elements are deterministically **neutral at their own rail to 1e−15**, which is what §103.1's
+fixed-point structure requires, and the existing cascade machinery accepts them unchanged.
+
+**§114.1 — the position moves at fixed Ω, which kills every volume-only candidate**
+
+At Ω = 30 the position spans **0.164 → 0.466** across elements; at Ω = 55, **0.470 → 0.624**. Ω did
+not change, so **√Ω and every other scalar that depends on volume alone is refuted** — the one thing
+a second axis is guaranteed to settle.
+
+**§114.2 — A·Ω collapses the rail axis onto the Ω axis to 8.7% of the position's range**
+
+Every valid rail cell against the published element's Ω-sweep curve — the full comparison, not a
+selected subset (rule 15):
+
+| cell | A·Ω | measured | Ω-curve says | residual | π_low |
+|---|---|---|---|---|---|
+| E-062 Ω=30 | 2.794 | +0.1640 | +0.0226 | +0.1415 | 0.998 |
+| E-070 Ω=30 | 4.641 | +0.4659 | +0.3517 | +0.1141 | 0.938 |
+| E-062 Ω=55 | 5.122 | +0.4699 | +0.4050 | +0.0649 | 1.000 |
+| E-070 Ω=55 | 8.509 | +0.6243 | +0.6931 | −0.0688 | 0.929 |
+| **E-084 Ω=14** | **4.946** | **+1.4718** | **+0.3855** | **+1.0863** | **0.244** |
+
+**RMS residual for the four high-occupancy cells: 0.1024, or 8.7% of the curve's span (1.1756).
+For the single low-occupancy cell: 1.0863, or 92.4%.** Two independent rail geometries, four cells,
+collapsing onto a curve measured on a third — the out-of-sample confirmation T-CASC-m asked for and
+§99.1 could not supply. A is a fitted slope, so its window was checked (rule 21): over [40,80],
+[60,120], [100,200] and [200,400] the A·Ω values move by under 1.5%.
+
+Where the A·Ω mismatch and the curve's local slope are both small the agreement is far tighter than
+8.7% — three matched pairs give **0.0000, 0.0041, 0.0041**:
+
+| pair | A·Ω | positions | gap | π_low |
+|---|---|---|---|---|
+| E-070 Ω=30 vs PUB Ω=30 | 4.641 / 5.672 | +0.4659 / +0.4658 | **0.0000** | 0.938 / 0.862 |
+| E-070 Ω=30 vs E-062 Ω=55 | 4.641 / 5.122 | +0.4659 / +0.4699 | **0.0041** | 0.938 / 1.000 |
+| E-062 Ω=55 vs PUB Ω=30 | 5.122 / 5.672 | +0.4699 / +0.4658 | **0.0041** | 1.000 / 0.862 |
+
+**Those three are not the whole story and are not offered as it.** Two other matched high-occupancy
+pairs disagree by **0.176 and 0.209** (PUB Ω=14 vs E-062 Ω=30; PUB Ω=20 vs E-070 Ω=30), both at
+A·Ω ≈ 2.6–4.6 where the curve is steepest. The 8.7% RMS is the number to quote; the ±0.004 pairs
+show what the collapse looks like where the curve is flat, and quoting them alone would have been
+the flattering-subset error this project keeps recording.
+
+**§114.3 — and it is not sufficient. The refutation is a single matched triple.**
+
+| cell | A·Ω | position | π_low |
+|---|---|---|---|
+| E-070 Ω=30 | 4.641 | +0.4659 | 0.938 |
+| **E-084 Ω=14** | **4.946** | **+1.4718** | **0.244** |
+| PUB Ω=30 | 5.672 | +0.4658 | 0.862 |
+
+**E-084's A·Ω is bracketed by two cells that agree with each other to four decimals, and its
+position is 3.2× theirs.** Matched to 6.6% against E-070; the gap is 1.006, or 68% of the position's
+entire range over the pool. Against PUB Ω=20 (A·Ω matched to 24%) the gap is **1.215 — 82% of the
+range**. No interpolation enters and no window ambiguity can absorb it. **A·Ω is confirmed within a
+regime and refuted as a complete description.** §98's identification was not wrong; it was untested
+across the only axis that could have found its boundary.
+
+**§114.4 — π_low is not the answer either, and it was tested the same way (rule 15)**
+
+The one candidate that distinguishes E-084 is the downstream's low-state occupancy, π_low = 0.244
+against ~0.9 everywhere else. It gets the identical test rather than a favourable one:
+
+| pair | π_low | positions | gap | A·Ω |
+|---|---|---|---|---|
+| PUB Ω=14 vs E-070 Ω=55 | 0.918 / 0.929 | −0.0123 / +0.6243 | **0.6367** | 2.647 / 8.509 |
+| PUB Ω=20 vs E-070 Ω=30 | 0.903 / 0.938 | +0.2565 / +0.4659 | 0.2094 | 3.781 / 4.641 |
+
+π_low matched to **1.2%** and the positions differ by 0.637 — 43% of the range. **So neither scalar
+is sufficient alone: the position needs at least two variables, and no single entry on T-CASC-aa's
+list is one of them.** That is a harder result than a new candidate would have been, and it is why
+five Ω points could never have settled it — along Ω both variables move together.
+
+**§114.5 — §102's frozen/fast bracket is not always a bracket, and the mechanism is measured**
+
+Off the published rails the framing itself fails, in two distinct ways that must not be conflated:
+
+- **INVERTED** (2 cells): E-084 at Ω = 30 and 55 give `k_avg/k_mean` = **0.9849** and **0.9798**.
+  The arithmetic mean of the rate is *below* the rate at the mean, so there is no bracket to hold a
+  position in.
+- **DEGENERATE** (5 cells): the shallow elements' two limits collapse together — E-021's ratio is
+  **1.022**, and dividing by its logarithm prints a position of **−304**.
+
+The inversion is Jensen's inequality failing, and the curvature was measured rather than asserted:
+
+| element | Ω | fraction of the input range where k is convex in x_up | k_avg/k_mean |
+|---|---|---|---|
+| E-070 | 14 | 97% | 1.9136 |
+| E-070 | 30 | 95% | 2.7313 |
+| E-084 | 14 | 92% | 1.5312 |
+| **E-084** | **30** | **20%** | **0.9849** |
+
+**The bracket inverts exactly where the escape rate stops being convex in its input**, which is what
+the Hill coupling's saturation near the rail produces. §102's "position between two limits" is a
+statement about a convex regime, not a general framing.
+
+**§114.6 — §103's intrinsic depression is not always a depression**
+
+`d_intr = μ₁ − r₃` was §103.1's fix, and §103.1's argument requires it negative — the rail is a
+fixed point of the map, so only a depression below it can make a chain degrade. Off the published
+rails it changes sign: **E-021 gives +0.603, +0.389, +0.244** and E-045 **+0.084** at Ω = 14. For a
+shallow well the QSD above the saddle has its mean *above* the deterministic rail. The premise holds
+for the four deeper elements and fails for the two shallowest — which are also the cells where the
+position coordinate is degenerate, so this is a transfer failure inside a regime that was already
+unusable, and is recorded rather than leaned on.
+
+**§114.7 — the coordinate is not portable, and 13 of 18 cells do not have one**
+
+Only **5 of 18** grid cells admit a position at all. The three definitional requirements — stage 1
+survives the measurement window (k_eff is extracted as `−ln(1 − v/π_low)/t` from a joint quantity
+that stage 1's death also suppresses), the bracket is not degenerate, and the bracket is not
+inverted — fail somewhere on 13 cells. **The published element sits in the middle of the valid band,
+which is why its Ω-sweep looked so clean.** T-CASC-aa asks "what does the position track?"; part of
+the answer is that the position is not a coordinate that exists across elements.
+
+**§114.8 — two criteria changed after seeing output, and one of them was one edit from publication**
+
+**(a)** The validity filter above was added after the first run. It has to be, and it makes every
+conclusion *harder*: on the raw grid the collapse test returned an **RMS of 30.1 against a curve
+spanning 1.18** and printed **"A·Ω is REFUTED"** — a refutation of everything, from correct numbers,
+computed off cells where the quantity does not exist. That is §53's failure mode exactly, and it
+would have been the section's headline.
+
+**(b)** P4's criterion was replaced. It first interpolated the Ω-sweep curve and took an RMS over
+every rail cell; it now compares only cells from *different* elements whose A·Ω already agree. The
+replacement is strictly stronger — a direct comparison instead of a curve — and it is what turned
+"refuted" into the far more useful "confirmed to ±0.004 within a regime, insufficient across
+regimes". Both changes were made before §114.4 and the curvature check were written or run.
+
+**(c)** The escape-rate solver is not bit-reproducible, and this was confirmed independently by a
+test failing. §113 wrote `assert (k_mean, k_avg, k_eff, pos) == rate_limits(14, 2, 2.0,
+cap_mult=1.25)` — bit-exact equality between two identical calls. It passed when written and
+**failed on a one-ulp difference in k_avg** (0.20030200928828895 against 0.2003020092882889) in a
+later suite run. §114's diagnosis predicts exactly that: the escape rate is an eigenvalue pulled by
+a dense QR solve out of a generator whose norm is orders larger, and LAPACK is not bit-reproducible
+across call paths. **A gate the instrument cannot satisfy will pass until it doesn't.** The
+assertion is now agreement to 1e−12, and the reason is recorded at the assertion.
+
+**(d)** P1's gate said "better than 1e−6", which **the published numbers themselves do not reach**
+at Ω = 70. The escape rate there is ~3e−6 extracted from a generator of norm ~1e4 — a dynamic range
+of 3e9 — so a dense QR eigensolve resolves it to about 1e−6 and repeated evaluations differ in the
+7th digit. The gate is now the instrument's own measured reproducibility: agreement is **1.13e−6
+against a solver floor of 2.82e−6**, i.e. below the noise. A published-number reproduction check
+cannot be tighter than the published number.
+
+> **What §114 settles.** The position moves at fixed Ω, so no volume-only scalar can be it. A·Ω
+> collapses two independent rail geometries onto the published Ω-curve to **8.7% of the position's
+> range** (and to ±0.004 where that curve is flat) — a real out-of-sample confirmation of §98 — and
+> is **refuted as sufficient** by a single matched triple in which the
+> odd cell differs by 3.2×. π_low, the one feature distinguishing that cell, fails the same test at
+> matched π_low. **The position therefore requires at least two variables**, which is why an axis
+> that moves them together was never going to resolve it. And §102's bracket and §103's depression
+> both turn out to be regime statements rather than general framings. **The arc's central question
+> is not answered; it is, for the first time, correctly posed.**

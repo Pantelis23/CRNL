@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§113. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§114. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -773,6 +773,33 @@ falling and monotone at every box (rule 14: a withdrawal verified as carefully a
   result**. That empty claim was caught by a test that was too strict for an unrelated reason. **Rule
   17 one level down: not a mechanism attached to a measurement, but a confident story about which of
   my own instruments would be fragile — and it was wrong four times out of four.**
+
+**§114 then gave the cascade arc's central quantity a second axis, and it was not Ω.** The fast/frozen
+**position** had three explanatory families retired across §108–§110, all of them along Ω — the one
+axis that moves every candidate together. §112's rail construction supplies genuinely different
+elements, and T-CASC-m had asked for exactly that in writing (*"Ω will not do it"*).
+  > **A·Ω collapses two independent rail geometries onto the published Ω-curve to 8.7% of the
+  > position's range** (RMS 0.102 over four cells), and to **±0.004** for the three matched pairs
+  > where that curve is flat — nothing fitted. That is the out-of-sample confirmation of §98 that
+  > §99.1's single point could not supply. Two other matched pairs, where the curve is steepest,
+  > disagree by 0.18–0.21; the 8.7% is the number, the ±0.004 is what it looks like at its best.
+  > **And it is refuted as sufficient by one matched triple**: E-084 at Ω = 14 has its A·Ω bracketed
+  > by two cells agreeing to four decimals, and a position **3.2×** theirs. π_low, the only feature
+  > distinguishing it, fails the identical test at matched π_low (gap 0.637, π_low matched to 1.2%).
+  > **So the position needs at least two variables** — which is precisely why five Ω points never
+  > could have settled it.
+
+  Two published framings also turn out to be regime statements. §102's frozen/fast bracket **inverts**
+  for the deepest element (k_avg/k_mean = 0.985), and the curvature says why: the escape rate is
+  convex on 97% of the input range for working cells and on **20%** there, so Jensen — the entire
+  content of "position between two limits" — no longer applies. §103.1's intrinsic *depression* goes
+  **positive** for the shallowest elements. And the coordinate itself is not portable: **13 of 18
+  cells do not admit a position at all**, the published element sitting in the middle of the valid
+  band, which is why its Ω-sweep looked so clean.
+  > The near-miss is worth recording: on the raw grid, before a validity filter, the collapse test
+  > returned an **RMS of 30 against a curve spanning 1.18** and printed **"A·Ω is REFUTED"** — a
+  > refutation of everything, from correct numbers, computed off cells where the quantity does not
+  > exist. §53's failure mode, one edit from being the headline.
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

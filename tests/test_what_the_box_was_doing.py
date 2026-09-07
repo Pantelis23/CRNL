@@ -40,7 +40,15 @@ def test_rate_limits_default_reproduces_section_102():
     k_mean, k_avg, k_eff, pos = rate_limits(14, 2, 2.0)
     assert k_avg / k_mean == pytest.approx(2.435, abs=0.02)
     assert 0.0 < pos < 0.5
-    assert (k_mean, k_avg, k_eff, pos) == rate_limits(14, 2, 2.0, cap_mult=1.25)
+    # NOT bit-exact: this assertion was `==` as written in §113 and became flaky, failing on a
+    # ONE-ULP difference in k_avg between two identical calls. §114 diagnosed the cause -- the
+    # escape rate is an eigenvalue extracted by a dense QR solve from a generator whose norm is
+    # many orders larger, and LAPACK is not bit-reproducible across call paths. The default and
+    # the explicit cap_mult=1.25 agree to the solver's floor, which is the strongest claim
+    # available; a `==` here was a gate the instrument cannot satisfy.
+    again = rate_limits(14, 2, 2.0, cap_mult=1.25)
+    for a, b in zip((k_mean, k_avg, k_eff, pos), again):
+        assert a == pytest.approx(b, rel=1e-12), (a, b)
 
 
 def test_the_two_clocks_default_reproduces_section_110s_stored_table():

@@ -129,11 +129,18 @@ def stage1_generator(om, reflected, cap_mult=1.25):
     return sp.csr_matrix((vals, (rows, cols)), shape=(k, k)), ns
 
 
-def spectral_gap(om, reflected):
-    """Slowest non-zero relaxation rate of stage 1: -Re(lambda_1) of the generator."""
-    Q, ns = stage1_generator(om, reflected)
+def spectral_gap(om, reflected, cap_mult=1.25):
+    """Slowest non-zero relaxation rate of stage 1: -Re(lambda_1) of the generator.
+
+    cap_mult defaults to 1.25, the box every published number here was measured at; §112.7
+    found it unconverged and §113 audits this quantity across it (rule 7: the default stays).
+    """
+    Q, ns = stage1_generator(om, reflected, cap_mult=cap_mult)
     k = Q.shape[0]
-    ev = np.linalg.eigvals(Q.toarray()) if k < 400 else \
+    # Dense up to 1500 states. ARPACK's which="SM" fails to converge on the wider boxes §113
+    # sweeps (ArpackNoConvergence at Omega=55, cap_mult>=2). No published cell moves: §100 and
+    # §102 run Omega <= 55 at cap_mult = 1.25, which is <= 220 states and was already dense.
+    ev = np.linalg.eigvals(Q.toarray()) if k < 1500 else \
         spla.eigs(Q.T.tocsc(), k=3, which="SM", return_eigenvectors=False)
     ev = np.sort(-np.real(ev))            # 0 first, then the gap
     return float(ev[1]), k

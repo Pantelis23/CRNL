@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§112. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§113. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -753,6 +753,26 @@ between, §34's finite crossover.
   honest direction for an instrument fix and the reason it is reported rather than quietly adopted.
   **Three generality claims in this project — §42's Clause 1, §32's headline, §34's k-independence —
   have now collapsed onto the same unwritten premise of exchange symmetry.**
+
+**§113 then audited what that box had been doing to everything else.** `cap_mult` is in 28 experiment
+files, so §112.7's finding put most of the §91–§110 arc in question. Sweeping it across the published
+quantities that are affordable: **every conclusion survives** — §100's gaps, §102's "near the fast
+end", §104's descent rate, and §110's *refutation* of the timescale-ratio account, which stays
+falling and monotone at every box (rule 14: a withdrawal verified as carefully as an assertion).
+  > **What moves is absolute relaxation rates at small Ω** — 6.88% on the free spectral gap, 5.05% on
+  > τ_up, 3.07% on §102's bracket width, all one-signed, all converged by cap_mult 2–3, all falling
+  > steeply with Ω. Read published absolute numbers at Ω = 14 with a 3–7% box error attached;
+  > directions, orderings and exponents are untouched. The D = 3 and large-Ω joint tables were too
+  > expensive to audit and are **listed as unaudited rather than implied safe**.
+
+  **The instructive part is the four wrong expectations.** §113 predicted the bracket width would
+  cancel the bias (it half-cancelled), the position would be the fragile half (it was the robust
+  one), the descent rate would behave like an escape rate (it is flat), and τ_cross's
+  box-independence would be measured — when in fact `downstream_crossing` never reads the parameter
+  at all, so the sweep re-ran one computation five times and reported **0.00% as a convergence
+  result**. That empty claim was caught by a test that was too strict for an unrelated reason. **Rule
+  17 one level down: not a mechanism attached to a measurement, but a confident story about which of
+  my own instruments would be fragile — and it was wrong four times out of four.**
 
   **One thing this session's record makes plain.** Every measurement in §98–§102 survived. Three of
   the *criteria* attached to them did not: §99.1 needed a post-hoc label, §101's P1 demanded bitwise

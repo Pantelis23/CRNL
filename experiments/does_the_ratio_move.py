@@ -84,13 +84,13 @@ def _stage_generator(om, x_up, first=False, cap_mult=1.25):
     return sp.csr_matrix((vals, (rows, cols)), shape=(m, m)), m, cap
 
 
-def upstream_relaxation(om):
+def upstream_relaxation(om, cap_mult=1.25):
     """Intra-basin relaxation time of stage 1: 1/(lambda_2 - lambda_1) above its saddle.
 
     lambda_1 is the QSD decay (the escape). What a downstream stage sees fluctuating is the
     NEXT mode -- how fast the input forgets where it was inside the high basin.
     """
-    Q, m, _ = _stage_generator(om, 0.0, first=True)
+    Q, m, _ = _stage_generator(om, 0.0, first=True, cap_mult=cap_mult)
     keep = np.where(np.arange(m) > R2 * om)[0]
     A = Q[keep][:, keep].toarray()
     ev = np.sort(-np.real(np.linalg.eigvals(A)))
@@ -104,6 +104,13 @@ def downstream_crossing(om, cap_mult=1.25):
     depends on its input, so the h-transform is redone here with the upstream pinned at stage
     1's operating point. The start is ONE SITE below the rail: the rail is itself the other
     absorbing boundary, so starting exactly on it is degenerate.
+
+    `cap_mult` IS DECLARED AND DELIBERATELY UNUSED (§113). The h-transform runs on [saddle,
+    rail] with both ends absorbing, so the truncation wall at cap_mult*r3*om is outside the
+    domain and cannot enter -- the same reason §112's splitting probability is box-independent.
+    Sweeping this argument therefore measures nothing; §113's P5 says so rather than reporting
+    five identical numbers as a convergence result. The operating point x_up DOES carry a box
+    (via `chain_operating_points`), and §113's P5b bounds that path separately.
     """
     mus, _ = chain_operating_points(om, 2)
     x_up = mus[0]

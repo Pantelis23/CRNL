@@ -153,7 +153,7 @@ def predict(om, mus, t, p_transmit=P_TRANSMIT, legacy=False):
     return ks, contam, pure
 
 
-def rate_limits(om, D, t):
+def rate_limits(om, D, t, cap_mult=1.25):
     """§102.1 -- bracket the LAST stage's effective escape rate by the two averaging limits.
 
     P3's residual is one-signed: the measured `pure` always exceeds a model that evaluates
@@ -164,21 +164,25 @@ def rate_limits(om, D, t):
 
     Returns (k_at_mean, k_averaged, k_effective, position) with position in log space,
     0 = rate at the mean (fast upstream), 1 = mean of the rate (frozen upstream).
+
+    cap_mult defaults to 1.25, the box every published number here was measured at. §112.7
+    found that box is NOT converged; §113 re-measures this quantity across it. The default is
+    left alone so nothing published moves silently (rule 7).
     """
-    p, ref, dims, strides, walled = solve(om, D, 0, t)
+    p, ref, dims, strides, walled = solve(om, D, 0, t, cap_mult=cap_mult)
     idx = np.arange(len(p))
     up = (idx // strides[D - 2]) % dims[D - 2]          # the last stage's own input
     hi = up > R2 * om
     w = p[hi] / p[hi].sum()
     xs = up[hi].astype(float) / om
 
-    k_mean = escape_rate(om, float((w * xs).sum()))
-    tbl = {int(u): escape_rate(om, u / om) for u in np.unique(up[hi])}
+    k_mean = escape_rate(om, float((w * xs).sum()), cap_mult=cap_mult)
+    tbl = {int(u): escape_rate(om, u / om, cap_mult=cap_mult) for u in np.unique(up[hi])}
     k_avg = float(sum(w[up[hi] == u].sum() * tbl[int(u)] for u in np.unique(up[hi])))
 
     # k_effective: invert the measured `pure` through the same survival model
     mus = [stage_mean_free(p, om, dims, strides, k) for k in range(D)]
-    ks = [escape_rate(om, x) for x in mus]
+    ks = [escape_rate(om, x, cap_mult=cap_mult) for x in mus]
     surv = float(np.prod([np.exp(-k * t) for k in ks[:-1]]))
     _, pure, _ = channel_split(p, om, dims, strides, ref, walled)
     frac = pure / surv

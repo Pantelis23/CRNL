@@ -12156,3 +12156,127 @@ is carried by the one quantity with no box in it is luck, not design.
 > the 5–10% level; its most quotable consequence needs exchange symmetry, which AM has by construction
 > and nothing else here does. That is the third time in this project (§42, §111, §112) that a
 > result's generality turned out to rest on a symmetry nobody had written down.
+
+### 113 What the box was doing: an audit of the published numbers, and four wrong expectations about it
+
+*Scope: the §91–§110 cascade quantities that are (a) published with a quoted precision and (b)
+affordable at a converged box — §100's spectral gap (free and walled, Ω = 14/30/55), §104's descent
+rate, §102's bracket width and position (Ω = 14 and 30 at D = 2, Ω = 14 at D = 3), and §110's two
+clocks and their ratio (Ω = 14–70). `cap_mult` swept over 1.25, 1.6, 2.0, 3.0, 4.0, threaded with
+the default left at 1.25 everywhere so nothing published moves silently.
+`experiments/what_the_box_was_doing.py`.*
+
+§112.7 found the reflecting box at `cap_mult = 1.25` was never swept and is not converged: the wall
+truncates excursions above the rail, so it can only *shorten* an escape, and the bias is one-signed
+and worst at small Ω. `cap_mult` is in 28 experiment files. This audits what that cost.
+
+**The verdict is a null result for every published conclusion tested, and it has a structure.**
+Nothing in §100, §102, §104 or §110 changes direction, and no conclusion moves out of the range its
+own test asserts. What moves is absolute relaxation rates at small Ω; what does not move is anything
+whose domain never reaches the wall.
+
+**§113.1 — what moves, and by how much**
+
+All one-signed with the converged value *smaller*, as a wider box lengthening an escape requires:
+
+| quantity | Ω = 14 | Ω = 30 | Ω = 55 |
+|---|---|---|---|
+| spectral gap, free stage | **6.88%** | 2.23% | 0.47% |
+| spectral gap, walled stage | 2.67% | 0.15% | 0.00% |
+| §110's τ_up | **5.05%** | 0.77% | 0.04% |
+| §102's bracket width | **3.07%** | 1.44% | — |
+| §102's bracket position | 0.0059 abs (2.63%) | 0.0051 abs (2.79%) | — |
+| §104's descent rate | 0.00% | 0.00% | 0.00% |
+
+Every sequence converges by `cap_mult` 2.0–3.0. The error falls steeply with Ω in every family that
+moves at all, which is why the arc's large-Ω cells are safest and its Ω = 14 cells are not.
+
+**§113.2 — §110's refutation survives, which matters because it is a withdrawal (rule 14)**
+
+§110 retired the timescale-ratio account of the cascade drift: τ_up/τ_cross *falls* across
+Ω = 14–70 while the measured position *rises*. A withdrawal gets verified as carefully as an
+assertion, so it was recomputed at every box:
+
+| cap_mult | ratio(Ω=14) | ratio(Ω=70) | direction | monotone |
+|---|---|---|---|---|
+| 1.25 (published) | 0.3797 | 0.2318 | falling | yes |
+| 2.0 | 0.4000 | 0.2318 | falling | yes |
+| 4.0 | 0.4000 | 0.2318 | falling | yes |
+
+**Falling and monotone at every box.** The ratio's own box sensitivity is 5.05% at Ω = 14 — which
+*misses* P5's pre-registered "< 5%" by 0.05 percentage points, recorded because a bound missed is a
+bound missed. §110's published ratio(14) = 0.3797 becomes **0.4000** under a converged box; its
+direction, its monotonicity and its conclusion are untouched.
+
+**§113.3 — §102's position survives; the reason I gave for expecting it was wrong**
+
+P4 predicted the bracket *width* would cancel the one-signed bias to under 2% at Ω = 14, and the
+*position* — carrying `k_eff` from the D-dimensional joint solve — would be the fragile one.
+**Both halves were wrong.** The width moves **3.07%**, cancelling by a factor of about two rather
+than to nothing; the position moves **0.0059 absolute**, seventeen times inside its predicted bound,
+and stays in (0, 0.5) in all three cells. The position is robust not because its parts are, but
+because `k_eff` moves *with* `k_mean`: numerator and denominator carry the same one-signed bias and
+it divides out of the ratio-of-logs far better than it does out of the width.
+
+D = 3 at Ω = 14 is reported as a **trend, not a converged value** — two boxes only (185k and 389k
+states; the 754k cell thrashes on this machine at one CPU-minute per five wall-minutes). Width
+3.083 → 3.182, position 0.0866 → 0.0920. Consistent in size with D = 2, and that is all it says.
+
+**§113.4 — what the box provably cannot touch, and the vacuous sweep I nearly published**
+
+τ_cross's h-transform runs on [saddle, rail] with **both ends absorbing**, so the wall is outside
+its domain — the same reason §112's splitting probability was exactly box-independent. This section's
+first draft *swept* `cap_mult` through `downstream_crossing` and reported five identical numbers as a
+**0.00% convergence measurement**. `downstream_crossing` declares `cap_mult` and never reads it: the
+parameter is dead, the sweep re-ran one computation five times, and 0.00% was a number the harness
+produced and the chemistry did not — rule 10, in a section written to hunt exactly that.
+
+It was caught by a test asserting *exact* equality, which failed: five runs of the same linear solve
+do not agree bitwise, because BLAS threading moves the last ulp. **A test that was too strict for the
+wrong reason caught a claim that was empty for the right one.** The sweep is replaced by an assertion
+on the function's source and domain, and the dead parameter is documented where it lives.
+
+§104's descent rate is flat for a different and weaker reason, stated separately because the two are
+not the same fact: its domain *does* reach the wall, but with the upstream pinned at the **low** rail
+the downstream has no high state at all (§105's bistability edge), so upward excursions are
+exponentially unlikely. That is measured, not derived, and it is labelled so.
+
+**§113.5 — the path this audit held fixed, bounded rather than caveated**
+
+P5 varies each clock's own box but takes τ_cross's operating point `x_up` from
+`chain_operating_points`, which has a box of its own held at 1.25. That is a real omitted path, named
+in the predictions before running and measured afterwards: `x_up` itself moves **3.60% / 0.98% /
+0.22%** at Ω = 14/30/55, which propagates to only **0.63% / 0.26% / 0.07%** in the ratio. So §110's
+full box sensitivity is **~5.7% at Ω = 14**, not 5.05%, and the direction is unaffected either way.
+
+**§113.6 — what is NOT audited, listed rather than implied safe**
+
+§101/§103's joint tables at D = 3 with Ω ≥ 30, §105–§109's closure and seed tables at D = 3, §107's
+closure residuals. At `cap_mult` 3.0 the D = 3 cells need 10⁶–10⁷ states. §112.7's bias is one-signed and
+falls steeply with Ω, so those are the cells where it should matter *least* — **but that is an
+extrapolation from the cells that were run, not a measurement of the cells that were not, and it is
+labelled as one.** The difference between this and a reassurance is the list.
+
+**§113.7 — a fifth wrong expectation, caught before it was committed**
+
+The unaudited list above first included **§32/§33/§34's AM results**, on the grounds that AM's own
+truncation had not been swept. **AM has no truncation.** Every AM reaction conserves total count, so
+`crnl/cme.py` enumerates the exact reachable simplex `{n : Σn = N}` of size C(N+2, 2) — there is no
+wall in the AM instrument and this class of error cannot occur there. The item was withdrawn from
+the list and from THEORIES (T-BOX-c) before committing.
+
+That is the same mistake as §113.4's vacuous τ_cross sweep, made twice in one section: **assuming a
+numerical parameter is doing something before checking that it exists.** What is actually left on
+the AM side is a different problem wearing the same symptom — §34's crossovers stop at N ≤ 72 for
+*conditioning*, the wall §112 removed on Schlögl with a log-domain recursion that does not transfer
+to a 2-D simplex. That is T-BOX-d, and it is not a box question.
+
+> **What §113 settles and what it cost.** Every published conclusion tested survives the box: §100's
+> gaps, §102's "near the fast end", §104's descent rate, §110's refutation. The absolute numbers at
+> Ω = 14 move by 3–7% and should be read with that attached. **Five expectations of mine were wrong
+> along the way** — the width would cancel (it half-cancelled), the position would be fragile (it was
+> the robust one), the descent rate would behave like an escape rate (it is flat), and τ_cross's
+> box-independence would be something I measured (it is structural, and my measurement of it was
+> empty). The measurements held; the story I attached to them in advance did not, which is rule 17
+> arriving one level down — not about a mechanism this time, but about which of my own instruments I
+> expected to be fragile.

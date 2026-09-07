@@ -5050,8 +5050,8 @@ are. **Consequences:** §111's headline loosens from 0.31% to 1.77% (its numbers
 The commitment probability is a splitting probability between two rails inside every box and is
 exactly box-independent (0.0e+00 over 90 cells), which is why §112's central claim survives intact.
 
-**T-BOX-a, open but now scoped and bounded: which other published numbers move under a converged
-box?** `cap_mult` appears in **28 experiment files** and 1.25 is the dominant default, so most of the
+**~~T-BOX-a, open~~ → §113: CLOSED for everything affordable, and the unaudited remainder is
+listed. Which other published numbers move under a converged box?** `cap_mult` appears in **28 experiment files** and 1.25 is the dominant default, so most of the
 §91–§111 cascade arc inherits it. A first probe on `escape_accounts_for_it.escape_rate`, the quantity
 that arc is built from (converged by cap_mult 1.6 there, unlike the MFPT):
 
@@ -5075,3 +5075,48 @@ closure residuals, and (c) §109's transient fractions. Each is a one-line chang
 MFPT makes the reference side cheap at any volume. **Do not assume the direction**: §112 found the
 fix making its own agreement worse, not better, and the ratio probe above shows the bias does not
 simply divide out.
+
+
+**T-BOX-a → §113: CLOSED where it could be run.** Every published conclusion tested survives the
+box — §100's gaps, §102's "near the fast end" position, §104's descent rate, and (rule 14, because
+it is a withdrawal) §110's refutation of the timescale-ratio account, which stays falling and
+monotone at every box width. What moves is absolute relaxation rates at small Ω: 6.88% on the free
+spectral gap, 5.05% on τ_up, 3.07% on §102's bracket width, all at Ω = 14, all one-signed, all
+converged by cap_mult 2.0–3.0 and all falling steeply with Ω. **Published absolute numbers at
+Ω = 14 should be read with a 3–7% box error attached; directions, orderings and exponents are
+untouched.** Four of §113's own expectations were wrong (§113's closing note); the conclusions were
+not.
+
+**T-BOX-b, open: the D = 3 and large-Ω joint tables, which §113 could not afford.** §101/§103's
+tables at D = 3 with Ω ≥ 30, §105–§109's closure and seed tables at D = 3, and §107's residuals all
+need 10⁶–10⁷ states at cap_mult 3.0; §113 reached D = 3 only at Ω = 14 and only at two box widths,
+which is a trend and not a convergence. §112.7's bias falls steeply with Ω, so these should be the
+*safest* cells — **but that is an extrapolation from the cells that ran, and T-BOX-a's own record is
+that four predictions about which quantities would be sensitive were wrong.** **How to kill:** the
+D = 3 cells are affordable at Ω = 14 up to cap_mult 1.6 today; either find a Krylov/expm approach
+that reaches 10⁶ states on this machine, or replace the joint solve with the §103 chain closure
+(whose 1-D pieces are cheap at any box) and audit *that* instead — the closure is already validated
+against the joint solve at cap_mult 1.25, so agreement at a converged box would transfer the audit.
+
+**~~T-BOX-c: AM's own truncation~~ — WITHDRAWN BEFORE COMMITTING, because the parameter does not
+exist.** As drafted this asked whether §32/§33/§34's AM results carry a comparable one-signed box
+bias, and proposed sweeping "AM's cap" as the kill test. **AM has no cap.** Every AM reaction
+conserves total count, so `crnl/cme.py` enumerates the exact reachable simplex `{n : sum(n) = N}`
+— `enumerate_states(3, omega)`, size C(N+2, 2) — and there is no truncation and no wall anywhere in
+the AM instrument. The box class of error cannot occur there at all. I opened a question with a kill
+test for a knob that is not in the code, which is the same failure as §113's own vacuous τ_cross
+sweep: **assuming a parameter is doing something before checking that it exists.** Twice in one
+section.
+
+What is left is a different problem with the same symptom: **T-BOX-d, open — §34's AM
+crossovers stop at N ≤ 72 for CONDITIONING, not truncation.** §111 hit the same wall at N ≈ 150 on
+Schlögl and §112 removed it there with an exact all-positive log-domain recursion, which works
+because a 1-D birth-death MFPT has one. AM's simplex is 2-D and the recursion does not transfer.
+So §34's absolute crossover tests are still capped by a solver, and §112.5's finding — that the
+crossover residual is dominated by the fit window over [Ω, kΩ] — implies §34's AM fits are subject
+to exactly the same window effect, over a range its N ≤ 72 ceiling makes it unable to check.
+**How to kill:** either find a well-conditioned exact method for first passage on the 2-D simplex
+(a log-domain or Schur-complement formulation, not a dense solve), or re-fit §34's AM crossovers
+over two disjoint N windows the way §112.5 did and report the spread. The second is cheap and can
+be done today; it will not extend the range, but it will say whether §34's absolute agreement is
+window-limited in the same way §112's is.

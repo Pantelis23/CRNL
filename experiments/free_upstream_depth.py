@@ -189,7 +189,7 @@ def last_low(p, om, dims, strides, walled, ref):
     return float(p[counts < R2 * om].sum())
 
 
-def solve(om, D, n_reflected, t, matched_seed=False):
+def solve(om, D, n_reflected, t, matched_seed=False, cap_mult=1.25):
     """Evolve the chain to time t.
 
     *** SEEDING WARNING (§109). *** The default seed is §101's intended initial condition --
@@ -206,9 +206,15 @@ def solve(om, D, n_reflected, t, matched_seed=False):
 
     Pass matched_seed=True to seed every stage from its quasi-stationary law instead, which is
     what any comparison against a stationary-law model requires.
+
+    *** BOX WARNING (§112.7, §113). *** cap_mult defaults to 1.25, the value every published
+    number here was measured at. It is NOT converged -- §112.7 found ln T off by up to 0.249 at
+    1.25 on a 1-D element, one-signed, worst at small Omega. The parameter is threaded here so
+    §113 can re-measure the published quantities at a converged box; the default is left at 1.25
+    so nothing already published moves silently (rule 7).
     """
-    Q, ref, dims, strides, cap, walled = build_gen(om, D, n_reflected)
-    _, pi1 = stage1_stationary(om)
+    Q, ref, dims, strides, cap, walled = build_gen(om, D, n_reflected, cap_mult=cap_mult)
+    _, pi1 = stage1_stationary(om, cap_mult=cap_mult)
     if matched_seed:
         p = seed_matched(om, ref, dims, strides, walled)
     else:

@@ -190,3 +190,47 @@ def test_the_stored_grid_matches_a_fresh_recomputation_of_one_cell():
     el = Elem("E-070", R1_FIX, 1.0050, R3_FIX, cap_mult=2.0)
     assert el.position(30)[0] == pytest.approx(r["position"], rel=1e-6)
     assert el.action() == pytest.approx(r["A"], rel=1e-9)
+
+
+# ---------------------------------------------------------------- §114.9's correction
+
+def test_proximity_to_the_curve_is_not_lying_on_it():
+    """§114.9. The three 'tight' pairs are NOT confirmations of A*Omega: the curve predicts
+    they should differ by 0.05-0.11 and they differ by 0.000-0.004."""
+    d = json.loads(STORE.read_text())
+    om = sorted((r["A_omega"], r["position"]) for r in d["p3"]["omega_sweep"])
+    cx = np.array([a for a, _ in om]); cy = np.array([p for _, p in om])
+    tight = [p for p in d["p4"]["pairs"]
+             if min(p["other_a"], p["other_b"]) > 0.8 and min(p["val_a"], p["val_b"]) > 4.5]
+    assert len(tight) == 3
+    for p in tight:
+        predicted = abs(float(np.interp(p["val_a"], cx, cy))
+                        - float(np.interp(p["val_b"], cx, cy)))
+        assert predicted > 5.0 * max(p["gap"], 1e-4), (p["a"], p["b"], predicted, p["gap"])
+
+
+def test_no_candidate_makes_the_two_axes_one_curve():
+    """§114.9's headline: every slope ratio is well below 1, so the rail axis is shallower."""
+    p7 = json.loads(STORE.read_text())["p7"]
+    ratios = [c["slope_ratio"] for c in p7]
+    assert all(0.4 < r < 0.8 for r in ratios), {c["candidate"]: c["slope_ratio"] for c in p7}
+    assert max(ratios) < 0.85, "if any reached ~1 the two axes would be one curve in it"
+
+
+def test_tau_cross_is_refuted_and_the_other_two_are_not_separated():
+    """§114.9: the one candidate the second axis eliminates, and the one it does not."""
+    p7 = {c["candidate"]: c for c in json.loads(STORE.read_text())["p7"]}
+    a, m, t_ = p7["A*Omega"], p7["(margin/sigma)^2"], p7["tau_cross"]
+    assert t_["rms_over_span"] > 2.0 * m["rms_over_span"], "tau_cross must be distinctly worse"
+    assert t_["slope_ratio"] < 0.6 < min(a["slope_ratio"], m["slope_ratio"])
+    # and A*Omega vs (margin/sigma)^2 are NOT separated -- if this ever fails, T-CASC-ab moved
+    assert abs(a["rms_over_span"] - m["rms_over_span"]) < 0.05
+    assert m["rms_over_span"] <= a["rms_over_span"], "(margin/sigma)^2 is the marginally better one"
+
+
+def test_pi_low_axes_do_not_overlap_so_the_slope_test_cannot_run():
+    p7 = {c["candidate"]: c for c in json.loads(STORE.read_text())["p7"]}
+    pl = p7["pi_low"]
+    assert pl["n_overlap"] == 0
+    assert math.isnan(pl["rms_over_span"])
+    assert pl["rail_range"][0] > pl["omega_range"][1] - 0.01

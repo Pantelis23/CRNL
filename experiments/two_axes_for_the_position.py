@@ -817,6 +817,64 @@ def p6_the_outlier(report):
     report["p6"] = {"e084_sweep": rows, "monotone_in_pi_low": bool(mono), "curvature": curv}
 
 
+def p7_the_slopes(rows, om_rows, report):
+    """POST-HOC, AND IT CORRECTS §114.2's READING OF ITS OWN DATA (rule 18).
+
+    §114.2 reported three matched pairs agreeing to +-0.004 and called them "what the collapse
+    looks like where the curve is flat". The curve is NOT flat there -- its local slope is
+    0.111, essentially its mean -- and those pairs' A*Omega differ by 10-22%, so the curve
+    predicts they should differ by 0.053, 0.114 and 0.061. They differ by 0.004, 0.000, 0.004.
+    **That is not a tight collapse; it is the rail axis being FLATTER in A*Omega than the Omega
+    axis.** Proximity to a curve is not lying on it, and RMS alone cannot tell them apart.
+
+    So each candidate now gets two diagnostics, both necessary: the RMS of the rail cells about
+    the Omega curve, AND the ratio of the two sweeps' own slopes in that variable. A variable on
+    which the two axes are one curve needs a small RMS and a slope ratio near 1.
+    """
+    print("\nP7 -- POST-HOC: proximity is not collapse. Each candidate gets a slope test too.")
+    valid = [r for r in rows if validity(r)[0] and r["pi_low"] > 0.80]
+
+    def val(r, key):
+        if key == "msq":
+            return r["margin_over_sigma"] ** 2
+        return r[key]
+
+    print(f"   {'candidate':>18}{'rail range':>20}{'Omega range':>20}{'n':>4}"
+          f"{'RMS/span':>10}{'slope ratio':>13}")
+    out = []
+    for key, label in (("A_omega", "A*Omega"), ("msq", "(margin/sigma)^2"),
+                       ("tau_cross", "tau_cross"), ("pi_low", "pi_low")):
+        ox = np.array([val(r, key) for r in om_rows], float)
+        oy = np.array([r["position"] for r in om_rows], float)
+        o = np.argsort(ox); ox, oy = ox[o], oy[o]
+        rx = np.array([val(r, key) for r in valid], float)
+        ry = np.array([r["position"] for r in valid], float)
+        srt = np.argsort(rx); rx, ry = rx[srt], ry[srt]
+        inside = (rx >= ox.min()) & (rx <= ox.max())
+        span = float(oy.max() - oy.min())
+        rms = (float(np.sqrt(np.mean((ry[inside] - np.interp(rx[inside], ox, oy)) ** 2)))
+               if inside.sum() else float("nan"))
+        sl_r = float((ry[-1] - ry[0]) / (rx[-1] - rx[0]))
+        sl_o = float((oy[-1] - oy[0]) / (ox[-1] - ox[0]))
+        out.append({"candidate": label, "rms_over_span": rms / span,
+                    "slope_rail": sl_r, "slope_omega": sl_o, "slope_ratio": sl_r / sl_o,
+                    "n_overlap": int(inside.sum()),
+                    "rail_range": [float(rx.min()), float(rx.max())],
+                    "omega_range": [float(ox.min()), float(ox.max())]})
+        print(f"   {label:>18}{rx.min():9.2f}-{rx.max():<10.2f}{ox.min():9.2f}-{ox.max():<10.2f}"
+              f"{int(inside.sum()):>4}{rms/span:>10.3f}{sl_r/sl_o:>13.3f}")
+    best_rms = min((o for o in out if np.isfinite(o["rms_over_span"])),
+                   key=lambda o: o["rms_over_span"])
+    print(f"   lowest RMS: {best_rms['candidate']} at {best_rms['rms_over_span']:.3f}")
+    print(f"   NO candidate has a slope ratio near 1 -- every one runs 0.51-0.74, so the rail")
+    print(f"   axis is systematically SHALLOWER than the Omega axis in all of them. The two")
+    print(f"   sweeps are close to one curve in A*Omega and (margin/sigma)^2, and are not one.")
+    print(f"   A*Omega and (margin/sigma)^2 remain degenerate (0.087/0.725 vs 0.062/0.739),")
+    print(f"   which is T-CASC-ab exactly; tau_cross is the one candidate this REFUTES (0.203,")
+    print(f"   0.512); pi_low's two axes do not overlap at all, so it cannot be tested this way.")
+    report["p7"] = out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", type=pathlib.Path,
@@ -835,6 +893,7 @@ def main():
     p4_the_committed_one(rows, om_rows, A_pub, report)
     p5_free_audit(rows, report)
     p6_the_outlier(report)
+    p7_the_slopes(rows, om_rows, report)
     args.out.write_text(json.dumps(report, indent=2, default=float))
     print(f"\nwrote {args.out}")
 

@@ -5142,7 +5142,15 @@ is exactly why five Ω points could not resolve it: along Ω every candidate mov
 remaining open question is which pair, and §114.7 adds a constraint nobody had — the coordinate is
 only defined on 5 of 18 cells, so the question presumes a portability the quantity does not have.
 
-**T-CASC-ab, open: A·Ω or (margin/σ)², and can anything separate them?** §114's Spearman table gives
+**T-CASC-ab, open, and §114.9 sharpened it rather than closing it: A·Ω or (margin/σ)²?**
+§114.9's two-diagnostic test gives A·Ω 0.087/0.725 and (margin/σ)² 0.062/0.739 — **(margin/σ)² is
+marginally better on both**, so §114.2's lean toward A·Ω was unsupported and the degeneracy is
+intact. What the same test *did* settle is that **τ_cross is refuted** (0.203, 0.512), and that
+**no candidate has a slope ratio near 1**: the rail axis is systematically shallower than the Ω
+axis in every one of them, so the two sweeps are near one curve and are not one curve. Original
+entry follows.
+
+**T-CASC-ab (original wording, kept per rule 3): A·Ω or (margin/σ)², and can anything separate them?** §114's Spearman table gives
 the two candidates *identical* rank correlations on both axes (0.4286 rail, 1.0000 Ω), because along
 a one-parameter family of rails they are monotone in each other just as they are along Ω. §99.1's
 22% split between them rested on one point. **How to kill:** the elements here move only r₂. Move r₁
@@ -5193,3 +5201,31 @@ reproduction check can be tighter than that, and any `==` on these quantities is
 well-conditioned route to it exists. Replacing the eigensolve with the recursion where the stage is
 1-D would remove this floor entirely. The reason not to do it blindly is rule 7: it would move
 published numbers at the 1e−6 level, so it needs a section that prints both.
+
+
+**T-CASC-af, open and new, and it is the sharpest thing §114 produced: why is the rail axis
+SHALLOWER than the Ω axis in every candidate?** §114.9 measures the ratio of the two sweeps' slopes
+as **0.725 (A·Ω), 0.739 ((margin/σ)²), 0.512 (τ_cross), 0.675 (π_low)** — all well below 1, none
+near it. A variable in which the two axes were one curve would give 1. That they cluster in
+0.5–0.74 rather than scattering suggests a single missing factor rather than four separate ones,
+and it is a *quantitative* target: whatever the second variable is, moving Ω changes it about 1.4×
+more per unit A·Ω than moving the rails does. **How to kill:** the ratio is measurable for any
+candidate without a joint solve once the position is known, so extend the rail grid — a third
+element in the valid band (π_low ≈ 0.9, bracket > 1.5) would turn four points into six and say
+whether the ratio is stable or an artifact of two elements. If it is stable at ~0.73, the missing
+factor is a function whose Ω-derivative and rail-derivative differ by that fixed amount, which is
+a much narrower target than "what does the position track".
+
+
+**T-NUM-b, open, and it is a hazard rather than a question: the Hill coupling lives in mutable
+module globals.** `chemical_cascade.HILL_N` and `HILL_K` are assigned by at least six experiments,
+and they change the physics — 3.3e-4 on `solve(14, 2, 0, 2.0)` between (4.0, 1.0) and (6.0, 1.3).
+Nine test files import modules that touch them, and a leak would change every later test's chemistry
+without failing anything. §114.10 added a conftest guard that asserts the defaults around every test
+and does not restore them, so a leak names its own culprit; 97 tests across the nine files pass, so
+nothing leaks today. **How to close it properly:** the guard detects, it does not prevent. The fix
+is to thread the Hill parameters through `rates_stage` as arguments the way `c` and `r3` already
+are — §114's own `Elem` does exactly that and needed no globals at all — which would make the class
+of error impossible rather than merely loud. That is a mechanical refactor across ~28 files and it
+would touch published call sites, so it needs a section that prints before-and-after (rule 7), not
+a quiet cleanup.

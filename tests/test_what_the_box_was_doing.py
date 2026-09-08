@@ -67,7 +67,13 @@ def test_solve_threading_is_inert():
 
     a = solve(14, 2, 0, 2.0)[0]
     b = solve(14, 2, 0, 2.0, cap_mult=1.25)[0]
-    assert np.array_equal(a, b)
+    # Not bit-exact, for the same reason as `rate_limits` above: this went from passing to
+    # failing under the full suite while remaining bit-identical in isolation, with the
+    # difference deep in the mantissa. `expm_multiply`'s reductions are not bit-reproducible
+    # across process states. Agreement to 1e-12 on a vector whose largest entry is ~6e-3 is
+    # the strongest claim the instrument supports; `array_equal` was a gate it cannot meet.
+    assert np.allclose(a, b, rtol=1e-12, atol=1e-18)
+    assert a.shape == b.shape
 
 
 # ------------------------------------------------- what the box provably cannot touch

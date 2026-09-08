@@ -778,11 +778,13 @@ falling and monotone at every box (rule 14: a withdrawal verified as carefully a
 **position** had three explanatory families retired across §108–§110, all of them along Ω — the one
 axis that moves every candidate together. §112's rail construction supplies genuinely different
 elements, and T-CASC-m had asked for exactly that in writing (*"Ω will not do it"*).
-  > **A·Ω collapses two independent rail geometries onto the published Ω-curve to 8.7% of the
-  > position's range** (RMS 0.102 over four cells), and to **±0.004** for the three matched pairs
-  > where that curve is flat — nothing fitted. That is the out-of-sample confirmation of §98 that
-  > §99.1's single point could not supply. Two other matched pairs, where the curve is steepest,
-  > disagree by 0.18–0.21; the 8.7% is the number, the ±0.004 is what it looks like at its best.
+  > **A·Ω brings two independent rail geometries within 8.7% of the published Ω-curve** (RMS 0.102
+  > over four cells) — near it, but **not on it**. §114.9 corrected §114.2's own reading here: the
+  > three pairs agreeing to ±0.004 have A·Ω differing by 10–22%, and the curve says they should
+  > differ by 0.05–0.11, so they are evidence that **the rail axis is flatter in A·Ω than the Ω
+  > axis** (slope ratio 0.725), not evidence of a tight collapse. On the two-diagnostic test
+  > **(margin/σ)² is marginally better than A·Ω** (0.062/0.739 vs 0.087/0.725) — the degeneracy is
+  > intact — while **τ_cross is refuted** (0.203/0.512). And no candidate has a slope ratio near 1.
   > **And it is refuted as sufficient by one matched triple**: E-084 at Ω = 14 has its A·Ω bracketed
   > by two cells agreeing to four decimals, and a position **3.2×** theirs. π_low, the only feature
   > distinguishing it, fails the identical test at matched π_low (gap 0.637, π_low matched to 1.2%).

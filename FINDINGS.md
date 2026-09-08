@@ -12443,10 +12443,87 @@ of 3e9 — so a dense QR eigensolve resolves it to about 1e−6 and repeated eva
 against a solver floor of 2.82e−6**, i.e. below the noise. A published-number reproduction check
 cannot be tighter than the published number.
 
+**§114.9 — CORRECTION TO §114.2, FOUND AFTER COMMITTING IT: proximity is not collapse**
+
+§114.2 above stands as printed (rule 7). Its RMS number is right and **its reading of the three
+matched pairs is wrong**, in the way rule 18 exists to catch: correct numbers, a plausible
+sentence, and a conclusion the data does not support.
+
+It called ±0.004 "what the collapse looks like where the curve is flat". **The curve is not flat
+there** — its local slope over A·Ω = 4.6–5.7 is 0.111, essentially its mean slope of 0.1110 — and
+those pairs' A·Ω differ by 10–22%, so the Ω-curve predicts they should differ by:
+
+| pair | A·Ω | curve predicts | measured |
+|---|---|---|---|
+| E-070 Ω=30 vs E-062 Ω=55 | 4.641 / 5.122 | 0.0533 | 0.0041 |
+| E-070 Ω=30 vs PUB Ω=30 | 4.641 / 5.672 | **0.1141** | **0.0000** |
+| E-062 Ω=55 vs PUB Ω=30 | 5.122 / 5.672 | 0.0608 | 0.0041 |
+
+**Those pairs are not confirmations of A·Ω. They are the rail axis being flatter in A·Ω than the Ω
+axis** — the measured differences are 13×, ∞× and 15× *smaller* than A·Ω requires. An RMS about a
+curve cannot distinguish "on the curve" from "near it with a different slope", so every candidate
+now gets both diagnostics:
+
+| candidate | RMS / span | slope ratio (rail ÷ Ω) |
+|---|---|---|
+| A·Ω | 0.087 | 0.725 |
+| **(margin/σ)²** | **0.062** | **0.739** |
+| τ_cross | 0.203 | 0.512 |
+| π_low | ranges do not overlap | 0.675 |
+
+**Three things follow, and two of them cut against §114.2.**
+
+1. **No candidate has a slope ratio near 1.** Every one runs 0.51–0.74: the rail axis is
+   systematically shallower than the Ω axis in *all* of them. The two sweeps are *close* to one
+   curve in A·Ω and (margin/σ)², and are not one curve. **"Collapse" was the wrong word for 8.7%.**
+2. **(margin/σ)² is marginally better than A·Ω on both diagnostics** (0.062/0.739 against
+   0.087/0.725). §114.2's lean toward A·Ω was unsupported; the two remain degenerate, which is
+   T-CASC-ab exactly, and this section did not break it.
+3. **τ_cross is refuted** — 0.203 RMS and a slope ratio of 0.512, distinctly worse than both. That
+   is the one candidate the second axis does eliminate, and it is a real result: §110 had already
+   refuted the τ_up/τ_cross *ratio*, and now τ_cross alone goes too.
+
+**π_low cannot be tested this way at all**: its rail range is 0.93–1.00 and its Ω range 0.55–0.92,
+so the two axes do not overlap. §114.4's matched-π_low refutation stands (it compares cells
+directly, not through a curve), but the slope test has nothing to work with, and saying so is the
+point of running it.
+
+**What survives §114.2 unchanged:** the RMS of 0.087, the E-084 refutation of A·Ω's sufficiency
+(a 3.2× discrepancy, far outside anything here), §114.1's killing of volume-only scalars, and
+§114.5–§114.7. **What does not:** the phrase "collapses… onto one curve", and the implication that
+A·Ω beat (margin/σ)².
+
+**§114.10 — two more bit-exactness gates failed, and looking into why found a live hazard**
+
+§113 wrote two assertions of exact equality between identical calls. Both have now failed:
+`rate_limits` on a **one-ulp** difference in `k_avg` (§114.8c), and `solve` on a difference deep in
+the mantissa — while remaining bit-identical when run in isolation. Neither is a physics problem;
+`expm_multiply`'s reductions are simply not bit-reproducible across process states. Both assertions
+are now agreement to 1e−12, with the reason recorded at each. **A gate the instrument cannot meet
+passes until it doesn't**, and writing two of them in one section is a pattern, not an accident.
+
+Chasing the second one turned up something that is not benign. `chemical_cascade` keeps the Hill
+coupling's exponent and half-saturation as **module-level globals**, `HILL_N` and `HILL_K`, and at
+least six experiments assign to them — `margin_law` sets them to arbitrary values mid-sweep and
+restores afterwards, while four others reset them defensively, which is itself evidence that leaking
+has been a worry. They are load-bearing: setting `cc.HILL_N, cc.HILL_K = 6.0, 1.3` moves
+`solve(14, 2, 0, 2.0)` by **3.3e−4** — not rounding, different chemistry. **Nine test files import
+modules that touch them.**
+
+A test that left them changed would silently alter every later test's physics **while the suite
+stayed green** — the hardest class of error to notice, because nothing fails and the numbers are
+merely different. `tests/conftest.py` now asserts the defaults before and after every test, and
+deliberately does *not* restore them, so a leak names the test that caused it. **Run against the
+nine files that touch them: 97 passed, nothing currently leaks.** This is a guard against a hazard,
+not a fix for a live bug — and it was found only because a too-strict assertion failed for an
+unrelated reason, which is the second time in three sections that a bad gate has been useful by
+accident (§113.4's vacuous τ_cross sweep was the first).
+
 > **What §114 settles.** The position moves at fixed Ω, so no volume-only scalar can be it. A·Ω
-> collapses two independent rail geometries onto the published Ω-curve to **8.7% of the position's
-> range** (and to ±0.004 where that curve is flat) — a real out-of-sample confirmation of §98 — and
-> is **refuted as sufficient** by a single matched triple in which the
+> brings two independent rail geometries within **8.7% of the published Ω-curve** — near it, but
+> **not on it**: the rail axis's slope in A·Ω is 0.725× the Ω axis's, and (margin/σ)² does
+> marginally better on both counts (§114.9). A·Ω is
+> **refuted as sufficient** by a single matched triple in which the
 > odd cell differs by 3.2×. π_low, the one feature distinguishing that cell, fails the same test at
 > matched π_low. **The position therefore requires at least two variables**, which is why an axis
 > that moves them together was never going to resolve it. And §102's bracket and §103's depression

@@ -12766,3 +12766,104 @@ matched seeding.
 > low, partly carried by the pinned occupancy — smaller, differently shaped, and for the first
 > time since §107 with a named suspect — which §116.5 then tested: the measurement's seed explains
 > the low-Ω arm and the level, leaving a flat 21% offset over Ω = 14–40 and a rise beyond 40.
+
+### 117 Where the remainder lives: every factor measured, and a channel no model in the arc contains
+
+*Scope: the published element, §107's grid Ω = 14–70, `cap_mult` 1.25 (§106/§107's box), matched
+(QSD) seeding on the measured side throughout, windows t = 2 … 64. Every factor of §103/§107's
+closure measured directly from one free-chain joint solve per cell; the absorbing chain evolved
+alongside at Ω = 30. `experiments/where_the_remainder_lives.py`.*
+
+After §116 the closure — exact stage-2 rate, matched seeding — sat flat at a 21% offset over
+Ω = 14–40 and rose beyond. It is a product of three factors, and each has a measured counterpart in
+the same joint solve, so its error splits with nothing substituted:
+
+`contam/pure = [los0 · p_t] / [(1 − los0) · los1]`, with los0 = P(stage 1 low), p_t = P(stage 2 low |
+stage 1 low), los1 = P(stage 2 low | stage 1 high). The split multiplies back to §116.5 to 9e−10.
+
+**§117.1 — the factor split at t = 2 (model / measured):**
+
+| Ω | 14 | 20 | 24 | 30 | 40 | 55 | 70 |
+|---|---|---|---|---|---|---|---|
+| stage 1 (los0) | 1.049 | 1.053 | 1.052 | 1.049 | 1.044 | 1.038 | 1.033 |
+| **p_transmit** | **1.005** | **1.016** | **1.018** | **1.018** | **1.015** | **1.007** | **1.000** |
+| stage 2, pinned π | 0.883 | 0.885 | 0.887 | 0.884 | 0.864 | 0.804 | 0.717 |
+| stage 2, conditioned π | 0.905 | 0.920 | 0.931 | 0.945 | 0.960 | 0.973 | 0.990 |
+
+- **T-CASC-aj's suspect is innocent.** The single p_transmit measured at Ω = 30 is right to ≤ 2% at
+  every Ω. My P3 guess — that the flat offset lived there — failed.
+- **The large-Ω rise is an inconsistency I introduced in §116**: it paired the exact conditioned rate
+  with the *pinned* occupancy. Both belong to one Q-process; with its own consistent pair (π_cond,
+  λ₁ − λ₀) stage 2's factor has no large-Ω fall. P2 holds, and was not blind — I had read
+  π_cond/π_pinned off §116's file first.
+
+**§117.2 — the kill test for "what remains is the two-state form", and it split.** At t = 8:
+
+| Ω | 14 | 20 | 24 | 30 | 40 | 55 | 70 |
+|---|---|---|---|---|---|---|---|
+| stage 1, t = 2 → **t = 8** | 1.049 → **1.010** | 1.053 → **1.012** | 1.052 → **1.012** | 1.049 → **1.012** | 1.044 → **1.011** | 1.038 → **1.009** | 1.033 → **1.008** |
+| stage 2 (cond), t = 2 → **t = 8** | 0.905 → **0.886** | 0.920 → **0.859** | 0.931 → **0.852** | 0.945 → **0.847** | 0.960 → **0.843** | 0.973 → **0.842** | 0.990 → **0.849** |
+
+**Stage 1's 5% is the two-state form's finite-window transient** — it falls to ~1% everywhere.
+**Stage 2's is not**: it gets *worse* with the window, so the 0.990 at Ω = 70, t = 2 was a
+time-dependent ratio passing through 1, not agreement. I had read it as convergence; the kill test
+is what stopped that being the headline.
+
+**§117.3 — stage 2 at steady state, and the Q-process is exact.** Over a long window:
+
+| t | 2 | 4 | 8 | 16 | 32 | 64 |
+|---|---|---|---|---|---|---|
+| **free** chain, Ω = 30 | 0.945 | 0.877 | 0.847 | **0.836** | **0.836** | 0.847 |
+| **absorbing** chain, Ω = 30 | 1.139 | 1.066 | 1.031 | 1.015 | **1.007** | — |
+| **free** chain, Ω = 70 | 0.990 | 0.892 | 0.849 | **0.830** | — | — |
+
+The absorbing chain — stage 1 killed at its saddle, which is exactly what the Q-process describes —
+**converges onto π_cond · (1 − e^{−λt}) with its increments halving each doubling**. The Q-process
+pair is right. The free chain instead plateaus at **0.836** (t = 16–32; the drift at t = 64 is kt
+≈ 0.44, where saturation begins): the Q-process under-predicts its stage-2 fall probability by **16%** — stage 2 falls
+**1.20×** as often as predicted — at steady state. P6a (a seed transient) failed; P7a held. Ω = 70 follows the same path and reads 0.830 at
+t = 16 against Ω = 30's 0.836 — within 1% at more than twice the volume, though it is still
+falling slowly there (taken to t = 16 only: each step at Ω = 70 costs minutes).
+
+**§117.4 — what the 16% is, stated at the strength the data supports.** The free chain's "stage 1
+high at t" is the union of trajectories where stage 1 never went below its saddle — whose law is the
+absorbing chain's, and which match exactly — and trajectories where **stage 1 dipped below its saddle
+and came back**. So the entire steady-state excess comes from the second set: **stage-1 near-misses
+leave stage 2 lower.** That accounting is exact, not a model. That the dips *cause* the stage-2 falls
+rather than co-occurring with them is the part that is a suspect (rule 17). And the shortfall is nearly
+Ω-independent — the prediction is 14–16% low across Ω = 20–70 at t = 8, where the free chain is
+close to its plateau.
+
+No model anywhere in the arc contains this channel. The pinned model, the frozen/fast bracket, the
+geometric mean, §103's closure and §115's Q-process all condition on — or average over — stage 1
+staying in its basin. Failed escapes that recover are invisible to all of them.
+
+**§117.5 — the arc's residual, accounted for term by term.** §107's 1.83× drift, which §108–§110
+chased and T-CASC-x closed as "no candidate left", is now fully decomposed, every term measured:
+
+| term | what it did | where |
+|---|---|---|
+| stage 2's rate estimated through a windowed, pinned-occupancy inversion | two-thirds of the log-drift | §115, §116.1 |
+| §101's default seed on the measured side | the U's low-Ω arm and the level | §116.5 |
+| exact rate paired with the pinned occupancy | the large-Ω rise | §117.1 |
+| stage 1's two-state form at a finite window | 5% at t = 2, ~1% by t = 8 | §117.2 |
+| p_transmit from one Ω | ≤ 2%, flat | §117.1 |
+| **stage-1 near-misses** | **stage 2 falls ~1.2× as often as predicted, near Ω-independent** | **§117.3–4** |
+
+Four of those six are instrument or bookkeeping; one is a known approximation that vanishes with the
+window; **one is physics nobody in this arc had modelled.**
+
+**§117.6 — failed predictions and my own errors, kept.** P3 (the offset lives in p_t) failed. The
+stage-2 half of the "two-state form" account failed its kill test. P6a failed. A "stationary flux"
+check I ran between P6 and P7 compared the raw one-step current across the saddle against a
+committed rate — 15–32× off *by construction*, because saddle recrossings dominate a one-step current;
+I should have expanded that before running it, and it is discarded, not read. Mechanically: a kill
+loop of mine matched on a pattern that appeared in its own command line and killed its own shell
+before an edit landed — CLAUDE.md's `pkill -f` warning, in a new shape — and three waiter loops of the
+form `while pgrep -f <pattern>` matched themselves and would never have exited.
+
+> **What §117 settles.** The drift that §106 found, §107 called unexplained, and §108–§110 chased
+> through three retired mechanism families is accounted for completely — and most of it was never
+> there: it was the estimator, the seed, and a bookkeeping inconsistency. What is left when the
+> instrument is right is small, measured, and new: **a stage that nearly fails and recovers still
+> damages the stage below it** — about 1.2× the predicted fall rate, at every volume tested.

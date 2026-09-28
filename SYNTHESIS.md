@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§116. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§117. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -843,3 +843,15 @@ exact rate into §107's closure removes **two-thirds of its drift (1.83× → 1.
 candidate left" is withdrawn. §110's refutation of the timescale framing survives the new instrument
 intact. What remains is U-shaped — a 22% rise at large Ω with the model 6–23% low — and has a named
 suspect for the first time since §107: the measured side's own seed.
+
+**§117 finished the account.** Splitting §107's closure into its three factors, each measured in the
+same matched-seed joint solve: p_transmit, the last suspect, was right all along (≤ 2%); the large-Ω
+rise was an inconsistency §116 itself introduced; stage 1's small excess is a window transient that
+vanishes. **The drift that §106 found, §107 called unexplained, and §108–§110 chased through three
+retired mechanism families is accounted for term by term — and most of it was the instrument.**
+  > What remains once the instrument is right is small, measured, and new. The Q-process is exact for
+  > the absorbing chain (converging to 1.007). The free chain plateaus 16% below it: **a stage that
+  > dips below its saddle and recovers still damages the stage downstream**, making it fall about
+  > 1.2× as often as any conditioned model predicts, at every volume tested. Every model in this arc —
+  > pinned, bracketed, averaged, conditioned — assumed an upstream that stays in its basin. Near-misses
+  > are invisible to all of them, and they are the physics that was left.

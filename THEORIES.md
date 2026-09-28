@@ -5305,3 +5305,31 @@ produce a large-Ω rise in exactly this direction; and the two-state form `π(1 
 which §115.2 showed is window-dependent. **How to kill:** rerun §106's measured ratio with matched
 (QSD) seeding — the seed is a flag already in `free_upstream_depth.solve` — and recompute the column.
 If the U flattens, the remainder was the measurement's seed, not the model.
+
+
+**T-CASC-aj → §117: CLOSED, and its suspect was innocent.** The single p_transmit measured at Ω = 30
+is right to ≤ 2% at every Ω. §117 split §107's closure into its three factors, each measured in the
+same joint solve: the large-Ω rise was §116's own inconsistency (exact conditioned rate paired with
+the pinned occupancy); stage 1's ~5% is the two-state form's finite-window transient (→ ~1% at
+t = 8); and stage 2's remainder is not a transient at all.
+
+**T-CASC-x → §117: CLOSED, accounted for term by term.** §107's 1.83× drift decomposes into the
+windowed pinned-occupancy estimator (two-thirds, §115/§116), §101's default seed (the low-Ω arm,
+§116.5), the pinned/exact inconsistency (the large-Ω rise, §117.1), stage 1's window transient, and
+one physical channel (below). "No candidate left" was wrong because the instrument was.
+
+**T-CASC-ak, open, and it is new physics for this arc: near-miss transmission.** The Q-process is
+exact for the absorbing chain (model/measured 1.139 → 1.007, increments halving). The FREE chain
+plateaus at 0.836 (t = 16–32, Ω = 30): stage 2 falls ~1.2× as often as the Q-process predicts. The
+free chain's "stage 1 high" set is the never-dipped trajectories (whose law matches the Q-process)
+plus trajectories where stage 1 dipped below its saddle and recovered — so the excess is carried
+entirely by the second set. That accounting is exact. **That the dips cause stage 2's falls is the
+suspect (rule 17).** And the shortfall is nearly Ω-independent (14–16% at t = 8, Ω = 20–70), which is
+itself unexplained: both the near-miss rate and stage 2's fall rate are exponentially small in Ω,
+and nothing yet says why their ratio should not be. **How to kill:** (1) measure the dip-and-return
+set directly — evolve with stage 1's sub-saddle states tagged (an extra "has dipped" bit doubles the
+state space) and read stage 2's low probability on each set separately; the excess must sit entirely
+in the dipped set. (2) Causation: pin stage 1 at its high operating point for the duration of each
+dip (a counterfactual) and check the excess disappears. (3) For the Ω-independence: measure the
+dipped set's weight and its per-trajectory effect separately across Ω; if one grows as the other
+shrinks, the constancy is a cancellation, not a law.

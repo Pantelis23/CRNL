@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§119. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§120. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -885,3 +885,13 @@ downstream's own escape rate moved ~690× where it could be resolved.
   > relative to the upstream's saddle.
   The first prediction (the excess ∝ k₁/k₂) failed, and so did "zone width alone sets the
   constant". The constant itself is not yet predictable from single-element data.
+
+**§120 predicted the constant from the two elements separately, and found what kind of effect it
+is.** A memoryless picture — stage 2 as a switch with a hazard set by its input at each instant,
+which is the arc's frozen limit — over-predicts the damage per near-miss by 1.1–117× and misorders
+the arms. Letting stage 2 *drift* along each stochastic stage-1 recovery, deterministically, gets
+within 1.5–3×. Adding stage 2's own noise gets within 0.66–1.06 across an 1,800× range. **The damage
+is a memory effect:** a finite-time fall that reverses if the upstream recovers first. What is left
+matches, in size, the pre-dip sag §118 measured by intervention; that match is a suspect, not a
+result, because the approach paths were not simulated. Two of the three pre-registered absolute
+criteria failed by their letter, and one reduction was refuted outright.

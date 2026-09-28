@@ -5387,3 +5387,13 @@ the within-pair Ω axis only. A second family, in which edge and barrier can be 
 
 **T-CASC-al (why recovery lingers) — unchanged and still open.** §119 is consistent with it but does
 not test it. Q1's failure says the zone's *clocks* matter, which is the direction T-CASC-al points.
+
+**T-CASC-an's open half → §120: mostly CLOSED.** p_d is predicted from single-element data. The
+frozen (memoryless) hazard is refuted: 1.1–117× over, a and c misordered. The memory reduction —
+stochastic stage 1 from its own chain, stage 2 driven along each path — runs 0.34–0.67
+deterministic and 0.66–1.06 with stage 2's noise, over an 1,800× range of p_d. **What remains
+(suspect):** the 8–34% shortfall in positive-zone arms is §118's pre-dip sag. **How to kill:**
+sample stage 1's approach to its saddle (rare-event paths, e.g. by time-reversing the QSD escape),
+start stage 2 from the state those paths leave it in, and check that the positive-zone ratios move
+to 1 rather than to another constant. **Also open (T-CASC-ao):** "the barrier buys nothing" across
+pairs needs a second element family in which edge and barrier move independently.

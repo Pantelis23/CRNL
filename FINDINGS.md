@@ -13116,3 +13116,100 @@ element only lowers p0.
 > the best conditioned model this arc has — under-predicts such a stage's failures by factors of
 > 15 to 3 × 10⁴ here, and the factor grows as the downstream is made more robust. Four predictions
 > failed on the way: P2, Q1, and two soft ones (P5 as a constant, and Q4 as a sharp threshold).
+
+### 120 Predicting the constant from single elements: the memoryless picture fails by up to 117×, memory gets within ~2×
+
+*Scope: §119's eight arms and eighteen cells, same elements and Ω. Two reductions, both built from
+single-element data only — stage 1's own 1-D chain and stage 2's own rates, with no joint chain —
+each compared in absolute terms against §119's exact p_d (rule 16). `experiments/frozen_downstream.py`.
+R1–R3 were written before the first reduction ran, and R4–R5 before the second.*
+
+§119 left the constant in P(wrong | right) ≈ φ·p_d·k₁t unpredicted: φ ≈ 0.4 is a stage-1 quantity,
+but p_d, the damage per near-miss, was only measured. Zone width orders it and does not determine
+it (Q1). This section asks whether p_d follows from single-element data.
+
+**§120.1 — the frozen (memoryless) reduction: refuted on all three predictions.** Stage 2 is treated
+as a two-state switch whose high → low hazard at each stage-1 level x is its own escape rate with
+the input frozen at x. That hazard kills a stage-2-alive density carried on stage 1's exact tagged
+1-D chain. This is the pointwise frozen limit that §92/§96 used for barrier crossings.
+
+- **R2 (absolute, within 2×) FAILED.** It over-predicts p_d everywhere: 1.1–1.2× in S, 2.6–2.9× in
+  X, 5.5–7.1× in Z, 20–31× in a, 49–117× in N. The ratio grows with Ω and is not a constant.
+- **R1 (order) FAILED.** It swaps a and c at both Ω.
+- **R3 (never-dipped) FAILED.** It over-predicts p0 by 2× to 3.5 × 10⁴.
+
+The failure has a direction: the shorter and shallower the excursions that matter, the worse the
+over-prediction. That is what a memoryless hazard gets wrong. A fall is a finite-time drift that
+**reverses** if stage 1 returns before stage 2 has crossed its separatrix. A hazard instead books
+every brief exposure as a partial fall.
+
+**§120.2 — the memory reduction: the shape of p_d from single elements.** Stage 1 runs stochastic
+from its own chain (τ-leaped, 20,000 paths), started one step below its saddle at the dip. Stage 2
+runs **deterministic**, on its own rate equation driven by x₁(t) along each path, starting at its
+high fixed point. Dip times are uniform over the window. The step size is converged: at τ/2, X:40
+moves 0.4%.
+
+| arm | w | exact p_d, Ω = 40 / 55 | reduction ÷ exact, Ω = 40 / 55 |
+|---|---|---|---|
+| S | +0.611 | 0.850 / 0.890 | 0.66 / 0.67 (Ω = 30: 0.61) |
+| X | +0.357 | 0.289 / 0.308 | 0.55 / 0.55 (Ω = 30: 0.54) |
+| b | +0.225 | 0.071 / 0.066 | 0.60 / 0.58 |
+| Z | +0.129 | 0.066 / 0.054 | 0.48 / 0.51 |
+| c | +0.061 | 0.029 / 0.021 | 0.53 / 0.46 |
+| a | +0.122 | 0.014 / 0.010 | **0.39 / 0.34** |
+| d | −0.003 | 0.011 / 0.006 | 0.42 / 0.57 |
+| N | −0.106 | 0.0014 / 0.0005 | 0.21 / 0 (none of 7,724 recovered paths fell) |
+
+- **R4 (every positive-zone cell within [0.5, 2]) FAILED by its letter.** a sits at 0.34–0.39, and
+  Z:40 and c:55 just under 0.5.
+- **What the letter misses:** across a 90× range of the exact p_d, the reduction's ratio stays in
+  0.34–0.67. It runs low on every arm — the side R4 predicted, because the reduction omits
+  §118's pre-dip sag (~24% of the effect) and stage 2's own noise.
+- **Consequence:** the floor's constant is now predicted from single-element data to within ~2–3×.
+  The memoryless alternative is off by 1–117×.
+- **R5 (order) held at Ω = 40 across all eight arms**, including a < Z, the equal-width pair that
+  zone width could not split. At Ω = 55, a and d tie within Monte Carlo noise (0.0034 vs 0.0036,
+  s.e. ~0.0007).
+- **N (no zone) goes to zero** in the deterministic reduction. With no zone, a deterministic stage 2
+  never loses its high state. N's exact 0.0005–0.0014 is therefore stage 2's own noise carrying it
+  across, which is consistent with Q4's graded boundary.
+
+**§120.3 — the kill test's first half: stage 2's noise (R6, written before running).** Stage 2 is
+now made stochastic, tau-leaped from its own rates along the same stage-1 paths and started from
+its own quasi-stationary law. Nothing else changes; the pre-dip sag stays out.
+
+| arm | reduction ÷ exact: deterministic → **stochastic** stage 2 (Ω = 40 / 55; S and X also 30) |
+|---|---|
+| S | 0.61 / 0.66 / 0.67 → **0.79 / 0.76 / 0.74** |
+| X | 0.54 / 0.55 / 0.55 → **0.76 / 0.70 / 0.66** |
+| b | 0.60 / 0.58 → **0.74 / 0.79** |
+| Z | 0.48 / 0.51 → **0.89 / 0.83** |
+| c | 0.53 / 0.46 → **0.77 / 0.90** |
+| a | 0.39 / 0.34 → **0.92 / 0.72** |
+| d | 0.42 / 0.57 → **0.89 / 0.77** |
+| N | 0.21 / 0 → **0.93 / 1.06** |
+
+- **R6 FAILED by its letter in one arm.** X reads 0.699 ± 0.016 and 0.663 ± 0.014 against the 0.7
+  floor. Every other positive-zone cell is inside [0.7, 1.05], and **none overshoots**.
+- **N goes from zero to exact within error.** Without a zone, the damage is stage 2's own noise
+  carrying it across, and there is no pre-dip sag to omit.
+- **With a zone, the reduction runs 0.66–0.92.** That missing 8–34% matches the ~24% that §118's
+  P11b measured, independently and by intervention, as stage 2's state at the dip.
+- **Scope of the match:** across all eighteen cells, spanning an **1,800× range** of p_d (0.0005 →
+  0.89), the stochastic reduction lands within 0.66–1.06 of the exact joint chain, while the frozen
+  hazard was off by 1.1–117×.
+
+The second half of the kill test — including the approach, so the sag is modelled rather than
+inferred — is not run. It needs stage 1's pre-dip paths, which are rare events. The residual is
+therefore *consistent with* the sag, not shown to be it (rule 17).
+
+> **What §120 settles.** The damage per near-miss is a *memory* effect: stage 2's finite-time drift
+> during stage 1's crawl, which reverses if the crawl ends first. The memoryless (frozen) picture —
+> which is how the arc's frozen limit treats a fluctuating input — is refuted for this channel by
+> up to two orders of magnitude, in the direction memory predicts. A reduction built only from
+> single-element data, one stochastic chain and one rate equation, reproduces the constant's
+> variation across a 90× range, running low by a factor of 1.5–3 in every arm with a zone. With
+> stage 2's own noise added, still single-element, the reduction lands within 0.66–1.06 across an
+> 1,800× range. What remains is the size §118 measured for the pre-dip sag. That makes the
+> near-miss floor of §119 predictable in absolute terms, to within a factor of ~1.5, from the two
+> elements separately.

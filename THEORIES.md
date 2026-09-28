@@ -5229,3 +5229,42 @@ are — §114's own `Elem` does exactly that and needed no globals at all — wh
 of error impossible rather than merely loud. That is a mechanical refactor across ~28 files and it
 would touch published call sites, so it needs a section that prints before-and-after (rule 7), not
 a quiet cleanup.
+
+**T-CASC-ag → §115: CLOSED. The effective rate has an exact definition and the windowed inversion
+was biased two ways.** §108–§114 inverted k_eff as `−ln(1 − v/π_low)/t` at one window with no
+stage-1 survival term and the *pinned* occupancy. The exact object is the Q-process gap λ₁ − λ₀ of
+the stage-1-alive joint generator (λ₀ = stage 1's QSD decay to ≤3e−7; λ₁'s eigenvector flips across
+stage 2's saddle, |corr| ≥ 0.978; box-converged to 4e−6; an independent windowed route with the
+conditioned occupancy lands within 0.08). Under it the drift is real but **0.547, not 1.176**; the
+rate **never exits the bracket**; and **§114.3's 3.2× outlier reads 0.493 against 0.570/0.665** —
+its anomaly was the grid's largest occupancy ratio (1.726).
+
+**T-CASC-ac → §115: WITHDRAWN, it was the instrument.** It asked what the "second variable" behind
+E-084's anomaly was, with π_low the suspect. §115 shows the anomaly was the inversion dividing by the
+pinned π_low: E-084 had the largest gap between pinned and conditioned occupancy, which is exactly
+why its residual tracked π_low in §114's P6. The measurement §114 read was real; the variable was
+the estimator's. Rule 14 applied to §115's own retraction: three independent checks (mode, box,
+second route) before it was written.
+
+**T-CASC-af → §115: the slope mismatch was the instrument too, and it now points the other way.**
+Under the exact rate the rail/Ω slope ratio is 1.133 (A·Ω) and 1.155 ((margin/σ)²), RMS/span 0.054
+and 0.082: the rail axis is no longer shallower, and A·Ω now beats (margin/σ)². **Still open, and
+it is the live remainder of T-CASC-ab:** four rail cells are one line through rail space, and
+A·Ω and (margin/σ)² still move together along it. The two-parameter rail family (move r₁ or r₃ to
+hold A·Ω fixed while (margin/σ)² varies) remains the kill test — now with the exact rate as the
+instrument, which is cheaper than the windowed joint solve (one sparse shift-invert per cell).
+
+**T-CASC-ah, open: what is E-084's −21%?** Under the exact rate it is the largest residual about the
+Ω-curve and it sits BELOW it — the only element whose downstream holds its high state (pinned π_low
+0.244). Four cells are within 8%. A fifth of the span is not an outlier by §114.3's standard and is
+not nothing. **How to kill:** it is the one cell in the low-occupancy regime, so a second element in
+that regime (f near 0.8, Ω ~ 10–14) either lands near −20% too (a regime effect with a name to find)
+or near the curve (E-084 is one noisy point).
+
+**T-NUM-c, open: every number in §108–§114 that passes through the windowed inversion.** §108's
+true/k(⟨x⟩) table, §109's P3 and drift headline, §110's position column, §114's grid. None is edited
+(rule 7); §115 prints the exact values for the published element and five rail cells. **How to
+close:** rerun each affected table's conclusion — not its numbers — on the exact gap, and record
+per section whether the conclusion survives. §110's refutation of the timescale-ratio account rests
+on the position rising while τ_up/τ_cross falls; the exact position still rises monotonically, so
+it is expected to survive, and that expectation is exactly what needs testing rather than assuming.

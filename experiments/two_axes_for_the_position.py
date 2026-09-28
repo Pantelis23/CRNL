@@ -279,8 +279,14 @@ class Elem:
         k_mean = self.escape_rate(om, mus[0])
         return k_mean, float(np.exp((w * np.log(ks)).sum())), float((w * ks).sum())
 
-    def joint_absorbing(self, om, t=T_WINDOW):
-        """§108's absorbing-upstream two-stage chain, stage 2 seeded from its own QSD (§109)."""
+    def joint_absorbing(self, om, t=T_WINDOW, return_survival=False):
+        """§108's absorbing-upstream two-stage chain, stage 2 seeded from its own QSD (§109).
+
+        Returns v = P(stage 1 never fell below its saddle AND stage 2 low). With
+        `return_survival=True` also returns S1 = P(stage 1 never fell), from the SAME joint
+        distribution -- stage 1 is absorbing below its saddle, so n1 >= saddle at t is exactly
+        "never failed". §115 needs it: §102 divides by stage-1 survival, §108/§109 do not.
+        """
         cap = self.cap(om)
         m = cap + 1
         N = m * m
@@ -313,7 +319,10 @@ class Elem:
             p[a * m + keep] = wa * w2
         p = spla.expm_multiply(Q.T * t, p)
         g = p.reshape(m, m)
-        return float(g[np.ix_(np.arange(m) >= sad, np.arange(m) < sad)].sum())
+        v = float(g[np.ix_(np.arange(m) >= sad, np.arange(m) < sad)].sum())
+        if return_survival:
+            return v, float(g[np.arange(m) >= sad, :].sum())
+        return v
 
     def position(self, om, t=T_WINDOW):
         """The coordinate T-CASC-aa is about: 0 = rate at the mean, 1 = mean of the rate."""

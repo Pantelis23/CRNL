@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§114. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§115. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -817,3 +817,20 @@ where the modulator is itself chemistry rather than an imposed noise process, an
 operating point is taken from the exact static-transfer average before the LNA is applied.** No
 reference was found combining a directed cascade, genuine bistability, an exact CME and a depth
 question.
+
+
+**§115 then found that the position had an exact definition all along, and that roughly half of what
+§108–§114 measured was the estimator.** Every position was `ln(k_eff/k_mean)/ln(k_avg/k_mean)` with
+k_eff inverted from a windowed joint probability — no stage-1 survival term (§102 had one; §108 on
+did not), one unswept window, and the *pinned* occupancy. The quantity it estimates is the gap
+λ₁ − λ₀ of the stage-1-alive joint generator: no seed, no window, no survival.
+  > Verified three independent ways before anything was retracted (rule 14): the right eigenmode,
+  > box convergence, and a second windowed route using the conditioned occupancy that lands on the
+  > gap within 0.08. Under it **the drift is real but 0.547, not 1.176**; the rate **never exits the
+  > bracket**; and **§114.3's 3.2× outlier reads 0.493 against a pair at 0.570/0.665** — the
+  > "second variable" (T-CASC-ac) was the estimator's fingerprint, and the rail axis's "systematic
+  > shallowness" (T-CASC-af) goes with it (slope ratio 0.73 → 1.13, A·Ω now best at 5.4% RMS).
+
+  The survival term alone — the first thing found — explained only a quarter of the drift and made
+  T-CASC-af *worse*; the pinned occupancy, found by following a failed prediction, explained the rest.
+  **Six of §115's own predictions failed, and the section is built out of what they pointed at.**

@@ -12529,3 +12529,142 @@ accident (§113.4's vacuous τ_cross sweep was the first).
 > that moves them together was never going to resolve it. And §102's bracket and §103's depression
 > both turn out to be regime statements rather than general framings. **The arc's central question
 > is not answered; it is, for the first time, correctly posed.**
+
+### 115 The effective rate has an exact definition, and about half the drift was the instrument
+
+*Scope: two-stage Schlögl cascades, the published element (rails 0.15/1.0/3.1827, Ω = 14–70) and
+five §114 rail cells (E-062 Ω=30,55; E-070 Ω=30,55; E-084 Ω=14); exact CME throughout; windows
+t = 1–8; `cap_mult` 1.25 for reproduction checks, 2.0 (converged, verified against 3.0) for every
+conclusion. Run in the project's `.venv` — the shared venv named in CLAUDE.md no longer exists;
+P1 reproduces §109 to 8e−12 under it. `experiments/the_survival_term.py`.*
+
+Every fast/frozen *position* since §108 is `ln(k_eff/k_mean)/ln(k_avg/k_mean)`, and every term in
+it is a spectral gap except `k_eff`, which is inverted from a windowed joint probability:
+`k_eff = −ln(1 − v/π_low)/t`, with `v = P(stage 1 never failed AND stage 2 low)` at t = 2. That
+inversion had two unswept biases. The quantity it was estimating has an exact definition that has
+neither.
+
+**§115.1 — the survival term: §102 divides by stage-1 survival, §108/§109/§114 do not**
+
+Stage 1 is absorbing below its saddle, so trajectories where it failed are missing from `v`, and
+the inversion returns roughly `S1 × k`. §102's `rate_limits` divides by a survival
+(`frac = pure / surv`); §108's `effective_rate`, §109's P3 and §114's `Elem.position` do not. **S1
+rises with Ω — 0.790 (Ω=14), 0.925, 0.988, 0.9999, 1.0000 (Ω=70) — which is the axis the
+position drifts along** (rule 9). Dividing by the S1 of the same joint distribution lifts Ω=14 from
+−0.012 to **+0.284** and shrinks the published drift span **1.176 → 0.880**: 25% of it.
+
+**§115.2 — the window was never swept**
+
+With S1 removed, the position is still a converging function of `T_WINDOW`:
+
+| Ω | t = 1 | t = 2 (published) | t = 4 | t = 8 |
+|---|---|---|---|---|
+| 14 | 0.217 | 0.284 | 0.322 | 0.349 |
+| 70 | 0.806 | 1.163 | 1.335 | 1.416 |
+| drift span | 0.589 | 0.880 | 1.013 | 1.067 |
+
+Rule 13 and rule 20 at once: a numerical parameter never swept, and a converging quantity read at
+one resolution. And rule 21's second half, before calling it physics: `−ln(1 − q/π_low)/t` is only
+window-free if stage 2 is exactly two-state *and* starts in the joint system's own quasi-stationary
+state, and neither holds.
+
+**§115.3 — the exact rate: the Q-process gap**
+
+Condition on stage 1 surviving. Stage 2's effective relaxation rate is then **λ₁ − λ₀ of the joint
+generator restricted to stage-1-alive states** — no seed, no window, no survival term, and the same
+kind of object as `k(⟨x⟩)`, which is itself a spectral gap. Checks, all passed:
+
+- **λ₀ equals stage 1's own QSD decay rate** to 2e−12 … 3e−7 (stage 2 does not feed back).
+- **λ₁ is stage 2's inter-well mode**: its Doob-transformed eigenvector flips sign across stage 2's
+  saddle with |corr| = 0.978, 0.998, 0.985, 0.996 in four cells, and λ₂ sits two orders higher.
+- **Box-converged**: `cap_mult` 2.0 → 3.0 grows the alive space 7,007 → 16,335 states and moves
+  the position by 4e−6 — checked explicitly, because a flat sweep is also what a dead parameter
+  prints (§113.4).
+- **An independent route agrees**, and it names the mechanism. For kt ≪ 1 the windowed inversion
+  measures `k_fwd / π_low,pinned` where the gap is `k_fwd / π_low,cond` — the pinned occupancy
+  instead of the one the conditioned system actually has. Redoing the windowed inversion with the
+  conditioned occupancy lands on the gap:
+
+| cell | π_low cond / pinned | exact | windowed, pinned π_low | windowed, conditioned |
+|---|---|---|---|---|
+| PUB Ω=30 | 1.074 | 0.665 | 0.719 | 0.622 |
+| PUB Ω=55 | 1.215 | 0.895 | 1.123 | 0.829 |
+| PUB Ω=70 | 1.384 | 0.996 | 1.470 | 0.916 |
+| **E-084 Ω=14** | **1.726** | **0.493** | **2.002** | **0.419** |
+| E-070 Ω=30 | 1.032 | 0.570 | 0.578 | 0.544 |
+
+The conditioned route runs systematically 0.03–0.08 low (a residual finite-window transient), and
+at E-070, where the occupancy ratio is only 1.03, the pinned route is actually closer. Everywhere
+the ratio is large, the pinned route is wrong by roughly its logarithm.
+
+**§115.4 — what the exact rate does to the arc (cap 2.0)**
+
+| Ω | 14 | 20 | 30 | 55 | 70 | span |
+|---|---|---|---|---|---|---|
+| published (t=2, pinned π_low, no S1) | −0.012 | 0.257 | 0.466 | 0.844 | 1.163 | 1.176 |
+| **exact gap** | **0.449** | **0.513** | **0.665** | **0.895** | **0.996** | **0.547** |
+
+1. **The drift is real and about half its published size.** The position still rises monotonically
+   across the whole range; 53% of the published span was instrument.
+2. **It never leaves the bracket.** 0.996 at Ω=70, not 1.163: §109's "traverses the bracket *and
+   exits it*" was the pinned-occupancy inversion.
+3. **§114.3's refutation of A·Ω's sufficiency does not survive.** E-084 at Ω=14 was 3.2× its
+   bracketing pair; exact, it reads **0.493** against **0.570** and **0.665**. Its anomaly was the
+   largest occupancy ratio in the grid (1.726), i.e. the instrument's fingerprint — which is why
+   §114.4 and §114.6's P6 found it tracking π_low.
+4. **T-CASC-af's slope mismatch was the instrument too.** Under the exact rate:
+
+| cell | A·Ω | exact | Ω-curve | residual (% of span) |
+|---|---|---|---|---|
+| E-062 Ω=30 | 2.794 | 0.423 | 0.457 | −6.2% |
+| E-062 Ω=55 | 5.122 | 0.631 | 0.621 | +1.9% |
+| E-070 Ω=30 | 4.641 | 0.570 | 0.582 | −2.3% |
+| E-070 Ω=55 | 8.509 | 0.758 | 0.803 | −8.3% |
+| E-084 Ω=14 | 4.946 | 0.493 | 0.607 | −20.9% |
+
+| candidate | RMS/span (π_low > 0.8) | slope ratio rail/Ω |
+|---|---|---|
+| A·Ω | **0.054** | 1.133 |
+| (margin/σ)² | 0.082 | 1.155 |
+
+   The rail axis is no longer "systematically shallower" (0.73 → 1.13), and **A·Ω now does better
+   than (margin/σ)²**, reversing §114.9's marginal ordering. That table was computed after I had
+   estimated its contents by hand from the same numbers, so it is arithmetic, not confirmation.
+   E-084 remains the largest deviation, now *below* the curve by a fifth of the span — not an
+   outlier by the standard §114.3 used, and not nothing either.
+
+**§115.5 — predictions that failed, kept**
+
+- **P4** ("corrected rate closer to 1 across windows in every cell") printed FAILS. Read against the
+  numbers it looked broken, so a post-hoc control was run (**P4b**, stage 2 alone with upstream
+  pinned, no stage 1 to die) under a criterion written before it ran. **P4b also printed FAILS**:
+  at Ω=14 and 20 the correction takes the window error against the control from −0.221 to +0.007
+  and −0.052 to +0.019, but at Ω=30 and 55 a second, survival-independent window effect dominates
+  (+10% per doubling at Ω=55 against +2% for the control). That second effect is §115.2, and it is
+  what led to the exact rate. I did not relax P4b's criterion a second time.
+- **P5** (the survival correction moves T-CASC-af's slope ratios toward 1) **failed**: 0.730 → 0.615,
+  because E-062 at Ω=30 has S1 = 0.857 and its lift flattens the rail axis further. Survival is not
+  what made the rail axis shallower; the pinned occupancy was.
+- **P9b** (exact position ≈ Aitken limit of the windowed sequence) **failed**: the windowed
+  sequence converges *past* the gap (Ω=70: t=8 already 1.416 against 0.996), because its limit is
+  `k_fwd/π_low,pinned`, not a rate.
+- **P9c** (exact span within 0.15 of 1.176) **failed**: 0.547.
+- **P10 V1** (exact position moves < 0.03 between cap 1.25 and 2.0) **failed**: 0.319 → 0.449 at
+  Ω=14. Converged by 2.0, but not at the published box.
+- **P2** put S1 at 0.80–0.86 at Ω=14; it is 0.790.
+
+Two of my own instrument errors, caught before they entered a verdict: the first mode check sorted
+eigenvalues descending and divided the λ₁ mode by a fast mode (every correlation it printed was
+meaningless); a `timeout` wrapper killed the verification run before any output was written; and
+this section's own first test asserted `==` between two identical solver calls — the error §114.8c
+and §114.10 had just recorded — and failed on the last digit. Recording a class of error does not
+stop you making it in the next section.
+
+> **What §115 settles.** The quantity the arc has been calling a position has an exact, window-free
+> definition, and three published claims were artifacts of estimating it through a pinned
+> occupancy: half the drift's size (§109), the rate exiting the bracket (§109), and the 3.2× outlier
+> that refuted A·Ω's sufficiency (§114.3) along with the "second variable" read off it (§114.4,
+> T-CASC-ac). What survives: the drift itself, monotone across Ω; §114.1 (the position moves at
+> fixed Ω); §114.5's bracket inversion and §114.6's sign change, which are statements about
+> k(⟨x⟩) and ⟨k⟩ and the operating point, not about k_eff. **Every number in §108–§114 that
+> passes through `−ln(1 − v/π_low)/t` should be read as carrying this bias; none is edited here.**

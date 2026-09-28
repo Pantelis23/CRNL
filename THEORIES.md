@@ -5354,9 +5354,36 @@ element whose saddle sits *closer to* stage 2's edge — r2 moved up, the §112 
 predicts the after-dip share shrinks with the saddle-to-edge distance. If the share does not move,
 the lingering is not what does the damage.
 
-**T-CASC-am, open (suspect): one action for two stages.** §118.2's flat ratio needs stage 1's dip
+**~~T-CASC-am, open (suspect): one action for two stages.~~ (closed §119, below)** §118.2's flat ratio needs stage 1's dip
 rate and stage 2's unaided fall rate to share an exponent. The suspect is that they are the same
 element with the same barrier. **How to kill:** repeat §118's tagging on a cascade of two *different*
 elements (the §114 grid supplies them). If the near-miss excess then grows or decays exponentially in
 Ω, at the difference of the two actions, the flatness was an identical-element coincidence. If it
 stays flat, something else ties the two rates together.
+
+**T-CASC-am → §119: CLOSED, and both branches of its kill test fired.** On two different elements
+(E-070 → E-084), E saturates near 15 instead of tracking k₁/k₂. "Something else ties the rates":
+the never-dipped stage 2 also fails on stage 1's clock (p0/(k₁t) ≈ 0.008 while k₂ falls 7000×). Where
+the downstream is strong enough that p0 escapes stage 1's clock (Z, c), E *does* grow exponentially
+(134 → 655, 1.2e3 → 9.9e3). So §118's flat E was neither a coincidence nor a law. **E is not the
+invariant; P/(k₁t) is** — see T-CASC-an.
+
+**T-CASC-an, RESULT at its scope (§119.3), with an open half.** Given a zone (edge₂ > saddle₁),
+P(stage 2 wrong | stage 1 right)/(k₁t) is flat in Ω — predicted before running on three pairs never
+fitted and held (1.04–1.37× over Ω = 40 → 55 while k₂ moved ~690× where resolvable). A restoring
+stage's error floor is slaved to its upstream's dip rate, and every conditioned model under-predicts
+it by E = 15 … 3 × 10⁴ here. **Scope:** one family, Ω = 30–55, t = 16 (still approaching its plateau),
+`cap_mult` 1.25 (checked at 2.0, ≤ 3.4%). **Open half — what sets the constant φ·p_d?** φ ≈ 0.4 is a
+stage-1 quantity. p_d is ordered by zone width w (Q2 held) but not determined by it (Q1 failed:
+equal-width pairs a and Z differ ~5×). **Suspect:** the right variable weighs stage 1's residence in
+the zone against stage 2's fall time there, which has a saddle-node bottleneck near edge₂. **How to
+kill:** compute both clocks from single-element data (stage 1's mean passage time from saddle₁ to
+edge₂ conditioned on not re-dipping; stage 2's deterministic fall time with its input held at points
+of the zone). Then predict p_d(a)/p_d(Z) ≈ 0.2 from them before looking. If a ratio of the two clocks
+does not order all eight arms, the variable is wrong. **Separately open:** across pairs in this
+family, the downstream's barrier and its edge move together, so "the barrier buys nothing" rests on
+the within-pair Ω axis only. A second family, in which edge and barrier can be moved independently
+(e.g. the Hill K), would test it across pairs.
+
+**T-CASC-al (why recovery lingers) — unchanged and still open.** §119 is consistent with it but does
+not test it. Q1's failure says the zone's *clocks* matter, which is the direction T-CASC-al points.

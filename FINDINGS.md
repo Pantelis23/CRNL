@@ -12973,3 +12973,146 @@ moved. P9a self-check: the two-block tagged chain with identical blocks reproduc
 - **A trap that nearly bit again:** with an ad-hoc run killed by PID after inspecting its `cmdline`,
   the canonical JSON comes from one `main()` run, which reproduces every piecewise number to
   7e−7 (expm noise, T-NUM-a).
+
+### 119 A restoring stage's error floor belongs to its upstream: confirmed out of sample, and conditioned models are off by up to 3 × 10⁴
+
+*Scope: the r1 = 0.15, r3 = 3.0 family (§114) plus three new members F-025/F-040/F-050 (r2 = 0.25,
+0.40, 0.50). Eight ordered pairs, Ω = 30–55 (40–55 for the E-062 upstream, whose dips saturate the
+window below 40). Exact CME on the joint chain, `cap_mult` 1.25, with the box checked at 2.0 (§119c).
+Stage-1 dip tagged as in §118. Seed = the product of the two quasi-stationary laws; window t = 16,
+with t = 4 and 8 stored. `experiments/weak_upstream.py`. Three blocks of predictions, each in the
+docstring before its run: P1–P5, then Q1–Q4 after reading P1–P5, then C1–C2.*
+
+§118 established near-miss transmission on two copies of one element. There the upstream's dip
+rate k₁ and the downstream's own fall rate k₂ are the same function of Ω, so nothing could separate
+them. This section pairs different elements.
+
+**The notation.** Given stage 1 is high at t, stage 2's low probability is
+
+    P = (1 − w_d)·p0 + w_d·p_d
+
+- w_d is the weight of dipped-and-recovered stage-1 trajectories;
+- p0 is stage 2's low probability on never-dipped trajectories. That set *is* the Q-process (§118
+  P2), and every conditioned model in this arc approximates it;
+- p_d is the same probability on dipped trajectories;
+- E = P/p0 − 1 is the excess over every conditioned model.
+
+A pair's zone width is w = edge₂ − saddle₁, where edge₂ is the least upstream level at which stage
+2's deterministic cubic is still bistable.
+
+**§119.1 — every cell** (t = 16; k = the element's decay rate absorbed at its own saddle; k₂ pinned
+at stage 1's operating point; "floor" where the quantity is below what the solver resolves, see
+§119c):
+
+| arm | stage 1 → stage 2 | w | Ω | k₁ | k₂ | p_d | **P/(k₁t)** | p0/(k₁t) | E |
+|---|---|---|---|---|---|---|---|---|---|
+| S | E-070 → E-070 | +0.611 | 30 | 1.25e-02 | 1.4e-02 | 0.843 | **1.34** | 1.1e+00 | 0.212 |
+| S | E-070 → E-070 | +0.611 | 40 | 2.74e-03 | 3.1e-03 | 0.85 | **1.7** | 1.4e+00 | 0.227 |
+| S | E-070 → E-070 | +0.611 | 55 | 2.75e-04 | 3.1e-04 | 0.89 | **2** | 1.6e+00 | 0.223 |
+| X | E-070 → E-084 | +0.357 | 30 | 1.25e-02 | 4.9e-05 | 0.289 | **0.122** | 1.3e-02 | 8.39 |
+| X | E-070 → E-084 | +0.357 | 40 | 2.74e-03 | 1.4e-06 | 0.289 | **0.123** | 8.3e-03 | 13.8 |
+| X | E-070 → E-084 | +0.357 | 55 | 2.75e-04 | 7.1e-09 | 0.308 | **0.136** | 8.2e-03 | 15.5 |
+| b | E-070 → F-040 | +0.225 | 40 | 2.74e-03 | 8.4e-10 | 0.0714 | **0.0286** | 7.1e-05 | 403 |
+| b | E-070 → F-040 | +0.225 | 55 | 2.75e-04 | below floor | 0.0665 | **0.0275** | 3.7e-05 | 733 |
+| Z | E-062 → E-084 | +0.129 | 40 | 2.66e-02 | 1.6e-06 | 0.0664 | **0.0246** | 1.8e-04 | 134 |
+| Z | E-062 → E-084 | +0.129 | 55 | 6.49e-03 | 7.8e-09 | 0.0544 | **0.0212** | 3.2e-05 | 655 |
+| a | E-070 → F-025 | +0.122 | 40 | 2.74e-03 | below floor | 0.0144 | **0.00576** | 2.0e-07 | 2.93e+04 |
+| a | E-070 → F-025 | +0.122 | 55 | 2.75e-04 | below floor | 0.0101 | **0.00419** | 2.8e-08 | floor |
+| c | E-062 → F-050 | +0.061 | 40 | 2.66e-02 | 5.0e-08 | 0.0286 | **0.0105** | 8.9e-06 | 1.18e+03 |
+| c | E-062 → F-050 | +0.061 | 55 | 6.49e-03 | 7.3e-11 | 0.021 | **0.00816** | 8.2e-07 | 9.94e+03 |
+| d | E-062 → F-040 | -0.003 | 40 | 2.66e-02 | 9.2e-10 | 0.0105 | **0.00387** | 2.4e-07 | 1.63e+04 |
+| d | E-062 → F-040 | -0.003 | 55 | 6.49e-03 | below floor | 0.00642 | **0.00249** | 8.6e-09 | floor |
+| N | E-062 → F-025 | -0.106 | 40 | 2.66e-02 | below floor | 0.00135 | **0.000497** | 1.3e-10 | floor |
+| N | E-062 → F-025 | -0.106 | 55 | 6.49e-03 | below floor | 0.000491 | **0.000191** | 6.4e-13 | floor |
+
+**§119.2 — the first prediction failed, and what it missed.** P2 predicted E ∝ (k₁/k₂)·p_d:
+exponential in Ω at the difference of the two dip actions.
+
+- **In arm X it is refuted.** E runs 8.4 → 13.8 → 15.5 and saturates. Over the same range
+  E·k₂/k₁ falls 82× while k₁/k₂ grows 150×.
+- **The assumption that failed is p0 ≈ k₂t.** In X, p0/(k₁t) sits at 0.008–0.013, which puts p0 16×
+  above k₂t at Ω = 40 and 317× above it at Ω = 55. Even the never-dipped stage 2 is failing on
+  stage 1's clock, not its own.
+- **Where p0 does decay faster than k₁, E is exponential after all:** Z 134 → 655, c 1.2e3 → 9.9e3.
+  So E is not the invariant.
+
+P1 held: the generator equals `near_misses.free_generator` exactly on the identical pair, and the
+tagged marginal equals the untagged chain to 1e−13. P3 held: arm S stays flat, E = 0.212 / 0.227 /
+0.223. P4 held: with the same stage 1, the no-zone pair's p_d is 0.020× and then 0.009× the zone
+pair's. P5 (E against w_d·0.85/p0) is recorded, not judged: 0.34–0.36 in X and ≤ 0.08 in the narrow
+zones. §118's 0.85 is a property of the wide zone, not a constant.
+
+**§119.3 — the invariant, first seen in-sample, then predicted.** Reading X and Z showed something
+that had not been predicted:
+
+- **P/(k₁t) was flat in Ω**: X 0.122 / 0.123 / 0.136, Z 0.025 / 0.021.
+- **The downstream's own rate k₂ moved by orders of magnitude over the same range**: 7,000× in X
+  and 200× in Z.
+- **It decomposes as φ·p_d + p0/(k₁t).** Here φ = w_d/(k₁t) = 0.37–0.41 is a stage-1 quantity,
+  roughly the share of dips that come back.
+
+A post-hoc pattern is not a result. Q3 therefore predicted it on three pairs never run: P/(k₁t)
+moves less than 1.5× from Ω = 40 to 55.
+
+| pair (never run before Q3) | w | P/(k₁t), Ω = 40 → 55 | change | k₂ over the same step |
+|---|---|---|---|---|
+| a: E-070 → F-025 | +0.122 | 0.00576 → 0.00419 | 1.37× | below the solver floor at both |
+| b: E-070 → F-040 | +0.225 | 0.0286 → 0.0275 | 1.04× | 8.4e−10 → below floor |
+| c: E-062 → F-050 | +0.061 | 0.0105 → 0.0082 | 1.29× | 5.0e−8 → 7.3e−11 (**690×**) |
+
+**Q3 HOLDS on all three.** Over the same step, the conditioned prediction p0/(k₁t) moves 1.9–11×
+(a 6.9×, b 1.9×, c 10.9×) and k₂ moves ~690× where it is resolvable.
+
+The claim, at the scope stated: **given a zone, the probability that a restoring stage is wrong
+while its input is right grows at a fixed fraction of the upstream's dip rate, and its own barrier
+does not set it.** Every conditioned model instead predicts p0, and the exact excess E over them is:
+
+- 15 (X, Ω = 55);
+- 655 (Z);
+- 733 (b);
+- 9.9 × 10³ (c);
+- 2.9 × 10⁴ (a, Ω = 40).
+
+That excess grows without bound as the downstream element is made stronger, because the stronger
+element only lowers p0.
+
+**§119.4 — what sets the fraction: p_d, which the zone orders but does not determine.**
+
+- **Q2 held**: p_d is monotone in w at both Ω, across all six arms from N to X.
+- **Q1 FAILED**: arm a (w = +0.122) and arm Z (w = +0.129) share no element and differ 4.6× / 5.4×.
+  The width in x is the wrong variable.
+- **The suspect** (rule 17): the right variable weighs stage 1's residence time in the zone against
+  stage 2's fall time there. A width in x ignores both clocks, and the second has a saddle-node
+  bottleneck near edge₂.
+- **Q4 held by its letter, but the boundary is graded.** p_d's fall from Ω = 40 to 55 runs N 2.75×,
+  d 1.64×, c 1.36×, a 1.42×, Z 1.22×, b 1.07×, X 0.94×, S 0.95×. That is a smooth crossover, not a
+  switch at w = 0.
+
+**§119c — the instrument** (C1, C2, predicted before running):
+
+- **C1 held.** At `cap_mult` 2.0, P, w_d and p0 move 2.0–3.4% and p_d under 0.3%, the same sign in
+  all three cells. That is far below the 1.04–1.37× readings Q3 rests on.
+- **C2 held.** Halving the step moves nothing by more than 4e−6.
+- E is withheld wherever p0 < 1e−9 (N at both Ω, a:55, d:55), and k₂ is marked "below floor"
+  under 1e−11. For F-025 at Ω = 40 the dense eigensolver returned k₂ = −1.2e−12.
+
+**§119.5 — scope, and what this does not show.**
+
+- **Across pairs**, k₂ and w move together in this one-parameter family: a stronger downstream here
+  also has a lower edge. The comparison across pairs therefore cannot separate "barrier" from
+  "edge". The barrier-independence claim rests on the Ω axis *within* each pair, where the elements
+  are fixed and only the barrier's effect scales.
+- **Everything is read at t = 16.** P/(k₁t) is still rising at t = 4 → 8 → 16 (a: 0.0030 → 0.0052 →
+  0.0058) with shrinking increments, so it is approaching a plateau, not sitting on one (rule 20).
+- **Two identical-width pairs showed that the zone is not a sufficient variable**, so the constant
+  is not yet predictable from single-element data (rule 16). φ is a stage-1 quantity and computable;
+  p_d is not yet.
+
+> **What §119 settles.** A restoring stage cannot be more reliable, given correct input, than a
+> fixed fraction of its upstream's dip rate. Making it stronger buys nothing through its own
+> barrier. It buys only through where its bistability edge sits relative to the upstream's saddle,
+> and the Ω = 40 → 55 fall in p_d gets steeper as that edge drops below the saddle (1.07× at b to
+> 2.75× at N). This was confirmed on three pairs that were never fitted. The exact Q-process —
+> the best conditioned model this arc has — under-predicts such a stage's failures by factors of
+> 15 to 3 × 10⁴ here, and the factor grows as the downstream is made more robust. Four predictions
+> failed on the way: P2, Q1, and two soft ones (P5 as a constant, and Q4 as a sharp threshold).

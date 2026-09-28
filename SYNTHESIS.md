@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§118. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§119. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -870,3 +870,18 @@ stage 2's state at the dip closes the remaining ~24%. The mechanism:
 **The damage is done by the recovery, not the dip.** Six predictions failed on the way, one of them
 an intervention that could not have passed: it clipped the input at a level below the downstream
 element's own bistability edge.
+
+**§119 made it a law with a scope, by breaking the symmetry.** It paired *different* elements, eight
+pairs, exact CME, and asked what a restoring stage's failure rate *given correct input* scales
+with. Once the downstream element's bistability edge sits above the upstream's saddle, it is
+**the upstream's dip rate, not the downstream's own barrier**. P(wrong | right)/(k₁t)
+held flat over Ω = 40 → 55 on three pairs never run before the prediction (1.04–1.37×), while the
+downstream's own escape rate moved ~690× where it could be resolved.
+  > Every conditioned model in this arc — including the exact Q-process that §115 built and §117
+  > showed exact for the absorbing chain — predicts the downstream's own failure rate. Against the
+  > free chain it is short by factors of 15 to 3 × 10⁴, and the factor grows as the downstream is
+  > made stronger, because a stronger element only lowers the part the models see. A stronger
+  > restoring stage buys nothing through its barrier. It buys only through where its edge sits
+  > relative to the upstream's saddle.
+  The first prediction (the excess ∝ k₁/k₂) failed, and so did "zone width alone sets the
+  constant". The constant itself is not yet predictable from single-element data.

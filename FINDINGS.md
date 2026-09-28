@@ -12867,3 +12867,109 @@ form `while pgrep -f <pattern>` matched themselves and would never have exited.
 > there: it was the estimator, the seed, and a bookkeeping inconsistency. What is left when the
 > instrument is right is small, measured, and new: **a stage that nearly fails and recovers still
 > damages the stage below it** — about 1.2× the predicted fall rate, at every volume tested.
+
+### 118 Near-misses cause it: the downstream damage is made after the recovery, and it is Ω-flat
+
+*Scope: the published element, `cap_mult` 1.25 (§106/§107's box), matched (QSD) seeding, exact CME
+on the joint two-stage chain, window t = 2 … 16; tagging and interventions at Ω = 30 and 55 (Ω = 14 for
+the tagging and P6). Every intervention is a do() on the generator, never a conditioning.
+`experiments/near_misses.py`; eleven predictions, each written into a docstring before its run.*
+
+§117 found that the free chain's stage 2 falls ~1.2× as often as the Q-process predicts, and said the
+excess sits in trajectories where stage 1 dipped below its saddle and recovered — exact as
+accounting, *causation a suspect*. This section is the causation test. It took four interventions to
+get one that was the right shape, and three of my mechanisms died on the way.
+
+**§118.1 — the accounting holds (P1–P3).** A "stage 1 has dipped" bit doubles the state space. Its
+marginal reproduces §117's free chain to 4e−13 (P1). The never-dipped set **is** the Q-process: its
+ratio runs 1.166 → 1.018 (Ω = 30) and 1.231 → 1.024 (Ω = 55) over t = 2 … 16, no plateau (P2). The
+dipped-and-recovered set carries the whole excess: at t = 16, P(stage 2 low) is 0.82 in it against
+0.094 in the never-dipped set (Ω = 30) and 0.88 against 0.0011 (Ω = 55) (P3).
+
+**§118.2 — the Ω-flatness is a cancellation, and it is not the one I expected (P5).** From Ω = 30 to
+55, the dipped set's weight falls 95× (2.8e−2 → 2.9e−4) and the never-dipped baseline falls 88×
+(0.094 → 0.0011). The per-trajectory effect, P(low | dipped) ≈ 0.8–0.9, barely moves. For the ratio
+to stay flat, **stage 1 dipping and stage 2 falling unaided must be suppressed at the same rate**.
+The suspect for why is that the two stages are one element and share one action; it is untested
+(rule 17, T-CASC-am).
+
+**§118.3 — four interventions, t = 16, as the closed fraction of the gap**
+(r − r_free)/(r_never − r_free):
+
+| intervention (all do() on the generator) | Ω = 30 | Ω = 55 | prediction | verdict |
+|---|---|---|---|---|
+| P4: stage 2's input clipped at stage 1's **saddle** | 0.011 | 0.004 | within 0.03 of never-dipped | FAILED — and mis-designed |
+| P7: sub-saddle stage 1 **shown as healthy** (μ₁) | 0.17 | 0.11 | within 0.03 | FAILED |
+| P7b: sub-saddle stage 1 shown at the **edge** (1.58) | 0.10 | 0.06 | "most" | FAILED |
+| P8: **after the first dip only**, stage 1 < edge shown as healthy | **0.706** | **0.70** | within 0.03 | FAILED, largest effect yet |
+
+- **P4 could not have passed.** It held stage 2's input at the saddle, x = 1.0, which is *below*
+  stage 2's own bistability edge (§105: x_up = 1.5795). Every dip still left stage 2 monostable-low.
+  Its null said nothing: rule 19 applies to an intervention as much as to a criterion.
+- **P6 killed the selection story.** I suspected stage 2 was damaged *before* the crossing, during
+  stage 1's long approach. At the first crossing it is low with probability 0.20 (Ω = 30) and 0.16
+  (Ω = 55), against the ≥ 0.6 I predicted. The prediction holds only at Ω = 14 (0.80).
+- **P7 put the damage somewhere else.** P7's own failure clause said a fail would refute
+  T-CASC-ak "outright". That clause overclaimed. It tested one phase, and P8 showed where the rest is.
+- **What P8 changed** was the zone check. In the dipped-and-recovered set at t = 16, 94% of the mass
+  has stage 1 already back above stage 2's edge, yet stage 2 is still low 83–89% of the time. The
+  reading P8 was built on: hysteresis. Stage 2 stays trapped in its own low basin after a fall that
+  happened while stage 1 was *back above its saddle but below the edge*, a zone P7 never touched.
+  P8 and P9 test the fall's location by intervention; the zone check only shows that stage 2 stays
+  low.
+
+**§118.4 — dose-response in the hiding threshold (P9).** P9 is P8's intervention with the threshold
+moved. P9a self-check: the two-block tagged chain with identical blocks reproduces the untagged chain to
+2e−13.
+
+| hide post-dip stage 1 below (× Ω) | 1.0 (P7) | 1.3 | 1.58 (edge) | 2.0 | 2.5 |
+|---|---|---|---|---|---|
+| closed, Ω = 30 | 0.17 | 0.594 | 0.706 | 0.735 | 0.746 |
+| closed, Ω = 55 | 0.11 | 0.622 | 0.703 | 0.721 | 0.725 |
+
+**P9b FAILED.** I predicted ≥ 0.9 by 2.0; the curve saturates near 0.75. Read per zone:
+
+- **[1.0, 1.3)·Ω after recovery — stage 1 just back above its saddle — carries ~42% of the gap on
+  its own** (0.594 − 0.171 at Ω = 30; 0.622 − 0.112 = 0.51 at Ω = 55), more than the whole sub-saddle phase.
+- Above the edge, input-hiding adds almost nothing.
+- Whatever is left is not the input level.
+
+**§118.5 — the remainder is stage 2's state at the dip (P10, P11, P11b).**
+
+- **P10 FAILED at both Ω.** Split the dipped set by whether stage 2 was already below its own saddle
+  at the first dip, then hide below 2.5. The already-low subgroup (15% of dips at both Ω) carries 79%
+  / 64% of the remaining excess. The still-high subgroup keeps falling well above never-dipped:
+  0.133 vs 0.094 (Ω = 30), 0.089 vs 0.0011 (Ω = 55). A binary line at stage 2's saddle is P4's
+  mistake repeated one stage down: a stage 2 that counts as "high" at the dip can already be sagging.
+- **P11: redraw stage 2 from its healthy law at the first dip, and hide below 2.5.** Closed 1.113 /
+  1.001. Criterion ≥ 0.95 met — but at Ω = 30 by *over*-correction: the dipped set now falls less
+  often than never-dipped (0.028 vs 0.094). A sledgehammer would also pass that criterion. So P11
+  shows the pair of interventions is **sufficient**, and says nothing about the split.
+- **P11b: redraw only.** Closed **0.237 / 0.241**, the complement of P9's 0.746 as predicted.
+  Redraw-only plus hide-only sums to 0.98 (Ω = 30) and 0.97 (Ω = 55), against the pair's 1.11 and 1.00.
+  The two are near-additive, with a +0.13 / +0.04 interaction that P11's over-correction also contains. That split is order-dependent
+  at the ±0.1 level, and both orders are reported here (rule 15).
+
+> **What §118 settles.** Stage-1 near-misses **cause** the downstream excess. That is shown by
+> intervention, with never-dipped trajectories left exactly as they were. The excess splits two
+> ways, and both shares are Ω-flat (Ω = 30 vs 55):
+>
+> - **About three-quarters is made after stage 1 has recovered.** Stage 1 lingers just above its
+>   saddle, below stage 2's bistability edge, where stage 2 has no high state. Stage 2 falls there,
+>   and is then held low by its own hysteresis long after stage 1 is back at its rail.
+> - **About a quarter is a stage 2 already sagging when stage 1 first dips.**
+>
+> The sub-saddle excursion itself — the part every picture of a "near miss" draws — is the smallest
+> piece (11–17%). The recovery does the damage. *Why* recovery lingers near the saddle — the drift
+> vanishes there, so a just-recrossed stage 1 climbs slowly — is a suspect, not a result.
+
+**§118.6 — failures and my own errors, kept.**
+
+- **Six predictions failed:** P4 (mis-designed), P6, P7, P8's 0.03 criterion, P9b and P10b.
+- **P7's text overclaimed:** its failure clause was worded as a refutation of the whole channel.
+- **P11's criterion could not tell a fit from a sledgehammer**, which is why P11b exists.
+- **A units slip, caught before it ran:** wiring P7 into `main()` I passed μ₁/Ω where the function
+  already multiplies by Ω.
+- **A trap that nearly bit again:** with an ad-hoc run killed by PID after inspecting its `cmdline`,
+  the canonical JSON comes from one `main()` run, which reproduces every piecewise number to
+  7e−7 (expm noise, T-NUM-a).

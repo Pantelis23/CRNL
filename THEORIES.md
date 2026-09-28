@@ -5318,7 +5318,7 @@ windowed pinned-occupancy estimator (two-thirds, §115/§116), §101's default s
 §116.5), the pinned/exact inconsistency (the large-Ω rise, §117.1), stage 1's window transient, and
 one physical channel (below). "No candidate left" was wrong because the instrument was.
 
-**T-CASC-ak, open, and it is new physics for this arc: near-miss transmission.** The Q-process is
+**~~T-CASC-ak, open~~ (closed §118, below), and it is new physics for this arc: near-miss transmission.** The Q-process is
 exact for the absorbing chain (model/measured 1.139 → 1.007, increments halving). The FREE chain
 plateaus at 0.836 (t = 16–32, Ω = 30): stage 2 falls ~1.2× as often as the Q-process predicts. The
 free chain's "stage 1 high" set is the never-dipped trajectories (whose law matches the Q-process)
@@ -5333,3 +5333,30 @@ in the dipped set. (2) Causation: pin stage 1 at its high operating point for th
 dip (a counterfactual) and check the excess disappears. (3) For the Ω-independence: measure the
 dipped set's weight and its per-trajectory effect separately across Ω; if one grows as the other
 shrinks, the constancy is a cancellation, not a law.
+
+**T-CASC-ak → §118: CLOSED, causation confirmed — and not where I looked for it.** All three kill
+tests ran. (1) The tagging holds exactly: the never-dipped set is the Q-process, and the dipped set
+carries the whole excess. (2) The causation test needed four interventions before one had the right
+shape. Two proposed mechanisms died on the way: *selection by approach* (P6: stage 2 is still mostly
+high when stage 1 first crosses, 0.20 / 0.16) and *the sub-saddle input* (P7: hiding it closes only
+17% / 11%). Hiding stage 1 from stage 2 **only after its first dip, whenever stage 1 is below stage 2's
+bistability edge**, closes 71% / 70%. Redrawing stage 2's state at the dip closes 24% / 24%.
+The two together are sufficient, and each share is Ω-flat. The recovery does most of the damage;
+the dip itself does the least. (3) The Ω-independence is a cancellation: weight and baseline both
+fall ~90× from Ω = 30 to 55, and the per-trajectory effect stays at ~0.85.
+
+**T-CASC-al, open (suspect): why recovery lingers.** In the Ω = 30 dose-response, the zone of stage 1
+just back above its saddle, [1.0, 1.3)·Ω, carries ~42% of the gap on its own (51% at Ω = 55). The suspect is that
+the drift vanishes at the saddle, so a just-recrossed stage 1 climbs slowly and stage 2 sits
+monostable-low meanwhile. **How to kill:** measure the mean post-recrossing sojourn in [saddle, edge)
+directly (a first-passage time from the saddle to the edge, restricted to d = 1). Then compare an
+element whose saddle sits *closer to* stage 2's edge — r2 moved up, the §112 family. The suspect
+predicts the after-dip share shrinks with the saddle-to-edge distance. If the share does not move,
+the lingering is not what does the damage.
+
+**T-CASC-am, open (suspect): one action for two stages.** §118.2's flat ratio needs stage 1's dip
+rate and stage 2's unaided fall rate to share an exponent. The suspect is that they are the same
+element with the same barrier. **How to kill:** repeat §118's tagging on a cascade of two *different*
+elements (the §114 grid supplies them). If the near-miss excess then grows or decays exponentially in
+Ω, at the difference of the two actions, the flatness was an identical-element coincidence. If it
+stays flat, something else ties the two rates together.

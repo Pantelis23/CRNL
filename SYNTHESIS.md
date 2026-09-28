@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§117. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§118. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -855,3 +855,18 @@ retired mechanism families is accounted for term by term — and most of it was 
   > 1.2× as often as any conditioned model predicts, at every volume tested. Every model in this arc —
   > pinned, bracketed, averaged, conditioned — assumed an upstream that stays in its basin. Near-misses
   > are invisible to all of them, and they are the physics that was left.
+
+**§118 proved the causation, and it was not in the dip.** §117 wrote "damages" before anything
+tested it. §118 tested it with do()-interventions on the generator that leave never-dipped
+trajectories untouched. The first two interventions aimed at the dip itself and moved almost
+nothing (1–17%). The one that worked hides stage 1 from stage 2 *after* the first dip, while stage 1
+is still below stage 2's bistability edge. That closes 70% of the gap at both volumes. Redrawing
+stage 2's state at the dip closes the remaining ~24%. The mechanism:
+
+- stage 1 recovers across its saddle and climbs slowly;
+- stage 2, which has no high state below the edge, falls meanwhile;
+- stage 2's own hysteresis then holds it low long after stage 1 is back at its rail.
+
+**The damage is done by the recovery, not the dip.** Six predictions failed on the way, one of them
+an intervention that could not have passed: it clipped the input at a level below the downstream
+element's own bistability edge.

@@ -5268,3 +5268,40 @@ close:** rerun each affected table's conclusion — not its numbers — on the e
 per section whether the conclusion survives. §110's refutation of the timescale-ratio account rests
 on the position rising while τ_up/τ_cross falls; the exact position still rises monotonically, so
 it is expected to survive, and that expectation is exactly what needs testing rather than assuming.
+
+
+**T-CASC-x → §116: REDUCED AND RESHAPED, not closed.** §107 left a 1.83× residual drift and excluded
+the fast/frozen averaging of stage 2's rate on a sign argument whose premise was the windowed
+position estimate. Under §115's exact rate the sign inverts; replacing the geometric rate by the
+exact gap in §107's closure (nothing else changed) removes two-thirds of the log-drift, 1.83× →
+1.22×. **§107's "no candidate left" is withdrawn**, and so is its "the position moves toward the fast
+end". §110's refutation of the timescale framing survives (ratio falls, exact position rises, both
+monotone at both boxes). **T-NUM-c → §116.3: done for §102.1, §107, §109, §110**; §108's table and
+§102's D = 3 cells remain unaudited.
+
+**T-CASC-ai → §116.5: HALF CLOSED.** Matched seeding on the measured side removes the U's low-Ω arm
+entirely (exact-rate ratio flat at 1.203–1.226 over Ω = 14–40) — so that arm was §101's default
+seed. What survives is a rise beyond Ω ≈ 40 (1.226 → 1.300 → 1.442) on a flat 21% offset. The
+script's "seed exonerated" was a wrong clause from a span criterion that merged the two arms.
+
+**T-CASC-aj, open: the rise beyond Ω ≈ 40, and a flat 21%.** Suspect (rule 17 — a suspect, not a
+result): the closure multiplies by `P_TRANSMIT_MEASURED`, ONE value measured at Ω = 30 (§104) and
+used at every Ω. A constant calibrated mid-range fits flat there and drifts at the ends; §105's
+derived head start changed §107's column only slightly, but it too was built at Ω = 30. The flat 21%
+is a second, separate question — it is numerically close to the closed T-CASC-z's 1.215, which was a
+different quantity (contam's measured/model, default seed) and should not be merged with this one
+without measuring each on its own axis (rule 9). **How to kill:** measure p_transmit directly at
+Ω = 55 and 70 from the joint solve (§104's own protocol) and substitute it per Ω. If the rise
+flattens, it was the constant; if not, the remainder is in the two-state factors.
+
+**T-CASC-ai (original wording, kept per rule 3): the U-shaped remainder.** With the exact rate, §107's closure/measured ratio runs
+0.829 → 0.769 (Ω = 30) → 0.941 (Ω = 70): a 22% rise at large Ω, the model 6–23% low throughout.
+Swapping in the conditioned occupancy as well flattens it to a monotone 0.808 → 0.682 — so part of
+what remains is the pinned π_low in the closure's two-state factor, and part is not (the level moves,
+the variant was not predicted, and the closure's π_low is not a term in the exact-gap definition).
+**Suspects, not results (rule 17):** the measured side itself — §106's free chain uses §101's default
+seed, which §109 showed carries stage-2 seeding transients, and those shrink with Ω, which would
+produce a large-Ω rise in exactly this direction; and the two-state form `π(1 − e^{−kt})` for stage 1,
+which §115.2 showed is window-dependent. **How to kill:** rerun §106's measured ratio with matched
+(QSD) seeding — the seed is a flag already in `free_upstream_depth.solve` — and recompute the column.
+If the U flattens, the remainder was the measurement's seed, not the model.

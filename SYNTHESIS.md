@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§115. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§116. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -834,3 +834,12 @@ did not), one unswept window, and the *pinned* occupancy. The quantity it estima
   The survival term alone — the first thing found — explained only a quarter of the drift and made
   T-CASC-af *worse*; the pinned occupancy, found by following a failed prediction, explained the rest.
   **Six of §115's own predictions failed, and the section is built out of what they pointed at.**
+
+**§116 then followed §115 back one more section, to the argument that started the chase.** §107 had
+excluded the fast/frozen averaging of stage 2's rate from its residual drift because the position
+"moved toward the fast end" as Ω grew — so the geometric-mean model should improve, and it got worse.
+Under the exact rate the position moves toward *frozen*, so the sign argument inverts; putting the
+exact rate into §107's closure removes **two-thirds of its drift (1.83× → 1.22×)**, and §107's "no
+candidate left" is withdrawn. §110's refutation of the timescale framing survives the new instrument
+intact. What remains is U-shaped — a 22% rise at large Ω with the model 6–23% low — and has a named
+suspect for the first time since §107: the measured side's own seed.

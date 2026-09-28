@@ -12668,3 +12668,101 @@ stop you making it in the next section.
 > fixed Ω); §114.5's bracket inversion and §114.6's sign change, which are statements about
 > k(⟨x⟩) and ⟨k⟩ and the operating point, not about k_eff. **Every number in §108–§114 that
 > passes through `−ln(1 − v/π_low)/t` should be read as carrying this bias; none is edited here.**
+
+### 116 §107's residual had the sign it was said not to have — two-thirds of it is stage 2's rate
+
+*Scope: the published element, §107's closure grid (Ω = 14, 20, 24, 30, 40, 55, 70) at §106/§107's
+own box (`cap_mult` 1.25) against §106's stored measured ratios; stage 2's rate replaced by §115's
+exact Q-process gap and nothing else changed. Plus T-NUM-c bookkeeping over §113/§115's stored
+numbers. `experiments/the_residual_had_a_sign.py`.*
+
+§107 applied every known correction to §103's closure and was left with a residual drifting 1.83×
+across Ω = 14–70 (model/measured 0.790 → 1.449, geometric-mean rate). It excluded the last
+approximation — the fast/frozen averaging of stage 2's rate — by a sign argument: *"§102.1's
+position moves toward the fast end as Ω grows (0.2200 → 0.1072) … the geometric mean should become
+more accurate at large Ω. The measured ratio does the opposite. The position argument has the wrong
+sign for the residual."* That is what sent §108–§110 after a mechanism outside the averaging family
+and left T-CASC-x with "no candidate left".
+
+§115 found that position was misestimated. **Under the exact rate it moves toward FROZEN, not
+fast**, so the sign argument inverts: a closure built on the geometric (fast-limit) rate *should*
+worsen with Ω. The test is absolute (rule 16) — replace k₂ by the exact gap in the closure's
+stage-2 factor and change nothing else:
+
+| Ω | §107 (geometric) | k_exact / k_geom | **exact rate** | exact rate + conditioned π_low |
+|---|---|---|---|---|
+| 14 | 0.790 | 0.948 | 0.829 | 0.808 |
+| 20 | 0.867 | 1.095 | 0.794 | 0.764 |
+| 24 | 0.931 | 1.196 | 0.781 | 0.744 |
+| 30 | 1.014 | 1.320 | **0.769** | 0.719 |
+| 40 | 1.126 | 1.451 | 0.776 | 0.699 |
+| 55 | 1.276 | 1.532 | 0.833 | 0.688 |
+| 70 | 1.449 | 1.540 | **0.941** | 0.682 |
+| **span** | **1.833×** | | **1.224×** | 1.185× |
+
+**§116.1 — the sign argument falls, and the rate is the largest single term.** k_exact/k_geom rises
+0.948 → 1.540 with Ω, the direction §107 said the averaging could not have. Swapping it in removes
+**two-thirds of the closure's log-drift** (ln 1.833 = 0.606 → ln 1.224 = 0.202). §107's "the
+position argument has the wrong sign" is withdrawn: its premise was the windowed estimator.
+
+**§116.2 — but the residual is reshaped, not removed, and the verdict line would have hidden it.**
+The pre-registered threshold (span < 1.35× ⇒ "the rate was the dominant missing factor") is met.
+Read per cell (rule 18), the exact-rate residual is **U-shaped**: it falls to 0.769 at Ω = 30 and
+**rises 22% to 0.941 by Ω = 70**, with the model now under-predicting contam/pure at every Ω, by
+6–23%. A span criterion can print "dominant" over a non-monotone residual — a rule-19 weakness
+in my own gate, recorded rather than leaned on. T-CASC-x is reduced from 1.83× to 1.22× and changes
+shape; it is not closed. With the conditioned occupancy also swapped in (no prediction was made for
+this variant) the U flattens into a mild monotone fall (0.808 → 0.682), which says the pinned π_low
+in the two-state bookkeeping carries part of what is left.
+
+**§116.3 — T-NUM-c: which conclusions survive the exact rate.** Bookkeeping over numbers §113 and
+§115 already computed; criteria are the published claims' own words.
+
+| published conclusion | under the exact rate |
+|---|---|
+| §110: the position rises while τ_up/τ_cross falls, so the timescale framing does not transfer | **SURVIVES** — ratio 0.400 → 0.232, exact position 0.449 → 0.996, both monotone at both boxes |
+| §109/§110: the rate traverses the bracket *and exits it* | **WITHDRAWN** — maximum exact position 0.996 |
+| §102.1: the position sits near the fast end (< 0.5) | holds at Ω = 14 (0.449), **fails** at Ω = 30 (0.665); D = 3 unaudited |
+| §107: the position moves toward the fast end as Ω grows | **WITHDRAWN** — it moves toward frozen |
+| §107: the residual has no candidate explanation | **WITHDRAWN** — two-thirds of it is stage 2's rate (§116.1) |
+
+**§116.4 — predictions that failed, kept.**
+
+- **P1 printed FAILS** on a worst deviation of 2.7e−7 from §107's stored column. I gated at 1e−9,
+  tighter than the eigensolver's measured floor (~1e−6, T-NUM-a) — the mistake §114.8(d) recorded,
+  made again two sections later. It is agreement.
+- **P2 failed at Ω = 14.** "Every ratio moves down" rested on the exact rate exceeding the geometric
+  one at every Ω, which I had read off §115's cap-2.0 positions (0.449 vs a fast limit of 0.356).
+  At the cap-1.25 box this closure uses, the exact rate is *below* the geometric at Ω = 14 (0.948×),
+  and that ratio moves up (0.790 → 0.829). A statement true at one box was carried to another.
+- The prediction was **not blind**: I had estimated the 1.26× span by hand from §115's stored
+  positions before writing the file, and said so in its docstring. The computed 1.224× agrees with
+  arithmetic I had half done; it is not an independent confirmation of the magnitude.
+
+**§116.5 — T-CASC-ai's kill test, run in the same session, and its verdict line was wrong too.**
+§106's measured contam/pure used §101's default seed, which §109 showed carries stage-2 transients.
+Re-measured with matched (QSD) seeding — criterion fixed before running: span of the exact-rate ratio
+below 1.10× ⇒ the U was the seed:
+
+| Ω | 14 | 20 | 24 | 30 | 40 | 55 | 70 |
+|---|---|---|---|---|---|---|---|
+| exact rate, default seed | 0.829 | 0.794 | 0.781 | 0.769 | 0.776 | 0.833 | 0.941 |
+| **exact rate, matched seed** | **1.203** | **1.211** | **1.210** | **1.209** | **1.226** | **1.300** | **1.442** |
+
+The script printed *"the remainder PERSISTS; the seed is exonerated."* The first clause is right
+(span 1.199×). **The second is false**, and reading the cells shows why: the seed accounts for the
+whole low-Ω arm of the U and for the level — with matched seeding the ratio is **flat to 2% from
+Ω = 14 to 40** — and what survives is only a **rise beyond Ω ≈ 40, +18% by Ω = 70**. A span criterion
+lumps the two arms together and printed a confident clause off correct numbers: rule 19, in the
+section immediately after §116.2 named the same weakness.
+
+The flat level is itself a finding: the model sits a constant **21% high** over Ω = 14–40 under
+matched seeding.
+
+> **What §116 settles.** §107's sign argument — the reason three sections went looking for a
+> mechanism outside the averaging family — rested on the misestimated position. Stage 2's exact rate
+> accounts for two-thirds of the closure's drift, and §110's refutation of the timescale framing
+> survives the change of instrument intact. What is left is a U-shaped 22% rise at large Ω with the model 6–23%
+> low, partly carried by the pinned occupancy — smaller, differently shaped, and for the first
+> time since §107 with a named suspect — which §116.5 then tested: the measurement's seed explains
+> the low-Ω arm and the level, leaving a flat 21% offset over Ω = 14–40 and a rise beyond 40.

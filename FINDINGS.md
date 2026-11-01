@@ -13213,3 +13213,44 @@ therefore *consistent with* the sag, not shown to be it (rule 17).
 > 1,800× range. What remains is the size §118 measured for the pre-dip sag. That makes the
 > near-miss floor of §119 predictable in absolute terms, to within a factor of ~1.5, from the two
 > elements separately.
+
+### 121 Three exact claims, machine-checked in Lean 4 — and what that does and does not add
+
+*Scope: exact statements only — algebra, closed forms, a floor-function law. Lean 4 (v4.36.0-rc2)
+with Mathlib, in `formal/`. Every theorem audited to depend on Lean's three standard axioms and
+nothing else (`scripts/axioms.lean`; no `sorryAx`). `tests/test_formal.py` rebuilds the library on
+every suite run and ties each theorem back to the Python it is about.*
+
+The project's withdrawals have a recurring shape that numerics cannot catch: a statement that is
+algebra, checked on a grid, and then read as a finding (rule 21's §84 is the type case). Lean is the
+instrument for that class. Three groups of claims the record leans on are now proved, for all
+inputs satisfying their hypotheses — not at the points that were tested:
+
+- **§112's merge law and both regime boundaries** (`MergeLaw.lean`). For any rails r₁ < r₂ < r₃
+  and any k ≥ 1: the merged tank is below the saddle ⇔ j > f·k; the least flipping count is exactly
+  ⌊f·k⌋ + 1; unanimity (m = k) ⇔ f ≥ 1 − 1/k; one failure flips it (m = 1) ⇔ f < 1/k. These are the
+  conditions in §112's regime table, which was previously stated and checked on six elements.
+- **The element construction** (`Schlogl.lean`). `schlogl_consts` makes the drift exactly
+  −k(x−r₁)(x−r₂)(x−r₃), with slopes −k(r₁−r₂)(r₁−r₃), k(r₂−r₁)(r₃−r₂), −k(r₃−r₁)(r₃−r₂): outer
+  rails stable and the saddle unstable for every ordered triple, and all four constants positive
+  for positive rails. The code's `tau` is the reciprocal of the third slope.
+- **§84/§85.1's effective exponent** (`EffectiveExponent.lean`). With ε = ½ − γ,
+  A = 4ε²(1−ε)/((½+ε)(3/2−ε)²) exactly. ν_eff = ε·d ln A/dε is exactly
+  2 − ε/(1−ε) − ε/(½+ε) + 2ε/(3/2−ε) on 0 < ε < 1, as a derivative. **And the record's
+  "ν_eff = 2 − (5/3)ε + O(ε²)" now has its constant: |ν_eff − (2 − 5ε/3)| ≤ 7ε² on (0, ¼].**
+  ν_eff(1/10) = 235/126 = 1.86508, the value §85.1 printed as 1.8651.
+
+**What the Python side checks** (`tests/test_formal.py`). A proof about a definition the code does
+not use proves nothing about the code. So: `Element.m_of_k` equals the least j with
+`x_merged(k, j) < r₂`, brute-forced from the code's own `x_merged`, for all six elements and
+k = 1…39. The regime conditions match the code's m on the same grid. `schlogl_consts` zeroes the
+drift at the rails, and `tau` equals 1/((r₃−r₁)(r₃−r₂)). §85.1's three printed exponents
+(1.8651 / 1.9254 / 1.9837) are recovered from the proved formula to 6e−5.
+
+**What this does not do.** Nothing measured in this project is upgraded by it. §119's floor law,
+§118's causation and every CME number are empirical at their stated scope, and a Lean proof of the
+algebra around them leaves their status exactly as it was. One drafted statement changed under
+proof: `A_half_sub` needed none of the non-vanishing hypotheses first written into it, so they were
+removed. That is a stronger theorem, but only through Lean's convention x/0 = 0 — it claims nothing
+physical at the poles. **The proofs found no error in the three claims.** That is the expected outcome for claims
+already checked numerically, and it is reported as such, not as a discovery.

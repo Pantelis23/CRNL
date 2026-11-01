@@ -14,3 +14,7 @@ docs/superpowers/
 
 # Local working rules, not part of the published record
 CLAUDE.md
+
+# third-party sources and Lean build outputs
+external/
+formal/.lake/

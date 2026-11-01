@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§120. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§121. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -895,3 +895,9 @@ is a memory effect:** a finite-time fall that reverses if the upstream recovers 
 matches, in size, the pre-dip sag §118 measured by intervention; that match is a suspect, not a
 result, because the approach paths were not simulated. Two of the three pre-registered absolute
 criteria failed by their letter, and one reduction was refuted outright.
+
+**§121 added an instrument for the one class of error numerics cannot catch.** Exact claims — §112's
+merge law and its regime table, the element construction every section uses, and §84's effective
+exponent with its O(ε²) given an explicit constant (≤ 7ε²) — are now proved in Lean 4 for all inputs
+satisfying their hypotheses, audited to rest on no unproved step, and tied back to the Python that
+implements them. The proofs found no error. Nothing measured is upgraded by them.

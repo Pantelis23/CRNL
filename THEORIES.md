@@ -5406,3 +5406,19 @@ runs. **Candidates not yet formalised:** ~~the birth-death product formula behin
 `stage1_stationary`~~ (done, §121.1); §119's decomposition P = (1 − w_d)·p0 + w_d·p_d (definitional, so cheap); and
 the edge — whether, for each element, the set of inputs giving three positive roots is an interval
 (the numerical `edge()` assumes it).
+
+**T-CASC-ap, open (suspect, §122): the universal floor.** φ → ½ (φ is the committor, measured; the
+committor → ½, computed) and p_d → erf(U*√(λₛΩ/2λ(s₁))) → 1 for every positive zone (confirmed in
+both of §120's reductions to Ω = 3200, crossover Ω_c = λ(s₁)/(λₛw²) predicted). Together:
+lim inf C ≥ ½ for every pair with a zone, whatever its width or the downstream barrier. **How to
+kill:** an exact (joint-chain) cell at Ω ≳ Ω_c in a narrow-zone pair. The exact chain reaches
+Ω = 100 for X (Ω_c = 21) and agreed in direction, but no narrow-zone pair has been run past its Ω_c,
+and Z needs Ω ≈ 230, a ~10⁶–10⁷-state tagged chain. Feasible only with a sparse rare-event method
+(e.g. computing p_d as a committor of the joint chain started at the dip, rather than evolving the
+whole window). Also open within it: the limit of p0/(k₁t) (levelling at ~0.008 in X), which decides
+whether the floor's limit is ½ or above.
+
+**T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
+single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint
+effects. That is an argument, not a theorem. **Kill test:** a closed form, written before comparison,
+within 1.25× in Z or c at Ω ≤ 55.

@@ -23,6 +23,7 @@ THEOREMS = (
     "Schlogl.consts_pos", "EffectiveExponent.ν_eq", "EffectiveExponent.ν_close",
     "EffectiveExponent.ν_tenth", "EffectiveExponent.A_half_sub",
     "BirthDeath.detailed_balance", "BirthDeath.global_balance",
+    "Committor.h_zero", "Committor.h_top", "Committor.backward",
 )
 
 
@@ -108,3 +109,24 @@ def test_stage1_stationary_is_the_proved_product_formula():
             Q -= np.diag(Q.sum(axis=1))
             flux = np.abs(pi @ Q).max() / (pi * (lam + mu)).max()
             assert flux < 1e-12, (el.name, om, flux)
+
+
+def test_committor_code_is_the_proved_harmonic_function():
+    """Committor.backward / h_zero / h_top: the code's closed form must be 0 at the low rail, 1 at
+    the high rail, and solve lam (h+ - h) + mu (h- - h) = 0 in between -- checked on the code's own
+    `asymptotic_floor.committor`, state by state."""
+    import numpy as np
+
+    from experiments.asymptotic_floor import committor
+    from experiments.weak_upstream import element
+
+    for name in ("E-070", "E-062"):
+        A = element(name)
+        for om in (30, 55):
+            lo, hi = int(round(A.r1 * om)), int(round(A.r3 * om))
+            h = np.array([committor(A, om, n) for n in range(lo, hi + 1)])
+            assert h[0] == 0.0 and abs(h[-1] - 1.0) < 1e-12
+            n = np.arange(lo + 1, hi, dtype=float)
+            lam, mu = A.rates(n, np.zeros(len(n)), om, True)
+            res = lam * (h[2:] - h[1:-1]) + mu * (h[:-2] - h[1:-1])
+            assert np.abs(res).max() < 1e-10 * lam.max(), (name, om)

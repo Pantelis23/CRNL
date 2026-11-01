@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§121. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§122. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -901,3 +901,16 @@ merge law and its regime table, the element construction every section uses, and
 exponent with its O(ε²) given an explicit constant (≤ 7ε²) — are now proved in Lean 4 for all inputs
 satisfying their hypotheses, audited to rest on no unproved step, and tied back to the Python that
 implements them. The proofs found no error. Nothing measured is upgraded by them.
+
+**§122 aimed at a goal set to be near-impossible, and missed it.** The goal was to predict §119's
+floor in every cell from single-element formulas alone, within 1.25×. At the volumes this project
+computes, it misses by 3× to ~1000×. On the way it found two things:
+  > φ, the upstream factor, is exactly a **committor** — a closed birth-death formula, now proved in
+  > Lean and confirmed in an exact cell never used before. The downstream factor tends to an erf law
+  > with no fitted parameter, p_d → erf(U*√(λₛΩ/2λ(s₁))), confirmed in both reductions to Ω = 3200,
+  > with the volume at which it takes over predicted pair by pair. Together they point to a
+  > universal limit: **a stage whose edge sits above its upstream's saddle fails, given correct
+  > input, at no less than half its upstream's dip rate**, whatever its own barrier.
+  That limit is a suspect: the exact chain has been followed only to Ω = 100, where it moved the
+  predicted way. And the miss at finite Ω is argued, not proved, to be irreducible: the pre-dip sag
+  and the downstream's noise are joint effects that no single-element formula contains.

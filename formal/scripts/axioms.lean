@@ -12,3 +12,6 @@ open CRNL
 #print axioms EffectiveExponent.A_half_sub
 #print axioms BirthDeath.detailed_balance
 #print axioms BirthDeath.global_balance
+#print axioms Committor.h_zero
+#print axioms Committor.h_top
+#print axioms Committor.backward

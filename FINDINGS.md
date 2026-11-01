@@ -13265,3 +13265,104 @@ box-membership hypothesis turned out to be unnecessary and was removed. The brid
 `Elem.stage1_stationary` zeroes πQ on the chain its docstring names (stage 1 on [saddle, cap], with
 no death out of the saddle and no birth out of the cap) to below 1e−12 of the largest flux, for the
 published element and E-062 at Ω = 14 and 30.
+
+### 122 The floor's single-element limit: φ is the committor, p_d tends to an erf law, C → ½ — and the finite-Ω goal failed
+
+*Scope: §119's arms and stored exact cells, plus one new exact cell (arm X, Ω = 100, t = 16); §120's
+two reductions extended to Ω = 3200 in three pairs (X, b, Z); `cap_mult` 1.25. Predictions F1–F4
+were written as docstrings of scratch scripts before each ran and are copied verbatim into
+`experiments/asymptotic_floor.py`; G1–G4 were written into that file before its own runs.
+`results/asymptotic_floor.json`.*
+
+**The goal, set before starting and judged near-impossible:** predict §119's floor
+C = P(stage 2 wrong | stage 1 right)/(k₁t) in every cell to within 1.25× from a formula built only
+from each element's own rates. No simulation, no joint chain. **It was not reached.** What was
+reached instead is below, with the failure stated first.
+
+**§122.1 — G3, the goal: FAILED.** At Ω = 30–55 the single-element formula is 3–4× below the exact
+floor in X, 4.5–5.6× in b, 21–29× in Z, 52–87× in a and 640–990× in c. It gives zero for d, whose
+edge sits on the saddle, while the exact value is 0.0025–0.0039. (S is 10–11× off because its
+downstream fails on its own; the formula omits p0 by design.)
+
+**§122.2 — φ is the committor (F1 failed, F2 held).**
+
+- **F1 failed.** I first identified φ = w_d/(k₁t) with the probability of climbing back to the
+  saddle from one step below. That probability is ~0.9, against φ ≈ 0.4. A recrossed stage 1 sits at
+  its saddle and re-dips; what counts is where it ends.
+- **F2 held.** φ is the **committor** from one step below the saddle to the high rail before the low
+  one, a closed birth-death formula (proved in Lean, §122.6). It holds at 0.987–1.003 in four
+  cells, with 0.954 in Z:40, the one cell whose window saturates (k₁t = 0.43).
+- **It held again in a cell never used:** exact X at Ω = 100 gives φ = 0.4311 against 0.4299.
+- **The committor tends to ½**: E-070 reads 0.384 → 0.430 → 0.459 → 0.480 → 0.490 at Ω = 30 → 6400.
+
+**§122.3 — p_d's limit (F3 failed, F4 held).** Stage 1 near its saddle is an unstable linear
+diffusion. Its slope there, λₛ = k(s₁−r₁)(r₃−s₁), is `Schlogl.drift'_rails`, and the noise variance
+rate is 2λ(s₁)/Ω. Its escape is the deterministic orbit from s₁ + U, with U ~ N(0, λ(s₁)/(λₛΩ)).
+
+- **F3 failed both halves.** A crude version froze stage 2's input at s₁ and linearised to the
+  zone's far edge. X drifted away (0.95 → 0.60), and Z's formula landed far *below*, not above as
+  predicted.
+- **F4 held.** Let U* be the largest offset from which the deterministic two-element orbit ends with
+  stage 2 below its separatrix, found by bisection on the two rate equations. Then
+
+      p_d → erf( U* · √(λₛΩ / 2λ(s₁)) ),     U* > 0  ⇔  the zone exists.
+
+Against §120's deterministic-stage-2 reduction, ratio reduction/formula:
+
+| Ω | 30 | 100 | 400 | 800 | 1600 | 3200 |
+|---|---|---|---|---|---|---|
+| X (w = 0.357) | 1.93 | 1.35 | **1.13** | 1.06 | 1.03 | **0.993** |
+| b (w = 0.225) | 4.30 | 1.92 | **1.14** | 1.05 | 0.994 | 0.941 |
+| Z (w = 0.129) | 23.7 | 5.38 | 1.97 | 1.38 | 1.13 | **1.004** |
+
+- **Stage 2's noise drops out in the limit.** The noisy reduction reaches 1.002 for X at Ω = 3200.
+- **The approach is O(σ/w), not monotone.** b undershoots to 0.94 at 3200. That is step-converged
+  (τ halved twice: 0.941 / 0.902 / 0.928, all within 1.5σ) and inside σ/w = 0.13.
+- **The crossover is predicted.** The asymptotic regime needs stage 1's wander σ = √(λ(s₁)/(λₛΩ))
+  below the zone width. That gives **Ω_c = λ(s₁)/(λₛw²) = 21 (X), 54 (b), 227 (Z)**, which is the
+  order in which the three pairs converged.
+- **U* is integration-stable** (horizon 80 → 200: ≤ 2e−12 relative).
+
+**§122.4 — the exact chain moves the predicted way (G4, held).** Exact joint CME for arm X at
+Ω = 100, run for this section:
+
+- **p_d = 0.385**, inside the predicted [0.33, 0.45]. The exact sequence is 0.289 / 0.289 /
+  0.308 / 0.385 over Ω = 30 / 40 / 55 / 100.
+- **C rose to 0.183**, past its Ω = 55 value of 0.136, as predicted.
+- **exact/formula fell 3.6 → 2.8 → 2.6.**
+
+The exact chain at Ω ≥ 400 is out of reach (≥ 2 × 10⁶ tagged states), so the limit is confirmed in
+both reductions and only *trended toward* in the exact chain.
+
+**§122.5 — what the limit says, as a suspect (rule 17).** φ → ½ and p_d → 1 for every positive zone
+together give **φ·p_d → ½: a floor independent of zone width and of the downstream barrier**,
+approached as an erf in √Ω. Three caveats:
+
+- **The total floor may be larger.** It adds p0/(k₁t), whose limit is not established (X: 0.0129 →
+  0.0083 → 0.0082, levelling). The supported statement is lim inf C ≥ ½.
+- **Nothing exact reaches the limit.** It is confirmed in two reductions to Ω = 3200, and only
+  trended toward in the exact chain.
+- **The approach is very slow.** p_d is only 0.70 at Ω = 3200 even in the best pair.
+
+**§122.6 — why the finite-Ω goal is probably unreachable, stated as an argument, not a proof.**
+Below Ω_c, three effects each contribute O(1) factors: stage 1's wander across the whole zone,
+stage 2's own noise (§120.3), and stage 2's pre-dip sag (§118 P11b). The sag is a joint effect,
+stage 1's approach together with stage 2's response to it. Even an exact solution of §120's reduction
+reaches only ~0.5 of the exact chain at these Ω. A single-element formula would have to reproduce a
+joint quantity, so only the limit is single-element. **Kill test for the argument:** a closed form,
+written before comparison, that lands within 1.25× in Z or c at Ω ≤ 55.
+
+**§122.7 — proved in Lean** (`formal/Formal/Committor.lean`). The committor closed form
+h(n) = Σ_{j<n} ρ_j / Σ_{j<N} ρ_j, with ρ_j = ∏_{i≤j} μᵢ/λᵢ, satisfies h(0) = 0, h(N) = 1 and the
+backward equation λₙ(h(n+1)−h(n)) + μₙ(h(n−1)−h(n)) = 0 at every interior state, needing only positive
+birth rates. It is audited on the standard axioms. `tests/test_formal.py` checks the code's
+`committor` against the proved equation state by state (residual < 1e−10). The identification
+φ = committor is a measurement; only the formula is proved.
+
+> **What §122 settles.** The goal failed, by up to three orders of magnitude at the volumes this
+> project computes. It produced instead an exact identification of the floor's upstream factor (φ is
+> a committor, proved in Lean and confirmed in a fresh exact cell). It also produced an asymptotic
+> law for the downstream factor with no fitted parameter, confirmed in both reductions to Ω = 3200
+> with its crossover volume predicted. Together they imply a universal limit, φ·p_d → ½, that
+> nothing in this arc had suggested. That limit is a suspect until an exact computation reaches
+> Ω ≳ Ω_c in a narrow-zone pair.

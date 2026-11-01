@@ -13254,3 +13254,14 @@ proof: `A_half_sub` needed none of the non-vanishing hypotheses first written in
 removed. That is a stronger theorem, but only through Lean's convention x/0 = 0 — it claims nothing
 physical at the poles. **The proofs found no error in the three claims.** That is the expected outcome for claims
 already checked numerically, and it is reported as such, not as a discovery.
+
+**§121.1 — the product formula behind every "exact stationary law" in the code** (`BirthDeath.lean`).
+For any birth rates and any non-zero death rates, π n ∝ ∏_{i<n} λᵢ/μᵢ₊₁ satisfies detailed balance on
+every edge and global balance — inflow equals outflow at each state of the reflecting box, stated
+directly as (πQ)ₙ = 0 and not in detailed balance's own form. A first draft wrote the balance as a
+difference of edge fluxes, which is detailed balance restated and close to circular. It was
+rewritten before being kept, under rule 19 applied to a theorem statement. As with `A_half_sub`, the
+box-membership hypothesis turned out to be unnecessary and was removed. The bridge test checks that
+`Elem.stage1_stationary` zeroes πQ on the chain its docstring names (stage 1 on [saddle, cap], with
+no death out of the saddle and no birth out of the cap) to below 1e−12 of the largest flux, for the
+published element and E-062 at Ω = 14 and 30.

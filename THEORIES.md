@@ -5402,7 +5402,7 @@ pairs needs a second element family in which edge and barrier move independently
 algebra, a closed form or combinatorics, and a numerical check of it is then a test of the code, not
 of the claim. **The kill test for anything placed there:** `tests/test_formal.py` must tie the
 theorem to the code path it is about. A theorem with no such test is about a definition nobody
-runs. **Candidates not yet formalised:** the birth-death product formula behind
-`stage1_stationary`; §119's decomposition P = (1 − w_d)·p0 + w_d·p_d (definitional, so cheap); and
+runs. **Candidates not yet formalised:** ~~the birth-death product formula behind
+`stage1_stationary`~~ (done, §121.1); §119's decomposition P = (1 − w_d)·p0 + w_d·p_d (definitional, so cheap); and
 the edge — whether, for each element, the set of inputs giving three positive roots is an interval
 (the numerical `edge()` assumes it).

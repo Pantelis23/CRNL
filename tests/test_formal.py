@@ -22,6 +22,7 @@ THEOREMS = (
     "MergeLaw.threshold_eq_one_iff", "Schlogl.stability", "Schlogl.drift_eq",
     "Schlogl.consts_pos", "EffectiveExponent.ν_eq", "EffectiveExponent.ν_close",
     "EffectiveExponent.ν_tenth", "EffectiveExponent.A_half_sub",
+    "BirthDeath.detailed_balance", "BirthDeath.global_balance",
 )
 
 
@@ -87,3 +88,23 @@ def test_effective_exponent_printed_values_and_bound():
         A = (1 + 2 * g) * (1 - 2 * g) ** 2 / (2 * (1 - g) * (1 + g) ** 2)
         assert A == pytest.approx(4 * e * e * (1 - e) / ((0.5 + e) * (1.5 - e) ** 2), rel=1e-12)
         assert math.isfinite(A)
+
+
+def test_stage1_stationary_is_the_proved_product_formula():
+    """BirthDeath.global_balance: the product formula is stationary for the reflecting box. The
+    code's `stage1_stationary` must therefore zero pi Q on the chain it says it describes -- stage 1
+    restricted to [saddle, cap], no death out of the saddle, no birth out of the cap."""
+    import numpy as np
+
+    from experiments.two_axes_for_the_position import PUBLISHED_RAILS, Elem
+
+    for el in (Elem("pub", *PUBLISHED_RAILS, cap_mult=1.25), Elem("E-062", 0.15, 1.233, 3.0)):
+        for om in (14, 30):
+            up, pi = el.stage1_stationary(om)
+            n = up.astype(float)
+            lam, mu = el.rates(n, np.zeros(len(n)), om, True)
+            lam[-1], mu[0] = 0.0, 0.0
+            Q = np.diag(lam[:-1], 1) + np.diag(mu[1:], -1)
+            Q -= np.diag(Q.sum(axis=1))
+            flux = np.abs(pi @ Q).max() / (pi * (lam + mu)).max()
+            assert flux < 1e-12, (el.name, om, flux)

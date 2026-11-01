@@ -10,3 +10,5 @@ open CRNL
 #print axioms EffectiveExponent.ν_close
 #print axioms EffectiveExponent.ν_tenth
 #print axioms EffectiveExponent.A_half_sub
+#print axioms BirthDeath.detailed_balance
+#print axioms BirthDeath.global_balance

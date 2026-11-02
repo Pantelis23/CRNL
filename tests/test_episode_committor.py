@@ -125,3 +125,13 @@ def test_never_dipped_term_grows_like_omega_squared_in_X():
     v = e["X:800/qpr"]
     assert v["phi_ep"] * v["p_d_ep"] + v["p0_rate_ratio"] > 1.5
     assert max(e[f"Z:{om}/qpr"]["p0_rate_ratio"] for om in (230, 400, 800, 1000)) < 1e-5
+
+
+def test_never_dipped_falls_two_channels():
+    """E13: the original-measure reactive flux equals the committed fall rate to 1e-12; the in-zone
+    share rises 0.12 -> 0.53 over Omega = 55 -> 400 (E13(b)'s >= 70% failed)."""
+    e = _e()["E13"]
+    for v in e.values():
+        assert abs(v["reactive_ratio"] / v["committed_ratio"] - 1) < 1e-12
+    z = [e[str(om)]["frac_in_zone"] for om in (55, 100, 200, 400)]
+    assert z == sorted(z) and z[0] < 0.2 and 0.5 < z[-1] < 0.7

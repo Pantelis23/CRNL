@@ -5436,7 +5436,9 @@ V(s₁) − V(edge₂) = 0.0185 (stage 1 reaching the downstream edge without cr
 local rate falling 0.0158 → 0.0037 while its product with Ω holds at 2.0–2.2. **No mechanism proposed.**
 **How to kill any candidate:** it must give the exponent ~2 in X and also explain why Z's term stays
 below 1e−5 at Ω = 1000. A decomposition of the committed fall flux by stage 1's position at the
-moment of the fall (cheap: the Q-process law is already computed) is the first measurement to make.
+moment of the fall (cheap: the Q-process law is already computed) is the first measurement to make. **→ §124.4: made.** The never-dipped falls split into an above-edge
+channel (stage 2's noise over a sag-lowered barrier: 88% at Ω = 55, 47% at 400) and an in-zone
+channel (12% → 53%), which carries the growth. Next: each channel's own growth exponent.
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

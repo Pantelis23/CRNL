@@ -13614,3 +13614,27 @@ the interval's left end (to 2e−3, the scan's resolution). Audited on Lean's st
 > upstream even nears failure. "lim inf C ≥ ½" survives, and the stronger statement is withdrawn the
 > same day its last support was measured. Separately, the quantity every section from §105 on has
 > called "the edge" is now proved to be well defined.
+
+**§124.4 — where the never-dipped falls happen (E13, T-CASC-ar's first measurement).** This is the
+reactive flux of committed falls: stage 2 crossing its saddle, weighted by the probability of then
+reaching its low rail first, read off by stage 1's position at the crossing.
+
+- **E13(a) failed as first built (9–13% off).** The fall rate lives in the original process's
+  quasi-stationary measure, where stage 1 may still die, but I had weighted crossings with the
+  Q-process committor, which assumes stage 1 survives. That over-weights crossings made with stage 1
+  near its saddle, which is exactly where the zone is.
+- **Fixed with the original-measure committor.** The identity then holds to 1e−14 at every Ω, and
+  only the fixed profile is read.
+- **E13(b) FAILED as written.** It required ≥ 70% of these falls to have stage 1 in the zone. In X:
+
+| Ω | 55 | 100 | 200 | 400 |
+|---|---|---|---|---|
+| stage 1 in the zone [s₁, edge₂) | 0.121 | 0.246 | 0.414 | 0.533 |
+| stage 1 above the edge | 0.879 | 0.754 | 0.586 | 0.467 |
+| mean x₁ at the crossing | 2.26 | 2.03 | 1.77 | 1.60 |
+
+- **Two channels, with opposite trends.** At small Ω most never-dipped falls happen with stage 1
+  *above* the edge: sagging, with stage 2's noise carrying it over a lowered barrier. As Ω grows the
+  in-zone channel takes the majority, and the mean crossing point slides toward the edge.
+- **That is a measured decomposition, not a mechanism for the Ω² growth.** T-CASC-ar stays open; its
+  next measurement is the growth exponent of each channel separately.

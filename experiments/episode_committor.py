@@ -119,6 +119,22 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
   E12 Written before running X:800 (laptop): the local growth rate of p0/(k1 t) from 400 to 800 keeps
       falling, below 0.005 -- sub-exponential, consistent with saturation. At or above 0.0185, the
       edge-approach yardstick is back.
+      -> HELD by its letter (0.0037), but "consistent with saturation" was the wrong reading: local
+         rate x Omega holds at 2.0-2.2, a power law ~Omega^2. The criterion could not tell (rule 19).
+
+  E13 Written before running (T-CASC-ar's first measurement): WHERE is stage 1 when a never-dipped
+      downstream fall commits? Reactive flux: stage 2 crossing its saddle (in the Q-process, stage 1
+      alive), times q = P(stage 2 then reaches its low rail before re-crossing upward), by n1.
+      Predict (a) its total equals the stored committed ratio (p0_rate_ratio) to 1e-6; (b) in X, >= 70%
+      of it has stage 1 inside the zone [s1, edge2) at Omega = 100, 200, 400, not falling with Omega.
+      The alternative -- falls with stage 1 ABOVE the edge -- would be stage 2's own noise over a
+      lowered barrier, a different mechanism.
+      -> (a) FAILED as built: 9-13% off. The fall rate is in the ORIGINAL process's QSD measure
+         (phi = pi~/psi, stage 1 may still die); the crossings were weighted with the Q-PROCESS
+         committor (stage 1 assumed to survive). psi varies sharply near the saddle, so this
+         over-weights crossings made with stage 1 near its saddle -- exactly where the zone is.
+         Fixed: u = E^Q[ 1/psi(n1 at the fall) ; low rail first ], boundary value 1/psi at the rail;
+         then sum pi~ mu u = the fall flux exactly. (b) is judged on the corrected profile only.
 """
 
 
@@ -253,7 +269,54 @@ def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD", lower="sad"):
     _, mu2s = B.rates(np.full(M1, float(base2)), n1s.astype(float), om, False)
     fall = float((np.clip(P[:, 0], 0, None) / psi_n1 * mu2s).sum())   # into the boundary below
     qprocess_J.last_ratio = fall / dip
+    qprocess_J.last = dict(P=P, n1s=n1s, n2s=n2s, base2=base2, psi_n1=psi_n1, dip=dip, lt1=lt1, mt1=mt1,
+                           M1=M1, M2=M2)
     return J / J.sum(), res
+
+
+def fall_profile(A, B, om):
+    """E13: reactive flux of committed never-dipped falls, by stage 1's position at the crossing."""
+    from experiments.weak_upstream import edge as edge_of
+    m = A.cap(om) + 1
+    sad1, sad2 = int(np.ceil(A.r2 * om)), int(np.ceil(B.r2 * om))
+    qprocess_J(A, B, om, m, sad1, sad2, lower="rail")
+    L = qprocess_J.last
+    P, n1s, base2, psi_n1, M1 = L["P"], L["n1s"], L["base2"], L["psi_n1"], L["M1"]
+    lt1, mt1 = L["lt1"].reshape(M1, -1)[:, 0], L["mt1"].reshape(M1, -1)[:, 0]
+    # committor q on n2 in (lo2, sad2): Q-process stage-1 moves + stage-2 moves; q = 1 at lo2, 0 at sad2
+    lo2 = base2 - 1
+    n2c = np.arange(lo2 + 1, sad2)
+    K = len(n2c)
+    I1, I2 = np.meshgrid(np.arange(M1), np.arange(K), indexing="ij")
+    I1, I2 = I1.ravel(), I2.ravel()
+    idx = I1 * K + I2
+    lam2, mu2 = B.rates(n2c[I2].astype(float), n1s[I1].astype(float), om, False)
+    l1, m1 = lt1[I1], mt1[I1]
+    rows, cols, vals, diag = [], [], [], np.zeros(M1 * K)
+    rhs = np.zeros(M1 * K)
+    for ok, step, rate in ((I1 < M1 - 1, K, l1), (I1 > 0, -K, m1)):
+        rows.append(idx[ok]); cols.append(idx[ok] + step); vals.append(rate[ok]); diag -= np.where(ok, rate, 0)
+    up_in = I2 < K - 1
+    rows.append(idx[up_in]); cols.append(idx[up_in] + 1); vals.append(lam2[up_in])
+    diag -= lam2                                                  # up out of the last row hits sad2: q = 0
+    dn_in = I2 > 0
+    rows.append(idx[dn_in]); cols.append(idx[dn_in] - 1); vals.append(mu2[dn_in])
+    diag -= mu2
+    rhs -= np.where(~dn_in, mu2 / psi_n1[I1], 0.0)                # hits lo2: u = 1/psi(n1) (original measure)
+    rows.append(idx); cols.append(idx); vals.append(diag)
+    M = sp.coo_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))),
+                      shape=(M1 * K, M1 * K)).tocsc()
+    q = spla.splu(M).solve(rhs).reshape(M1, K)
+    row = sad2 - base2                                            # P's column for n2 = sad2
+    _, mu_s = B.rates(np.full(M1, float(sad2)), n1s.astype(float), om, False)
+    flux = np.clip(P[:, row], 0, None) * mu_s * q[:, -1]   # (n1, sad2) -> (n1, sad2-1), committed, original measure
+    x1 = n1s / om
+    e2 = edge_of(B)
+    tot = float(flux.sum() / L["dip"])
+    return {"omega": om, "reactive_ratio": tot, "committed_ratio": qprocess_J.last_ratio,
+            "frac_in_zone": float(flux[x1 < e2].sum() / flux.sum()),
+            "frac_above_edge": float(flux[x1 >= e2].sum() / flux.sum()),
+            "mean_x1": float((flux * x1).sum() / flux.sum()), "edge2": e2, "saddle1": A.r2}
 
 
 def episode(A, B, om, method="qsd", dump=None, permc="COLAMD"):

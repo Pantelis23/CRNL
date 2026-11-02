@@ -5423,7 +5423,10 @@ flattening). Remaining kill test: exact Z at Ω ≥ 800 (≈ 16 GB; not run, mem
 exact Z p_d 0.035 (Ω = 600), 0.186 (800), 0.562 (1000), smooth, as pre-registered (E7). φ·p_d reaches
 0.27. **Supported in both pairs, refuted in neither.** Open within it: why the exact turn is so much
 sharper than the erf law (suspect: the pre-dip approach lingers in the zone too; kill test in
-§123.4). Also still open: the limit of p0/(k₁t).
+§123.4). Also still open: the limit of p0/(k₁t). **→ §123.5: the sharp turn was an artifact and is withdrawn.** On a
+deterministic route (E9), Z turns gently: 0.032 / 0.035 / 0.0375 / 0.0415 at Ω = 400–1000. X reaches
+φ·p_d = 0.443 at Ω = 800. The narrow-zone rise is 65% pre-dip sag by cross-substitution (E8).
+**Status: supported in X (near ½), direction-only in Z.**
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

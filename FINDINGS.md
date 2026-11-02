@@ -13444,6 +13444,9 @@ anything that solves near zero mixes the two pockets (stage 2 high / stage 2 low
 > rising). In the narrow-zone pair the exact damage has not turned by 1.76 Ω_c. So **T-CASC-ap is
 > supported in one pair, unresolved in the other, and refuted in neither.**
 
+> ⚠ **§123.4's values at Ω ≥ 800 and its "sharp turn" are WITHDRAWN in §123.5** — the eigenvector
+> behind them was not reproducible. The section is kept as first written.
+
 **§123.4 — the narrow-zone pair turns (E6, E7; run on a 64 GB laptop).** Z:800 needed ~16 GB, so it
 ran on a second machine (Windows, Python 3.12.10, the same numpy 2.5.1 / scipy 1.18.0). That machine
 first reproduced the stored Z:230 cell to 1.1e−10 relative.
@@ -13478,3 +13481,61 @@ first reproduced the stored Z:230 cell to 1.1e−10 relative.
 > both the wide-zone pair (0.38 at Ω = 800) and the narrow-zone pair (0.27 at Ω = 1000), and refuted
 > in neither.** Ω_c says when the reductions converge, not when the exact chain turns; that is
 > about 3× later for Z.
+
+**§123.5 — the third instrument failure, and the corrected record (E8, E9).**
+
+> *Withdrawn from §123.4:* "Z:800 = 0.186 … Z:1000 = 0.562 … a near-miss damages the downstream more
+> often than not … the turn is far sharper than §122's erf law."
+
+- **What killed it.** E8 re-ran Z:600–1000 with the same code, on the same machine, with the same
+  inputs, and got **Z:800 = 0.171 and Z:1000 = 0.188** (from 0.186 and 0.562). The E5 eigenvector
+  starts from a random vector. Seeded runs showed Z:230 and Z:400 stable to six digits, Z:600
+  spreading by ~1%, and Z ≥ 800 not reproducible at all. **For this strongly non-normal generator a
+  residual of 1e−10 did not bound the error in the eigenvector, even with |λ₁| ≈ 2.3.** §123.4's
+  numerics check ("clean in every cell") was looking at the wrong quantity. The pushed claim stood
+  for about two hours.
+- **The fix (E9): no eigenproblem near zero.** Stage 1 is autonomous, so its conditioning function
+  ψ(n₁) is one-dimensional. It is built in log domain from the mean time to the dip. The
+  Doob-transformed joint chain, with stage 2 reflected at its saddle, is conservative with an O(1)
+  gap. J's shape is its stationary law at n₁ = s₁: one direct solve, pinned at a high-probability
+  state.
+  - **No random start, and orderings agree.** Two LU column orderings agree to ≤ 1e−15.
+  - **Matches the stable cells.** It matches E5 within 0.5% wherever E5 was seed-stable (X:40,
+    X:100, Z:55, Z:230, Z:400; Z:230 and Z:400 to 1e−6).
+  - **One failure inside the fix.** A first version normalised through a dense row of ones, which
+    destroyed the LU's sparsity at Ω ≥ 400; it was replaced by pinning one state.
+
+**The corrected exact record** (E9 route; Ω ≥ 600 on the laptop):
+
+| Ω | 40 | 55 | 100 | 200 | 230 | 400 | 600 | 800 | 1000 |
+|---|---|---|---|---|---|---|---|---|---|
+| X: p_d | 0.303 | — | 0.407 | 0.576 | — | 0.778 | — | **0.940** | — |
+| X: φ·p_d | 0.121 | — | 0.175 | 0.254 | — | 0.357 | — | **0.443** | — |
+| Z: p_d | — | 0.057 | — | — | 0.033 | 0.032 | 0.0350 | **0.0375** | **0.0415** |
+| Z: φ·p_d | — | 0.022 | — | — | 0.015 | 0.015 | 0.016 | 0.018 | **0.020** |
+
+- **E6 and E7 still hold on the correct numbers.** Z:800 = 0.0375 ≥ 0.0306. The sequence
+  0.0322 < 0.0350 < 0.0375 < 0.0415 is monotone through Ω = 600 → 1000.
+- **The narrow-zone pair does turn, gently,** with its minimum near Ω ≈ 400–600 ≈ 2–3 Ω_c. It is
+  not the sharp turn §123.4 reported, so the question "why so sharp" is withdrawn with it.
+- **The wide-zone pair goes further than §123.3 said:** p_d = 0.940 at Ω = 800, and φ·p_d = 0.443
+  against the predicted limit of ½. (E5's 0.807 there is also superseded.)
+
+**E8 — what carries the narrow-zone rise (written before running; judged on the E9 dumps).**
+p_d = Σ J(x₂)·f(x₂). Swapping between Ω = 600 and 1000:
+
+- **J_1000 with f_600 (the sag alone) gives 65% of the rise.** E8 required ≥ 60%: held.
+- **J_600 with f_1000 (the episode alone) gives 26%.** E8 required ≤ 40%: held.
+- **The remaining 9% is the interaction.**
+- **Stage 2's mean position at the dip slides down** as Ω grows: x₂ = 1.852 → 1.807 → 1.769.
+
+So the narrow-zone rise is mostly **pre-dip sag**: the approach to the saddle lingers in the zone
+and leaves stage 2 lower when the dip comes. That is now a measurement at this scope, not a
+suspect. An E8 run on the irreproducible E5 dumps had printed 86% / 1%; it is discarded.
+
+> **What §123.5 settles.** The universal floor φ·p_d → ½ is now close in the wide-zone pair (0.443
+> at Ω = 800). The narrow-zone pair has turned, but slowly (0.020 at Ω = 1000), so it supports the
+> limit's direction, not its value. Three instruments broke in this one section, each printing a
+> confident number. The last one broke *after* its result had been pushed, and was caught only
+> because a re-run for a different purpose disagreed with it. **Re-running a cell is a check; a
+> residual is not.**

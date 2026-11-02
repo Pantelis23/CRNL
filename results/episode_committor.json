@@ -327,7 +327,8 @@
     "J_low_frac": 0.0,
     "lam0": -1.9273582540942886e-13,
     "eig_res": 1.4039738038165619e-10,
-    "eig_gap": 12026422151438.82
+    "eig_gap": 12026422151438.82,
+    "withdrawn": "E9: superseded by the deterministic route (\u00a7123.5)"
   },
   "Z:800/hi": {
     "omega": 800,
@@ -339,7 +340,8 @@
     "lam0": -1.9958276141790422e-13,
     "eig_res": 1.1454542325790632e-10,
     "eig_gap": 11605482764845.506,
-    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0); Z:230/hi reproduced to 1.1e-10"
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0); Z:230/hi reproduced to 1.1e-10",
+    "withdrawn": "E9: eigenvector not reproducible across random starts at this Omega (\u00a7123.5)"
   },
   "Z:600/hi": {
     "omega": 600,
@@ -351,7 +353,8 @@
     "lam0": -2.417121405354072e-13,
     "eig_res": 7.121159828854756e-11,
     "eig_gap": 9674371931792.918,
-    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0); Z:230/hi reproduced to 1.1e-10"
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0); Z:230/hi reproduced to 1.1e-10",
+    "withdrawn": "E9: eigenvector not reproducible across random starts at this Omega (\u00a7123.5)"
   },
   "Z:1000/hi": {
     "omega": 1000,
@@ -363,6 +366,152 @@
     "lam0": 3.7925448854773314e-13,
     "eig_res": 1.4855965323096695e-10,
     "eig_gap": 6064330679215.938,
-    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0); Z:230/hi reproduced to 1.1e-10"
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0); Z:230/hi reproduced to 1.1e-10",
+    "withdrawn": "E9: eigenvector not reproducible across random starts at this Omega (\u00a7123.5)"
+  },
+  "Z:600/qp": {
+    "omega": 600,
+    "states": 3846959,
+    "secs": 117.93825149536133,
+    "phi_ep": 0.468282078740762,
+    "p_d_ep": 0.035033889077846284,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 2.6443566664456107e-09,
+    "permc": "COLAMD",
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0)"
+  },
+  "Z:800/qp": {
+    "omega": 800,
+    "states": 6839279,
+    "secs": 315.19456577301025,
+    "phi_ep": 0.47544653268550485,
+    "p_d_ep": 0.037529756334019754,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 3.866328514897247e-09,
+    "permc": "COLAMD",
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0)"
+  },
+  "Z:1000/qp": {
+    "omega": 1000,
+    "states": 10686599,
+    "secs": 618.6517307758331,
+    "phi_ep": 0.4741565057273836,
+    "p_d_ep": 0.04151418543868087,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 2.5682166114464622e-08,
+    "permc": "COLAMD",
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0)"
+  },
+  "X:200/qp": {
+    "omega": 200,
+    "states": 427319,
+    "secs": 5.117839813232422,
+    "phi_ep": 0.4420537933491505,
+    "p_d_ep": 0.5754994013019835,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 1.283939797932081e-09,
+    "permc": "COLAMD",
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0)"
+  },
+  "X:400/qp": {
+    "omega": 400,
+    "states": 1709639,
+    "secs": 38.77257323265076,
+    "phi_ep": 0.4590455986370868,
+    "p_d_ep": 0.777574298561157,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 2.43291506714344e-09,
+    "permc": "COLAMD",
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0)"
+  },
+  "X:800/qp": {
+    "omega": 800,
+    "states": 6839279,
+    "secs": 327.53385853767395,
+    "phi_ep": 0.4710471724140662,
+    "p_d_ep": 0.9402239962944029,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 4.216142676225869e-10,
+    "permc": "COLAMD",
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0)"
+  },
+  "X:40/qp": {
+    "omega": 40,
+    "states": 17063,
+    "secs": 0.07469987869262695,
+    "phi_ep": 0.398882826725706,
+    "p_d_ep": 0.30307154255671553,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 4.4158245230295025e-11,
+    "permc": "COLAMD",
+    "order_diff": 2.220446049250313e-16,
+    "host": "local"
+  },
+  "X:100/qp": {
+    "omega": 100,
+    "states": 106784,
+    "secs": 0.7104284763336182,
+    "phi_ep": 0.4298844904268989,
+    "p_d_ep": 0.4070556893902515,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 1.7556216223027026e-10,
+    "permc": "COLAMD",
+    "order_diff": 6.661338147750939e-16,
+    "host": "local"
+  },
+  "Z:55/qp": {
+    "omega": 55,
+    "states": 32448,
+    "secs": 0.16437888145446777,
+    "phi_ep": 0.3909117466711707,
+    "p_d_ep": 0.05708465023396496,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 1.980315076135632e-10,
+    "permc": "COLAMD",
+    "order_diff": 3.3306690738754696e-16,
+    "host": "local"
+  },
+  "Z:230/qp": {
+    "omega": 230,
+    "states": 565920,
+    "secs": 5.6717517375946045,
+    "phi_ep": 0.4513940288522799,
+    "p_d_ep": 0.033419274189031366,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 3.496410301704361e-10,
+    "permc": "COLAMD",
+    "order_diff": 0.0,
+    "host": "local"
+  },
+  "Z:400/qp": {
+    "omega": 400,
+    "states": 1709639,
+    "secs": 27.220680713653564,
+    "phi_ep": 0.4672474529212324,
+    "p_d_ep": 0.032244967289796686,
+    "J_low_frac": 0.0,
+    "lam0": NaN,
+    "qp_res": 6.35167937584463e-10,
+    "permc": "COLAMD",
+    "order_diff": 0.0,
+    "host": "local"
+  },
+  "Z:1000/hi_rerun": {
+    "p_d_ep": 0.18833,
+    "note": "same code and machine, second run (E8 log): 0.562 -> 0.188"
+  },
+  "Z:800/hi_rerun": {
+    "p_d_ep": 0.17064,
+    "note": "same code and machine, second run (E8 log)"
   }
 }

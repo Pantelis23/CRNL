@@ -70,6 +70,27 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
       that band, or Z:1000 below Z:800, marks the 800 value as an isolated spike -- withdrawn
       until an independent route reproduces it.
       -> HELD: Z:600 = 0.0354, Z:1000 = 0.562 (laptop; eig_res <= 1.5e-10, |lambda_1| ~ 2.3).
+
+  E8  Written before running: what makes the turn sharp? p_d = sum J(n2) f(n2) with f = h/c at
+      (sad1 - 1, n2) -- stage 2's state at the dip (J) times what the episode does from there (f).
+      Suspect (FINDINGS §123.4): pre-dip SAG -- J slides toward stage 2's separatrix as Omega grows.
+      Cross-substitute on the common grid x2 = n2/Omega between Omega = 600 and 1000, both orders
+      (rule 15). The suspect predicts: J_1000 with f_600 recovers >= 60% of the rise
+      (p_d(1000) - p_d(600)) and J_600 with f_1000 recovers <= 40%. The reverse -- f carrying the
+      rise -- means the damage is made after the dip, and the sag suspect is refuted.
+
+  E9  Written after E8's run exposed that E5's route is NOT reproducible at Omega >= 600: the same
+      cell, same code, same machine gave Z:1000 = 0.562 and then 0.188, Z:800 = 0.186 then 0.171
+      (seed spread at Z:600 ~1%; Z:230 and Z:400 stable to 6 digits). The eigensolver starts from a
+      random vector, and for this strongly non-normal generator a residual of 1e-10 does not bound
+      the error in the eigenvector, even with |lambda_1| = 2.3. §123.4's turn is therefore unverified.
+      Fix with no eigenproblem near zero: stage 1 is autonomous, so its conditioning function psi(n1)
+      is one-dimensional -- psi = tau / tau(cap), tau the mean time to the dip, built in log domain
+      (psi = lambda0 tau up to relative O(t_relax lambda0) ~ 1e-13). The Doob-transformed joint chain
+      (stage 1's rates times psi ratios, stage 2 reflected at its saddle) is conservative with an O(1)
+      gap; J's shape is its stationary law at n1 = sad1 -- one direct solve, no random start.
+      Predict: within 1% of E5 at the seed-stable cells X:100, Z:230, Z:400; two different column
+      orderings of the LU agree to 1e-6 at every Omega run. Z:800/1000 are read only from this route.
 """
 
 
@@ -127,7 +148,73 @@ def qsd_alive_high(Q, m, sad1, sad2):
     return full / full.sum(), float(-np.real(vals[order[0]])), res, gap
 
 
-def episode(A, B, om, method="qsd"):
+def psi_stage1(A, om, sad1, cap):
+    """Stage 1's conditioning function on n1 = sad1-1 .. cap: the mean time to first dip, normalised,
+    in log domain. tau(n+1) - tau(n) = sum_{k>n} w_k / (lam_n w_n), w the product-formula weights."""
+    n = np.arange(sad1 - 1, cap + 1, dtype=float)
+    lam, mu = A.rates(n, np.zeros(len(n)), om, True)
+    lw = np.zeros(len(n))
+    for i in range(1, len(n)):
+        lw[i] = lw[i - 1] + np.log(lam[i - 1]) - np.log(mu[i])
+    # log of tail sums S_i = sum_{k>i} w_k
+    ltail = np.full(len(n), -np.inf)
+    acc = -np.inf
+    for i in range(len(n) - 2, -1, -1):
+        acc = np.logaddexp(acc, lw[i + 1])
+        ltail[i] = acc
+    ldelta = ltail[:-1] - (np.log(lam[:-1]) + lw[:-1])          # log increments, i = 0 .. len-2
+    m0 = ldelta.max()
+    tau = np.concatenate([[0.0], np.cumsum(np.exp(ldelta - m0))])
+    return tau / tau[-1]                                         # psi on n1 = sad1-1 .. cap
+
+
+def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD"):
+    """J's shape from the stationary law of the Doob-transformed (Q-process) joint chain, stage 2
+    reflected at its saddle. Returns J over n2 (zero below sad2)."""
+    cap = m - 1
+    psi = psi_stage1(A, om, sad1, cap)                           # index j <-> n1 = sad1-1+j
+    n1s = np.arange(sad1, cap + 1)
+    n2s = np.arange(sad2, cap + 1)
+    M1, M2 = len(n1s), len(n2s)
+    I1, I2 = np.meshgrid(np.arange(M1), np.arange(M2), indexing="ij")
+    I1, I2 = I1.ravel(), I2.ravel()
+    idx = I1 * M2 + I2
+    n1 = n1s[I1].astype(float); n2 = n2s[I2].astype(float)
+    lam1, mu1 = A.rates(n1, np.zeros(len(n1)), om, True)
+    lam2, mu2 = B.rates(n2, n1, om, False)
+    ps = psi[I1 + 1]
+    up1 = I1 < M1 - 1
+    dn1 = I1 > 0
+    lt1 = np.where(up1, lam1 * psi[np.minimum(I1 + 2, len(psi) - 1)] / ps, 0.0)
+    mt1 = np.where(dn1, mu1 * psi[I1] / ps, 0.0)
+    up2 = (I2 < M2 - 1) & (lam2 > 0)
+    dn2 = (I2 > 0) & (mu2 > 0)
+    rows = [idx[up1], idx[dn1], idx[up2], idx[dn2]]
+    cols = [idx[up1] + M2, idx[dn1] - M2, idx[up2] + 1, idx[dn2] - 1]
+    vals = [lt1[up1], mt1[dn1], lam2[up2], mu2[dn2]]
+    out = np.zeros(M1 * M2)
+    for r_, v_ in zip(rows, vals):
+        np.add.at(out, r_, v_)
+    rows.append(idx); cols.append(idx); vals.append(-out)
+    Qt = sp.coo_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))),
+                       shape=(M1 * M2, M1 * M2)).tocsc()
+    # pin one high-probability state (both stages at their rails) to 1 -- a single unit row keeps
+    # the LU sparse; a dense normalisation row (the first draft) destroyed it at Omega >= 400
+    k1 = int(np.clip(round(A.r3 * om) - sad1, 0, M1 - 1))
+    k2 = int(np.clip(round(B.r3 * om) - sad2, 0, M2 - 1))
+    k = k1 * M2 + k2
+    At = Qt.T.tocsr().tolil()
+    At[k, :] = 0.0
+    At[k, k] = 1.0
+    b = np.zeros(M1 * M2); b[k] = 1.0
+    pi = spla.splu(At.tocsc(), permc_spec=permc).solve(b)
+    res = float(np.abs(Qt.T @ pi).max() / np.abs(pi).max())
+    J = np.zeros(m)
+    J[sad2:] = np.clip(pi.reshape(M1, M2)[0, :], 0.0, None)    # n1 = sad1 row
+    return J / J.sum(), res
+
+
+def episode(A, B, om, method="qsd", dump=None, permc="COLAMD"):
     from experiments.weak_upstream import seed
     Q, m = pair_generator(A, B, om)
     N = m * m
@@ -138,12 +225,18 @@ def episode(A, B, om, method="qsd"):
         pi, lam0 = qsd_alive(Q, m, sad1)
     elif method == "occ":
         pi, lam0 = occupation_alive(Q, m, sad1, seed(A, B, om, m)[0])
-    else:
+    elif method == "hi":
         pi, lam0, eig_res, eig_gap = qsd_alive_high(Q, m, sad1, sad2)
+    else:                                                        # "qp", E9
+        Jq, qp_res = qprocess_J(A, B, om, m, sad1, sad2, permc)
+        pi, lam0 = None, float("nan")
     n2 = np.arange(m)
     _, mu1 = A.rates(np.full(m, float(sad1)), np.zeros(m), om, True)
-    J = pi.reshape(m, m)[sad1, :] * mu1                     # flux sad1 -> sad1-1, by n2
-    J /= J.sum()
+    if method == "qp":
+        J = Jq
+    else:
+        J = pi.reshape(m, m)[sad1, :] * mu1                     # flux sad1 -> sad1-1, by n2
+        J /= J.sum()
     # backward problems on interior n1 in (lo1, hi1); boundaries n1 = lo1 (0) and n1 = hi1 (target)
     idx = np.arange(N)
     n1 = idx // m
@@ -159,17 +252,22 @@ def episode(A, B, om, method="qsd"):
     pos = {s: i for i, s in enumerate(inner)}
     start = [pos[(sad1 - 1) * m + j] for j in range(m)]
     cs, hs = c[start], h[start]
+    if dump is not None:
+        f = np.where(cs > 0, hs / np.where(cs > 0, cs, 1.0), 0.0)
+        np.savez_compressed(dump, x2=np.arange(m) / om, J=J, f=f, c=cs, sad2=sad2, om=om)
     return {"omega": om, "states": int(len(inner)), "secs": time.time() - t0,
             "phi_ep": float((J * cs).sum()), "p_d_ep": float((J * hs).sum() / (J * cs).sum()),
             "J_low_frac": float(J[:sad2].sum()), "lam0": lam0,
-            **({"eig_res": eig_res, "eig_gap": eig_gap} if method == "hi" else {})}
+            **({"eig_res": eig_res, "eig_gap": eig_gap} if method == "hi" else {}),
+            **({"qp_res": qp_res, "permc": permc} if method == "qp" else {})}
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", type=pathlib.Path, default=pathlib.Path("results/episode_committor.json"))
     ap.add_argument("--cells", default="X:40,X:55,Z:40,Z:55")
-    ap.add_argument("--method", default="hi", choices=["qsd", "occ", "hi"],
+    ap.add_argument("--dump", default=None, help="directory: save J and f per cell as .npz (E8)")
+    ap.add_argument("--method", default="hi", choices=["qsd", "occ", "hi", "qp"],
                     help="hi (default, E5): the only route valid at every Omega; qsd/occ kept as the record of E4's failure")
     args = ap.parse_args()
     rep = json.loads(args.out.read_text()) if args.out.exists() else {}
@@ -179,7 +277,11 @@ def main():
             continue
         arm, om = cell.split(":")
         A, B = element(ARMS[arm][0]), element(ARMS[arm][1])
-        r = episode(A, B, int(om), args.method)
+        dump = None if args.dump is None else str(pathlib.Path(args.dump) / f"{arm}_{om}_{args.method}.npz")
+        if dump is not None:
+            pathlib.Path(args.dump).mkdir(parents=True, exist_ok=True)
+            key = f"{key}/dump"
+        r = episode(A, B, int(om), args.method, dump)
         rep[key] = r
         print(key, json.dumps(r), flush=True)
         args.out.write_text(json.dumps(rep, indent=2, default=float))

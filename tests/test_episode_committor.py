@@ -43,12 +43,13 @@ def test_the_broken_instruments_are_on_record():
 
 
 def test_exact_wide_zone_floor_climbs_toward_one_half():
+    """§123.5 (E9 route): X's p_d rises monotonically to 0.94 at Omega = 800; phi * p_d to 0.443."""
     e = _e()
-    oms = (40, 55, 100, 200, 400, 800)
-    pd = [e[f"X:{om}/hi"]["p_d_ep"] for om in oms]
-    lead = [e[f"X:{om}/hi"]["p_d_ep"] * e[f"X:{om}/hi"]["phi_ep"] for om in oms]
-    assert pd == sorted(pd) and pd[-1] > 0.8
-    assert lead == sorted(lead) and 0.35 < lead[-1] < 0.5
+    oms = (40, 100, 200, 400, 800)
+    pd = [e[f"X:{om}/qp"]["p_d_ep"] for om in oms]
+    lead = [e[f"X:{om}/qp"]["p_d_ep"] * e[f"X:{om}/qp"]["phi_ep"] for om in oms]
+    assert pd == sorted(pd) and pd[-1] > 0.9
+    assert lead == sorted(lead) and 0.42 < lead[-1] < 0.5
 
 
 def test_narrow_zone_has_not_turned_E2_failed():
@@ -60,13 +61,44 @@ def test_narrow_zone_has_not_turned_E2_failed():
     assert (z[-2] - z[-1]) / z[-2] < (z[-3] - z[-2]) / z[-3], "but the decline is flattening"
 
 
-def test_narrow_zone_turns_smoothly_past_three_omega_c():
-    """E6 / E7 held (laptop run): Z rises 0.035 -> 0.186 -> 0.562 at Omega = 600 / 800 / 1000,
-    strictly monotone from the minimum, with clean eigen-numerics in every cell."""
+def test_narrow_zone_turns_gently_on_the_deterministic_route():
+    """E6 / E7 hold on the E9 numbers: monotone 400 -> 600 -> 800 -> 1000, but gently (0.032 ->
+    0.0415), not §123.4's withdrawn 0.186 / 0.562."""
     e = _e()
-    z = {om: e[f"Z:{om}/hi"] for om in (400, 600, 800, 1000)}
-    assert z[400]["p_d_ep"] < z[600]["p_d_ep"] < z[800]["p_d_ep"] < z[1000]["p_d_ep"]
-    assert z[1000]["p_d_ep"] > 0.5
-    for v in z.values():
-        assert v["eig_res"] < 1e-9
-        assert 1.0 < v["eig_gap"] * abs(v["lam0"]) < 10.0, "second eigenvalue O(1): no mixing"
+    z = [e[f"Z:{om}/qp"]["p_d_ep"] for om in (400, 600, 800, 1000)]
+    assert z == sorted(z) and z[2] >= 0.0306
+    assert z[-1] < 0.05
+
+
+def test_the_withdrawn_route_is_on_record_and_irreproducible():
+    """§123.5: the same Z:1000 cell, same code, gave 0.562 and 0.188 on E5's random-start
+    eigenvector; the deterministic route gives 0.0415. All three are kept, labelled."""
+    e = _e()
+    assert "withdrawn" in e["Z:1000/hi"]
+    assert e["Z:1000/hi"]["p_d_ep"] / e["Z:1000/hi_rerun"]["p_d_ep"] > 2
+    assert e["Z:1000/hi_rerun"]["p_d_ep"] / e["Z:1000/qp"]["p_d_ep"] > 4
+
+
+def test_deterministic_route_validated_and_order_independent():
+    """E9: within 0.6% of E5 at its seed-stable cells; LU orderings agree to 1e-12."""
+    e = _e()
+    for k in ("X:40", "X:100", "Z:55", "Z:230", "Z:400"):
+        assert abs(e[f"{k}/qp"]["p_d_ep"] / e[f"{k}/hi"]["p_d_ep"] - 1) < 0.006, k
+        assert e[f"{k}/qp"]["order_diff"] < 1e-12, k
+
+
+def test_the_narrow_zone_rise_is_mostly_pre_dip_sag():
+    """E8 on the E9 dumps: J_1000 with f_600 recovers >= 60% of the 600 -> 1000 rise, J_600 with
+    f_1000 <= 40%."""
+    import numpy as np
+    D = pathlib.Path("results/episode_dumps")
+    L = {om: np.load(D / f"Z_{om}_qp.npz") for om in (600, 1000)}
+
+    def pd(a, b):
+        A, B = L[a], L[b]
+        w = A["J"] * A["c"]
+        return float((w * np.interp(A["x2"], B["x2"], B["f"])).sum() / w.sum())
+
+    lo, hi = pd(600, 600), pd(1000, 1000)
+    assert (pd(1000, 600) - lo) / (hi - lo) >= 0.6
+    assert (pd(600, 1000) - lo) / (hi - lo) <= 0.4

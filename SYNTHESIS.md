@@ -924,3 +924,7 @@ in the other, and refuted in neither.
 Run on a second machine (the user's laptop, after it reproduced a stored cell to 1e−10), the
 narrow-zone pair then turned at about 3 Ω_c, smoothly as pre-registered: by Ω = 1000 a near-miss
 damages the downstream more often than not. **The universal floor is supported in both pairs.**
+  > **Withdrawn two hours later (§123.5).** A re-run of the same cells disagreed with them: the
+  > eigenvector behind the narrow-zone numbers was not reproducible, despite residuals of 1e−10. On a
+  > deterministic route the narrow-zone pair turns only gently (0.0415 at Ω = 1000). The wide-zone
+  > pair's floor term reaches 0.443, close to ½. A re-run is a check; a residual is not.

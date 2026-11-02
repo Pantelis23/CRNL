@@ -934,3 +934,11 @@ trajectories where the upstream never dips grow roughly like Ω² in the wide-zo
 the downstream fails 1.8 times per upstream dip, three-quarters of that without any dip at all.
 "At least half the upstream's dip rate" stands; "converges to half" does not. The quantity called
 "the edge" since §105 is now proved in Lean to be well defined.
+
+**§124.7 found the mechanism the growth had been missing.** A downstream stage can fail without its
+upstream ever crossing its own tipping point, because the cheapest way to fail is a *joint*
+fluctuation. The upstream sinks toward its saddle along the time-reverse of its recovery, lingers
+there, and drags the downstream across the joint basin boundary. That path costs less than a full
+upstream dip, by Γ = V₁(s₁) − W*: 1.69e−3 in the wide-zone pair and ten times less in its neighbour.
+It was computed by minimum action, recovered from the exact chain's stationary law, and tested on a
+second pair before that pair's numbers were read.

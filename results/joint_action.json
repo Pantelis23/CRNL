@@ -1,0 +1,107 @@
+{
+  "method": "WKB Hamiltonian ray shooting from the joint stable point, Gamma extrapolated to |p| -> 0; checked by direct minimum-action (L-BFGS-B, free segment times). Target: the joint deterministic separatrix Sigma, x1 > s1. Computed by an independent agent; scripts in experiments/joint_action/.",
+  "V1_s1": {
+    "E-070": 0.1557419101,
+    "E-062": 0.094908305
+  },
+  "X": {
+    "pair": "E-070 -> E-084",
+    "W_star": 0.15405354,
+    "Gamma": 0.001688,
+    "Gamma_err": 2e-06,
+    "free_x2_bound": {
+      "x_dag": [
+        1.0846,
+        1.17
+      ],
+      "Gamma": 0.001105
+    },
+    "path_min_x1": 1.1287,
+    "convergence_rays": {
+      "1e-5": [
+        0.00168837,
+        0.00168836
+      ],
+      "1e-6": [
+        0.00168826,
+        0.00168837
+      ],
+      "1e-7": [
+        0.00168874,
+        0.00168862
+      ]
+    },
+    "mam": {
+      "100": 0.15407681,
+      "200": 0.15406076,
+      "400": 0.15405679,
+      "800": 0.15405548
+    }
+  },
+  "b": {
+    "pair": "E-070 -> F-040",
+    "W_star": 0.15557718,
+    "Gamma": 0.00016473,
+    "Gamma_err": 3e-08,
+    "free_x2_bound": {
+      "x_dag": [
+        1.027955,
+        0.910128
+      ],
+      "Gamma": 9.526e-05
+    },
+    "path_min_x1": 1.04495,
+    "convergence_rays": {
+      "1e-6": [
+        0.00016468,
+        0.0001647
+      ],
+      "1e-7": [
+        0.00016476,
+        0.00016473
+      ],
+      "1e-8": [
+        0.00016473,
+        null
+      ]
+    },
+    "mam_gamma": {
+      "100": 0.00014549,
+      "200": 0.00015883,
+      "400": ">= 1.607e-4 (stopped at the 1500 s limit; a lower bound on Gamma)"
+    }
+  },
+  "Z": {
+    "pair": "E-062 -> E-084",
+    "W_star": 0.09488984,
+    "Gamma": 1.847e-05,
+    "Gamma_err": 1e-08,
+    "free_x2_bound": {
+      "x_dag": [
+        1.241821,
+        1.243471
+      ],
+      "Gamma": 1.022e-05
+    },
+    "path_min_x1": 1.24894,
+    "mam_gamma": {
+      "100": 8.89e-06,
+      "200": 1.481e-05,
+      "400": ">= 1.595e-5 (stopped early; lower bound)"
+    }
+  },
+  "a": {
+    "pair": "E-070 -> F-025",
+    "Gamma_estimate": 1.55e-06,
+    "note": "lower bounds only; under-resolved",
+    "free_x2_bound": {
+      "x_dag": [
+        1.007094,
+        0.713639
+      ],
+      "Gamma": 7.8e-07
+    },
+    "path_min_x1": 1.009
+  },
+  "note_direct_check": "Direct minimisation converged for X (N=800 within 1.3e-6 of the ray W*). For b and Z it rises toward the ray value from below without converging in the time allowed; consistent, not an independent confirmation at the quoted precision. Pair a is below its resolution."
+}

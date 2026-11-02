@@ -5445,7 +5445,14 @@ neither.** Past Ω ≈ 800 both channels grow at similar rates (2.4 vs 2.7, 800 
 above-edge one accelerating; the total local exponent drifts 2.07 → 2.77, so "~Ω²" was a window and
 the asymptotic form (power vs exponential) is unresolved. **Kill test for any proposed mechanism:**
 it must reproduce the drifting exponent across Ω = 100–1600 *and* the in-zone share rising to
-0.59 and falling back.
+0.59 and falling back. **→ §124.7: a candidate, supported.** The never-dipped falls follow a joint large
+deviation cheaper than a dip: stage 1 descends along its time-reversed relaxation, lingers near its
+saddle, and drags stage 2 across the joint separatrix. Γ = V₁(s₁) − W* = 1.69e−3 (X) and 1.65e−4 (b)
+by minimum action (independent agent). The exact stationary law extrapolates to Γ_X ≈ 0.0018–0.0022.
+A pre-registered b-vs-X test held. **Still open (T-CASC-as):** the prefactor exponent a(Ω), which
+drifts in both pairs. **Kill test for the mechanism:** a pair with Γ > 3e−3 must show a local-exponent
+slope near its Γ by Ω ≈ 1/Γ; a pair with no x† must show a never-dipped term that decays relative to
+the dips.
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

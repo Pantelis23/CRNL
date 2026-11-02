@@ -13698,3 +13698,90 @@ Each channel's rate is the never-dipped term times its share in E13's reactive d
 > channels hand the growth to each other, and their sum accelerates through the largest volume
 > computed. What survives is the measurement: C = 8.2 at Ω = 1600 in X, with the dip channel at ½ and
 > the never-dipped channel growing faster than any power fitted so far.
+
+**§124.7 — a candidate mechanism for the never-dipped growth, found, cross-checked, and tested on a
+second pair.** The user asked for a candidate rather than an open question. Search: my own analysis,
+plus two agents in parallel — one surveying the literature, one computing a minimum action
+independently. Six of my steps failed on the way, and they are listed last.
+
+**The candidate: the least joint action of a fall that never dips.** Both rates are exponentially
+small, so R = (never-dipped falls)/(dips) ~ Ω^a·e^{ΓΩ}, with Γ = V₁(s₁) − W*. Here V₁(s₁) is stage 1's
+quasi-potential at its saddle, and W* is the least Freidlin–Wentzell action of a joint path that
+takes the pair across the **joint deterministic separatrix Σ** with stage 1 kept above s₁. Σ is the
+boundary between initial states whose coupled rate equations end with stage 2 high vs low.
+
+- **The shape of the optimal path.** Stage 1 descends along the time-reverse of its own relaxation,
+  so it lingers near its saddle on the way down as well as on the way up. Stage 2 is dragged down
+  meanwhile, mostly at no cost (its momentum p₂ ≈ −0.003), until the pair crosses Σ; then stage 1
+  relaxes back. This is §123.5's pre-dip sag, now inside the action itself.
+- **The free-x₂ bound.** Letting stage 2 follow its own flow exactly gives a turning point x† and the
+  bound Γ_bound = V₁(s₁) − V₁(x†). I computed it, and the agent reproduced it independently:
+  x† = 1.0846, with stage 2 dragged to 1.170, so Γ_bound = 1.105e−3 for X.
+- **The converged optimum** (the agent's ray shooting, |p| → 0 extrapolated, checked by a direct
+  minimum-action solve at N = 100–800) lets stage 2 fluctuate slightly:
+
+| pair | Γ (converged) | free-x₂ bound | path's lowest x₁ |
+|---|---|---|---|
+| X: E-070 → E-084 | **1.688e−3** | 1.105e−3 | 1.129 |
+| b: E-070 → F-040 | **1.647e−4** | 9.5e−5 | 1.045 |
+| Z: E-062 → E-084 | 1.85e−5 | 1.02e−5 | 1.249 |
+| a: E-070 → F-025 | ≈ 1.5e−6 (lower bounds only) | 7.8e−7 | 1.009 |
+
+  Γ falls as stage 2's edge sinks toward stage 1's saddle. For pairs d and N no fall-inducing approach
+  exists at all.
+  The direct minimum-action check converged for X (N = 800 within 1.3e−6 of the ray value). For b
+  and Z it rises toward the ray value from below without converging in the time allowed
+  (b ≥ 1.607e−4, Z ≥ 1.595e−5 at N = 400), so it is consistent but not independently confirmed
+  there. Pair a is below its resolution.
+
+**Three independent checks against the exact CME.**
+
+1. **The stationary law.** −ln φ/Ω on Σ, read from the exact quasi-stationary law of X, gives
+   Γ̂_Σ = 0.0083 / 0.0056 / 0.0045 / 0.0039 at Ω = 400 / 800 / 1200 / 1600. Extrapolating — both
+   ansätze reported (rule 15):
+   - Γ + c·ln Ω/Ω (the form large-deviation prefactors give): **Γ ≈ 0.0018–0.0019**;
+   - Γ + c/Ω: 0.0021–0.0022.
+   Both bracket the minimum action's 0.00169, the first within about 10%. The stationary law's argmin
+   on Σ walks 1.078 → 1.094 → 1.105 → 1.113, toward the optimal path's lowest point, 1.129.
+2. **A second pair, predicted before its numbers were read (E19(a), E20).** b shares X's upstream but
+   has a Γ ten times smaller. The candidate says b's never-dipped term grows almost only through its
+   prefactor, so its local exponent should flatten while X's keeps climbing. Measured: b's exponent
+   runs 2.52 / 2.83 / 2.70 / 2.56 (Ω = 200–1600), a slope of **−3.3e−4** at large Ω, against X's
+   **+9.9e−4**. Both pre-registered criteria held. Γ_b was fixed by the agent before b's numbers were
+   opened.
+3. **A paired difference (post hoc, recorded as such).** The two pairs share stage 1, so stage 1's
+   prefactor drift should cancel in the difference of their exponent slopes. It does: 0.00132,
+   against Γ_X − Γ_b = 0.00152 (13%).
+
+**What it explains, and what it does not.**
+
+- **Explained:** the drifting exponent (a + ΓΩ with Γ > 0); the two channels as timing labels on one
+  path (the path turns in the zone, but stage 2 crosses the fixed line x₂ = 0.606 only as stage 1
+  climbs back); and why Z's never-dipped term barely grows (Γ_Z ≈ 2e−5).
+- **Not explained:** the prefactor exponent a(Ω) itself — it still drifts at accessible Ω, and in both
+  pairs. Nor the crossing location: the critical path ends parked on stage 2's saddle, so that
+  prediction is not sharp.
+
+**Literature (the agent's search).** Nothing treats this exact setup. The nearest analogue is Ashwin,
+Creaser & Tsaneva-Atanasova, PRE 107, 014213 (2023): quasi-potentials for coupled escape problems, in
+which the dominant exit point jumps between boundary points. Assaf et al., PRL 111, 058102 (2013) and
+Khasin & Dykman, PRL 103, 068101 (2009) support a driver's sub-threshold fluctuation carrying a lower
+action than its full transition.
+
+**My failures on the way.**
+
+- **E17 and E17b were mis-designed targets.** E17 used the line x₂ = 0.606 (stage 2's separatrix only
+  at healthy input). E17b counted stage 1 merely touching the edge as a fall.
+- **E18 refuted.** The cheapest point is not the end of the "every x₂ falls" strip (s₁, s₁ + U*],
+  although that strip was confirmed at exactly s₁ + U*.
+- **E19(b) failed.** x† is a bound, not the optimum.
+- **A post-hoc claim of mine was retracted within the hour.** "The prefactor exponent settles near
+  1.25" used the bound Γ; with the converged Γ it keeps drifting (rule 14).
+- **A crossing-location check I proposed was not sharp,** for the reason above.
+
+> **What §124.7 settles.** There is a candidate, it has an absolute number, and two routes agree on
+> it: the never-dipped falls ride a joint large deviation that is cheaper than a dip, by Γ = 1.69e−3
+> in the wide-zone pair. It was computed from the rate equations by minimum action, recovered within
+> ~10% from the exact chain's stationary law, and it passed a discriminating test on a pair with a
+> tenfold smaller Γ, predicted before that pair was read. It is labelled a **supported mechanism**
+> (rule 17): independently confirmed twice, with the prefactor still unexplained.

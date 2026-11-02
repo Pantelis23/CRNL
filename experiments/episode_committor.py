@@ -161,6 +161,70 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
       -> FAILED both: 800 -> 1600 in-zone 2.42, above-edge 2.69 (within 0.3: not channel-specific);
          in-zone share peaked at 0.59 (800) and fell to 0.54. The TOTAL local exponent drifts upward,
          2.07 / 2.14 / 2.37 / 2.77 -- "~Omega^2" was an effective exponent over ~100-800 (rule 21).
+
+  E17 Written before running. CANDIDATE: two large-deviation channels. R ~ Omega^a exp(Omega Gamma),
+      Gamma = V1(s1) - W*, W* the least joint action that takes stage 2 over its separatrix while
+      stage 1 stays above s1. C1: W* < V1(s1) -> eventually exponential; drifting local exponent
+      a + Gamma Omega, and the cheaper channel takes over (share rises, then falls). C2: W* = V1(s1)
+      (the optimal fall path hugs the saddle) -> prefactor-only growth. Read off the quasi-stationary
+      law phi = pi~/psi: Gamma_hat(Omega) = Delta_dip - min Delta_line, with Delta = -ln phi / Omega
+      relative to the most probable state, Delta_dip on the dip row (n1 = sad1), Delta_line on stage
+      2's saddle line (n2 = sad2). Predict: under C1 Gamma_hat settles (changes < 30% from 800 to 1600)
+      and lies within 2x of R's ln-growth (~0.0022); under C2 it falls ~ ln(Omega)/Omega (about
+      halves). Either way the argmin of Delta_line sits near x1 ~ 1.5. (An independent minimum-action
+      computation of W* is being run in parallel by a separate agent.)
+      -> MIS-DESIGNED: the line n2 = sad2 = ceil(0.606 Omega) is stage 2's separatrix only at a healthy
+         input; for a sagged stage 1 the separatrix moves UP and that line lies inside the falling
+         region. Its argmin sat at x1 ~ 2.95 (healthy stage 1), Gamma_hat 0.0005 / 0.0042 at 200 / 400.
+  E17b Written before re-running: the correct target is the x1-DEPENDENT separatrix (middle root of
+      stage 2's cubic) for x1 > edge, and any x2 for x1 <= edge (stage 2 collapses there). On it the
+      argmin moves to x1 ~ 1.4-1.6, and C1 vs C2 is judged by Gamma_hat's Omega-trend as in E17.
+      -> ALSO MIS-DESIGNED: "any x2 for x1 <= edge" counts stage 1 merely TOUCHING the edge as a fall;
+         the argmin sat exactly at the edge (1.360), Gamma_hat 0.044 / 0.034 / 0.028 at 100/200/400.
+  E17c Written before running: the target is the JOINT DETERMINISTIC SEPARATRIX Sigma -- the boundary
+      between initial (x1, x2), x1 > s1, whose coupled rate-equation flow ends with stage 2 high vs low
+      (stage 1 always returns to its rail). If the argmin on Sigma hugs x1 -> s1 (within 0.05), that is
+      C2 (no exponential gap; the cheapest fall is a near-dip); an interior argmin is C1, read there.
+      Judged by Gamma_hat_Sigma's Omega-trend.
+      -> Sigma has a strip (s1, ~s1+U*] where EVERY x2 falls (a just-recrossed stage 1 lingers long
+         enough to collapse stage 2), then drops to x2* ~ 0.8 by x1 = 1.21 and to 0.606 at the rail.
+         Gamma_hat_Sigma = 0.0152 / 0.0122 / 0.0083 at 100 / 200 / 400; argmin x1 1.050 / 1.065 / 1.073
+         (coarse grid: steps ~0.02, comparable to the strip).
+  E18 Written before running. CANDIDATE: the cheapest never-dipped fall is a NEAR-dip -- stage 1 reaches
+      the strip (s1, s1 + U*] without crossing, where stage 2 at its high state costs nothing extra; so
+      W* = V1(s1 + U*) and Gamma = V1(s1) - V1(s1 + U*) = 1.67e-4 for X (U* = 0.0305 from §122), 9e-8 for
+      Z. Exponential growth only past Omega ~ 1/Gamma ~ 6000; below Omega_U = lam(s1)/(ls U*^2) ~ 2930 the
+      strip lies inside stage 1's noise width, and the local exponent should rise toward Omega_U.
+      Predict, with x1 resolved count by count within 0.25 of s1: (a) the argmin on Sigma within 0.02 of
+      s1 + U* = 1.0355 at Omega >= 800; (b) Gamma_hat_Sigma below 0.004 at 1600 and still falling.
+      Refuted if Gamma_hat_Sigma levels off well above 1.67e-4 or the argmin settles elsewhere.
+      -> (a) REFUTED at Omega = 400 with x1 resolved: the strip IS (s1, 1.0325] (s1 + U* confirmed), but
+         the minimum of Delta on Sigma is INTERIOR, (x1, x2) = (1.0775, 1.23), not the strip's end.
+  E19 Written before running. REFINED CANDIDATE: the cheapest never-dipped fall is the TIME-REVERSED
+      APPROACH. Stage 1's optimal fluctuation path is x1' = -f1(x1) (the mirror of its relaxation), so
+      it lingers near its saddle on the way DOWN and drags stage 2 (following its own deterministic flow,
+      at no extra cost) across Sigma; then it relaxes back. W* = V1(x_dag), x_dag the shallowest turning
+      point that still ends in a fall; Gamma = V1(s1) - V1(x_dag). Computed from the two rate equations
+      alone: X: x_dag = 1.0846 (stage 2 dragged to 1.170), Gamma = 0.00110 -- the measured interior argmin
+      at 400 is (1.0775, 1.23); and the local exponent of R minus Gamma*Omega settles at ~1.25 (1.82 /
+      1.76 / 1.52 / 1.27 / 1.25), its slope vs Omega 0.00099 over the last two windows -- POST HOC checks
+      on existing data, not predictions. b (E-070 -> F-040): x_dag = 1.0280, Gamma = 0.00010. d, N: no
+      x_dag (no fall-inducing approach). Predict: (a) for b, the slope of the never-dipped term's local
+      exponent vs Omega over 400 -> 1600 is < 3e-4 (X's: ~1e-3); (b) for X, the stationary-law argmin on
+      Sigma within 0.02 of x_dag at Omega >= 800, and Gamma_hat_Sigma still falling toward 0.0011.
+
+  E20 Written after an independent minimum-action computation (a separate agent: Hamiltonian ray
+      shooting, |p| -> 0 extrapolation, checked by direct minimisation) and BEFORE reading b's exact-CME
+      numbers. The free-x2 ray is only a bound; the converged joint optimum lets stage 2 fluctuate a
+      little: Gamma_X = 1.688e-3 (bound 1.105e-3, optimal path min x1 = 1.129), Gamma_b = 1.6473e-4
+      (bound 9.5e-5, min x1 = 1.045), Gamma_Z = 1.85e-5, Gamma_a ~ 1.55e-6. Predict, besides E19(a):
+      b's local-exponent slope vs Omega is <= 0.3 x X's last-window slope (0.00099).
+      -> E19(a) and E20 HELD: b's never-dipped local exponent 2.52 / 2.83 / 2.70 / 2.56 (Omega 200-1600),
+         slope -3.3e-4 at large Omega, against X's +9.9e-4. E19(b) FAILED as written (argmin 1.094 /
+         1.105 / 1.113 at 800 / 1200 / 1600 vs x_dag 1.085): it walks toward the converged path's min
+         x1 = 1.129, x_dag being only the free-x2 bound. Gamma_hat_Sigma(X) = 0.0056 / 0.0045 / 0.0039
+         extrapolates to Gamma ~ 0.0018-0.0019 (Gamma + c ln(Omega)/Omega) or 0.0021-0.0022 (Gamma +
+         c/Omega), against the minimum-action 0.00169.
 """
 
 
@@ -322,6 +386,36 @@ def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD", lower="sad"):
     return J / J.sum(), res
 
 
+def joint_separatrix(A, B, x1_grid, horizon=80.0):
+    """Sigma: for each x1 > s1, the x2 above which the coupled rate equations return stage 2 to its
+    high state (stage 1 always returns to its rail). +inf: every x2 falls; -inf: none does."""
+    from scipy.integrate import solve_ivp
+    import experiments.frozen_downstream as fd
+    k1a, k1r, k2b, k2r = A.c
+    f1 = lambda x: k1a * x * x + k2b - k1r * x ** 3 - k2r * x
+    hb = fd.high_fixed_point(B, A.r3)
+    k1a2, k1r2, k2b2, k2r2 = B.c
+    sep_rail = sorted(z.real for z in np.roots([-k1r2, B.hill(A.r3) * k1a2, -k2r2, k2b2]) if abs(z.imag) < 1e-9)[1]
+
+    def falls(x1, x2):
+        sol = solve_ivp(lambda t, y: [f1(y[0]), fd.ode_rate(B, y[1], y[0])], (0, horizon), [x1, x2],
+                        rtol=1e-9, atol=1e-11, method="LSODA")
+        return sol.y[1, -1] < sep_rail
+
+    out = []
+    for x1 in x1_grid:
+        lo, hi = 1e-3, 3.4
+        if falls(x1, hi):
+            out.append(np.inf); continue
+        if not falls(x1, lo):
+            out.append(-np.inf); continue
+        for _ in range(40):
+            mid = 0.5 * (lo + hi)
+            lo, hi = (mid, hi) if falls(x1, mid) else (lo, mid)
+        out.append(0.5 * (lo + hi))
+    return np.array(out)
+
+
 def fall_profile(A, B, om):
     """E13: reactive flux of committed never-dipped falls, by stage 1's position at the crossing."""
     from experiments.weak_upstream import edge as edge_of
@@ -361,7 +455,50 @@ def fall_profile(A, B, om):
     x1 = n1s / om
     e2 = edge_of(B)
     tot = float(flux.sum() / L["dip"])
-    return {"omega": om, "reactive_ratio": tot, "committed_ratio": qprocess_J.last_ratio,
+    # E17: quasi-potential read-off, phi = pi~/psi, relative to its maximum
+    Pc = np.clip(P, 1e-300, None)
+    lphi = np.log(Pc) - np.log(psi_n1)[:, None]
+    lmax = lphi.max()
+    d_line = -(lphi[:, row] - lmax) / om                          # n2 = sad2, over n1 >= sad1 (E17)
+    # E17b: the x1-dependent separatrix; below the edge, the cheapest x2 at that x1
+    k1a, k1r, k2b, k2r = B.c
+    d_sep = np.full(M1, np.inf)
+    for i, xx in enumerate(x1):
+        if xx <= e2:
+            d_sep[i] = float((-(lphi[i, :] - lmax) / om).min())
+        else:
+            r = sorted(z.real for z in np.roots([-k1r, B.hill(xx) * k1a, -k2r, k2b]) if abs(z.imag) < 1e-9)
+            n2s_sep = int(round(r[1] * om)) - base2
+            if 0 <= n2s_sep < lphi.shape[1]:
+                d_sep[i] = float(-(lphi[i, n2s_sep] - lmax) / om)
+    js = int(np.argmin(d_sep))
+    # E17c: the joint deterministic separatrix Sigma, evaluated on a coarse x1 grid then read on lphi
+    stride = max(1, M1 // 120)
+    near = int(np.searchsorted(x1, A.r2 + 0.25))                  # E18: every count within 0.25 of s1
+    rows_ = sorted(set(range(0, near)) | set(range(0, M1, stride)))
+    xs = x1[rows_]
+    sig = joint_separatrix(A, B, xs)
+    lo_n2 = base2
+    d_sig = np.full(len(xs), np.inf)
+    for t_, (i, sv) in enumerate(zip(rows_, sig)):
+        col = -(lphi[i, :] - lmax) / om
+        if sv == np.inf:                                          # whole column falls: cheapest x2 there
+            d_sig[t_] = float(col.min())
+        elif np.isfinite(sv):
+            jj = int(round(sv * om)) - lo_n2
+            if 0 <= jj < len(col):
+                d_sig[t_] = float(col[jj])
+    ks = int(np.argmin(d_sig))
+    d_dip = float((-(lphi[0, :] - lmax) / om).min())             # n1 = sad1 row
+    j = int(np.argmin(d_line))
+    e17 = {"delta_dip": d_dip, "delta_line_min": float(d_line[j]), "gamma_hat": d_dip - float(d_line[j]),
+           "argmin_x1": float(x1[j]), "delta_line": [float(v) for v in d_line[:: max(1, len(d_line) // 200)]],
+           "sep_min": float(d_sep[js]), "gamma_hat_sep": d_dip - float(d_sep[js]), "sep_argmin_x1": float(x1[js]),
+           "sigma_min": float(d_sig[ks]), "gamma_hat_sigma": d_dip - float(d_sig[ks]), "sigma_argmin_x1": float(xs[ks]),
+           "sigma_x2": [float(v) for v in sig], "sigma_x1": [float(v) for v in xs], "delta_sigma": [float(v) for v in d_sig],
+           "delta_sep": [float(v) for v in d_sep[:: max(1, len(d_sep) // 200)]],
+           "delta_line_x1": [float(v) for v in x1[:: max(1, len(d_line) // 200)]]}
+    return {"omega": om, "reactive_ratio": tot, "committed_ratio": qprocess_J.last_ratio, **e17,
             "frac_in_zone": float(flux[x1 < e2].sum() / flux.sum()),
             "frac_above_edge": float(flux[x1 >= e2].sum() / flux.sum()),
             "mean_x1": float((flux * x1).sum() / flux.sum()), "edge2": e2, "saddle1": A.r2}

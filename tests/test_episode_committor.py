@@ -150,3 +150,20 @@ def test_to_omega_1600_on_pardiso():
     assert lead == sorted(lead) and 0.443 < lead[-1] < 0.5
     r = e["X:1600/qpr"]["p0_rate_ratio"] / e["X:800/qpr"]["p0_rate_ratio"]
     assert 3.5 <= r <= 6.0
+
+
+def test_channels_hand_off_and_the_exponent_drifts():
+    """E16 failed: past Omega ~ 800 both channels grow alike; the in-zone share peaks at 800; the
+    total local exponent drifts upward ('~Omega^2' was a window)."""
+    import math
+    e = _e()["E13"]
+    share = {om: e[str(om)]["frac_in_zone"] for om in (400, 800, 1200, 1600)}
+    assert share[800] > share[400] and share[800] > share[1600]
+    tot = {om: e[str(om)]["committed_ratio"] for om in (200, 400, 800, 1200, 1600)}
+    ex = [math.log(tot[b] / tot[a]) / math.log(b / a) for a, b in ((200, 400), (400, 800), (800, 1200), (1200, 1600))]
+    assert ex == sorted(ex) and ex[-1] > 2.6
+    zone = lambda om: tot[om] * share[om]
+    above = lambda om: tot[om] * (1 - share[om])
+    ez = math.log(zone(1600) / zone(800)) / math.log(2)
+    ea = math.log(above(1600) / above(800)) / math.log(2)
+    assert abs(ez - ea) < 0.3 and ea > ez

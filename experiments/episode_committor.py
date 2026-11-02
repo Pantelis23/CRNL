@@ -152,6 +152,15 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
          0.4775 at 1600 (in (0.443, 0.5)); p0 ratio x5.81 from 800 to 1600 (in [3.5, 6.0]). MKL's
          32-bit iparm(18) wrapped (factors 3.4e9 entries); the factorisation itself is verified by
          phi = the exact 1-D committor to 2e-13 from the same factor.
+
+  E16 Written before running: which never-dipped channel carries the ~Omega^2.5 growth? Each
+      channel's rate = p0_rate_ratio x its share (E13's reactive decomposition), at Omega = 400, 800,
+      1200, 1600 (laptop, PARDISO). Predict (a) the in-zone channel's local exponent 800 -> 1600 is
+      >= 2.5 and the above-edge channel's <= 2.0; (b) the in-zone share exceeds 0.7 at 1600. If the
+      two exponents agree within 0.3, the growth is not channel-specific and (a) fails.
+      -> FAILED both: 800 -> 1600 in-zone 2.42, above-edge 2.69 (within 0.3: not channel-specific);
+         in-zone share peaked at 0.59 (800) and fell to 0.54. The TOTAL local exponent drifts upward,
+         2.07 / 2.14 / 2.37 / 2.77 -- "~Omega^2" was an effective exponent over ~100-800 (rule 21).
 """
 
 
@@ -345,7 +354,7 @@ def fall_profile(A, B, om):
     rows.append(idx); cols.append(idx); vals.append(diag)
     M = sp.coo_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))),
                       shape=(M1 * K, M1 * K)).tocsc()
-    q = spla.splu(M).solve(rhs).reshape(M1, K)
+    q = lu_solve(M, rhs)[0].reshape(M1, K)
     row = sad2 - base2                                            # P's column for n2 = sad2
     _, mu_s = B.rates(np.full(M1, float(sad2)), n1s.astype(float), om, False)
     flux = np.clip(P[:, row], 0, None) * mu_s * q[:, -1]   # (n1, sad2) -> (n1, sad2-1), committed, original measure
@@ -415,6 +424,7 @@ def main():
     ap.add_argument("--out", type=pathlib.Path, default=pathlib.Path("results/episode_committor.json"))
     ap.add_argument("--cells", default="X:40,X:55,Z:40,Z:55")
     ap.add_argument("--solver", default="superlu", choices=["superlu", "pardiso"])
+    ap.add_argument("--profile", action="store_true", help="E13/E16: the never-dipped fall channels, per cell")
     ap.add_argument("--permc", default="COLAMD", help="SuperLU column ordering; MMD_AT_PLUS_A halves the fill on these lattices")
     ap.add_argument("--dump", default=None, help="directory: save J and f per cell as .npz (E8)")
     ap.add_argument("--method", default="hi", choices=["qsd", "occ", "hi", "qp", "qpr"],
@@ -424,6 +434,16 @@ def main():
     SOLVER = args.solver
     rep = json.loads(args.out.read_text()) if args.out.exists() else {}
     for cell in args.cells.split(","):
+        if args.profile:
+            arm, om = cell.split(":")
+            key = f"{cell}/profile"
+            if key in rep:
+                continue
+            r = fall_profile(element(ARMS[arm][0]), element(ARMS[arm][1]), int(om))
+            rep[key] = r
+            print(key, json.dumps(r), flush=True)
+            args.out.write_text(json.dumps(rep, indent=2, default=float))
+            continue
         key = cell if args.method == "qsd" else f"{cell}/{args.method}"
         if key in rep:
             continue

@@ -740,6 +740,39 @@
       "mean_x1": 1.596389396821902,
       "edge2": 1.3618387279575985,
       "saddle1": 1.005
+    },
+    "800": {
+      "omega": 800,
+      "reactive_ratio": 1.3369795973089582,
+      "committed_ratio": 1.336979597309007,
+      "frac_in_zone": 0.5897191981707973,
+      "frac_above_edge": 0.4102808018292028,
+      "mean_x1": 1.5070813520926365,
+      "edge2": 1.3618387279575985,
+      "saddle1": 1.005,
+      "host": "laptop (PARDISO)"
+    },
+    "1200": {
+      "omega": 1200,
+      "reactive_ratio": 3.497894868375406,
+      "committed_ratio": 3.4978948683755315,
+      "frac_in_zone": 0.5806664969462207,
+      "frac_above_edge": 0.41933350305377926,
+      "mean_x1": 1.495942460706306,
+      "edge2": 1.3618387279575985,
+      "saddle1": 1.005,
+      "host": "laptop (PARDISO)"
+    },
+    "1600": {
+      "omega": 1600,
+      "reactive_ratio": 7.770680826946626,
+      "committed_ratio": 7.770680826946469,
+      "frac_in_zone": 0.5442690301621924,
+      "frac_above_edge": 0.4557309698378077,
+      "mean_x1": 1.5149936945921005,
+      "edge2": 1.3618387279575985,
+      "saddle1": 1.005,
+      "host": "laptop (PARDISO)"
     }
   },
   "X:1200/qpr": {

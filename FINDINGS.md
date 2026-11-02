@@ -13580,7 +13580,8 @@ stage 2 already below its saddle at the dip.
 - **E12 (local rate 400 → 800 below 0.005) held by its letter. Its reading was wrong.** I had written
   "consistent with saturation". Multiplied by Ω, the local rates give a steady exponent of 2.0–2.2
   (each doubling multiplies the term by 3.95, 4.2, 4.4). **That is a power law, ~Ω², not
-  saturation.** The criterion could not tell the two apart (rule 19), and the reading is corrected
+  saturation.** *(⚠ §124.6: "~Ω²" is the effective exponent over Ω ≈ 100–800 only; the local
+  exponent keeps drifting up to 2.8 by Ω = 1600.)* The criterion could not tell the two apart (rule 19), and the reading is corrected
   here rather than left standing.
 - **Instrument checks (re-run, not residual).** Two LU orderings agree to 1e−13 at X:200 and X:400.
   The windowed exact chain agrees at Ω = 30–100.
@@ -13668,3 +13669,32 @@ was to offload to the laptop's page file. Two obstacles came first:
 
 **At Ω = 1600 the wide-zone downstream fails 8.2 times per upstream dip, 94% of that without any
 dip.** Every conditioned model in this arc describes the dips.
+
+**§124.6 — which channel carries the growth (E16): neither, past Ω ≈ 800 — and "~Ω²" was a window.**
+Each channel's rate is the never-dipped term times its share in E13's reactive decomposition, now to
+Ω = 1600 (laptop, PARDISO). Reactive totals match the committed rates to ≤ 1e−13 at every Ω.
+
+| Ω window | 55→100 | 100→200 | 200→400 | 400→800 | 800→1200 | 1200→1600 |
+|---|---|---|---|---|---|---|
+| total, local exponent | 1.19 | 1.98 | 2.07 | 2.14 | 2.37 | **2.77** |
+| in-zone channel | 2.38 | 2.73 | 2.44 | 2.28 | 2.33 | 2.55 |
+| above-edge channel | 0.93 | 1.62 | 1.74 | 1.95 | 2.43 | **3.06** |
+| in-zone share (at the window's end) | 0.25 | 0.41 | 0.53 | 0.59 | 0.58 | 0.54 |
+
+- **E16 FAILED on both counts.**
+  - (a) Over 800 → 1600 the in-zone exponent is 2.42 (predicted ≥ 2.5) and the above-edge exponent is
+    2.69 (predicted ≤ 2.0). Within 0.3 of each other, so the growth is not channel-specific.
+  - (b) The in-zone share peaked at 0.59 (Ω = 800) and fell back to 0.54 (predicted > 0.7).
+- **The in-zone channel carried the growth up to Ω ≈ 400; past Ω ≈ 800 the above-edge channel
+  accelerates.**
+- **The crossing point settles just above the edge** (mean x₁ = 1.51 / 1.50 / 1.52 at 800 / 1200 /
+  1600, against edge 1.362).
+- **Correction to §124.2a (rule 21, applied to my own wording).** "~Ω²" is the effective exponent over
+  Ω ≈ 100–800, not a law. The local exponent drifts upward (2.07 → 2.77). Over Ω = 800–1600 the data
+  are as consistent with slow exponential growth (ln growth ≈ 0.0022 per unit Ω) as with a power law.
+  The asymptotic form is unresolved, and says so (rule 15).
+
+> **What §124.6 settles.** The never-dipped falls are not one mechanism with one exponent. Two
+> channels hand the growth to each other, and their sum accelerates through the largest volume
+> computed. What survives is the measurement: C = 8.2 at Ω = 1600 in X, with the dip channel at ½ and
+> the never-dipped channel growing faster than any power fitted so far.

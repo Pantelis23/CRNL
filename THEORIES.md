@@ -5440,7 +5440,12 @@ moment of the fall (cheap: the Q-process law is already computed) is the first m
 channel (stage 2's noise over a sag-lowered barrier: 88% at Ω = 55, 47% at 400) and an in-zone
 channel (12% → 53%), which carries the growth. Next: each channel's own growth exponent. **§124.5:** extended to Ω = 1600 (PARDISO on the laptop):
 the never-dipped term keeps growing (local exponent 2.4 → 2.54, still drifting up), while φ·p_d
-reaches 0.478 → ½. Which channel carries the exponent at Ω ≥ 800 is the next measurement.
+reaches 0.478 → ½. Which channel carries the exponent at Ω ≥ 800 is the next measurement. **→ §124.6:
+neither.** Past Ω ≈ 800 both channels grow at similar rates (2.4 vs 2.7, 800 → 1600), with the
+above-edge one accelerating; the total local exponent drifts 2.07 → 2.77, so "~Ω²" was a window and
+the asymptotic form (power vs exponential) is unresolved. **Kill test for any proposed mechanism:**
+it must reproduce the drifting exponent across Ω = 100–1600 *and* the in-zone share rising to
+0.59 and falling back.
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

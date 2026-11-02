@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§122. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§123. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -914,3 +914,10 @@ computes, it misses by 3× to ~1000×. On the way it found two things:
   That limit is a suspect: the exact chain has been followed only to Ω = 100, where it moved the
   predicted way. And the miss at finite Ω is argued, not proved, to be irreducible: the pre-dip sag
   and the downstream's noise are joint effects that no single-element formula contains.
+
+**§123 followed the exact chain past the crossover**, to Ω = 800, by solving for a dip's outcome
+instead of evolving a window. Two instruments built for it broke and printed confident numbers
+before being caught, and both readings were withdrawn. The rebuilt one is checked at every Ω. In
+the wide-zone pair the exact floor climbs toward the predicted ½ (φ·p_d = 0.38 at Ω = 800). In the
+narrow-zone pair it has not yet turned. The universal floor is supported in one pair, unresolved
+in the other, and refuted in neither.

@@ -5416,7 +5416,10 @@ kill:** an exact (joint-chain) cell at Ω ≳ Ω_c in a narrow-zone pair. The ex
 and Z needs Ω ≈ 230, a ~10⁶–10⁷-state tagged chain. Feasible only with a sparse rare-event method
 (e.g. computing p_d as a committor of the joint chain started at the dip, rather than evolving the
 whole window). Also open within it: the limit of p0/(k₁t) (levelling at ~0.008 in X), which decides
-whether the floor's limit is ½ or above.
+whether the floor's limit is ½ or above. **→ §123: supported in X, unresolved in Z.** By the episode committor
+(validated, then rebuilt after two instruments broke), exact X's φ·p_d climbs 0.12 → 0.38 over
+Ω = 40 → 800, monotonically; exact Z's p_d is still falling at Ω = 400 = 1.76 Ω_c (0.065 → 0.032,
+flattening). Remaining kill test: exact Z at Ω ≥ 800 (≈ 16 GB; not run, memory).
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

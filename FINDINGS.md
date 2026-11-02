@@ -13366,3 +13366,80 @@ birth rates. It is audited on the standard axioms. `tests/test_formal.py` checks
 > with its crossover volume predicted. Together they imply a universal limit, φ·p_d → ½, that
 > nothing in this arc had suggested. That limit is a suspect until an exact computation reaches
 > Ω ≳ Ω_c in a narrow-zone pair.
+
+### 123 The exact p_d past the crossover: a committor method, two broken instruments, and the floor climbing toward ½
+
+*Scope: arms X (E-070 → E-084, Ω_c = 21) and Z (E-062 → E-084, Ω_c = 227), `cap_mult` 1.25, exact
+joint chain. Ω = 40–800 for X, 40–400 for Z, up to 6.8 × 10⁶ states. Predictions E1–E5 were
+written into `experiments/episode_committor.py` before each run. `results/episode_committor.json`
+keeps every route's numbers, including the broken ones, labelled.*
+
+§122's universal-floor suspect (T-CASC-ap) needed an exact p_d past Ω_c, beyond what §119's
+windowed evolution can reach. **The method** treats a dip as an episode. Stage 2's law at the dip,
+J, is the exact crossing flux, so the pre-dip sag is in it. Two sparse solves on the joint chain
+then give P(stage 1 commits high) and P(commits high with stage 2 below its saddle). Nothing is
+evolved.
+
+**§123.1 — validation.**
+
+- **E1 held.** The episode reproduces §119's windowed exact p_d within 6% (X:40/55 +6%, Z:40 −1%,
+  Z:55 +5%). The window additionally counts trajectories caught mid-episode at t = 16.
+- **E3 held.** The episode's upstream factor equals the stage-1 committor to four digits in every
+  cell. Stage 1 is autonomous, so it must.
+- **Speed.** 0.5 s at Ω = 55; 5 min at Ω = 800.
+
+**§123.2 — two instruments broke, and what they withdraw.** Stage 1 is autonomous, so with stage 1
+alive the joint chain has *two* eigenvalues within a whisker of zero: stage 1 dying, and that plus
+stage 2's own slow switching. Once both are below double precision relative to the matrix scale,
+anything that solves near zero mixes the two pockets (stage 2 high / stage 2 low).
+
+- **The QSD eigenvector failed first.** At Z:800 it returned p_d = 0.44 with λ₀ = −5e−15 and 30% of
+  stage 2 "already low at the dip" (3e−8 at Ω = 400). Caught on sight, never reported.
+- **E4's replacement then failed too, less visibly.** That was the occupation before the first dip,
+  one linear solve. At Ω ≥ 200 its relative residual was ~1e2, its total occupation *fell* from
+  Ω = 200 to 400 (it must grow like 1/k₁), and J's shape jumped. For a few hours it had printed
+  "Z still falling at Ω = 800 (0.028)" and a non-monotone X (0.596 / 0.538 / 0.674).
+  **Both readings are withdrawn.**
+- **The lattice explanation I proposed for X's wobble was refuted first.** A lattice-matched
+  sequence (Ω = 200 / 400 / 800, integer saddle each time) was still non-monotone. That pointed the
+  search at the solver.
+- **E5, the fix: make stage-2-low absorbing too.** The remaining chain has one tiny eigenvalue
+  separated from the rest by O(1), so the shift-invert eigenvector converges even where the
+  eigenvalue itself is noise. Its residual is ≤ 1.4e−10 at every Ω run. It matches every validated
+  cell within 1.2%, and the difference is the omitted already-low fraction (≤ 0.5% wherever it is
+  measured reliably), carried as that error bar.
+- **Rule 14 for the withdrawal itself:** at X:400 the old eigenvector gave 0.775 against E5's
+  0.770, so it was the *occupation* route that broke there, not the eigenvector. The withdrawal is
+  of the occupation numbers at Ω ≥ 200, and of the eigenvector only where two pockets sit at the
+  floor (Z:800).
+
+**§123.3 — the exact chain past the crossover** (E5 throughout):
+
+| Ω | 40 | 55 | 100 | 200 | 230 | 400 | 800 |
+|---|---|---|---|---|---|---|---|
+| X: exact p_d | 0.302 | 0.324 | 0.405 | 0.571 | 0.591 | **0.770** | **0.807** |
+| X: φ·p_d | 0.120 | 0.134 | 0.174 | 0.252 | 0.271 | 0.353 | **0.380** |
+| Z: exact p_d | 0.065 | 0.057 | 0.041 | — | 0.033 | 0.032 | not run |
+
+- **The wide-zone pair, in the exact chain with sag and noise included:** the damage per near-miss
+  climbs monotonically past 0.8. The floor's leading term, φ·p_d, climbs from 0.12 to 0.38, toward
+  the ½ that §122's limit predicts.
+- **The exact chain runs ahead of the reductions.** At Ω = 800 exact X is 0.807, against 0.422 in the
+  deterministic-stage-2 reduction and 0.399 from the erf formula. Sag and noise add damage, and the
+  limit is the same.
+- **I had predicted [0.42, 0.60] for X:800, and that range failed.** It was written before the
+  instrument broke and is judged as written.
+- **The narrow-zone pair has not turned.** Z falls 0.065 → 0.032 through Ω = 400 = 1.76 Ω_c, so
+  **E2 FAILED as written** (it required a rise above 0.057 by Ω = 230–400). The decline is flattening
+  (−18% from 100 to 230, −3.5% from 230 to 400). The reduction only turned near Ω ≈ 800 ≈ 3.5 Ω_c, and
+  exact/reduction is falling (2.35 at Ω = 400). So the turn may be later than Ω_c says. That is a
+  reading, not a result.
+- **Z:800 was not computed.** The run was stopped by Claude Code because system memory ran out (it
+  needs ~16 GB), and it is not restarted without the user's go-ahead.
+
+> **What §123 settles.** The exact joint chain can be followed to Ω = 800 by treating a dip as an
+> episode, provided the one near-zero eigenproblem is posed so that only one eigenvalue sits near
+> zero. Two plausible-looking instruments failed that test and printed confident numbers first.
+> In the wide-zone pair the exact floor climbs toward ½ as predicted (φ·p_d = 0.38 at Ω = 800 and
+> rising). In the narrow-zone pair the exact damage has not turned by 1.76 Ω_c. So **T-CASC-ap is
+> supported in one pair, unresolved in the other, and refuted in neither.**

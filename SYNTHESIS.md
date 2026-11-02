@@ -1,6 +1,6 @@
 # What restoration costs
 
-*A synthesis of CRNL §1–§123. Every claim here points at the section that measured it and
+*A synthesis of CRNL §1–§124. Every claim here points at the section that measured it and
 carries the scope that section stated. Where a claim was withdrawn, the withdrawal is here
 too — the retraction record is part of the result, not an appendix to it.*
 
@@ -928,3 +928,9 @@ damages the downstream more often than not. **The universal floor is supported i
   > eigenvector behind the narrow-zone numbers was not reproducible, despite residuals of 1e−10. On a
   > deterministic route the narrow-zone pair turns only gently (0.0415 at Ω = 1000). The wide-zone
   > pair's floor term reaches 0.443, close to ½. A re-run is a check; a residual is not.
+
+**§124 then measured the floor's other term and withdrew "C → ½".** Committed downstream falls on
+trajectories where the upstream never dips grow roughly like Ω² in the wide-zone pair. At Ω = 800
+the downstream fails 1.8 times per upstream dip, three-quarters of that without any dip at all.
+"At least half the upstream's dip rate" stands; "converges to half" does not. The quantity called
+"the edge" since §105 is now proved in Lean to be well defined.

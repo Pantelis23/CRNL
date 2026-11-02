@@ -102,3 +102,26 @@ def test_the_narrow_zone_rise_is_mostly_pre_dip_sag():
     lo, hi = pd(600, 600), pd(1000, 1000)
     assert (pd(1000, 600) - lo) / (hi - lo) >= 0.6
     assert (pd(600, 1000) - lo) / (hi - lo) <= 0.4
+
+
+def test_committed_never_dipped_term_matches_the_window():
+    """E11(a): within 15% of §119's windowed p0/(k1 t) at five cells, and of §122's at X:100."""
+    e = _e()
+    w = json.loads(WINDOW.read_text())
+    for k in ("X:30", "X:40", "X:55", "Z:40", "Z:55"):
+        s = w[k]["series"][-1]
+        assert abs(e[f"{k}/qpr"]["p0_rate_ratio"] / (s["p0"] / (w[k]["k1"] * s["t"])) - 1) < 0.15, k
+    assert abs(e["X:100/qpr"]["p0_rate_ratio"] / e["X:100/window_p0"]["p0_over_k1t"] - 1) < 0.15
+
+
+def test_never_dipped_term_grows_like_omega_squared_in_X():
+    """E11(b) failed, E12 held by letter, reading corrected: a steady local exponent ~2, so C
+    passes 1/2 and reaches ~1.8 at Omega = 800. 'C -> 1/2' withdrawn."""
+    import math
+    e = _e()
+    r = {om: e[f"X:{om}/qpr"]["p0_rate_ratio"] for om in (100, 200, 400, 800)}
+    expo = [math.log(r[2 * om] / r[om]) / math.log(2) for om in (100, 200, 400)]
+    assert all(1.8 < x < 2.4 for x in expo)
+    v = e["X:800/qpr"]
+    assert v["phi_ep"] * v["p_d_ep"] + v["p0_rate_ratio"] > 1.5
+    assert max(e[f"Z:{om}/qpr"]["p0_rate_ratio"] for om in (230, 400, 800, 1000)) < 1e-5

@@ -24,6 +24,7 @@ THEOREMS = (
     "EffectiveExponent.ν_tenth", "EffectiveExponent.A_half_sub",
     "BirthDeath.detailed_balance", "BirthDeath.global_balance",
     "Committor.h_zero", "Committor.h_top", "Committor.backward",
+    "EdgeInterval.F_pos_of_nonpos", "EdgeInterval.disc_eq", "EdgeInterval.bistable_levels_convex",
 )
 
 
@@ -130,3 +131,30 @@ def test_committor_code_is_the_proved_harmonic_function():
             lam, mu = A.rates(n, np.zeros(len(n)), om, True)
             res = lam * (h[2:] - h[1:-1]) + mu * (h[:-2] - h[1:-1])
             assert np.abs(res).max() < 1e-10 * lam.max(), (name, om)
+
+
+def test_edge_is_the_left_end_of_the_proved_interval():
+    """EdgeInterval: three positive roots <=> discriminant > 0 on the code's own elements (the
+    classical half the proof does not cover, checked numerically), the bistable inputs are one
+    contiguous run, and weak_upstream.edge() is its left end."""
+    import numpy as np
+
+    from experiments.weak_upstream import edge, element
+
+    for name in ("E-021", "E-045", "E-050", "E-062", "E-070", "E-084", "F-025", "F-040", "F-050"):
+        B = element(name)
+        k1a, k1r, k2b, k2r = B.c
+        xs = np.linspace(0.2, 3.2, 3001)
+        three, dpos = [], []
+        for x in xs:
+            h = B.hill(x)
+            r = np.roots([-k1r, h * k1a, -k2r, k2b])
+            real = [z.real for z in r if abs(z.imag) < 1e-9]
+            three.append(len(real) == 3 and all(z > 0 for z in real))
+            D = (-4 * k1a ** 3 * k2b * h ** 3 + k1a ** 2 * k2r ** 2 * h ** 2
+                 + 18 * k1r * k1a * k2r * k2b * h - (4 * k1r * k2r ** 3 + 27 * k1r ** 2 * k2b ** 2))
+            dpos.append(D > 0)
+        assert three == dpos, name
+        idx = np.nonzero(three)[0]
+        assert len(idx) > 0 and np.all(np.diff(idx) == 1), f"{name}: bistable inputs not contiguous"
+        assert abs(xs[idx[0]] - edge(B)) < 2e-3, name

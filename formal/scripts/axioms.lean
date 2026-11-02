@@ -15,3 +15,6 @@ open CRNL
 #print axioms Committor.h_zero
 #print axioms Committor.h_top
 #print axioms Committor.backward
+#print axioms EdgeInterval.F_pos_of_nonpos
+#print axioms EdgeInterval.disc_eq
+#print axioms EdgeInterval.bistable_levels_convex

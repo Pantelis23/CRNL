@@ -91,6 +91,34 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
       gap; J's shape is its stationary law at n1 = sad1 -- one direct solve, no random start.
       Predict: within 1% of E5 at the seed-stable cells X:100, Z:230, Z:400; two different column
       orderings of the LU agree to 1e-6 at every Omega run. Z:800/1000 are read only from this route.
+
+  E10 Written before running: the floor's other term. C = phi p_d + p0/(k1 t), and lim C = 1/2 only if
+      p0/(k1 t) -> 0. From the same Q-process stationary law: r = (flux of stage 2 across its saddle
+      while stage 1 is alive) / (flux of stage-1 dips), both read off phi = pi~/psi. Predict:
+      (a) r reproduces §119's windowed p0/(k1 t) within 15% at X:30/40/55 and Z:40/55;
+      (b) r(X) falls by >= 2x from Omega = 55 to 800 -- an approach that lingers near the saddle
+          without crossing becomes rare relative to one that crosses. If r(X) instead stays within
+          30% of 0.008, the floor's limit is above 1/2.
+      -> (a) FAILED: r ran 21-30x the windowed value. The flux of stage 2 stepping below its saddle
+         counts every recrossing, not committed falls -- the mistake §117.6 already recorded ("a
+         one-step saddle current is not a committed rate"), repeated.
+
+  E11 Written before running. Committed falls instead: in the Q-process, stage 2 now runs down to
+      its low rail and is ABSORBED there (no reflection at the saddle); the fall rate is the flux
+      into that rail, and J includes stage 2 already below its saddle at the dip (removing E5/E9's
+      error bar). Still one near-zero mode, so the pinned solve stays well-conditioned. Predict:
+      (a) the committed ratio reproduces windowed p0/(k1 t) within 15% at X:30/40/55, Z:40/55;
+      (b) E10(b) unchanged; (c) p_d with the full J is >= the E9 value, by about the already-low
+      fraction, at every cell.
+      -> (a) HELD: 1.10-1.12 at all five cells. (c) HELD (difference <= 0.03%: the already-low
+         fraction is negligible). (b) FAILED: p0/(k1 t) in X GROWS -- 0.009 / 0.018 / 0.073 / 0.304 at
+         Omega = 55 / 100 / 200 / 400 -- so C passes 1/2 (0.66 at 400). The guess that it grows as
+         exp(Omega dS), dS = V(s1) - V(edge2) = 0.0185 on stage 1's quasi-potential, does not fit: the
+         local rate runs 0.0158 / 0.0137 / 0.0072, falling.
+
+  E12 Written before running X:800 (laptop): the local growth rate of p0/(k1 t) from 400 to 800 keeps
+      falling, below 0.005 -- sub-exponential, consistent with saturation. At or above 0.0185, the
+      edge-approach yardstick is back.
 """
 
 
@@ -168,13 +196,15 @@ def psi_stage1(A, om, sad1, cap):
     return tau / tau[-1]                                         # psi on n1 = sad1-1 .. cap
 
 
-def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD"):
+def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD", lower="sad"):
     """J's shape from the stationary law of the Doob-transformed (Q-process) joint chain, stage 2
     reflected at its saddle. Returns J over n2 (zero below sad2)."""
     cap = m - 1
     psi = psi_stage1(A, om, sad1, cap)                           # index j <-> n1 = sad1-1+j
     n1s = np.arange(sad1, cap + 1)
-    n2s = np.arange(sad2, cap + 1)
+    lo2 = int(round(B.r1 * om))
+    base2 = sad2 if lower == "sad" else lo2 + 1
+    n2s = np.arange(base2, cap + 1)
     M1, M2 = len(n1s), len(n2s)
     I1, I2 = np.meshgrid(np.arange(M1), np.arange(M2), indexing="ij")
     I1, I2 = I1.ravel(), I2.ravel()
@@ -189,28 +219,40 @@ def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD"):
     mt1 = np.where(dn1, mu1 * psi[I1] / ps, 0.0)
     up2 = (I2 < M2 - 1) & (lam2 > 0)
     dn2 = (I2 > 0) & (mu2 > 0)
+    leak = np.where((I2 == 0) & (mu2 > 0), mu2, 0.0) if lower == "rail" else np.zeros(len(I2))
     rows = [idx[up1], idx[dn1], idx[up2], idx[dn2]]
     cols = [idx[up1] + M2, idx[dn1] - M2, idx[up2] + 1, idx[dn2] - 1]
     vals = [lt1[up1], mt1[dn1], lam2[up2], mu2[dn2]]
     out = np.zeros(M1 * M2)
     for r_, v_ in zip(rows, vals):
         np.add.at(out, r_, v_)
-    rows.append(idx); cols.append(idx); vals.append(-out)
+    rows.append(idx); cols.append(idx); vals.append(-out - leak)
     Qt = sp.coo_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))),
                        shape=(M1 * M2, M1 * M2)).tocsc()
     # pin one high-probability state (both stages at their rails) to 1 -- a single unit row keeps
     # the LU sparse; a dense normalisation row (the first draft) destroyed it at Omega >= 400
     k1 = int(np.clip(round(A.r3 * om) - sad1, 0, M1 - 1))
-    k2 = int(np.clip(round(B.r3 * om) - sad2, 0, M2 - 1))
+    k2 = int(np.clip(round(B.r3 * om) - base2, 0, M2 - 1))
     k = k1 * M2 + k2
     At = Qt.T.tocsr().tolil()
     At[k, :] = 0.0
     At[k, k] = 1.0
     b = np.zeros(M1 * M2); b[k] = 1.0
     pi = spla.splu(At.tocsc(), permc_spec=permc).solve(b)
-    res = float(np.abs(Qt.T @ pi).max() / np.abs(pi).max())
+    r_ = Qt.T @ pi
+    r_[k] = 0.0                                                  # the pinned row is not an equation
+    res = float(np.abs(r_).max() / np.abs(pi).max())
+    P = pi.reshape(M1, M2)
     J = np.zeros(m)
-    J[sad2:] = np.clip(pi.reshape(M1, M2)[0, :], 0.0, None)    # n1 = sad1 row
+    J[base2:] = np.clip(P[0, :], 0.0, None)                     # n1 = sad1 row
+    # E10: phi = pi~/psi; dip flux = sum_n2 phi(sad1, n2) mu1(sad1); fall flux = sum_n1 phi(n1, sad2)
+    # mu2(n1, sad2) -- stage 2 stepping below its saddle while stage 1 is alive
+    psi_n1 = psi[np.arange(M1) + 1]
+    _, mu1s = A.rates(np.array([float(sad1)]), np.zeros(1), om, True)
+    dip = float(np.clip(P[0, :], 0, None).sum() / psi_n1[0] * mu1s[0])
+    _, mu2s = B.rates(np.full(M1, float(base2)), n1s.astype(float), om, False)
+    fall = float((np.clip(P[:, 0], 0, None) / psi_n1 * mu2s).sum())   # into the boundary below
+    qprocess_J.last_ratio = fall / dip
     return J / J.sum(), res
 
 
@@ -227,12 +269,12 @@ def episode(A, B, om, method="qsd", dump=None, permc="COLAMD"):
         pi, lam0 = occupation_alive(Q, m, sad1, seed(A, B, om, m)[0])
     elif method == "hi":
         pi, lam0, eig_res, eig_gap = qsd_alive_high(Q, m, sad1, sad2)
-    else:                                                        # "qp", E9
-        Jq, qp_res = qprocess_J(A, B, om, m, sad1, sad2, permc)
+    else:                                                        # "qp" (E9) / "qpr" (E11)
+        Jq, qp_res = qprocess_J(A, B, om, m, sad1, sad2, permc, "rail" if method == "qpr" else "sad")
         pi, lam0 = None, float("nan")
     n2 = np.arange(m)
     _, mu1 = A.rates(np.full(m, float(sad1)), np.zeros(m), om, True)
-    if method == "qp":
+    if method in ("qp", "qpr"):
         J = Jq
     else:
         J = pi.reshape(m, m)[sad1, :] * mu1                     # flux sad1 -> sad1-1, by n2
@@ -259,7 +301,8 @@ def episode(A, B, om, method="qsd", dump=None, permc="COLAMD"):
             "phi_ep": float((J * cs).sum()), "p_d_ep": float((J * hs).sum() / (J * cs).sum()),
             "J_low_frac": float(J[:sad2].sum()), "lam0": lam0,
             **({"eig_res": eig_res, "eig_gap": eig_gap} if method == "hi" else {}),
-            **({"qp_res": qp_res, "permc": permc} if method == "qp" else {})}
+            **({"qp_res": qp_res, "permc": permc, "p0_rate_ratio": qprocess_J.last_ratio}
+               if method in ("qp", "qpr") else {})}
 
 
 def main():
@@ -267,7 +310,7 @@ def main():
     ap.add_argument("--out", type=pathlib.Path, default=pathlib.Path("results/episode_committor.json"))
     ap.add_argument("--cells", default="X:40,X:55,Z:40,Z:55")
     ap.add_argument("--dump", default=None, help="directory: save J and f per cell as .npz (E8)")
-    ap.add_argument("--method", default="hi", choices=["qsd", "occ", "hi", "qp"],
+    ap.add_argument("--method", default="hi", choices=["qsd", "occ", "hi", "qp", "qpr"],
                     help="hi (default, E5): the only route valid at every Omega; qsd/occ kept as the record of E4's failure")
     args = ap.parse_args()
     rep = json.loads(args.out.read_text()) if args.out.exists() else {}

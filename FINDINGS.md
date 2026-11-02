@@ -13539,3 +13539,78 @@ suspect. An E8 run on the irreproducible E5 dumps had printed 86% / 1%; it is di
 > confident number. The last one broke *after* its result had been pushed, and was caught only
 > because a re-run for a different purpose disagreed with it. **Re-running a cell is a check; a
 > residual is not.**
+
+### 124 The floor's second term does not vanish — it grows like Ω² — and the edge is proved to be an edge
+
+*Scope: arms X and Z, `cap_mult` 1.25, exact joint chain on the deterministic Q-process route of
+§123.5, Ω = 30–800 (X) and 40–1000 (Z); Ω = 800 and 1000 on the laptop. Predictions E10–E12 were
+written into `experiments/episode_committor.py` before each run. Lean: `formal/Formal/EdgeInterval.lean`.*
+
+§122 left one term of the floor C = φ·p_d + p0/(k₁t) unmeasured at large Ω: p0/(k₁t), stage 2's
+committed falls on trajectories where stage 1 never dips, per dip. §122's limit φ·p_d → ½ gives
+C → ½ only if this term vanishes.
+
+**§124.1 — E10 failed by repeating a recorded mistake.** The first route divided the flux of stage 2
+stepping below its saddle by the dip flux, and came out 21–30× the windowed value. A one-step saddle
+current counts every recrossing, not committed falls. **§117.6 recorded exactly this, and I repeated
+it.**
+
+**§124.2 — E11: committed falls.** In the Q-process, stage 2 now runs down to its low rail and is
+absorbed there; the fall rate is the flux into that rail. The same solve then also gives J with
+stage 2 already below its saddle at the dip.
+
+- **(a) held.** The committed ratio reproduces §119's windowed p0/(k₁t) at 1.10–1.12 in all five
+  cells (X:30/40/55, Z:40/55). It holds again at X:100 against §122's windowed run (1.10). The steady
+  10% excess is the window's p0 still climbing at t = 16.
+- **(c) held.** The full-J p_d exceeds §123.5's by ≤ 0.03%, so the error bar E5 and E9 carried for the
+  already-low fraction is now measured and negligible.
+- **(b) FAILED. The term grows:**
+
+| Ω | 30 | 40 | 55 | 100 | 200 | 400 | 800 |
+|---|---|---|---|---|---|---|---|
+| X: p0/(k₁t) | 0.0144 | 0.0093 | 0.0090 | 0.018 | 0.073 | 0.304 | **1.337** |
+| X: φ·p_d | 0.113 | 0.121 | 0.134 | 0.175 | 0.254 | 0.357 | 0.443 |
+| X: **C** | 0.127 | 0.130 | 0.143 | 0.193 | 0.327 | 0.661 | **1.780** |
+| Z: p0/(k₁t) | — | 2.0e−4 | 3.6e−5 | 2.1e−6 | 3.3e−7 | 3.2e−7 | 1.8e−6 (800), 4.4e−6 (1000) |
+
+- **A guessed mechanism failed.** I guessed the growth was exp(ΩΔS), with ΔS = V(s₁) − V(edge₂) =
+  0.0185 on stage 1's quasi-potential, i.e. the upstream reaching the downstream's edge without
+  crossing its own saddle. It does not fit: the local growth rate falls, 0.0158 → 0.0137 → 0.0072 →
+  0.0037.
+- **E12 (local rate 400 → 800 below 0.005) held by its letter. Its reading was wrong.** I had written
+  "consistent with saturation". Multiplied by Ω, the local rates give a steady exponent of 2.0–2.2
+  (each doubling multiplies the term by 3.95, 4.2, 4.4). **That is a power law, ~Ω², not
+  saturation.** The criterion could not tell the two apart (rule 19), and the reading is corrected
+  here rather than left standing.
+- **Instrument checks (re-run, not residual).** Two LU orderings agree to 1e−13 at X:200 and X:400.
+  The windowed exact chain agrees at Ω = 30–100.
+
+**§124.2a — the claim, corrected.** §122 stated the limit as a suspect: "φ·p_d → ½ … lim inf C ≥ ½,
+with equality if never-dipped approaches don't contribute." **They do contribute, and in the
+wide-zone pair they come to dominate:** at Ω = 800, stage 2 fails given correct input 1.8 times per
+upstream dip, three-quarters of it on trajectories where stage 1 never crosses its saddle at all.
+
+- **"lim inf C ≥ ½" stands**, supported in X and directionally in Z. **"C → ½" is withdrawn.**
+- **What C does is pair-dependent:** ~Ω² growth in X; a never-dipped term still below 1e−5 in Z at
+  Ω = 1000.
+- **Mechanism: none proposed** (rule 17). The one guess that was tested failed.
+
+**§124.3 — the edge is proved to be an edge (Lean).** `edge()` takes the least input at which stage
+2's cubic has three positive roots, which presumes those inputs form an interval. Proved for any
+positive rate constants:
+
+- every real root is positive;
+- the cubic's discriminant, as a function of the Hill level h, is an explicit cubic Δ(h) (checked
+  against the general formula);
+- Δ(h)/h is concave on h > 0, so **the set of h with Δ > 0 is convex: an interval.** Since the Hill
+  function is increasing, the bistable inputs are an interval too.
+
+Not proved: the classical equivalence "three distinct real roots ⇔ Δ > 0". The bridge test checks it
+numerically on all nine elements at 3001 inputs each, together with contiguity and that `edge()` is
+the interval's left end (to 2e−3, the scan's resolution). Audited on Lean's standard axioms.
+
+> **What §124 settles.** The floor does not converge to ½. Its never-dipped part grows like a power
+> of Ω in the wide-zone pair, so at large volume a restoring stage there fails more often than its
+> upstream even nears failure. "lim inf C ≥ ½" survives, and the stronger statement is withdrawn the
+> same day its last support was measured. Separately, the quantity every section from §105 on has
+> called "the edge" is now proved to be well defined.

@@ -5405,7 +5405,8 @@ theorem to the code path it is about. A theorem with no such test is about a def
 runs. **Candidates not yet formalised:** ~~the birth-death product formula behind
 `stage1_stationary`~~ (done, §121.1); §119's decomposition P = (1 − w_d)·p0 + w_d·p_d (definitional, so cheap); and
 the edge — whether, for each element, the set of inputs giving three positive roots is an interval
-(the numerical `edge()` assumes it).
+(the numerical `edge()` assumes it). **→ §124.3: proved in Lean** (bistable Hill levels form an interval; the
+classical Δ > 0 ⇔ three real roots is checked numerically, not proved).
 
 **T-CASC-ap, open (suspect, §122): the universal floor.** φ → ½ (φ is the committor, measured; the
 committor → ½, computed) and p_d → erf(U*√(λₛΩ/2λ(s₁))) → 1 for every positive zone (confirmed in
@@ -5426,7 +5427,16 @@ sharper than the erf law (suspect: the pre-dip approach lingers in the zone too;
 §123.4). Also still open: the limit of p0/(k₁t). **→ §123.5: the sharp turn was an artifact and is withdrawn.** On a
 deterministic route (E9), Z turns gently: 0.032 / 0.035 / 0.0375 / 0.0415 at Ω = 400–1000. X reaches
 φ·p_d = 0.443 at Ω = 800. The narrow-zone rise is 65% pre-dip sag by cross-substitution (E8).
-**Status: supported in X (near ½), direction-only in Z.**
+**Status: supported in X (near ½), direction-only in Z.** **→ §124: "C → ½" WITHDRAWN.** The floor's second term
+p0/(k₁t) — committed stage-2 falls on trajectories where stage 1 never dips — grows ~Ω² in X (0.009
+→ 1.34 over Ω = 55 → 800), so C reaches 1.78 at Ω = 800. "lim inf C ≥ ½" stands.
+
+**T-CASC-ar, open: why does the never-dipped term grow like Ω²?** Guessed exp(ΩΔS) with ΔS =
+V(s₁) − V(edge₂) = 0.0185 (stage 1 reaching the downstream edge without crossing its saddle): refuted,
+local rate falling 0.0158 → 0.0037 while its product with Ω holds at 2.0–2.2. **No mechanism proposed.**
+**How to kill any candidate:** it must give the exponent ~2 in X and also explain why Z's term stays
+below 1e−5 at Ω = 1000. A decomposition of the committed fall flux by stage 1's position at the
+moment of the fall (cheap: the Q-process law is already computed) is the first measurement to make.
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

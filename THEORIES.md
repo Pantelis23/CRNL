@@ -5419,7 +5419,11 @@ whole window). Also open within it: the limit of p0/(k₁t) (levelling at ~0.008
 whether the floor's limit is ½ or above. **→ §123: supported in X, unresolved in Z.** By the episode committor
 (validated, then rebuilt after two instruments broke), exact X's φ·p_d climbs 0.12 → 0.38 over
 Ω = 40 → 800, monotonically; exact Z's p_d is still falling at Ω = 400 = 1.76 Ω_c (0.065 → 0.032,
-flattening). Remaining kill test: exact Z at Ω ≥ 800 (≈ 16 GB; not run, memory).
+flattening). Remaining kill test: exact Z at Ω ≥ 800 (≈ 16 GB; not run, memory). **→ §123.4: Z turns.** Run on a second machine:
+exact Z p_d 0.035 (Ω = 600), 0.186 (800), 0.562 (1000), smooth, as pre-registered (E7). φ·p_d reaches
+0.27. **Supported in both pairs, refuted in neither.** Open within it: why the exact turn is so much
+sharper than the erf law (suspect: the pre-dip approach lingers in the zone too; kill test in
+§123.4). Also still open: the limit of p0/(k₁t).
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

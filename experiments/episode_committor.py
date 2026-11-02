@@ -54,7 +54,24 @@ lam0 <~ 1e-12. E5 held (within 1.2% of every validated cell; residuals <= 1.4e-1
 E2 FAILED as written: exact Z keeps falling through Omega = 400 = 1.76 Omega_c (0.065 -> 0.032);
 Z:800 was not computed (stopped for system memory). Exact X rises monotonically to 0.807 at
 Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
+
+  E6  Written before Z:800 ran (on the user's 64 GB laptop, after it reproduced Z:230/hi to 1.1e-10
+      relative). T-CASC-ap needs exact Z to turn eventually; the reduction turned near Omega ~ 800
+      and exact/reduction is falling. Predict Z:800 p_d >= 0.0306 (no more than 5% below Z:400's
+      0.0322): flattening or rising. A fall of more than 10% (below 0.0290) weakens T-CASC-ap for
+      narrow zones at accessible Omega; it would not refute a limit, but it would say Omega_c is
+      not where the exact chain turns.
+      -> HELD, and then some: Z:800 = 0.186 (from 0.032 at 400), eig_res 1.1e-10, on the laptop
+         after it reproduced Z:230/hi to 1.1e-10. A 5.8x step is itself suspect (exact/reduction
+         went 2.35 -> ~14), hence E7.
+
+  E7  Written before running. If the turn is real it is smooth in Omega: Z:600 lies strictly
+      between Z:400 and Z:800 (0.032 < p_d < 0.186), and Z:1000 lies above Z:800. Z:600 outside
+      that band, or Z:1000 below Z:800, marks the 800 value as an isolated spike -- withdrawn
+      until an independent route reproduces it.
+      -> HELD: Z:600 = 0.0354, Z:1000 = 0.562 (laptop; eig_res <= 1.5e-10, |lambda_1| ~ 2.3).
 """
+
 
 from __future__ import annotations
 

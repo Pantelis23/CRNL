@@ -58,3 +58,15 @@ def test_narrow_zone_has_not_turned_E2_failed():
     assert z == sorted(z, reverse=True)
     assert z[-1] < 0.057
     assert (z[-2] - z[-1]) / z[-2] < (z[-3] - z[-2]) / z[-3], "but the decline is flattening"
+
+
+def test_narrow_zone_turns_smoothly_past_three_omega_c():
+    """E6 / E7 held (laptop run): Z rises 0.035 -> 0.186 -> 0.562 at Omega = 600 / 800 / 1000,
+    strictly monotone from the minimum, with clean eigen-numerics in every cell."""
+    e = _e()
+    z = {om: e[f"Z:{om}/hi"] for om in (400, 600, 800, 1000)}
+    assert z[400]["p_d_ep"] < z[600]["p_d_ep"] < z[800]["p_d_ep"] < z[1000]["p_d_ep"]
+    assert z[1000]["p_d_ep"] > 0.5
+    for v in z.values():
+        assert v["eig_res"] < 1e-9
+        assert 1.0 < v["eig_gap"] * abs(v["lam0"]) < 10.0, "second eigenvalue O(1): no mixing"

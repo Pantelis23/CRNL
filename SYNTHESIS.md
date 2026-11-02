@@ -921,3 +921,6 @@ before being caught, and both readings were withdrawn. The rebuilt one is checke
 the wide-zone pair the exact floor climbs toward the predicted ½ (φ·p_d = 0.38 at Ω = 800). In the
 narrow-zone pair it has not yet turned. The universal floor is supported in one pair, unresolved
 in the other, and refuted in neither.
+Run on a second machine (the user's laptop, after it reproduced a stored cell to 1e−10), the
+narrow-zone pair then turned at about 3 Ω_c, smoothly as pre-registered: by Ω = 1000 a near-miss
+damages the downstream more often than not. **The universal floor is supported in both pairs.**

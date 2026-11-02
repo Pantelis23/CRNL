@@ -13443,3 +13443,38 @@ anything that solves near zero mixes the two pockets (stage 2 high / stage 2 low
 > In the wide-zone pair the exact floor climbs toward ½ as predicted (φ·p_d = 0.38 at Ω = 800 and
 > rising). In the narrow-zone pair the exact damage has not turned by 1.76 Ω_c. So **T-CASC-ap is
 > supported in one pair, unresolved in the other, and refuted in neither.**
+
+**§123.4 — the narrow-zone pair turns (E6, E7; run on a 64 GB laptop).** Z:800 needed ~16 GB, so it
+ran on a second machine (Windows, Python 3.12.10, the same numpy 2.5.1 / scipy 1.18.0). That machine
+first reproduced the stored Z:230 cell to 1.1e−10 relative.
+
+- **E6** (written before the run: Z:800 ≥ 0.0306, i.e. flattening or rising) **held**: Z:800 = 0.186.
+- **That 5.8× step was itself suspect.** exact/reduction went from 2.35 to ~14. So **E7** was written
+  before any further run: a real turn is smooth, so Z:600 must lie strictly between Z:400 and Z:800,
+  and Z:1000 must lie above Z:800. **E7 held.**
+
+| Ω | 40 | 55 | 100 | 230 | 400 | 600 | 800 | 1000 |
+|---|---|---|---|---|---|---|---|---|
+| Z: exact p_d | 0.065 | 0.057 | 0.041 | 0.033 | 0.032 | **0.035** | **0.186** | **0.562** |
+| Z: φ·p_d | 0.025 | 0.022 | 0.018 | 0.015 | 0.015 | 0.017 | 0.089 | **0.266** |
+
+- **The numerics are clean.** Every cell has eigen-residual ≤ 1.5e−10 and a second eigenvalue
+  |λ₁| ≈ 2.3, so there is no near-zero mixing (§123.2).
+- **The turn sits at ≈ 3 Ω_c and is far sharper than §122's erf law.** That law gives 0.0098 at
+  Ω = 800 and 0.011 at 1000; the deterministic reduction gives 0.0135 at Ω = 800.
+- **Suspect for the sharpness (rule 17):** stage 1's *approach* to its saddle lingers above it for a
+  time comparable to its post-dip escape, ~ln Ω / (2λₛ). For Z that lingering lies inside the zone,
+  so stage 2 sags before the dip as well as after, and both waits grow with Ω. The reductions start
+  stage 2 fresh at the dip and contain only the second. **Kill test:** split the exact p_d at Z:1000
+  by stage 2's position in J (deep in its high well vs near its separatrix). The suspect says the
+  rise is carried by the near-separatrix part of J.
+- **Error bar, with its sign known.** The E5 route omits trajectories whose stage 2 was already low
+  at the dip. Those would mostly count as damaged, so the values above are approximately *lower*
+  bounds.
+
+> **What §123.4 changes.** E2's failure stands as written: Z had not turned by Ω = 1.76 Ω_c. But it
+> turns at ≈ 3 Ω_c, and by Ω = 1000 a near-miss damages the downstream more often than not
+> (p_d = 0.56). **T-CASC-ap — the universal floor φ·p_d → ½ — is now supported in the exact chain in
+> both the wide-zone pair (0.38 at Ω = 800) and the narrow-zone pair (0.27 at Ω = 1000), and refuted
+> in neither.** Ω_c says when the reductions converge, not when the exact chain turns; that is
+> about 3× later for Z.

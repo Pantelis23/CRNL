@@ -135,3 +135,18 @@ def test_never_dipped_falls_two_channels():
         assert abs(v["reactive_ratio"] / v["committed_ratio"] - 1) < 1e-12
     z = [e[str(om)]["frac_in_zone"] for om in (55, 100, 200, 400)]
     assert z == sorted(z) and z[0] < 0.2 and 0.5 < z[-1] < 0.7
+
+
+def test_to_omega_1600_on_pardiso():
+    """E15 / E14 (laptop, MKL PARDISO): the dip channel reaches 0.478 -> 1/2, the never-dipped term
+    grows x5.8 from 800 to 1600; the factorisation is verified by phi = the exact 1-D committor."""
+    e = _e()
+    for om in (1200, 1600):
+        v = e[f"X:{om}/qpr"]
+        assert v["solver"] == "pardiso"
+        assert abs(v["phi_ep"] / v["phi_check_1d_committor"] - 1) < 1e-10
+    assert e["X:1600/qpr"]["committor_nnz"] > 2 ** 31, "X:1600's factors exceed any 32-bit index"
+    lead = [e[f"X:{om}/qpr"]["phi_ep"] * e[f"X:{om}/qpr"]["p_d_ep"] for om in (800, 1200, 1600)]
+    assert lead == sorted(lead) and 0.443 < lead[-1] < 0.5
+    r = e["X:1600/qpr"]["p0_rate_ratio"] / e["X:800/qpr"]["p0_rate_ratio"]
+    assert 3.5 <= r <= 6.0

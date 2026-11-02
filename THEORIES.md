@@ -5438,7 +5438,9 @@ local rate falling 0.0158 → 0.0037 while its product with Ω holds at 2.0–2.
 below 1e−5 at Ω = 1000. A decomposition of the committed fall flux by stage 1's position at the
 moment of the fall (cheap: the Q-process law is already computed) is the first measurement to make. **→ §124.4: made.** The never-dipped falls split into an above-edge
 channel (stage 2's noise over a sag-lowered barrier: 88% at Ω = 55, 47% at 400) and an in-zone
-channel (12% → 53%), which carries the growth. Next: each channel's own growth exponent.
+channel (12% → 53%), which carries the growth. Next: each channel's own growth exponent. **§124.5:** extended to Ω = 1600 (PARDISO on the laptop):
+the never-dipped term keeps growing (local exponent 2.4 → 2.54, still drifting up), while φ·p_d
+reaches 0.478 → ½. Which channel carries the exponent at Ω ≥ 800 is the next measurement.
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

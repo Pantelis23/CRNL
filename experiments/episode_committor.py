@@ -135,6 +135,23 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
          over-weights crossings made with stage 1 near its saddle -- exactly where the zone is.
          Fixed: u = E^Q[ 1/psi(n1 at the fall) ; low rail first ], boundary value 1/psi at the rail;
          then sum pi~ mu u = the fall flux exactly. (b) is judged on the corrected profile only.
+      -> (b) FAILED as written: in-zone share 0.12 / 0.25 / 0.41 / 0.53 at Omega = 55-400 (rising).
+
+  E14 Written before running X:1200 and X:1600 (laptop, 64 GB RAM + page file; memory on this route
+      measured ~linear in states, so ~45 GB and ~80 GB). Predict (a) phi * p_d at 1600 strictly between
+      0.443 and 0.5, still approaching 1/2; (b) p0_rate_ratio(1600)/p0_rate_ratio(800) in [3.5, 6.0]
+      (local exponent 1.8-2.6), continuing ~Omega^2.
+      -> NOT RUN as planned: SciPy's SuperLU stores factor indices as 32-bit ints, and the factors
+         at X:1200 exceed ~2^31 non-zeros even with MMD_AT_PLUS_A (which halves fill, identical
+         results to 10 digits at X:400). A page file cannot help an index limit.
+
+  E15 Written before running: MKL PARDISO (64-bit internals, out-of-core capable) via `--solver
+      pardiso` reproduces the stored SuperLU X:400 values (p0 ratio 0.3042349495, p_d 0.7775560912)
+      to 1e-8 relative. Only then are X:1200 / X:1600 read from it, and E14 judged on them.
+      -> HELD: 4.5e-12 (p0) and 3.4e-11 (p_d), 3-10x faster. E14 then HELD on PARDISO: phi p_d =
+         0.4775 at 1600 (in (0.443, 0.5)); p0 ratio x5.81 from 800 to 1600 (in [3.5, 6.0]). MKL's
+         32-bit iparm(18) wrapped (factors 3.4e9 entries); the factorisation itself is verified by
+         phi = the exact 1-D committor to 2e-13 from the same factor.
 """
 
 
@@ -150,6 +167,28 @@ import scipy.sparse as sp
 import scipy.sparse.linalg as spla
 
 from experiments.weak_upstream import ARMS, element, pair_generator
+
+
+SOLVER = "superlu"          # or "pardiso" (MKL, 64-bit internals, out-of-core capable; --solver)
+
+
+def lu_solve(M, rhs, permc="COLAMD"):
+    """Solve M x = rhs (rhs a vector or an (n, k) matrix). Returns (x, factor nnz)."""
+    if SOLVER == "pardiso":
+        import os
+        import pypardiso
+        ps = pypardiso.PyPardisoSolver(mtype=11)
+        ps.set_iparm(60, int(os.environ.get("CRNL_PARDISO_OOC", "1")))   # 1: in-core if it fits, else on disk
+        A = sp.csr_matrix(M)
+        x = ps.solve(A, np.asarray(rhs, dtype=float))
+        nnz = int(ps.iparm[17])
+        ps.free_memory(everything=True)
+        return x, nnz
+    lu = spla.splu(sp.csc_matrix(M), permc_spec=permc)
+    x = lu.solve(np.asarray(rhs, dtype=float))
+    nnz = int(lu.L.nnz + lu.U.nnz)
+    del lu
+    return x, nnz
 
 
 def qsd_alive(Q, m, sad1):
@@ -254,7 +293,7 @@ def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD", lower="sad"):
     At[k, :] = 0.0
     At[k, k] = 1.0
     b = np.zeros(M1 * M2); b[k] = 1.0
-    pi = spla.splu(At.tocsc(), permc_spec=permc).solve(b)
+    pi, qprocess_J.last_nnz = lu_solve(At, b, permc)
     r_ = Qt.T @ pi
     r_[k] = 0.0                                                  # the pinned row is not an equation
     res = float(np.abs(r_).max() / np.abs(pi).max())
@@ -352,8 +391,9 @@ def episode(A, B, om, method="qsd", dump=None, permc="COLAMD"):
     rhs_c = -np.asarray(Qt.sum(axis=1)).ravel()
     low2 = (top % m) < sad2
     rhs_h = -np.asarray(Qt[:, low2].sum(axis=1)).ravel()
-    lu = spla.splu(Qi)
-    c, h = lu.solve(rhs_c), lu.solve(rhs_h)
+    ch, nnz = lu_solve(Qi, np.column_stack([rhs_c, rhs_h]), permc)
+    c, h = ch[:, 0], ch[:, 1]
+    fill = {"committor_nnz": nnz, "solver": SOLVER}
     pos = {s: i for i, s in enumerate(inner)}
     start = [pos[(sad1 - 1) * m + j] for j in range(m)]
     cs, hs = c[start], h[start]
@@ -364,7 +404,9 @@ def episode(A, B, om, method="qsd", dump=None, permc="COLAMD"):
             "phi_ep": float((J * cs).sum()), "p_d_ep": float((J * hs).sum() / (J * cs).sum()),
             "J_low_frac": float(J[:sad2].sum()), "lam0": lam0,
             **({"eig_res": eig_res, "eig_gap": eig_gap} if method == "hi" else {}),
-            **({"qp_res": qp_res, "permc": permc, "p0_rate_ratio": qprocess_J.last_ratio}
+            **fill,
+            **({"qp_res": qp_res, "permc": permc, "p0_rate_ratio": qprocess_J.last_ratio,
+                "qprocess_nnz": qprocess_J.last_nnz}
                if method in ("qp", "qpr") else {})}
 
 
@@ -372,10 +414,14 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", type=pathlib.Path, default=pathlib.Path("results/episode_committor.json"))
     ap.add_argument("--cells", default="X:40,X:55,Z:40,Z:55")
+    ap.add_argument("--solver", default="superlu", choices=["superlu", "pardiso"])
+    ap.add_argument("--permc", default="COLAMD", help="SuperLU column ordering; MMD_AT_PLUS_A halves the fill on these lattices")
     ap.add_argument("--dump", default=None, help="directory: save J and f per cell as .npz (E8)")
     ap.add_argument("--method", default="hi", choices=["qsd", "occ", "hi", "qp", "qpr"],
                     help="hi (default, E5): the only route valid at every Omega; qsd/occ kept as the record of E4's failure")
     args = ap.parse_args()
+    global SOLVER
+    SOLVER = args.solver
     rep = json.loads(args.out.read_text()) if args.out.exists() else {}
     for cell in args.cells.split(","):
         key = cell if args.method == "qsd" else f"{cell}/{args.method}"
@@ -387,7 +433,7 @@ def main():
         if dump is not None:
             pathlib.Path(args.dump).mkdir(parents=True, exist_ok=True)
             key = f"{key}/dump"
-        r = episode(A, B, int(om), args.method, dump)
+        r = episode(A, B, int(om), args.method, dump, permc=args.permc)
         rep[key] = r
         print(key, json.dumps(r), flush=True)
         args.out.write_text(json.dumps(rep, indent=2, default=float))

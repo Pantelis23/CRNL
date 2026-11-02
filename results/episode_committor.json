@@ -741,5 +741,46 @@
       "edge2": 1.3618387279575985,
       "saddle1": 1.005
     }
+  },
+  "X:1200/qpr": {
+    "omega": 1200,
+    "states": 15388919,
+    "secs": 82.60938858985901,
+    "phi_ep": 0.4763617574610206,
+    "p_d_ep": 0.9840382258443254,
+    "J_low_frac": 0.11587783502736651,
+    "lam0": NaN,
+    "committor_nnz": 1691452083,
+    "solver": "pardiso",
+    "qp_res": 5.8171710381253615e-11,
+    "permc": "COLAMD",
+    "p0_rate_ratio": 3.497894868375531,
+    "qprocess_nnz": 1591528966,
+    "phi_check_1d_committor": 0.4763617574609483,
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0, MKL PARDISO in-core, 64 GB + page file)"
+  },
+  "X:1600/qpr": {
+    "omega": 1600,
+    "states": 27358559,
+    "secs": 215.48907899856567,
+    "phi_ep": 0.47952938093996594,
+    "p_d_ep": 0.9957258289260581,
+    "J_low_frac": 0.1579324255574345,
+    "lam0": NaN,
+    "committor_nnz": 3430144425,
+    "solver": "pardiso",
+    "qp_res": 5.8180708759196074e-11,
+    "permc": "COLAMD",
+    "p0_rate_ratio": 7.770680826946894,
+    "qprocess_nnz": 3040198498,
+    "committor_nnz_reported": -864822871,
+    "qprocess_nnz_reported": -1254768798,
+    "phi_check_1d_committor": 0.47952938094007813,
+    "host": "laptop (Windows, py3.12.10, numpy 2.5.1, scipy 1.18.0, MKL PARDISO in-core, 64 GB + page file)"
+  },
+  "X:400/qpr_pardiso_validation": {
+    "p0_rate_ratio": 0.30423494951,
+    "rel_vs_superlu_p0": 4.5e-12,
+    "rel_vs_superlu_pd": 3.4e-11
   }
 }

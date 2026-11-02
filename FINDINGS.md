@@ -13638,3 +13638,33 @@ reaching its low rail first, read off by stage 1's position at the crossing.
   in-zone channel takes the majority, and the mean crossing point slides toward the edge.
 - **That is a measured decomposition, not a mechanism for the Ω² growth.** T-CASC-ar stays open; its
   next measurement is the growth exponent of each channel separately.
+
+**§124.5 — to Ω = 1600, with the factors paged on a 64 GB machine (E14, E15).** The user's suggestion
+was to offload to the laptop's page file. Two obstacles came first:
+
+- **SciPy's SuperLU was the limit, not memory.** It stores factor indices as 32-bit integers, so it
+  refused X:1200 — first with COLAMD, then again with `MMD_AT_PLUS_A`, which halves the fill and
+  reproduces X:400 to 10 digits. A page file cannot fix an index limit.
+- **MKL PARDISO (`--solver pardiso`) has 64-bit internals.** It was installed with `--no-deps`, so
+  the pinned numpy and scipy stayed untouched. E15 required it to reproduce the stored SuperLU X:400
+  values to 1e−8; it agreed to 4.5e−12 (p0 term) and 3.4e−11 (p_d), and ran 3–10× faster.
+- **It then factorised 3.4 × 10⁹ entries in-core.** MKL's own 32-bit counter of those entries
+  wrapped negative, but the solve is verified independently: φ from that factorisation equals the
+  exact 1-D stage-1 committor to 2e−13 at Ω = 1600 and 1.5e−13 at Ω = 1200.
+
+| Ω | 400 | 800 | 1200 | 1600 |
+|---|---|---|---|---|
+| X: p_d | 0.778 | 0.940 | 0.984 | **0.996** |
+| X: φ·p_d | 0.357 | 0.443 | 0.469 | **0.478** |
+| X: p0/(k₁t) | 0.304 | 1.337 | 3.498 | **7.771** |
+| X: C | 0.661 | 1.780 | 3.967 | **8.248** |
+| stage 2 already low at the dip | — | 0.072 | 0.116 | 0.158 |
+
+**E14 held on both counts.**
+- **(a) The dip channel converges to ½.** φ·p_d = 0.478 at Ω = 1600 lies inside (0.443, 0.5): p_d is
+  within 0.5% of 1, and φ → ½ as the committor does.
+- **(b) The never-dipped channel keeps its power law.** It grew ×5.81 from Ω = 800 to 1600 (predicted
+  3.5–6.0), a local exponent of 2.54 against 2.4 for 800 → 1200; the exponent is still drifting up.
+
+**At Ω = 1600 the wide-zone downstream fails 8.2 times per upstream dip, 94% of that without any
+dip.** Every conditioned model in this arc describes the dips.

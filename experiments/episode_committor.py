@@ -225,6 +225,16 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
          x1 = 1.129, x_dag being only the free-x2 bound. Gamma_hat_Sigma(X) = 0.0056 / 0.0045 / 0.0039
          extrapolates to Gamma ~ 0.0018-0.0019 (Gamma + c ln(Omega)/Omega) or 0.0021-0.0022 (Gamma +
          c/Omega), against the minimum-action 0.00169.
+
+  E21 Written before running: the kill test THEORIES names for §124.7's mechanism. Pairs d (E-062 ->
+      F-040, edge on the saddle) and N (E-062 -> F-025, edge below it) have NO fall-inducing approach
+      (no x_dag: the free-x2 descent never crosses Sigma). The mechanism then says their never-dipped
+      term must SHRINK relative to the dips. Predict for both: p0_rate_ratio at Omega = 1600 below its
+      Omega = 400 value, with negative local exponents throughout 400 -> 1600. A growing term in either
+      pair refutes the mechanism as the general account (a cheaper path would then exist without x_dag).
+      -> HELD: d 2.9e-16 -> 1.4e-34, N 5.4e-29 -> 1.7e-112 over Omega = 200 -> 1600; local exponents
+         -17.6 .. -24.5 (d) and -53 .. -164 (N): exponential DECAY, ~ -0.020 and -0.12 per unit Omega.
+         Tiny values verified: two SuperLU orderings and PARDISO agree to <= 1e-12 at 1e-21 and 1e-45.
 """
 
 

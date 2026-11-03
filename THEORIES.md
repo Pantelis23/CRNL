@@ -5452,7 +5452,9 @@ by minimum action (independent agent). The exact stationary law extrapolates to 
 A pre-registered b-vs-X test held. **Still open (T-CASC-as):** the prefactor exponent a(Ω), which
 drifts in both pairs. **Kill test for the mechanism:** a pair with Γ > 3e−3 must show a local-exponent
 slope near its Γ by Ω ≈ 1/Γ; a pair with no x† must show a never-dipped term that decays relative to
-the dips.
+the dips. **→ §124.8: the second half held** — in d and N (no x†) the never-dipped term
+decays exponentially (to 1.4e−34 and 1.7e−112 at Ω = 1600), values verified across three solvers.
+The Γ > 3e−3 half is not yet run.
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

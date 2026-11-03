@@ -51,3 +51,14 @@ def test_b_versus_X_discriminates():
 
     assert slope("X") > 0 > slope("b")
     assert slope("b") <= 0.3 * slope("X")
+
+
+def test_no_joint_path_means_decay():
+    """E21: pairs d and N (no x_dag) -- the never-dipped term decays exponentially; verified across
+    three solvers at 1e-21 and 1e-45."""
+    e = json.loads((ROOT / "results/episode_committor.json").read_text())
+    for arm in "dN":
+        r = [e[f"{arm}:{om}/qpr"]["p0_rate_ratio"] for om in (200, 400, 800, 1200, 1600)]
+        assert all(b < a for a, b in zip(r, r[1:])), arm
+    for v in e["E21_crosscheck"].values():
+        assert v["rel"] < 1e-10 and v["rel_vs_laptop"] < 1e-10

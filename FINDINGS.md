@@ -13785,3 +13785,28 @@ action than its full transition.
 > ~10% from the exact chain's stationary law, and it passed a discriminating test on a pair with a
 > tenfold smaller Γ, predicted before that pair was read. It is labelled a **supported mechanism**
 > (rule 17): independently confirmed twice, with the prefactor still unexplained.
+
+**§124.8 — the mechanism's kill test on the pairs that have no joint path (E21): held.** §124.7's
+mechanism needs a turning point x†: a time-reversed approach of stage 1 that drags stage 2 across
+the joint separatrix without stage 1 crossing its own saddle. In pairs d (E-062 → F-040, edge on the
+saddle) and N (E-062 → F-025, edge below it) no such approach exists. THEORIES named the consequence
+as the mechanism's kill test: their never-dipped term must shrink relative to the dips, not grow.
+E21, written before running:
+
+| Ω | 200 | 400 | 800 | 1200 | 1600 |
+|---|---|---|---|---|---|
+| d: never-dipped / dips | 2.9e−16 | 1.5e−21 | 1.5e−27 | 1.6e−31 | 1.4e−34 |
+| N: never-dipped / dips | 5.4e−29 | 7.6e−45 | 5.4e−70 | 5.4e−92 | 1.7e−112 |
+
+- **The local exponents are negative and grow in magnitude:** −17.6 → −24.5 (d) and −53 → −164 (N).
+  That is exponential decay, at about −0.020 (d) and −0.12 (N) per unit Ω. In X and b, which have an
+  x†, the same term grows; here, without one, it vanishes.
+- **The numbers are not rounding noise.** At values like 1e−45 that is the first suspicion, so d:400
+  and N:400 were re-solved with two SuperLU orderings locally and compared with PARDISO on the laptop.
+  All agree to ≤ 1e−12 relative. These M-matrix solves carry no cancellation, so tiny entries keep
+  their relative accuracy.
+
+> **What §124.8 settles.** The mechanism's sharpest consequence held across all four pairs: where
+> the joint path exists (X, b) the never-dipped falls grow relative to dips, at a rate ordered by
+> Γ; where it does not (d, N) they decay exponentially. The status in §124.7 stands — **supported**,
+> with the prefactor still open.

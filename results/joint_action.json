@@ -103,5 +103,25 @@
     },
     "path_min_x1": 1.009
   },
-  "note_direct_check": "Direct minimisation converged for X (N=800 within 1.3e-6 of the ray W*). For b and Z it rises toward the ray value from below without converging in the time allowed; consistent, not an independent confirmation at the quoted precision. Pair a is below its resolution."
+  "note_direct_check": "Direct minimisation converged for X (N=800 within 1.3e-6 of the ray W*). For b and Z it rises toward the ray value from below without converging in the time allowed; consistent, not an independent confirmation at the quoted precision. Pair a is below its resolution.",
+  "XK": {
+    "pair": "E-070 -> E-084@K1.2 (Hill threshold 1.2; \u00a7124.9)",
+    "edge": 1.6112,
+    "Gamma": 0.00734,
+    "Gamma_err": 1e-06,
+    "free_x2_bound": {
+      "x_dag": 1.179,
+      "Gamma": 0.00496
+    },
+    "path_min_x1": 1.2704,
+    "convergence_rays": {
+      "1e-6": 0.007339692,
+      "1e-7": 0.007339395,
+      "1e-8": 0.007340156
+    },
+    "K1_reproduction": {
+      "Gamma": 0.001688372,
+      "note": "same code at K = 1 reproduces X"
+    }
+  }
 }

@@ -62,3 +62,25 @@ def test_no_joint_path_means_decay():
         assert all(b < a for a, b in zip(r, r[1:])), arm
     for v in e["E21_crosscheck"].values():
         assert v["rel"] < 1e-10 and v["rel_vs_laptop"] < 1e-10
+
+
+def test_large_gamma_pair_converges_onto_the_action():
+    """E22: XK (Hill threshold 1.2), Gamma = 7.34e-3 fixed beforehand; the local-exponent slope over
+    the two largest windows lies in [0.6, 1.3] Gamma and increases toward it."""
+    import math
+    e = json.loads((ROOT / "results/episode_committor.json").read_text())
+    oms = (100, 200, 400, 600, 800)
+    r = {om: e[f"XK:{om}/qpr"]["p0_rate_ratio"] for om in oms}
+    ex = [(math.sqrt(a * b), math.log(r[b] / r[a]) / math.log(b / a)) for a, b in zip(oms, oms[1:])]
+    sl = [(e2 - e1) / (m2 - m1) for (m1, e1), (m2, e2) in zip(ex, ex[1:])]
+    G = J["XK"]["Gamma"]
+    assert all(0.6 * G <= v <= 1.3 * G for v in sl[-2:])
+    assert sl == sorted(sl)
+
+
+def test_hill_k_one_is_the_published_coupling():
+    """ElemK at K = 1 is the published element: same Hill factor everywhere."""
+    from experiments.weak_upstream import element
+    a, b = element("E-084"), element("E-084@K1.0")
+    for x in (0.5, 1.0, 1.362, 2.0, 3.0):
+        assert abs(a.hill(x) - b.hill(x)) < 1e-14

@@ -5454,7 +5454,10 @@ drifts in both pairs. **Kill test for the mechanism:** a pair with Γ > 3e−3 m
 slope near its Γ by Ω ≈ 1/Γ; a pair with no x† must show a never-dipped term that decays relative to
 the dips. **→ §124.8: the second half held** — in d and N (no x†) the never-dipped term
 decays exponentially (to 1.4e−34 and 1.7e−112 at Ω = 1600), values verified across three solvers.
-The Γ > 3e−3 half is not yet run.
+**→ §124.9: the Γ > 3e−3 half held too.** A pair built by raising the Hill threshold
+(K = 1.2; Γ = 7.34e−3 by minimum action, fixed beforehand) shows the local-exponent slope converging
+onto Γ: 0.56 / 0.79 / 0.93 Γ. Both halves of the kill test have now held. **Still open (T-CASC-as):**
+the prefactor a(Ω).
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

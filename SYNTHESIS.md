@@ -942,3 +942,7 @@ there, and drags the downstream across the joint basin boundary. That path costs
 upstream dip, by Γ = V₁(s₁) − W*: 1.69e−3 in the wide-zone pair and ten times less in its neighbour.
 It was computed by minimum action, recovered from the exact chain's stationary law, and tested on a
 second pair before that pair's numbers were read.
+Two further tests, both written before their runs, then held. **Where no such joint path exists
+(§124.8) the never-dipped falls decay exponentially. On a pair built to have a large Γ (§124.9) the
+growth rate converges onto the minimum-action value (0.93 Γ by Ω ≈ 700), with no fitted parameter**,
+and that downstream fails 226 times per upstream dip at Ω = 800.

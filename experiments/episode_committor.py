@@ -235,6 +235,17 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
       -> HELD: d 2.9e-16 -> 1.4e-34, N 5.4e-29 -> 1.7e-112 over Omega = 200 -> 1600; local exponents
          -17.6 .. -24.5 (d) and -53 .. -164 (N): exponential DECAY, ~ -0.020 and -0.12 per unit Omega.
          Tiny values verified: two SuperLU orderings and PARDISO agree to <= 1e-12 at 1e-21 and 1e-45.
+
+  E22 Written before any exact CME exists for this pair: the other half of the kill test, a pair with
+      Gamma > 3e-3. The Hill threshold K moves stage 2's edge without changing its rates at a healthy
+      input (hill(r3) = 1 for every K). XK = E-070 -> E-084@K1.2: edge 1.611, free-x2 bound 4.96e-3,
+      converged Gamma = 7.340e-3 (ray shooting, EPS 1e-6 / 1e-7 / 1e-8: 7.3397 / 7.3394 / 7.3402 e-3;
+      the same code reproduces X's 1.6884e-3 at K = 1). Predict: over Omega = 100-800, the slope of the
+      never-dipped term's local exponent vs Omega, over the two largest windows, lies in
+      [0.6, 1.3] x Gamma = [4.4e-3, 9.5e-3] -- about 7x X's.
+      -> HELD: slopes 4.1e-3 / 5.8e-3 / 6.8e-3 (0.56 / 0.79 / 0.93 Gamma) over windows centred at
+         Omega ~ 141-283 / 283-490 / 490-693 -- the two largest inside the band, converging onto Gamma
+         from below. R reaches 226 never-dipped falls per dip at Omega = 800.
 """
 
 

@@ -13810,3 +13810,38 @@ E21, written before running:
 > the joint path exists (X, b) the never-dipped falls grow relative to dips, at a rate ordered by
 > Γ; where it does not (d, N) they decay exponentially. The status in §124.7 stands — **supported**,
 > with the prefactor still open.
+
+**§124.9 — an absolute, out-of-sample test of Γ: a pair built to have a large one (E22): held.** The
+other half of §124.7's kill test needs a pair with Γ > 3e−3, large enough that the exponential regime
+shows by Ω ≈ 1/Γ. In this element family a higher downstream edge also means a weaker downstream. The
+lever that separates them is the **Hill threshold K** of the coupling. The Hill factor is normalised
+at r₃, so at a healthy input hill = 1 for every K: the downstream's own rates and barrier at its
+operating point are unchanged, and only its edge moves (`weak_upstream.ElemK`; names like
+`E-084@K1.2`).
+
+- **The pair.** XK = E-070 → E-084@K1.2, with its edge raised from 1.362 to 1.611.
+- **Γ, computed before any exact data for this pair existed.** The free-x₂ bound gives Γ ≥ 4.96e−3.
+  The converged minimum-action value (`experiments/joint_action`, ray shooting) is **Γ = 7.340e−3**:
+  7.3397 / 7.3394 / 7.3402e−3 at EPS = 1e−6 / 1e−7 / 1e−8. The same code at K = 1 reproduces X's
+  1.6884e−3.
+- **The prediction (E22).** The slope of the never-dipped term's local exponent against Ω, over the
+  two largest windows, lies in [0.6, 1.3]·Γ = [4.4e−3, 9.5e−3].
+
+| Ω | 100 | 200 | 400 | 600 | 800 |
+|---|---|---|---|---|---|
+| XK: never-dipped falls per dip | 0.50 | 1.93 | 11.3 | 51.7 | **226** |
+
+| window centred at Ω | 141 → 283 | 283 → 490 | 490 → 693 |
+|---|---|---|---|
+| slope of the local exponent | 4.1e−3 | 5.8e−3 | **6.8e−3** |
+| as a fraction of Γ | 0.56 | 0.79 | **0.93** |
+
+**E22 held.** Both of the largest windows fall inside the band, and the slope converges onto Γ from
+below, as the drift in the prefactor (§124.7) implies. Γ came from the two rate equations by minimum
+action, was fixed before the pair's master equation was solved, and has no fitted parameter.
+
+> **What §124.9 settles.** The mechanism now passes a quantitative test it could have failed in
+> absolute terms. On a pair constructed for the purpose, the growth rate of the never-dipped
+> failures converges onto the minimum-action Γ (0.93 Γ by Ω ≈ 700), and at Ω = 800 that downstream
+> fails 226 times per upstream dip. Together with §124.8 (no joint path ⇒ exponential decay) and
+> §124.7 (b vs X), every pre-registered consequence of the mechanism tested so far has held.

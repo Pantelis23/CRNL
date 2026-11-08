@@ -246,6 +246,21 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
       -> HELD: slopes 4.1e-3 / 5.8e-3 / 6.8e-3 (0.56 / 0.79 / 0.93 Gamma) over windows centred at
          Omega ~ 141-283 / 283-490 / 490-693 -- the two largest inside the band, converging onto Gamma
          from below. R reaches 226 never-dipped falls per dip at Omega = 800.
+
+  E23 Written before running: the prefactor. With R = C Omega^a e^{Gamma Omega}, the window residual
+      a = dlnR/dlnOmega - Gamma * logmean(Omega) is, in the stored cells, a function of u = Gamma Omega
+      rather than of Omega (X and XK agree at matched u: 1.16 / 0.91 at u ~ 1, 0.43 / 0.43 at u ~ 2.2)
+      and falls with u. Two candidates for its limit:
+        H0  both rates are Eyring-Kramers escapes through non-degenerate saddles -> a -> 0;
+        Hh  a 1-D turning-level picture (stage 1's excursion minimum lands in a Gaussian layer above s1),
+            R ~ 1/erfc(sqrt(u)) - 1 -> a -> 1/2, approached as ~ 1/2 - 1/(2u).
+      XK at Omega = 1000, 1200, 1400, 1600 (u = 7.3 .. 11.7). Predict H0: |a| <= 0.05 in every new
+      window and ln R - Gamma Omega changing by < 0.15 from 1000 to 1600. Hh predicts a in [0.40, 0.50]
+      there. Neither: the prefactor has a third form, and both are refuted.
+      -> H0 HELD, Hh REFUTED: a = -0.008 / -0.015 / -0.016 / -0.014 over 800-1600 (u = 6.6-11.0);
+         ln R - Gamma Omega = -0.452 / -0.454 / -0.456 / -0.459 / -0.461 at 800-1600 (changes 0.007 from
+         1000 to 1600). The -0.015 residual equals what Gamma too large by 1e-5 (0.14%) would give; not
+         resolved.
 """
 
 

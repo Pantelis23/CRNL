@@ -84,3 +84,18 @@ def test_hill_k_one_is_the_published_coupling():
     a, b = element("E-084"), element("E-084@K1.0")
     for x in (0.5, 1.0, 1.362, 2.0, 3.0):
         assert abs(a.hill(x) - b.hill(x)) < 1e-14
+
+
+def test_prefactor_is_a_constant_past_the_crossover():
+    """E23: XK to Omega = 1600 -- |a| <= 0.05 in every window past u ~ 6 (H0), not 0.4-0.5 (H1/2), and
+    ln R - Gamma Omega flat to < 0.15 over 1000 -> 1600."""
+    import math
+    e = json.loads((ROOT / "results/episode_committor.json").read_text())
+    G = J["XK"]["Gamma"]
+    oms = (800, 1000, 1200, 1400, 1600)
+    r = {om: e[f"XK:{om}/qpr"]["p0_rate_ratio"] for om in oms}
+    for a_, b_ in zip(oms, oms[1:]):
+        L = (b_ - a_) / math.log(b_ / a_)
+        assert abs(math.log(r[b_] / r[a_]) / math.log(b_ / a_) - G * L) <= 0.05
+    off = [math.log(r[om]) - G * om for om in (1000, 1600)]
+    assert abs(off[1] - off[0]) < 0.15

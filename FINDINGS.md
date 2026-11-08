@@ -13845,3 +13845,43 @@ action, was fixed before the pair's master equation was solved, and has no fitte
 > failures converges onto the minimum-action Γ (0.93 Γ by Ω ≈ 700), and at Ω = 800 that downstream
 > fails 226 times per upstream dip. Together with §124.8 (no joint path ⇒ exponential decay) and
 > §124.7 (b vs X), every pre-registered consequence of the mechanism tested so far has held.
+
+**§124.10 — the prefactor: the never-dipped/dip ratio is a pure exponential with a constant in front
+(E23).** §124.7 left the prefactor a(Ω) in R = C·Ω^a·e^{ΓΩ} open. Scope: pair XK (E-070 →
+E-084@K1.2, Γ = 7.340e−3 by minimum action), exact CME on the deterministic Q-process route,
+Ω = 100–1600, Ω ≥ 1000 on the laptop (PARDISO; φ equals the exact 1-D committor to ≤ 3e−13 in every
+new cell).
+
+- **What was seen before predicting.** The window residual a = d ln R/d ln Ω − Γ·logmean(Ω) depends
+  on u = ΓΩ rather than on Ω. X and XK, whose Γ differ 4.3×, agree at matched u: 1.16 / 0.91 at
+  u ≈ 1, and 0.43 / 0.43 at u ≈ 2.2. This is a post-hoc observation, recorded as such. Two candidate
+  limits were then written down:
+  - **H0:** both rates are Eyring–Kramers escapes through non-degenerate saddles, so a → 0.
+  - **H½:** a 1-D picture in which stage 1's excursion minimum lands in the Gaussian layer above its
+    saddle, so R ∝ 1/erfc(√u) − 1 and a → ½.
+- **E23, written before running:** H0 requires |a| ≤ 0.05 in every new window and ln R − ΓΩ moving
+  by < 0.15 from Ω = 1000 to 1600. H½ requires a ∈ [0.40, 0.50].
+
+| window (Ω) | 100→200 | 200→400 | 400→600 | 600→800 | 800→1000 | 1000→1200 | 1200→1400 | 1400→1600 |
+|---|---|---|---|---|---|---|---|---|
+| u = Γ·logmean Ω | 1.06 | 2.12 | 3.62 | 5.10 | 6.58 | 8.05 | 9.52 | 10.99 |
+| a | +0.905 | +0.428 | +0.129 | +0.024 | −0.008 | −0.015 | −0.016 | −0.014 |
+
+| Ω | 100 | 200 | 400 | 600 | 800 | 1000 | 1200 | 1400 | 1600 |
+|---|---|---|---|---|---|---|---|---|---|
+| ln R − ΓΩ | −1.435 | −0.808 | −0.511 | −0.459 | −0.452 | −0.454 | −0.456 | −0.459 | −0.461 |
+
+- **H0 held and H½ is refuted.** Past u ≈ 5 the prefactor is flat, C = e^{−0.46} ≈ 0.63, and at
+  Ω = 1600 the downstream fails 7.9 × 10⁴ times per upstream dip.
+- **The approach to the plateau falls with u, not with Ω** (post hoc). It is the transient that made
+  X's exponent look like "~Ω²" (§124.6) and its prefactor look like a drift (§124.7). X has only
+  reached u ≈ 2.3 at Ω = 1600.
+- **A residual, unresolved (rule 15).** a ≈ −0.015 in the last three windows. It equals what Γ too
+  large by 1e−5 (0.14%) would produce, although the ray estimates agree to 1e−7. A small negative
+  power of Ω would look the same. Neither reading is claimed.
+
+> **What §124.10 settles.** T-CASC-as closes for this pair. The never-dipped/dip ratio is
+> R ≈ 0.63·e^{ΓΩ}, with Γ from the minimum action and no power of Ω at large u. Every apparent power
+> law in §124 was the crossover transient in u = ΓΩ. The mechanism now accounts for the effect's
+> exponent (Γ, computed) and for the shape of its prefactor (constant). The constant itself, 0.63,
+> is measured, not derived.

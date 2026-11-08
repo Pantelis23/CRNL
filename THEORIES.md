@@ -5457,7 +5457,11 @@ decays exponentially (to 1.4e−34 and 1.7e−112 at Ω = 1600), values verified
 **→ §124.9: the Γ > 3e−3 half held too.** A pair built by raising the Hill threshold
 (K = 1.2; Γ = 7.34e−3 by minimum action, fixed beforehand) shows the local-exponent slope converging
 onto Γ: 0.56 / 0.79 / 0.93 Γ. Both halves of the kill test have now held. **Still open (T-CASC-as):**
-the prefactor a(Ω).
+the prefactor a(Ω). **→ §124.10: CLOSED for XK.** a → 0 (|a| ≤ 0.016 at u = 6.6–11) and ln R − ΓΩ
+plateaus at −0.46: R ≈ 0.63·e^{ΓΩ}. The 1-D turning-level picture (a → ½) is refuted. The pre-plateau
+drift is a function of u = ΓΩ (post hoc, X vs XK). **Open:** deriving C = 0.63 (an Eyring–Kramers
+prefactor ratio along the joint instanton); and the −0.015 residual (Γ off by 0.14%, or a small
+power of Ω).
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

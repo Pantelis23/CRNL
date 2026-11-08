@@ -946,3 +946,6 @@ Two further tests, both written before their runs, then held. **Where no such jo
 (§124.8) the never-dipped falls decay exponentially. On a pair built to have a large Γ (§124.9) the
 growth rate converges onto the minimum-action value (0.93 Γ by Ω ≈ 700), with no fitted parameter**,
 and that downstream fails 226 times per upstream dip at Ω = 800.
+**§124.10 closed the prefactor.** Past u = ΓΩ ≈ 5 the ratio is a pure exponential with a
+constant in front, R ≈ 0.63·e^{ΓΩ}. Every apparent power law along the way (“~Ω²”, a drifting
+exponent) was the crossover in u. A competing 1-D picture that predicted an extra √Ω was refuted.

@@ -55,8 +55,9 @@ from model import A1, B1, C1, A2, B2, C2, KH, H3, R2_2, S1, V1
 def h2(x1):
     if UNCOUPLED:
         return 0.0
-    z = (x1 / KH) ** 4
-    return 4 * z * (3 - 5 * z) / (x1 * x1 * (1 + z) ** 3) / H3
+    n = model.NH
+    z = (x1 / KH) ** n
+    return n * z * ((n - 1) - (n + 1) * z) / (x1 * x1 * (1 + z) ** 3) / H3
 
 
 def aug_rhs(t, y):

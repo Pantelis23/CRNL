@@ -122,3 +122,22 @@ def test_exit_is_spread_at_accessible_omega():
     assert 0.75 <= sd[1600] / sd[400] <= 1.25
     mu = [e[str(om)]["mean_x1"] for om in (400, 800, 1600)]
     assert mu == sorted(mu)
+
+
+def test_hill_exponent_two_out_of_sample():
+    """E25: XN (Hill n = 2), Gamma fixed beforehand. Slope -> Gamma (within 0.5% in the last window,
+    both XN and XK); prefactor flat past u ~ 6."""
+    import math
+    e = json.loads((ROOT / "results/episode_committor.json").read_text())
+
+    def slopes(arm, oms):
+        G = J[arm]["Gamma"]
+        r = {om: e[f"{arm}:{om}/qpr"]["p0_rate_ratio"] for om in oms}
+        ex = [((b - a) / math.log(b / a), math.log(r[b] / r[a]) / math.log(b / a)) for a, b in zip(oms, oms[1:])]
+        return [(e2 - e1) / (m2 - m1) / G for (m1, e1), (m2, e2) in zip(ex, ex[1:])], ex, G
+
+    sl, ex, G = slopes("XN", (100, 200, 400, 600, 800, 1000, 1200, 1600))
+    assert all(0.6 <= v <= 1.3 for v in sl[1:3]) and abs(sl[-1] - 1) < 0.005
+    assert all(abs(n - G * L) <= 0.05 for L, n in ex if G * L >= 6)
+    sk, _, _ = slopes("XK", (100, 200, 400, 600, 800, 1000, 1200, 1400, 1600))
+    assert abs(sk[-1] - 1) < 0.005

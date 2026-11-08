@@ -123,5 +123,20 @@
       "Gamma": 0.001688372,
       "note": "same code at K = 1 reproduces X"
     }
+  },
+  "XN": {
+    "pair": "E-070 -> E-084@K1.2@N2 (Hill exponent 2; \u00a7124.13)",
+    "edge": 1.7339,
+    "Gamma": 0.0074466,
+    "Gamma_err": 1e-06,
+    "free_x2_bound": {
+      "x_dag": 1.1715,
+      "Gamma": 0.00457
+    },
+    "convergence_rays": {
+      "1e-6": 0.007453953,
+      "1e-7": 0.007446613,
+      "1e-8": 0.007446531
+    }
   }
 }

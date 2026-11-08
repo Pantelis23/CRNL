@@ -9,6 +9,7 @@ import math
 import pathlib
 import shutil
 import subprocess
+import sys
 
 import pytest
 
@@ -25,6 +26,7 @@ THEOREMS = (
     "BirthDeath.detailed_balance", "BirthDeath.global_balance",
     "Committor.h_zero", "Committor.h_top", "Committor.backward",
     "EdgeInterval.F_pos_of_nonpos", "EdgeInterval.disc_eq", "EdgeInterval.bistable_levels_convex",
+    "RiccatiLyapunov.riccati_iff_lyapunov", "RiccatiLyapunov.trace_identity",
 )
 
 
@@ -158,3 +160,22 @@ def test_edge_is_the_left_end_of_the_proved_interval():
         idx = np.nonzero(three)[0]
         assert len(idx) > 0 and np.all(np.diff(idx) == 1), f"{name}: bistable inputs not contiguous"
         assert abs(xs[idx[0]] - edge(B)) < 2e-3, name
+
+
+def test_saddle_hessian_satisfies_the_proved_identities():
+    """RiccatiLyapunov: prefactor.saddle_lyapunov's Z must solve A^T Z + Z A + Z D Z = 0 and give
+    2 tr A + tr(D Z) = 0 (the transport integrand's zero), for the coupled XK pair and uncoupled."""
+    code = (
+        "import sys, numpy as np; sys.argv=['prefactor.py','1e-6','1e-12','10']\n"
+        "src=open('prefactor.py').read().split('if __name__ == \"__main__\" and UNCOUPLED')[0]; exec(src)\n"
+        "Z, lp = saddle_lyapunov()\n"
+        "A = np.array([[2*A1*3-(27+C1),0],[model.dhill(3.0)*A2*R2_2**2, lp]])\n"
+        "D = np.diag([2*(A1*9+B1), 2*(model.hill(3.0)*A2*R2_2**2+B2)])\n"
+        "R = A.T@Z + Z@A + Z@D@Z\n"
+        "print(abs(R).max()/abs(Z).max(), abs(2*np.trace(A)+np.trace(D@Z)))\n")
+    import os
+    for k in ("1.0", "1.2"):
+        out = subprocess.run([sys.executable, "-W", "ignore", "-c", code], capture_output=True, text=True,
+                             cwd=pathlib.Path(__file__).resolve().parent.parent / "experiments/joint_action",
+                             env={**os.environ, "HILL_K": k}, timeout=900).stdout.split()
+        assert float(out[0]) < 1e-12 and float(out[1]) < 1e-12, (k, out)

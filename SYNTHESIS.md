@@ -949,3 +949,8 @@ and that downstream fails 226 times per upstream dip at Ω = 800.
 **§124.10 closed the prefactor.** Past u = ΓΩ ≈ 5 the ratio is a pure exponential with a
 constant in front, R ≈ 0.63·e^{ΓΩ}. Every apparent power law along the way (“~Ω²”, a drifting
 exponent) was the crossover in u. A competing 1-D picture that predicted an extra √Ω was refuted.
+**§124.11–§124.13.** The Eyring–Kramers machinery for the prefactor was built and validated to 0.2%
+on an exact rate. It cannot derive C, because the joint exit is degenerate: the optimal path slides
+along the basin boundary into a caustic, and the exit is spread along an O(1) stretch of it. On a
+coupling of a different shape (Hill n = 2), predicted beforehand, the exact growth rate matched the
+minimum-action Γ to 0.1%.

@@ -13948,3 +13948,37 @@ the fall is near-deterministic, so a localised exit would give a narrow distribu
   must sit in the crossing normal to Σ, which the naive count treats as diffusive. The suspect,
   untested: along a stretch of Σ where the path still carries momentum (|p| ≈ 1e−2 in §124.11's
   trajectory), the crossing is not the local Gaussian a saddle would give.
+
+**§124.13 — the mechanism on an axis it was not built on: the Hill exponent (E25), and Γ confirmed to
+0.1%.** Every pair through §124.12 used the published coupling, hill ∝ x⁴. Rule 9: test along an axis
+not chosen for the effect. Scope: XN = E-070 → E-084@K1.2@N2 (hill ∝ x², edge 1.734), exact CME on
+the deterministic Q-process route, Ω = 100–1600 (laptop, PARDISO).
+
+- **Γ, fixed before any exact data for XN existed.** Minimum action (`experiments/joint_action`, now
+  with a Hill-exponent parameter) gives Γ = 7.4466e−3 (7.446613 / 7.446531e−3 at EPS = 1e−7 / 1e−8).
+  The same code at n = 4 still reproduces XK's 7.3394e−3.
+- **E25: (a)** the local-exponent slope over the two largest windows below u = 5 lies in
+  [0.6, 1.3] Γ; **(b)** the prefactor flattens as in XK, |a| ≤ 0.05 for u ≥ 6, and ln R − ΓΩ moves by
+  < 0.15 from Ω = 1000 to 1600.
+
+| window centred at Ω | 144→289 | 289→493 | 493→695 | 695→896 | 896→1097 | 1097→1390 |
+|---|---|---|---|---|---|---|
+| XN: slope of the local exponent / Γ | 0.656 | 0.824 | 0.937 | 0.982 | 0.996 | **1.001** |
+| XK (same windows to 1600) / Γ | 0.55 | 0.80 | 0.93 | 0.978 | 0.995 | 1.000 → 1.001 |
+
+| Ω | 400 | 600 | 800 | 1000 | 1200 | 1600 |
+|---|---|---|---|---|---|---|
+| XN: ln R − ΓΩ | −0.469 | −0.422 | −0.415 | −0.417 | −0.419 | −0.421 |
+
+- **E25 held on both counts.** (a) 0.824 and 0.937 Γ. (b) |a| ≤ 0.012 for u ≥ 6, and ln R − ΓΩ
+  changes by 0.005 over 1000 → 1600. C_XN ≈ e^{−0.42} = 0.66, against C_XK = 0.63.
+- **Γ is now confirmed in absolute terms to 0.1%, in two pairs.** The exact chain's exponential
+  growth rate equals the minimum-action Γ to 1.000–1.001 Γ in the last windows, for both couplings.
+- **§124.10's residual, revisited (rule 14).** a ≈ −0.01 to −0.015 persists in both pairs. "Γ too
+  large by 0.14%" would put these slopes at about 0.9986; they read 1.000–1.001. That reading is
+  disfavoured, though not excluded at this precision. A small Ω-dependence of the prefactor itself is
+  the likelier source, and it is left unresolved.
+
+> **What §124.13 settles.** The mechanism's quantitative content — growth rate Γ from minimum action,
+> constant prefactor past u ≈ 5 — holds on a coupling of a different shape, predicted before its
+> master equation was solved. The exact chain reproduces the action to 0.1%.

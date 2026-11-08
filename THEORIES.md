@@ -5476,6 +5476,10 @@ drifting toward the saddle). So the naive count's geometry holds at accessible �
 flux per unit length of Σ, against Ω, at fixed x₁. A diffusive (saddle-like) crossing scales as
 Ω^{−1/2} × density; anything else is the missing factor.
 
+**§124.13: the mechanism holds on a second coupling shape (Hill n = 2), predicted beforehand.** The
+exact growth rate equals the minimum-action Γ to 0.1% in XK and XN. The −0.01 prefactor residual's
+"Γ is off" reading is disfavoured.
+
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint
 effects. That is an argument, not a theorem. **Kill test:** a closed form, written before comparison,

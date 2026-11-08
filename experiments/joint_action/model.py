@@ -18,17 +18,18 @@ A1, B1, C1 = kconst((0.15, R2_1, 3.0))   # stage 1: k1a, k2b, k2r
 A2, B2, C2 = kconst((0.15, R2_2, 3.0))   # stage 2
 S1 = R2_1
 KH = float(os.environ.get('HILL_K', '1.0'))      # coupling threshold (§124.9); 1 = published
-H3 = (3.0 / KH)**4 / (1 + (3.0 / KH)**4)
+NH = float(os.environ.get('HILL_N', '4.0'))      # Hill exponent (§124.13); 4 = published
+H3 = (3.0 / KH)**NH / (1 + (3.0 / KH)**NH)
 
 
 def hill(x1):
-    z = (x1 / KH)**4
+    z = (x1 / KH)**NH
     return (z / (1 + z)) / H3
 
 
 def dhill(x1):
-    z = (x1 / KH)**4
-    return (4 * z / x1 / (1 + z) ** 2) / H3
+    z = (x1 / KH)**NH
+    return (NH * z / x1 / (1 + z) ** 2) / H3
 
 
 def lam1(x1): return A1 * x1 * x1 + B1

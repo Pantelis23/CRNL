@@ -82,26 +82,31 @@ class ElemK(Elem):
     The Hill factor stays normalised at r3, so a healthy input still gives hill = 1: the element's
     own rates at its operating point are untouched, and only its bistability edge moves."""
 
-    def __init__(self, name, r1, r2, r3, hill_k, cap_mult=CAP_MULT):
+    def __init__(self, name, r1, r2, r3, hill_k, cap_mult=CAP_MULT, hill_n=None):
         super().__init__(name, r1, r2, r3, cap_mult=cap_mult)
         self.hill_k = hill_k
+        self.hill_n = hill_n
 
     def hill(self, x_up):
         from experiments.two_axes_for_the_position import HILL_N
-        z = (x_up / self.hill_k) ** HILL_N
-        zr = (self.r3 / self.hill_k) ** HILL_N
+        nh = HILL_N if self.hill_n is None else self.hill_n
+        z = (x_up / self.hill_k) ** nh
+        zr = (self.r3 / self.hill_k) ** nh
         return (z / (1.0 + z)) / (zr / (1.0 + zr))
 
 
 def element(name):
-    """'E-084' etc.; 'E-084@K1.2' is the same element with its coupling threshold set to K = 1.2."""
+    """'E-084' etc.; 'E-084@K1.2' sets the coupling threshold to K = 1.2; 'E-084@K1.2@N2' also sets the
+    Hill exponent to 2 (§124.13)."""
     base, _, k = name.partition("@K")
+    k, _, nh = k.partition("@N")
     table = dict(ELEMENTS)
     table["F-025"] = 0.25
     table["F-040"] = 0.40
     table["F-050"] = 0.50
     if k:
-        return ElemK(name, R1_FIX, table[base], R3_FIX, float(k), cap_mult=CAP_MULT)
+        return ElemK(name, R1_FIX, table[base], R3_FIX, float(k), cap_mult=CAP_MULT,
+                     hill_n=float(nh) if nh else None)
     return Elem(name, R1_FIX, table[base], R3_FIX, cap_mult=CAP_MULT)
 
 
@@ -194,7 +199,8 @@ ARMS = {"X": ("E-070", "E-084"), "S": ("E-070", "E-070"),
         "Z": ("E-062", "E-084"), "N": ("E-062", "F-025"),
         "a": ("E-070", "F-025"), "b": ("E-070", "F-040"),
         "c": ("E-062", "F-050"), "d": ("E-062", "F-040"),
-        "XK": ("E-070", "E-084@K1.2")}                     # §124.9: X with its coupling threshold at 1.2
+        "XK": ("E-070", "E-084@K1.2"),
+        "XN": ("E-070", "E-084@K1.2@N2")}                  # §124.13: Hill exponent 2 instead of 4                     # §124.9: X with its coupling threshold at 1.2
 ARM_OMEGAS = {"X": (30, 40, 55), "S": (30, 40, 55), "Z": (40, 55), "N": (40, 55),
               "a": (40, 55), "b": (40, 55), "c": (40, 55), "d": (40, 55)}
 

@@ -271,6 +271,15 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
       -> SPREAD by its letter: sd(x1) = 0.649 / 0.629 / 0.617 / 0.577 at 200 / 400 / 800 / 1600 (ratio
          0.92 over 400 -> 1600); but the distribution drifts toward the saddle (mean 1.78 -> 2.18, q10
          1.17 -> 1.50), so localisation at much larger Omega is not excluded.
+
+  E25 Written before running: the mechanism on an axis none of it was built on -- the Hill EXPONENT.
+      XN = E-070 -> E-084@K1.2@N2 (coupling hill ~ x^2 instead of x^4; edge 1.734). Gamma by minimum
+      action, fixed beforehand: 7.4466e-3 (EPS 1e-7 / 1e-8: 7.446613 / 7.446531 e-3; 1e-6: 7.454e-3).
+      Predict over Omega = 100 .. 1600: (a) the local-exponent slope over the two largest windows below
+      u = 5 lies in [0.6, 1.3] Gamma; (b) the prefactor flattens as in XK: |a| <= 0.05 in every window
+      with u >= 6, and ln R - Gamma Omega changes by < 0.15 from 1000 to 1600.
+      -> HELD both: slopes 0.656 / 0.824 / 0.937 / 0.982 / 0.996 / 1.001 Gamma; |a| <= 0.012 for u >= 6;
+         ln R - Gamma Omega = -0.415 / -0.417 / -0.419 / -0.421 at 800 / 1000 / 1200 / 1600 (C ~ 0.66).
 """
 
 

@@ -18,3 +18,5 @@ open CRNL
 #print axioms EdgeInterval.F_pos_of_nonpos
 #print axioms EdgeInterval.disc_eq
 #print axioms EdgeInterval.bistable_levels_convex
+#print axioms RiccatiLyapunov.riccati_iff_lyapunov
+#print axioms RiccatiLyapunov.trace_identity

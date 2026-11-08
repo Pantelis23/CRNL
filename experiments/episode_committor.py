@@ -261,6 +261,16 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
          ln R - Gamma Omega = -0.452 / -0.454 / -0.456 / -0.459 / -0.461 at 800-1600 (changes 0.007 from
          1000 to 1600). The -0.015 residual equals what Gamma too large by 1e-5 (0.14%) would give; not
          resolved.
+
+  E24 Written before running (T-CASC-at's kill test): how wide is the band of stage-1 positions x1 that
+      carries the committed never-dipped falls (stage 2 crossing its saddle line, committor-weighted)?
+      XK at Omega = 200, 400, 800, 1600. If the exit is spread over an O(1) stretch (the naive
+      degenerate count, a = +1/2), the spread sd(x1) stays within 25% across 400 -> 1600. If it is
+      localised with Gaussian width ~ Omega^{-1/2} (consistent with a = 0), sd(1600)/sd(400) lies in
+      [0.4, 0.6]. Anything else is a third geometry.
+      -> SPREAD by its letter: sd(x1) = 0.649 / 0.629 / 0.617 / 0.577 at 200 / 400 / 800 / 1600 (ratio
+         0.92 over 400 -> 1600); but the distribution drifts toward the saddle (mean 1.78 -> 2.18, q10
+         1.17 -> 1.50), so localisation at much larger Omega is not excluded.
 """
 
 
@@ -537,7 +547,9 @@ def fall_profile(A, B, om):
     return {"omega": om, "reactive_ratio": tot, "committed_ratio": qprocess_J.last_ratio, **e17,
             "frac_in_zone": float(flux[x1 < e2].sum() / flux.sum()),
             "frac_above_edge": float(flux[x1 >= e2].sum() / flux.sum()),
-            "mean_x1": float((flux * x1).sum() / flux.sum()), "edge2": e2, "saddle1": A.r2}
+            "mean_x1": float((flux * x1).sum() / flux.sum()), "edge2": e2, "saddle1": A.r2,
+            "sd_x1": float(np.sqrt(max((flux * x1 * x1).sum() / flux.sum() - ((flux * x1).sum() / flux.sum()) ** 2, 0.0))),
+            "q10_q90_x1": [float(np.interp(q, np.cumsum(flux) / flux.sum(), x1)) for q in (0.1, 0.9)]}
 
 
 def episode(A, B, om, method="qsd", dump=None, permc="COLAMD"):

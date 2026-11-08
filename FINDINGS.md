@@ -13885,3 +13885,66 @@ new cell).
 > law in §124 was the crossover transient in u = ΓΩ. The mechanism now accounts for the effect's
 > exponent (Γ, computed) and for the shape of its prefactor (constant). The constant itself, 0.63,
 > is measured, not derived.
+
+**§124.11 — deriving the constant: the Eyring–Kramers machinery works, and the never-dipped exit is
+not an Eyring–Kramers exit.** The goal was C ≈ 0.63 from the rate equations alone. The method is
+WKB for the master equation, π ≈ K·e^{−ΩW}: a Riccati equation for Z = ∂²W and a transport equation
+for ln K along the optimal path, the latter including the CME's own 1/Ω propensity corrections. Then
+k = (λ₊/2π)·√(det Z_m/|det Z_s|)·(K_s/K_m)·e^{−ΩW*} through the joint saddle, divided by the exact
+1-D dip rate. Code: `experiments/joint_action/prefactor.py`; results in `results/prefactor.json`.
+
+- **An instrument failure inside the method, caught by validation.** In forward time the Riccati
+  equation is *unstable* near a saddle: its physical root repels, and an error grows like
+  1/distance². My first runs read Z there as ~0 and gave W* 6% off. The fix uses theory twice:
+  - at the saddle, p = 0, so Z_s solves the algebraic Riccati. Its full-rank root is the inverse of
+    the Lyapunov covariance at the saddle, A C + C Aᵀ = −D;
+  - ln K is read in a window on the descent into the saddle, |p| ∈ [1e−3, 6e−3], and extrapolated.
+- **K1, the validation, held.** With the coupling removed (Hill ≡ 1) the 2-D formula must reproduce
+  stage 2's exact 1-D escape rate (1/MFPT in log domain). k_EK/k_exact = 1.032 / 1.018 / 1.007 /
+  1.0024 / 1.0000 / 0.9989 at Ω = 50 / 100 / 200 / 400 / 800 / 1600: an O(1/Ω) approach, plus the
+  method's own ~0.2% from the ln K extrapolation (2.39699 against the exact 2.39923).
+- **K2, the test on XK, could not be evaluated as designed — and why is the finding.** Along the
+  coupled optimal path:
+  - **the path reaches the separatrix Σ far from the saddle and slides along it.** Stage 1 dips to
+    x₁ ≈ 1.27 and returns while stage 2 rides Σ into the saddle;
+  - **the Hessian component along Σ collapses** (Z₁₁: 0.15 → ~3e−4), so W is nearly flat along Σ;
+  - **just before the saddle the Riccati solution diverges**, a caustic of the fluctuation paths.
+
+  So the non-degenerate formula's ingredients (a smooth Hessian of W at s, and K_s) do not exist
+  along this path. This is consistent with the exact chain, which found falls crossing Σ at mean
+  x₁ ≈ 1.5 in X (§124.6), far from the saddle at x₁ = 3. The never-dipped fall is a degenerate exit
+  through an extended stretch of the separatrix, not through a saddle point.
+- **A tension this leaves open (suspect, rule 17).** A naive degenerate count — density flat along a
+  stretch of Σ of length O(1), instead of a Gaussian of width Ω^{−1/2} — predicts an extra factor
+  Ω^{1/2} in the fall rate, i.e. a = +½. §124.10 measured a ≈ 0 (−0.015). Either the flat stretch
+  shrinks with Ω or the crossing flux is limited somewhere the count misses. Not resolved.
+
+> **What §124.11 settles.** The prefactor machinery is built and validated against an exact rate to
+> 0.1–0.2%. It cannot derive C, because the exit it would need is degenerate: the optimal path
+> slides along the separatrix and meets a caustic before the saddle. C ≈ 0.63 stays measured, not
+> derived. The standard Eyring–Kramers picture — and the naive fix for it — are both inconsistent with
+> §124.10's a ≈ 0.
+
+**§124.12 — T-CASC-at's kill test (E24): at accessible Ω the exit is spread, and the √Ω is still
+missing.** Scope: XK, Ω = 200–1600 (laptop, PARDISO). The observable is the distribution of stage 1's
+position x₁ at which committed never-dipped falls carry stage 2 across its saddle line, weighted by
+the committor. The reactive flux equals the committed rate to ≤ 2e−13 in every cell. Past the exit
+the fall is near-deterministic, so a localised exit would give a narrow distribution here (width
+~Ω^{−1/2}), and a spread one an O(1) width.
+
+| Ω | 200 | 400 | 800 | 1600 |
+|---|---|---|---|---|
+| sd(x₁) | 0.649 | 0.629 | 0.617 | 0.577 |
+| mean x₁ | 1.777 | 1.793 | 1.958 | 2.183 |
+| 10% / 90% quantiles | 1.17 / 2.91 | 1.19 / 2.91 | 1.30 / 2.96 | 1.50 / 2.99 |
+
+- **E24 held its "spread" branch by its letter.** sd(1600)/sd(400) = 0.92, inside the predicted 25%
+  band; a localised exit needed 0.4–0.6.
+- **The distribution is moving toward the saddle**: the mean goes 1.78 → 2.18, and the lower
+  quantile 1.17 → 1.50. Slow localisation at much larger Ω is not excluded, and the sd's shrinkage
+  is accelerating.
+- **So the tension in §124.11 sharpens.** The exit is spread over an O(1) stretch at the volumes
+  computed, yet §124.10's prefactor carries no extra √Ω. By E24's own framing, the missing Ω^{−1/2}
+  must sit in the crossing normal to Σ, which the naive count treats as diffusive. The suspect,
+  untested: along a stretch of Σ where the path still carries momentum (|p| ≈ 1e−2 in §124.11's
+  trajectory), the crossing is not the local Gaussian a saddle would give.

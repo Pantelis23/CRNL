@@ -5461,7 +5461,20 @@ the prefactor a(Ω). **→ §124.10: CLOSED for XK.** a → 0 (|a| ≤ 0.016 at 
 plateaus at −0.46: R ≈ 0.63·e^{ΓΩ}. The 1-D turning-level picture (a → ½) is refuted. The pre-plateau
 drift is a function of u = ΓΩ (post hoc, X vs XK). **Open:** deriving C = 0.63 (an Eyring–Kramers
 prefactor ratio along the joint instanton); and the −0.015 residual (Γ off by 0.14%, or a small
-power of Ω).
+power of Ω). **→ §124.11: C not derivable by non-degenerate Eyring–Kramers** (machinery validated
+to 0.1–0.2% on an exact case). The joint exit is degenerate: the optimal path slides along Σ (Z₁₁
+→ ~3e−4) and meets a caustic before the saddle.
+
+**T-CASC-at, open: the degenerate exit's prefactor.** A naive count (density flat along an O(1)
+stretch of Σ) predicts a = +½, but §124.10 measured a ≈ 0. **Kill test:** from the exact
+quasi-stationary law, measure the width of the region along Σ that carries the crossing flux, at
+Ω = 400 … 1600. If it is O(1) and Ω-independent, the naive count's assumption holds and the missing
+Ω^{−1/2} must sit in the normal crossing. If it shrinks like Ω^{−1/2}, the exit is effectively
+localised and a = 0 follows. Then derive the flux in whichever geometry survives. **→ §124.12: spread** (sd(x₁) ≈ 0.58–0.65 over Ω = 200–1600,
+drifting toward the saddle). So the naive count's geometry holds at accessible Ω, and the extra
+Ω^{−1/2} that keeps a ≈ 0 must come from the normal crossing. **Next kill test:** the local crossing
+flux per unit length of Σ, against Ω, at fixed x₁. A diffusive (saddle-like) crossing scales as
+Ω^{−1/2} × density; anything else is the missing factor.
 
 **T-CASC-aq, open: is the finite-Ω floor irreducibly joint?** §122.6 argues that below Ω_c a
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint

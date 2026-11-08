@@ -1,0 +1,29 @@
+{
+  "K1_uncoupled": {
+    "prefactor": 1.05106425,
+    "W_star": 0.353959946241,
+    "W_exact": 0.353959929004,
+    "lnK_s": 2.39698839,
+    "lnK_s_exact": 2.399231,
+    "Z22_s_lyapunov": -0.660798,
+    "ratio_EK_over_exact": {
+      "50": 1.03153,
+      "100": 1.01806,
+      "200": 1.00736,
+      "400": 1.00242,
+      "800": 1.00005,
+      "1600": 0.99888
+    }
+  },
+  "K2_XK": {
+    "status": "not evaluable: degenerate exit (caustic before the saddle)",
+    "Z11_along_path": {
+      "start": 0.1518,
+      "t=3.0": 0.00359,
+      "t=3.7": 0.000315
+    },
+    "Z11_lyapunov_at_saddle": 0.150163,
+    "riccati_diverges_at_t": 4.3,
+    "closest_approach_p": 0.00289
+  }
+}

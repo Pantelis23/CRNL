@@ -99,3 +99,26 @@ def test_prefactor_is_a_constant_past_the_crossover():
         assert abs(math.log(r[b_] / r[a_]) / math.log(b_ / a_) - G * L) <= 0.05
     off = [math.log(r[om]) - G * om for om in (1000, 1600)]
     assert abs(off[1] - off[0]) < 0.15
+
+
+def test_prefactor_machinery_reproduces_an_exact_rate():
+    """K1 (§124.11): with the coupling removed the 2-D Eyring-Kramers formula reproduces stage 2's
+    exact 1-D escape rate, approaching 1 like 1/Omega to the method's ~0.2%; rerun the prefactor."""
+    P = json.loads((ROOT / "results/prefactor.json").read_text())["K1_uncoupled"]
+    r = [P["ratio_EK_over_exact"][k] for k in ("50", "100", "200", "400", "800")]
+    assert all(abs(b - 1) < abs(a - 1) for a, b in zip(r, r[1:]))
+    assert abs(P["ratio_EK_over_exact"]["1600"] - 1) < 0.003
+    out = subprocess.run([sys.executable, "-W", "ignore", "prefactor.py", "1e-6", "1e-12", "40", "--uncoupled"],
+                         cwd=ROOT / "experiments/joint_action", capture_output=True, text=True, timeout=900).stdout
+    pref = float(next(l for l in out.splitlines() if l.startswith("PREFACTOR")).split()[1])
+    assert abs(pref / P["prefactor"] - 1) < 1e-3
+
+
+def test_exit_is_spread_at_accessible_omega():
+    """E24: the committed-fall crossing distribution keeps an O(1) width over Omega = 200-1600
+    (ratio 400 -> 1600 within 25%), while its mean drifts toward the saddle."""
+    e = json.loads((ROOT / "results/episode_committor.json").read_text())["E24"]
+    sd = {om: e[str(om)]["sd_x1"] for om in (200, 400, 800, 1600)}
+    assert 0.75 <= sd[1600] / sd[400] <= 1.25
+    mu = [e[str(om)]["mean_x1"] for om in (400, 800, 1600)]
+    assert mu == sorted(mu)

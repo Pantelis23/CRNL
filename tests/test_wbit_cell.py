@@ -52,3 +52,10 @@ def test_wbit_class_still_matches():
     w = wbit_one_step(1.5, 0.5, 0.5, 0.4, p0, 5000, seed=11)
     r = 0.5 * p0 + 0.5 * expit((1.5 * (2 * p0 - 1) + np.random.default_rng(2).normal(0, 0.4 * math.sqrt(2), 5000)) / 0.5)
     assert abs(w.mean() - r.mean()) < 4 * math.hypot(w.std(), r.std()) / math.sqrt(5000)
+
+
+def test_min_action_is_finite_and_reproduces():
+    """The stored S once came out inf (a convergence check that skipped the first update)."""
+    from experiments.wbit_cell import min_action
+    S = min_action(1.5, 0.5, 0.5)
+    assert 0.3 < S < 0.36 and abs(S / _d()["W3"]["S"] - 1) < 1e-12

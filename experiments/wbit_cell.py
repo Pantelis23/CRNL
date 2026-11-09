@@ -128,9 +128,12 @@ def min_action(a, T, dt, n=3000):
     C = np.where(ok, (T * np.log(zz / (1 - zz)) - a * (2 * P - 1)) ** 2 / 4, np.inf)
     for _ in range(1000):
         An = np.min(C + np.concatenate([[0.0], A])[None, :], axis=1)
-        if np.max(np.abs(np.where(np.isfinite(An) & np.isfinite(A), An - A, 0.0))) < 1e-14:
+        same_support = np.array_equal(np.isfinite(An), np.isfinite(A))
+        both = np.isfinite(An) & np.isfinite(A)
+        done = same_support and np.max(np.abs(An[both] - A[both]), initial=0.0) < 1e-14
+        A = An                                  # update first: a stale A was the first draft's bug
+        if done:
             break
-        A = An
     return float(np.interp(fixed_points(a, T, dt)[-1], g, A))
 
 

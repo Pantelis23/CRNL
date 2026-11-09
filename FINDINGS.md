@@ -14037,6 +14037,13 @@ operator has exact bin masses from the normal CDF.
 | rate per step | 8.9e−3 | 1.7e−3 | 3.4e−4 | 4.8e−5 | 2.2e−6 | 8.8e−8 | 7.1e−10 |
 | local slope / S | 0.910 | 0.919 | 0.950 | 0.967 | 0.983 | 0.991 | **0.995** |
 
+- **A slip of mine, kept.** The first commit of this section (`2d80604`) was pushed with one failing
+  test, because my commit command did not stop on the suite's failure. The failure was real: porting
+  the value iteration into `min_action`, I broke its convergence check. With A still mostly infinite,
+  the check compared only finite entries, saw "no change" and exited before the first update, so the
+  stored S was inf and every stored slope ratio was 0. The table above comes from the scratch run,
+  which was correct. The fix updates first and checks a stable support, and a new test pins S.
+
 > **What §125 settles.** The machinery behind CRNL's cascade result — exact transfer operators,
 > minimum action, 1/σ² as the large parameter — applies to W-bit's analog cell unchanged, and is
 > checked against W-bit's own code. It also reaches rates (7e−10 per step) that the project's

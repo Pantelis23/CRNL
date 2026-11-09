@@ -40,7 +40,7 @@
     }
   },
   "W3": {
-    "S": Infinity,
+    "S": 0.32890998229862456,
     "rows": [
       {
         "sigma": 0.4,
@@ -51,55 +51,55 @@
         "sigma": 0.35,
         "M": 1600,
         "rate": 0.008883430104515578,
-        "local_slope_over_S": 0.0
+        "local_slope_over_S": 0.9098740382306133
       },
       {
         "sigma": 0.3,
         "M": 1600,
         "rate": 0.0036923508175724334,
-        "local_slope_over_S": 0.0
+        "local_slope_over_S": 0.9054726008209328
       },
       {
         "sigma": 0.27,
         "M": 3200,
         "rate": 0.0016788700828471099,
-        "local_slope_over_S": 0.0
+        "local_slope_over_S": 0.9193937129988003
       },
       {
         "sigma": 0.25,
         "M": 3200,
         "rate": 0.0008320328932017199,
-        "local_slope_over_S": 0.0
+        "local_slope_over_S": 0.9350545010278818
       },
       {
         "sigma": 0.23,
         "M": 3200,
         "rate": 0.000335938215420211,
-        "local_slope_over_S": 0.0
+        "local_slope_over_S": 0.9496601541701855
       },
       {
         "sigma": 0.2,
         "M": 4000,
         "rate": 4.8296664428836995e-05,
-        "local_slope_over_S": 0.0
+        "local_slope_over_S": 0.9672821731141642
       },
       {
         "sigma": 0.17,
         "M": 6400,
         "rate": 2.166310264970675e-06,
-        "local_slope_over_S": 0.0
+        "local_slope_over_S": 0.9829392527038701
       },
       {
         "sigma": 0.15,
         "M": 8000,
         "rate": 8.761560105472347e-08,
-        "local_slope_over_S": 0.0
+        "local_slope_over_S": 0.9909084634831271
       },
       {
         "sigma": 0.13,
         "M": 12000,
         "rate": 7.074961228980547e-10,
-        "local_slope_over_S": 0.0
+        "local_slope_over_S": 0.9948542601607546
       }
     ]
   }

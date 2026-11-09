@@ -5497,7 +5497,9 @@ driven by cell 1 through Θ₂₁. The mechanism predicts that cell 2's errors w
 relative to cell 1's flips like e^{Γ/σ²} when cell 2's edge (the least input keeping it bistable-high)
 sits above cell 1's saddle, and decay when it sits below. Γ comes from the discrete-time joint minimum
 action. **Kill test:** the joint exact chain (2-D transfer operator) at σ = 0.15–0.35, on one pair of
-each kind, with Γ computed beforehand.
+each kind, with Γ computed beforehand. **→ §126: the sign held** (Z rises, N falls; per-cell estimate 16× low in Z at
+σ = 0.25). **Still open:** W-bit's Γ (discrete-time joint minimum action) and an absolute test against R's
+growth; the speed cost of the weak-coupling (edge-below-saddle) design.
 
 **T-WBIT-b, open: the error table Aeternum's level policy lacks.** Exact per-cell and cascaded error
 rates at R ∈ {3, 5, 9, 17, 33} against σ and chain depth, as the physical guardrail for the LLP's

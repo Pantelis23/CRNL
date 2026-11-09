@@ -14049,3 +14049,46 @@ operator has exact bin masses from the normal CDF.
 > checked against W-bit's own code. It also reaches rates (7e−10 per step) that the project's
 > billion-cycle Monte Carlo cannot resolve. Next: two cells in series, with the near-miss mechanism
 > and the edge-below-saddle design rule tested on W-bit's Θ, predictions first.
+
+### 126 Two W-bit cells in series: the near-miss mechanism transfers, and per-cell reliability is off by 16×
+
+*Scope: W-bit's R = 2 analog cell (§125, validated against W-bit's own `AnalogWbitNetwork`); two cells in
+series, cell 2 driven by cell 1 through Θ₂₁ = c·I with bias b₂; a = 1.5, T = 0.5, dt = 0.5; σ = 0.25–0.34; exact
+2-D transfer operator on M × M grids (M = 120, 160), product kernel, direct sparse solve. Pairs constructed like
+§124.9: cell 2's drive at a healthy input is fixed at h = 0.1 (identical bistable cell 2 there, fixed points
+0.0995 / 0.397 / 0.9469), and only the coupling moves its edge: Z, c = 0.671, edge 0.70 (above cell 1's saddle at
+½); N, c = 0.244, edge 0.30 (below). `experiments/wbit_cascade.py`, `results/wbit_cascade.json`.*
+
+Started at both high wells, the chain exits by a **dip** (p₁ < ½) or a committed **fall** (p₂ reaches its low
+well while p₁ never dipped). R = P(fall first)/P(dip first) is the W-bit analogue of CRNL's never-dipped falls
+per dip. The probabilities sum to 1 to 1e−15. Predictions C1–C3 were written before running.
+
+| σ | 0.34 | 0.30 | 0.27 | 0.25 |
+|---|---|---|---|---|
+| Z (zone): R | 0.523 | 0.576 | 0.604 | 0.615 |
+| N (no zone): R | 0.119 | 0.080 | 0.048 | 0.029 |
+| Z: R ÷ per-cell estimate | 2.4 | 4.6 | 9.0 | **16.1** |
+| N: R ÷ per-cell estimate | 0.54 | 0.64 | 0.72 | 0.77 |
+
+The "per-cell estimate" is what a per-cell reliability analysis gives: cell 2's own escape rate with its input
+frozen at cell 1's healthy value, divided by cell 1's dip rate.
+
+- **C1 held.** R changes by ≤ 0.6% from M = 120 to 160. M = 200 exceeds SuperLU's memory here.
+- **C2 held: the mechanism's sign transfers to W-bit.** As the noise falls, R rises where a zone exists and
+  falls where it does not, with cell 2 identical at healthy input in both pairs. This is §124.8–§124.9's
+  dichotomy in a different substrate: Gaussian logit noise in a discrete-time softmax map instead of
+  Poisson chemistry.
+- **C3 held: per-cell reliability does not compose.** In Z the true fall rate is 16× the per-cell estimate
+  at σ = 0.25, and the gap roughly doubles at each step down in σ. In N the per-cell estimate is right to
+  within a factor 0.5–0.8.
+- **Scope of the claim.** The sign and the composition failure are measured. The exponential rate (a W-bit
+  Γ from the discrete-time joint minimum action) is not computed yet, and Z's R is still far from any
+  asymptote (u = Γ/σ² unknown). The design reading — keep the downstream edge below the upstream saddle —
+  is a consequence of C2 at this scope, not a tested rule across W-bit's parameter space. And it has an
+  untested cost: a weaker coupling may make cell 2 slower to follow genuine changes of cell 1.
+
+> **What §126 settles.** In W-bit's own dynamics, a downstream cell's error rate given a correct upstream is
+> set by the upstream's sub-threshold excursions whenever its edge sits above the upstream's saddle. A
+> per-cell reliability analysis then underestimates it, by 16× here and growing as the noise falls. Moving
+> only the coupling, so that the edge sits below the saddle, removes the effect. W-bit's multi-cell
+> reliability cannot be inferred from per-cell Monte Carlo.

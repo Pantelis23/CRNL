@@ -272,6 +272,28 @@ Omega = 800 and phi * p_d to 0.380. FINDINGS §123.
          0.92 over 400 -> 1600); but the distribution drifts toward the saddle (mean 1.78 -> 2.18, q10
          1.17 -> 1.50), so localisation at much larger Omega is not excluded.
 
+  E26 Written before running: the local structure of the spread exit (T-CASC-at). Committed-fall flux
+      per unit x1 per dip, F(x1; Omega), on fixed bins, XK at Omega = 200, 400, 800, 1200, 1600. Fit per
+      bin ln F = c + G*Omega - w(x1)*Omega + b(x1)*ln Omega with G = Gamma (minimum action, fixed).
+      Two geometries: (i) a flat stretch -- w ~ 0 over an O(1) range with b ~ 0; (ii) a localised
+      minimum -- w > 0 away from a minimum with curvature, b ~ +1/2 at it (Laplace then gives a = 0).
+      Predict (ii), with the minimum at x1 > 2.5 (the mean drifts toward the saddle). Absolute check:
+      min over bins of w lies within 0.1 Gamma of 0 (the total grows at exactly Gamma, §124.13).
+      -> (ii) NOT as written: the free 3-parameter fit is ill-conditioned (ln Omega ~ Omega over 200-1600:
+         b = 0.5 trades for w = 0.085 Gamma), and whole-range fits are dominated by the u < 5 transient.
+         Read at Omega >= 800 with w = 0 fixed: interior bins (x1 1.9-2.6) grow as Omega^{0.52-0.56}
+         e^{Gamma Omega} (rms ~1e-3), low-x1 bins fade (b -0.4 .. -3), saddle bins b 0.6-0.7; the total
+         a = -0.012. A flat stretch with the naive local Omega^{1/2}, its low end receding.
+
+  E27 Written before running: does the total's a climb toward +1/2 as the low end empties (the flat
+      interior persists) or stay at 0 (the exit localises)? XK at Omega = 1800, 2000 with the box at
+      cap_mult 1.1 -- valid only if cap 1.1 reproduces cap 1.25 at Omega = 1200 and 1600 to < 1e-4 in R.
+      Predict the flat-interior reading: the window residual a over 1600 -> 2000 exceeds +0.05, and the
+      interior bins keep b in [0.4, 0.65]. a staying within 0.03 of -0.015 favours localisation.
+      -> cap 1.1 valid (R to 8e-7 / 6e-8 at 1200 / 1600). First half FAILED: a = -0.012 / -0.010 over
+         1600 -> 1800 -> 2000 (localisation branch). Second half HELD: interior b 0.46-0.53; the saddle bin
+         (b 0.84) gains share 0.054 -> 0.080; mean exit x1 2.18 -> 2.26.
+
   E25 Written before running: the mechanism on an axis none of it was built on -- the Hill EXPONENT.
       XN = E-070 -> E-084@K1.2@N2 (coupling hill ~ x^2 instead of x^4; edge 1.734). Gamma by minimum
       action, fixed beforehand: 7.4466e-3 (EPS 1e-7 / 1e-8: 7.446613 / 7.446531 e-3; 1e-6: 7.454e-3).
@@ -558,7 +580,11 @@ def fall_profile(A, B, om):
             "frac_above_edge": float(flux[x1 >= e2].sum() / flux.sum()),
             "mean_x1": float((flux * x1).sum() / flux.sum()), "edge2": e2, "saddle1": A.r2,
             "sd_x1": float(np.sqrt(max((flux * x1 * x1).sum() / flux.sum() - ((flux * x1).sum() / flux.sum()) ** 2, 0.0))),
-            "q10_q90_x1": [float(np.interp(q, np.cumsum(flux) / flux.sum(), x1)) for q in (0.1, 0.9)]}
+            "q10_q90_x1": [float(np.interp(q, np.cumsum(flux) / flux.sum(), x1)) for q in (0.1, 0.9)],
+            # E26: committed-fall flux per unit x1, per dip, on a fixed x1 grid (bins of width 0.05)
+            "flux_bins_x1": [round(1.0 + 0.05 * k + 0.025, 4) for k in range(44)],
+            "flux_density": [float(flux[(x1 >= 1.0 + 0.05 * k) & (x1 < 1.05 + 0.05 * k)].sum() / L["dip"] / 0.05)
+                             for k in range(44)]}
 
 
 def episode(A, B, om, method="qsd", dump=None, permc="COLAMD"):

@@ -5474,7 +5474,11 @@ localised and a = 0 follows. Then derive the flux in whichever geometry survives
 drifting toward the saddle). So the naive count's geometry holds at accessible Ω, and the extra
 Ω^{−1/2} that keeps a ≈ 0 must come from the normal crossing. **Next kill test:** the local crossing
 flux per unit length of Σ, against Ω, at fixed x₁. A diffusive (saddle-like) crossing scales as
-Ω^{−1/2} × density; anything else is the missing factor.
+Ω^{−1/2} × density; anything else is the missing factor. **→ §124.14:** interior bins grow locally as Ω^{½} (the naive count is right locally), the low
+end fades, the saddle bin gains share, and the total keeps a ≈ −0.01 to Ω = 2000. The flat-interior
+prediction (a climbing above +0.05) failed. **Suspect:** a slow localisation at the saddle, which
+would make a = 0 the true asymptote. **Kill test:** the saddle bin's share must keep rising and the
+interior's fall, past Ω = 2000 (needs a solver beyond 64 GB).
 
 **§124.13: the mechanism holds on a second coupling shape (Hill n = 2), predicted beforehand.** The
 exact growth rate equals the minimum-action Γ to 0.1% in XK and XN. The −0.01 prefactor residual's
@@ -5484,3 +5488,19 @@ exact growth rate equals the minimum-action Γ to 0.1% in XK and XN. The −0.01
 single-element formula cannot reach 1.25×, because the pre-dip sag and stage 2's noise are joint
 effects. That is an argument, not a theorem. **Kill test:** a closed form, written before comparison,
 within 1.25× in Z or c at Ω ≤ 55.
+
+
+## §125 — the W-bit / Aeternum direction (from the Seam Registry)
+
+**T-WBIT-a, open: does §124's mechanism hold in W-bit's cascade?** Two R = 2 cells in series, cell 2
+driven by cell 1 through Θ₂₁. The mechanism predicts that cell 2's errors with cell 1 correct grow
+relative to cell 1's flips like e^{Γ/σ²} when cell 2's edge (the least input keeping it bistable-high)
+sits above cell 1's saddle, and decay when it sits below. Γ comes from the discrete-time joint minimum
+action. **Kill test:** the joint exact chain (2-D transfer operator) at σ = 0.15–0.35, on one pair of
+each kind, with Γ computed beforehand.
+
+**T-WBIT-b, open: the error table Aeternum's level policy lacks.** Exact per-cell and cascaded error
+rates at R ∈ {3, 5, 9, 17, 33} against σ and chain depth, as the physical guardrail for the LLP's
+radix choice (which currently sees only arithmetic saturation). **Kill test of usefulness:** at fixed
+σ, the table must predict a radix above which a chain of depth d exceeds a stated error budget. If
+that radix is beyond 33 at every realistic σ, the table adds nothing to the LLP.

@@ -73,7 +73,8 @@ import scipy.sparse.linalg as spla
 
 from experiments.two_axes_for_the_position import ELEMENTS, R1_FIX, R3_FIX, Elem
 
-CAP_MULT = 1.25
+import os as _os
+CAP_MULT = float(_os.environ.get("CRNL_CAP_MULT", "1.25"))   # §124.14: 1.1 validated for XK at large Omega
 MARKS = (4.0, 8.0, 16.0)
 
 

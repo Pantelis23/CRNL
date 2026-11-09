@@ -13982,3 +13982,63 @@ the deterministic Q-process route, Ω = 100–1600 (laptop, PARDISO).
 > **What §124.13 settles.** The mechanism's quantitative content — growth rate Γ from minimum action,
 > constant prefactor past u ≈ 5 — holds on a coupling of a different shape, predicted before its
 > master equation was solved. The exact chain reproduces the action to 0.1%.
+
+**§124.14 — the spread exit's local structure (E26, E27).** Scope: XK, committed-fall flux per unit
+x₁ per dip on fixed bins of width 0.05, Ω = 200–2000. Ω = 1800 and 2000 used a smaller box,
+`cap_mult` 1.1, which reproduces cap 1.25 to 8e−7 / 6e−8 in R at Ω = 1200 / 1600 (laptop, PARDISO).
+
+- **E26's prediction, a localised minimum, could not be judged as written.** Over Ω = 200–1600 the
+  free fit ln F = c + (Γ − w)Ω + b ln Ω is ill-conditioned (b = ½ trades for w ≈ 0.085 Γ), and
+  whole-range fits are dominated by the u < 5 transient. That made the criterion "min w within 0.1 Γ"
+  uninformative (rule 19).
+- **Read at Ω ≥ 800 with w = 0 fixed:**
+  - interior bins (x₁ ≈ 1.9–2.7) grow as Ω^{0.46–0.56}·e^{ΓΩ} (rms ~1e−3) — the naive degenerate
+    count's local Ω^{½};
+  - low-x₁ bins fade (b from −0.4 down to −10);
+  - the saddle bin (x₁ ≈ 2.975) has b ≈ 0.6–0.8.
+  The total stays at a ≈ −0.01, because the fading low end balances the interior.
+- **E27, written before Ω = 1800 / 2000:** if the flat interior persisted as the low end emptied,
+  the total's a would climb above +0.05.
+  - **That FAILED.** a = −0.012 / −0.010 over 1600 → 1800 → 2000, the "localisation" branch.
+  - **The interior b held in [0.4, 0.65]** (0.46–0.53).
+  - **The saddle bin keeps gaining share** (5.4% → 8.0%), and the mean exit position slides
+    2.18 → 2.26.
+- **Reading (suspect, rule 17).** The exit is slowly localising toward the saddle. Its interior is
+  locally Ω^{½} but losing share, and the total keeps the a = 0 of a standard exit. That would make
+  the tension of §124.11–12 a long transient, not an asymptotic contradiction. It is not shown at
+  Ω ≤ 2000.
+
+### 125 W-bit's analog cell is a CRNL element: faithful reduction, exact rates, Arrhenius in 1/σ²
+
+*Scope: the user's W-bit project (`../W-bit`, read-only), whose `AnalogWbitNetwork.step` relaxes
+radix-R cells under injected Gaussian noise; R = 2, one self-coupled cell (Θᵢᵢ = a·I), a = 1.5,
+T = 0.5, dt = 0.5; σ = 0.13–0.40. `experiments/wbit_cell.py`, `results/wbit_cell.json`. Chosen from the
+user's Seam Registry. W-bit's reliability evidence is per-cell Monte Carlo, while CRNL has just shown,
+exactly, that per-cell reliability does not compose in a cascade; Aeternum's vector coprocessor runs on
+W-bit's multi-radix lanes with the shared radix R = 2n + 1, so both projects inherit the result.*
+
+For R = 2 the cell state is one number p, and W-bit's step is the map
+p′ = (1 − dt)p + dt·logistic((b + a(2p − 1) + η)/T) with η ~ N(0, 2σ²) (independent noise of size σ on
+each of the R inputs). Its next-state law is a Gaussian pushed through a logistic, so the transfer
+operator has exact bin masses from the normal CDF.
+
+- **W1 — faithfulness (rule 10).** Against W-bit's own class, the one-step law matches at the low
+  well, the saddle and the high well: mean differences 0.2–1.5 standard errors, sd within 1.7%
+  (20,000 draws each). A test keeps this checked, so a change to W-bit's `step` would fail CRNL's suite.
+- **W2 — exact vs Monte Carlo.** The flip rate (1/MFPT, high well to below ½) is grid-converged
+  (1.574971 / 1.574898 / 1.574880 e−2 at M = 400 / 800 / 1600) and agrees with 126,045 simulated flips
+  (1.5756e−2 ± 4.4e−5, 1.5σ).
+- **W3 — Arrhenius, with the exponent from first principles.** The discrete-time minimum action from
+  the high well to the saddle, by value iteration, is S = 0.32891. The local slope of −ln rate against
+  1/σ² approaches it from below:
+
+| σ | 0.35 | 0.27 | 0.23 | 0.20 | 0.17 | 0.15 | 0.13 |
+|---|---|---|---|---|---|---|---|
+| rate per step | 8.9e−3 | 1.7e−3 | 3.4e−4 | 4.8e−5 | 2.2e−6 | 8.8e−8 | 7.1e−10 |
+| local slope / S | 0.910 | 0.919 | 0.950 | 0.967 | 0.983 | 0.991 | **0.995** |
+
+> **What §125 settles.** The machinery behind CRNL's cascade result — exact transfer operators,
+> minimum action, 1/σ² as the large parameter — applies to W-bit's analog cell unchanged, and is
+> checked against W-bit's own code. It also reaches rates (7e−10 per step) that the project's
+> billion-cycle Monte Carlo cannot resolve. Next: two cells in series, with the near-miss mechanism
+> and the edge-below-saddle design rule tested on W-bit's Θ, predictions first.

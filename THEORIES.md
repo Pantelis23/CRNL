@@ -5513,6 +5513,12 @@ never-dipped constraint's boundary, and the prefactor of hovering above a repell
 - Verdict rule: each pair's slope sequence must reverse direction. A slope landing "near" Γ does not count;
   per rule 20, the criterion is that the sequence turns. If it neither turns nor crosses those bounds, the
   answer is unresolved at this σ, and that is what gets written.
+**→ §128: both turned.** Z twice (minimum 0.0066 near σ = 0.235, maximum 0.0204 near σ = 0.145, now descending
+toward +0.0125). N once (minimum −0.246 near σ = 0.19, −0.236 at σ = 0.155). This is consistent with Γ as the
+asymptote, but not a demonstration of it, because N is still 0.13 away. The matrix-free solver loses N below
+σ = 0.15 (mass deficit ~ q_fall). **Still open, T-WBIT-a″:** does N's slope reach −0.107? The suspect is the
+saddle-parking path's prefactor. **Kill test:** a solver conditioned on the escape rate, run to σ ≈ 0.10. N's slope
+must keep rising; a second reversal (back down) would mean the prefactor is not the explanation.
 
 **Still open:** the speed cost of the weak-coupling (edge-below-saddle) design.
 

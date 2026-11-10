@@ -14162,3 +14162,53 @@ L = 46 / 66, N gives 0.43573 / 0.43552 / 0.43550 at L = 70 / 90 / 130.
 > result: N's saddle-parking path is an infimum attained only on the never-dipped constraint's boundary. Its
 > prefactor counts the chance of hovering just above a repelling saddle without dipping, which could be strongly
 > σ-dependent. This is the leading candidate for why N's slope is far from Γ_N. Kill test: T-WBIT-a.
+
+### 128 Both slopes turn: Z twice, N once — the approach to Γ is non-monotone, and N is still far from it
+
+*Scope: the §126 pairs and parameters; σ = 0.34–0.12; exact exit probabilities from the same 2-D chain as §126,
+solved matrix-free (the product structure gives an O(M³) matrix-vector product, and GMRES does the solve) on
+M = 160, 240, 320 (here) and 480, 640, 960 (laptop). `experiments/wbit_turn.py`, `results/wbit_turn.json`.
+T-WBIT-a′'s kill test. The verdict rule was in THEORIES before the run. The extension below σ = 0.18 was
+pre-registered in the docstring after the first sweep.*
+
+**Instrument.** §126's direct LU stops at M = 160 because the kernel is ~25% dense: a logistic spreads the
+Gaussian over half the interval. The matrix-free solve reproduces §126's stored R to 3e−11 relative, with mass
+conserved to 4e−12 in ~35 iterations (V1). The laptop reproduces the same cells to 1e−14.
+
+Local slopes of ln R against 1/σ², at M = 640 (M = 960 identical to 1e−4 where run):
+
+| σ interval | .34–.30 | .30–.27 | .27–.25 | .25–.22 | .22–.20 | .20–.18 | .18–.16 | .16–.15 | .15–.14 | .14–.13 | .13–.12 | Γ (§127) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Z | 0.0394 | 0.0175 | 0.0085 | **0.0066** | 0.0100 | 0.0147 | 0.0185 | 0.0201 | **0.0204** | 0.0201 | 0.0195 | +0.0125 |
+| N | −0.159 | −0.196 | −0.217 | −0.233 | −0.243 | **−0.246** | −0.243 | −0.236 | *(−0.231)* | — | — | −0.107 |
+
+- **Z turned twice.** Its slope falls through Γ_Z to a minimum of 0.0066 near σ = 0.235. It then rises past Γ_Z to
+  a maximum of 0.0204 near σ = 0.145, and is descending again at σ = 0.12. My stated expectation, that Z's slope
+  would go negative before turning, was wrong. Z's R keeps rising throughout (0.615 at σ = 0.25, 1.54 at
+  σ = 0.12). At σ = 0.12 a correct cell 1 produces more never-dipped downstream falls than it produces dips.
+- **N turned once** (T-ext-N held). The slope bottoms out at −0.246 near σ = 0.19 and climbs back to −0.236 by
+  σ = 0.155. It never approaches −0.267, cell 2's own route. It is still far from Γ_N = −0.107.
+- **Grid.** V2 failed as written: over M = 160 / 240 / 320 the change in R grows at some cells, because M = 240 is
+  an outlier. Over M = 320 / 480 / 640 it shrinks. Its readability clause holds everywhere: slopes agree to 1e−4
+  across M ≥ 320.
+- **The instrument's limit (found here, not pre-registered).** q_fall + q_dip departs from 1 as σ falls, at every
+  M:
+
+  | σ | 0.15 | 0.14 | 0.13 | 0.12 |
+  |---|---|---|---|---|
+  | q_fall + q_dip − 1 | −6e−8 | −3e−7 | −3e−6 | −2e−5 |
+
+  The cause is GMRES's residual amplified by the solve's conditioning, about 1/(escape rate). A cell is read only
+  if this deficit is below 1% of q_fall; that rule was set after seeing the data. It removes N at σ ≤ 0.14, where
+  q_fall is of the same order as the deficit. The σ = 0.13 cell gives q_fall = 1.9e−14 against ~1e−6 implied by its
+  neighbour, so it is broken, not physics. The bracketed −0.231 is shown only for completeness. Every Z cell
+  passes, since its q_fall is of order 1.
+
+> **What §128 settles.** Neither pair's slope approaches its exponent monotonically. Both reverse inside the
+> measured range, in the directions the large-deviation form requires: Z back down toward +0.0125 from above, N
+> back up toward −0.107 from below. That is consistent with §127's Γ being the asymptote. It does not show it:
+> N's slope is still 0.13 from Γ_N at the smallest readable σ (u = Γ/σ² ≈ −4.7 at σ = 0.15). What it does show is that
+> no finite-σ slope from this chain could have been read as Γ. §126's sign survives, and its magnitude claims
+> are measurements at their σ. *Suspect*, unchanged from §127: N's slow approach belongs to the saddle-parking
+> path's σ-dependent prefactor. A well-conditioned solver (for example one that solves for q_fall relative to
+> the escape rate) would reach σ ≈ 0.10, where the suspect predicts N's slope keeps climbing toward −0.107.

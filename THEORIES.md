@@ -5498,8 +5498,23 @@ relative to cell 1's flips like e^{Γ/σ²} when cell 2's edge (the least input 
 sits above cell 1's saddle, and decay when it sits below. Γ comes from the discrete-time joint minimum
 action. **Kill test:** the joint exact chain (2-D transfer operator) at σ = 0.15–0.35, on one pair of
 each kind, with Γ computed beforehand. **→ §126: the sign held** (Z rises, N falls; per-cell estimate 16× low in Z at
-σ = 0.25). **Still open:** W-bit's Γ (discrete-time joint minimum action) and an absolute test against R's
-growth; the speed cost of the weak-coupling (edge-below-saddle) design.
+σ = 0.25). ~~Still open: W-bit's Γ~~ **→ §127: Γ_Z = +0.0125, Γ_N = −0.1066** (three routes; in N the closed
+form W\* = S + S₂(b₂), cell 1 parked on its saddle). **The absolute test failed:** §126's local slopes are not
+approaching Γ in either pair (Z's has fallen through it, N's moves away from it), so §126's range is
+pre-asymptotic.
+
+**T-WBIT-a′, open: do the slopes turn back toward Γ?** Suspect (rule 17): N's optimal fall runs along the
+never-dipped constraint's boundary, and the prefactor of hovering above a repelling saddle is strongly
+σ-dependent. **Kill test:** the exact §126 chain at σ = 0.22, 0.20, 0.18 (M ≥ 240, grid-checked as C1).
+- If the large-deviation form holds, N's local slope must stop steepening, turning back toward −0.107, and Z's
+  must stop falling, settling toward +0.0125.
+- If N's slope passes −0.267 (cell 2's own route) or Z's goes negative, W\* is not the exponent of §126's R, and
+  the never-dipped definition of a fall is the first suspect.
+- Verdict rule: each pair's slope sequence must reverse direction. A slope landing "near" Γ does not count;
+  per rule 20, the criterion is that the sequence turns. If it neither turns nor crosses those bounds, the
+  answer is unresolved at this σ, and that is what gets written.
+
+**Still open:** the speed cost of the weak-coupling (edge-below-saddle) design.
 
 **T-WBIT-b, open: the error table Aeternum's level policy lacks.** Exact per-cell and cascaded error
 rates at R ∈ {3, 5, 9, 17, 33} against σ and chain depth, as the physical guardrail for the LLP's

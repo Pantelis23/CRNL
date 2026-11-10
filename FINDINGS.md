@@ -14092,3 +14092,73 @@ frozen at cell 1's healthy value, divided by cell 1's dip rate.
 > per-cell reliability analysis then underestimates it, by 16× here and growing as the noise falls. Moving
 > only the coupling, so that the edge sits below the saddle, removes the effect. W-bit's multi-cell
 > reliability cannot be inferred from per-cell Monte Carlo.
+
+### 127 W-bit's Γ, exact in both pairs — and §126's slopes are not near it
+
+*Scope: the two §126 pairs (Z: c = 0.671, b₂ = −0.476; N: c = 0.244, b₂ = −0.110), a = 1.5, T = 0.5, dt = 0.5. The
+discrete-time joint minimum action W\* (cost Σ(η₁² + η₂²)/4 per 1/σ², from both high wells to the deterministic
+basin of "cell 2 low", p₁ ≥ ½ at every step) by three routes: value iteration on N × N grids (N = 41–241),
+shooting over L-step noise sequences (L = 20–100), and collocation over states (L = 26–90). Γ = S − W\*, with S =
+0.32891 cell 1's dip action (§125). `experiments/wbit_action.py`, `results/wbit_action.json`. Predictions A1–A2
+were written before any run; A3 after the grid runs at N ≤ 161 and before either grid-free route.*
+
+| | grid N = 81 / 121 / 161 / 201 / 241 | grid extrapolated | shooting | collocation | **Γ** |
+|---|---|---|---|---|---|
+| Z: W\* | 0.3272 / 0.3222 / 0.3205 / 0.3179 / 0.3175 | 0.3152–0.3173 | 0.31652 | **0.31646** | **+0.0125** |
+| N: W\* | 0.4625 / 0.4508 / 0.4458 / 0.4411 / 0.4391 | 0.4289–0.4364 | ≥ 0.4888 (local minima) | **0.43552** | **−0.1066** |
+
+The extrapolation ranges are 1/N, 1/N² and free-exponent fits to the last two or three grids (rule 15). The free
+exponent is unstable for Z (7.4) because the grid's convergence is not smooth: the nearest grid point to each well
+moves with N. The grid's S does not converge smoothly for the same reason (0.33098 / 0.32967 / 0.32957 at
+N = 81–161), so Γ is taken against the exact S. Collocation is converged in L: Z gives 0.3164600 / 0.3164592 at
+L = 46 / 66, N gives 0.43573 / 0.43552 / 0.43550 at L = 70 / 90 / 130.
+
+**The two optimal paths are different in kind.**
+- **Z stays inside the allowed region.** Cell 1 goes down only to p₁ = 0.596, below cell 2's edge (0.70) but
+  well above its own saddle. It carries 99.4% of the action, and cell 2 then falls almost deterministically.
+  W\*_Z barely moves when the constraint is tightened to p₁ ≥ ½ + δ (0.3220 / 0.3219 / 0.3220 / 0.3222 at
+  δ = 0 / 0.02 / 0.05 / 0.10, N = 121).
+- **N runs along the constraint.** Cell 1 climbs exactly to its saddle and parks there for 41 steps, which costs
+  nothing at the saddle. Meanwhile cell 2 is pushed across its basin boundary, which is continuous as p₁ → ½⁺
+  (s = 0.6139 at 0 and 1e−8, 0.6132 at ε = 1e−4). Cell 1 carries 75.5% of the action, which is S.
+  An independent check: cell 2's own escape action at the drive it sees with cell 1 on its saddle (b₂ = −0.110)
+  is 0.10659, and the collocation value is 0.10661. So **W\*_N = S + S₂(b₂)**: the cheapest never-dipped fall
+  pays the full dip price and then lets cell 2 escape against its weakened drive. The same constraint test as
+  for Z moves W\*_N strongly (0.451 / 0.468 / 0.502 / 0.560).
+
+**Predictions.**
+- **A1 (signs) failed as written; it held for the converged values.** It said Γ_Z > 0 and Γ_N < 0 "at every N".
+  At N = 41 the grid gives Γ_Z = −0.013, because W\*'s grid bias (+0.029) is larger than Γ_Z itself. From N = 81
+  onward the signs hold, and they hold in the converged values.
+- **A2 (absolute) failed in both pairs.** §126's local slopes of ln R against 1/σ², from its stored cells:
+
+  | σ interval | 0.34–0.30 | 0.30–0.27 | 0.27–0.25 | Γ |
+  |---|---|---|---|---|
+  | Z | 0.0395 | 0.0176 | 0.0086 | +0.0125 |
+  | N | −0.158 | −0.195 | −0.217 | −0.107 |
+
+  - Z: Γ_Z is outside the predicted [0, 0.009], but not above the 0.02 that A2 said would mean "falling away".
+  - N: Γ_N is 0.11 from the last slope, outside the 0.1 window.
+  - What fails is the premise. A2 assumed the slopes approach Γ monotonically. They do not. Z's slope has already
+    fallen through Γ_Z, and N's moves away from Γ_N, toward cell 2's own route (S − S₂(h) = −0.267).
+  - If Γ is the asymptote, both slopes must turn back below σ = 0.25. A sum of exponentials with constant
+    weights cannot produce N's concave ln R, so the turnaround would have to come from σ-dependent prefactors.
+  - In u = Γ/σ² units, §126's smallest σ is u = 0.2 for Z and −1.7 for N. CRNL's prefactor settled only past
+    |u| ≈ 5 (§124.10).
+- **A3 (second route) held in both pairs.** Both grid-free values are inside the bands. Two parts of it did not
+  work as planned:
+  - Its L clause failed for shooting at L = 20 (Z 0.31755, 1e−3 high).
+  - Shooting never found N's minimum. Its best feasible values were 0.4888 at L = 20 (best of 14 random starts) and
+    0.5892 at L = 40 (the rest sat near 0.591, close to cell 2's own route, S₂(h) = 0.5957). The warm start from
+    the grid path was infeasible. Shooting is ill-conditioned along a path that hugs a saddle repelling at 1.25
+    per step, so collocation over states became the reported route. By A3's own rule the shooting values for N
+    are not read.
+
+> **What §127 settles, and what it does not.** W-bit's Γ is now known exactly in both pairs, by routes that agree
+> to 1e−4 (Z) and 2e−5 (N, against the closed form S + S₂). Its sign matches §126's trend in both. Its size does
+> not describe §126's range: none of the measured slopes is approaching it. §126's R is therefore
+> pre-asymptotic. The "16× and growing" of C3 is a measurement at σ = 0.25, not an extrapolation, and Γ_Z =
+> +0.0125 implies that Z's R grows only like e^{0.0125/σ²} once the asymptote is reached. *Suspect*, not
+> result: N's saddle-parking path is an infimum attained only on the never-dipped constraint's boundary. Its
+> prefactor counts the chance of hovering just above a repelling saddle without dipping, which could be strongly
+> σ-dependent. This is the leading candidate for why N's slope is far from Γ_N. Kill test: T-WBIT-a.

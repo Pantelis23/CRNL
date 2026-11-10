@@ -14212,3 +14212,44 @@ Local slopes of ln R against 1/σ², at M = 640 (M = 960 identical to 1e−4 whe
 > are measurements at their σ. *Suspect*, unchanged from §127: N's slow approach belongs to the saddle-parking
 > path's σ-dependent prefactor. A well-conditioned solver (for example one that solves for q_fall relative to
 > the escape rate) would reach σ ≈ 0.10, where the suspect predicts N's slope keeps climbing toward −0.107.
+
+### 129 A solver that never subtracts: N's slope climbs toward Γ_N at every step to σ = 0.10
+
+*Scope: the §126 pairs and parameters; σ = 0.25–0.10; M = 320, 640, 960, 1280 (laptop). Exit probabilities from
+positive arithmetic only: probability mass is pushed forward (μ ← μP_aa) and exits are summed. Once μ has relaxed
+to the quasi-stationary distribution, the remaining mass is split in its exact stationary exit ratio.
+`experiments/wbit_qsd.py`, `results/wbit_qsd.json`. T-WBIT-a″'s kill test; predictions Q1, Q2, T″ written
+before running.*
+
+**Why a new solver.** §128's GMRES loses q_fall once q_fall falls below rtol/(escape rate). In the new scheme every
+operation adds non-negative numbers, so a probability of 1e−9 keeps its relative precision, and about 300 steps
+reach the stationary distribution.
+- **Q1 held** where it can be judged. It reproduces §128 to 4e−12 / 2e−12 (Z) and 3e−11 / 7e−9 (N) at σ = 0.25 /
+  0.20. The 7e−9 is GMRES's own error, at the first cell where its mass deficit shows. Q1 also named σ = 0.16 at
+  M = 320, a cell §128 never ran. That was an error in writing the prediction, and that part could not be judged.
+- **Q2 held.** The stopping rule moves R by ≤ 7e−15. The grid moves it by ≤ 0.33% from M = 640 to 960 and ≤ 0.12%
+  from 960 to 1280, shrinking. Mass is conserved to 2e−14 in every cell.
+- **§128's unreadable cells, read.** N at σ = 0.14 is 7.14e−6 (GMRES had 6.83e−6, 4.5% low, as its readability
+  rule warned). At σ = 0.13 it is 1.30e−6 (GMRES had 1.9e−14).
+
+| σ | 0.18 | 0.16 | 0.15 | 0.14 | 0.13 | 0.12 | 0.11 | 0.10 |
+|---|---|---|---|---|---|---|---|---|
+| Z: R | 0.722 | 0.841 | 0.937 | 1.071 | 1.262 | 1.541 | 1.967 | **2.657** |
+| N: R | 8.2e−4 | 1.1e−4 | 3.1e−5 | 7.1e−6 | 1.3e−6 | 1.8e−7 | 1.9e−8 | **1.2e−9** |
+| Z: slope (to this σ) | | 0.0185 | 0.0201 | 0.0204 | 0.0201 | 0.0195 | 0.0185 | 0.0173 |
+| N: slope (to this σ) | | −0.2431 | −0.2353 | −0.2248 | −0.2093 | −0.1898 | −0.1712 | −0.1576 |
+
+M = 960. M = 640 and 1280 give the same slopes to 1e−4.
+
+- **T″ held.** N's slope rises at every step from σ = 0.18 to 0.10, toward Γ_N = −0.107, and stays below it. There
+  is no second reversal, so the saddle-parking prefactor survives its kill test. Z's slope is past its maximum and
+  descends toward Γ_Z = +0.0125 with no third reversal.
+- **Distances at σ = 0.10.** N is 0.051 short of Γ_N (u = Γ/σ² = −10.7). Z is 0.0048 above Γ_Z (u = 1.25).
+- **Z's R reaches 2.66** at σ = 0.10: a correct cell 1 causes 2.66 never-dipped downstream falls for every dip.
+
+> **What §127–§129 settle together.** W-bit's two-cell cascade has exact exponents, Γ_Z = +0.0125 and Γ_N =
+> −0.107. The exact chain's slopes approach them non-monotonically: Z after two reversals, N after one. From σ = 0.18
+> to 0.10 both sequences move steadily toward Γ. N is still 0.05 away at u ≈ −11, far later than CRNL's chemistry
+> (|u| ≈ 5, §124.10). That is a measurement, not an explanation. The saddle-parking prefactor is the surviving
+> *suspect*: it predicts the slow approach and has now passed the kill test aimed at it, but nothing has derived
+> it.

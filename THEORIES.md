@@ -5518,7 +5518,12 @@ toward +0.0125). N once (minimum −0.246 near σ = 0.19, −0.236 at σ = 0.155
 asymptote, but not a demonstration of it, because N is still 0.13 away. The matrix-free solver loses N below
 σ = 0.15 (mass deficit ~ q_fall). **Still open, T-WBIT-a″:** does N's slope reach −0.107? The suspect is the
 saddle-parking path's prefactor. **Kill test:** a solver conditioned on the escape rate, run to σ ≈ 0.10. N's slope
-must keep rising; a second reversal (back down) would mean the prefactor is not the explanation.
+must keep rising; a second reversal (back down) would mean the prefactor is not the explanation. **→ §129: it
+kept rising** (−0.243 → −0.158 over σ = 0.18 → 0.10, every step, using a positive-arithmetic solver that conserves
+mass to 2e−14). The suspect survives. It is still 0.05 from Γ_N at u ≈ −11.
+**Still open, T-WBIT-a‴:** derive the saddle-parking prefactor, i.e. how the chance of hovering just above a
+repelling saddle without dipping scales with σ. **Kill test:** a derived prefactor C(σ) must reproduce §129's N
+slopes from Γ_N alone, in absolute terms (rule 16), not by fitting a slope.
 
 **Still open:** the speed cost of the weak-coupling (edge-below-saddle) design.
 
@@ -5527,3 +5532,17 @@ rates at R ∈ {3, 5, 9, 17, 33} against σ and chain depth, as the physical gua
 radix choice (which currently sees only arithmetic saturation). **Kill test of usefulness:** at fixed
 σ, the table must predict a radix above which a chain of depth d exceeds a stated error budget. If
 that radix is beyond 33 at every realistic σ, the table adds nothing to the LLP.
+**Reading of W-bit's own experiments (2026-11-10, a reading, not a measurement), before any table is built.**
+W-bit's radix and noise results are not in the regime §125–§129 study.
+- `proof_of_adaptive_logic.py`, `tune_wbit_hyperparams.py`, the billion-cycle harnesses and the ablations all
+  run feedforward cells with dt = 1, no self-coupling, σ = 5, T = 0.5. The output is read after a few steps as a
+  success fraction over independent trials.
+- An error there is a noisy argmax (Gaussian order statistics, closed form for the plain softmax cell). It is
+  not a rare escape from a held state.
+- `schedule_capacity()`'s thresholds (σ > 0.4 → R = 3, > 0.15 → 5, > 0.05 → 7, else R_max) are hand-set. They
+  include R = 7, which is outside the Aeternum alphabet {3, 5, 9, 17, 33}.
+So CRNL's rare-event machinery has nothing to say about W-bit's current radix choice. The cascade result
+(§126–§129) applies only to cells that hold state through self-coupling, which no W-bit experiment uses. The
+useful table would then be a closed-form one-shot error per radix, which is ordinary statistics and not CRNL's
+to build. Still open for CRNL only if W-bit adopts self-coupled (memory) cells; otherwise this question should
+be closed as out of scope.

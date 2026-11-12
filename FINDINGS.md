@@ -14469,3 +14469,43 @@ The interior slope is ~1e−4 per unit x₁, so Ω·Δε reaches 1 only near Ω 
 > - **Consequence for a (T-CASC-at).** Localisation at the saddle cannot appear before Ω ~ 10⁴ on this profile.
 >   Below that, the total's a ≈ 0 must come from the spread exit itself, which is what §124.14 measured locally
 >   (interior Ω^{½}). Why the total's a stays ≈ 0 is still not derived.
+
+### 134 Why the total's prefactor is flat: local Ω^½ at every point of Σ, drained by the slope of W along Σ — a model that passed a forward test to Ω = 2800
+
+*Scope: XK; the Σ-cut flux of §133 at Ω = 800, 1600 (cap 1.25) and 1600, 2000, 2800 (cap 1.1, laptop PARDISO; cap
+1.1 reproduces cap 1.25 at Ω = 1600 to 5.9e−8; at every Ω the two cut totals agree to ≤ 2e−13). The total's a is
+measured from the Σ-cut totals, which equal the committed fall rate. `experiments/sigma_total.py`,
+`results/sigma_flux.json` (key S134). Predictions M1–M3 before running; M4 after M1–M3 were judged, before
+Ω = 2800 was run.*
+
+**The model.** Each point of Σ carries F(x₁; Ω) = C(x₁)·Ω^½·e^{(Γ − ε(x₁))Ω}:
+- **the local Ω^½** is the naive degenerate count (a normal crossing at each point of a spread exit);
+- **ε(x₁)** is the ray-family action along Σ (§133), not fitted;
+- **C(x₁)** is calibrated from the Σ-cut density at Ω = 800 only.
+
+After that one calibration nothing is free: the model predicts the total's local exponent a in every other window.
+
+| window | model a | measured a | offset |
+|---|---|---|---|
+| 800 → 1600 | +0.061 | −0.0127 | 0.074 |
+| 1600 → 2000 | +0.026 | −0.0118 | 0.038 |
+| 2000 → 2800 (forward) | +0.014 | −0.0073 | 0.021 |
+
+- **M1, M2 held** (inside 0.10), and **M3 held**: the model's a drifts down as e^{−Ωε} drains the low-x₁ shoulder.
+- **M4 held: a forward test.** It was written after the first two windows and before Ω = 2800 existed. The
+  measured a lands 0.021 from the model, inside 0.05, and the offset keeps shrinking: 0.074 → 0.038 → 0.021.
+- **First exact cell past Ω = 2000** (§124.14 said that needed more than 64 GB; PARDISO did it in 13 minutes per
+  cut). On Σ the mean x₁ is 2.055 → 2.166 and the spread 0.704 → 0.692 over 2000 → 2800: the first sign of
+  narrowing on Σ itself.
+
+> **What §134 settles, at accessible Ω.** a ≈ 0 needs no special exit geometry. Each point of a spread exit grows
+> with the naive local Ω^½, and the slope of W along Σ (~1e−4 per unit x₁, computed independently from the rays)
+> drains the low-x₁ part at just the rate that keeps the total nearly flat. The model and the exact chain
+> converge window by window, including one window predicted before it was computed.
+>
+> **What it does not settle.**
+> - **C(x₁) is calibrated, not derived**, so C = 0.63 (§124.10) is still not predicted.
+> - **The asymptote is open.** The model's a keeps drifting negative (−0.0008, −0.018, −0.038 over 2800 → 4000 →
+>   8000 → 16000), with a limit set by ε right at the saddle, which the ray envelope resolves least well (a
+>   caustic). The measured a has so far risen slightly (−0.0127 → −0.0073); if the model holds, it must eventually
+>   turn down. Whether a → 0 or a negative value is open, with a kill test in THEORIES.

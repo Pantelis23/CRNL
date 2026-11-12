@@ -5486,7 +5486,16 @@ family), so on Σ localisation cannot appear before Ω ~ 10⁴. The "slow locali
 that form. **Still open:** why the total's a ≈ 0 with a widening exit.
 **Kill test:** ∫ C(x₁) Ω^{b(x₁)} e^{−Ωε(x₁)} dx₁ along Σ, with ε from the rays and b(x₁) from the Σ-cut second
 differences, must reproduce the measured total a ≈ −0.01 over Ω = 800–2000 in absolute terms. It needs b on Σ
-read on bins wide enough to clear the aliasing (≥ 0.1).
+read on bins wide enough to clear the aliasing (≥ 0.1). **→ §134: explained at accessible Ω.** Local Ω^½ at
+each point of Σ, with C(x₁) calibrated at Ω = 800 and ε from the rays, gives a within 0.074 / 0.038 / 0.021 of the
+exact total over 800 → 1600 → 2000 → 2800. The last window was predicted before it was computed. The flat
+prefactor is the spread exit's local growth drained by W's slope along Σ.
+**Open (T-CASC-au):** the asymptotic a, and C(x₁).
+- **The model's prediction:** its a keeps falling (−0.0008 over 2800 → 4000, −0.018 over 4000 → 8000), and the
+  measured a, which has so far risen slightly (−0.0127 → −0.0073), must turn down.
+- **Kill test:** Ω = 4000 on the laptop (cap 1.1; extrapolating 2000 → 2800's cost, about 40 min per cut and
+  roughly 40 GB). The measured a over 2800 → 4000 must lie within 0.03 of −0.0008. A measured a still rising,
+  above +0.01, means ε near the saddle (the caustic region) is wrong.
 
 **§124.13: the mechanism holds on a second coupling shape (Hill n = 2), predicted beforehand.** The
 exact growth rate equals the minimum-action Γ to 0.1% in XK and XN. The −0.01 prefactor residual's

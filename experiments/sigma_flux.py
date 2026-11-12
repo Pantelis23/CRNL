@@ -154,7 +154,8 @@ def main():
     sig = None
     for om in [int(x) for x in sys.argv[1].split(",")]:
         for cut in ("sad2", "sigma"):
-            key = f"XK:{om}:{cut}"
+            from experiments.weak_upstream import CAP_MULT
+            key = f"XK:{om}:{cut}" + ("" if CAP_MULT == 1.25 else f":cap{CAP_MULT:g}")
             if key in rep:
                 continue
             if cut == "sigma" and sig is None:

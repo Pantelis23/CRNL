@@ -14253,3 +14253,64 @@ M = 960. M = 640 and 1280 give the same slopes to 1e−4.
 > (|u| ≈ 5, §124.10). That is a measurement, not an explanation. The saddle-parking prefactor is the surviving
 > *suspect*: it predicts the slow approach and has now passed the kill test aimed at it, but nothing has derived
 > it.
+
+### 130 What the edge-below-saddle design costs: an exact exponent across the window, and a saddle-node latency
+
+*Scope: the §126 construction (a = 1.5, T = 0.5, dt = 0.5, healthy drive h = 0.1), with the coupling c swept. The
+edge sits below cell 1's saddle for c < c_half = 0.3582. Cell 2 still follows a genuine fall of cell 1 only for
+c > c_min = 0.1791, the c at which its drive with cell 1 low passes its saddle-node. Exponents by collocation
+(L ≤ 428); latency deterministic and by the exact 1-D chain; R by §129's positive solver (σ = 0.15, M = 320).
+`experiments/wbit_speed.py`, `results/wbit_speed.json`. Predictions P1–P4 written before running. Cell 2 copies
+falls only: at the healthy input it is bistable, so no c makes it follow cell 1 back up.*
+
+**P1: the exponent has a closed form across the whole window (held once converged).** For every edge below ½,
+the cheapest never-dipped fall parks cell 1 on its saddle (§127), so
+
+  **Γ(c) = −S₂(b₂(c)),  with b₂(c) = h − c(2·HI₁ − 1)**, cell 2's drive with cell 1 at its saddle.
+
+| c | 0.19 | 0.22 | 0.26 | 0.30 | 0.34 | 0.355 | *0.40* | *0.50* | *0.6707* |
+|---|---|---|---|---|---|---|---|---|---|
+| edge | 0.120 | 0.230 | 0.338 | 0.417 | 0.477 | 0.496 | *0.545* | *0.622* | *0.700* |
+| Γ (collocation) | −0.19108 | −0.14244 | −0.08545 | −0.03907 | −0.00685 | −0.00051 | *+1.1e−5* | *+0.0014* | *+0.0125* |
+| Γ − (−S₂) | +3.0e−6 | +2.9e−6 | +2.8e−6 | +2.8e−6 | +2.6e−6 | −2.2e−6 | — | — | — |
+
+- The first pass was not converged in L (W\* still falling by 1–2e−3 per 20 steps at c ≥ 0.30). It printed
+  1.1e−3 misses at c = 0.34 and 0.355, past the 1e−3 bar, and those values are not read (rule 13).
+- A collocation with an analytic gradient reproduces §127 to 3e−6 and reaches L = 428. The near-constant
+  +2.8e−6 is the grid error of the 1-D actions S and S₂.
+- Γ passes continuously through zero at edge = ½, because S₂ → 0 as b₂ → −d_c. The design rule's boundary is
+  exactly the sign change of the exponent.
+
+**P2: the latency diverges at the window's floor by the saddle-node law (failed as written; the law held).**
+- **Setup.** Deterministically, cell 2 must pass the ghost of its vanished high state. The normal form,
+  computed before the run from the map alone, predicts τ·√(c − c_min) → π/√(k·g·|β|) = 6.3104.
+- **As written, it failed.** Measured from §126's c_min, the products ran 5.40 / 6.04 / 6.23 / 6.37 / 7.35 at
+  c − c_min = 1e−2 … 1e−6, and the last one moved away from the limit.
+- **Why.** §126's DC is rounded to six places (0.207546 against 0.2075464553). That puts c_min 2.65e−7 low, a
+  quarter of the last step.
+- **Measured from the exact floor**, the products are 6.2200 / 6.2834 / 6.3020 / 6.3078 / 6.3095 over 1e−4 … 1e−8,
+  approaching 6.3104 monotonically. The instrument's own constant was a second axis (rule 13). The §126 pairs
+  themselves are unaffected, since their definition uses the same rounded constant throughout.
+
+**P3: noise caps it (held).** At σ = 0.15 the exact mean latency is 44.5 steps at 1e−4 above the floor, against
+622 deterministic. At c = 0.30 it is 9.64 against 10 (3.6%).
+
+**P4: the trade-off, a design table (held: monotone, no interior optimum).** At σ = 0.15:
+
+| edge | 0.496 | 0.477 | 0.417 | 0.338 | 0.230 | 0.120 |
+|---|---|---|---|---|---|---|
+| R (never-dipped falls per dip) | 1.65e−3 | 9.7e−4 | 2.2e−4 | 5.1e−5 | 1.8e−5 | 1.18e−5 |
+| mean follow latency (steps) | 7.2 | 7.7 | 9.6 | 12.9 | 19.8 | 33.5 |
+
+The first third of the window buys most of the error reduction. Moving the edge from 0.496 to 0.338 cuts R 32×
+for 1.8× the latency. The remaining range buys another 4.3× at a further 2.6×. The finite-σ R gains less than
+Γ(c) alone suggests (from edge 0.23 to 0.12, Γ predicts e^{2.2} ≈ 9× and R falls 1.5×). This is §128–§129's
+slow approach to Γ again, and it is not explained here.
+
+> **What §130 settles.** Within this construction the edge-below-saddle design has an exact price list. Its
+> error exponent is −S₂(b₂(c)) in closed form, passing through zero exactly at the rule's boundary. Its cost is
+> a follow latency that grows smoothly until it diverges, as π/√(k g |β| (c − c_min)), at the coupling where
+> cell 2 stops following at all. At useful noise the trade-off is monotone, and the steepest gain comes first:
+> an edge one third of the way below the saddle gets most of the benefit for under 2× the latency. This is a
+> design statement about two-cell cascades of this map. It is not tested across W-bit's parameter space, and
+> W-bit's own experiments do not use memory cells (T-WBIT-b).

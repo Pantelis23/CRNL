@@ -5525,7 +5525,10 @@ mass to 2e−14). The suspect survives. It is still 0.05 from Γ_N at u ≈ −1
 repelling saddle without dipping scales with σ. **Kill test:** a derived prefactor C(σ) must reproduce §129's N
 slopes from Γ_N alone, in absolute terms (rule 16), not by fitting a slope.
 
-**Still open:** the speed cost of the weak-coupling (edge-below-saddle) design.
+~~Still open: the speed cost of the weak-coupling (edge-below-saddle) design.~~ **→ §130:** an exact price list.
+Γ(c) = −S₂(b₂(c)) across the window (to 3e−6), zero exactly at edge = ½. The follow latency diverges at the
+window's floor as 6.310/√(c − c_min) (normal form, to 1.4e−4), and noise caps it. At σ = 0.15 the trade-off is
+monotone: 32× less error for 1.8× the latency over the first third of the window.
 
 **T-WBIT-b, open: the error table Aeternum's level policy lacks.** Exact per-cell and cascaded error
 rates at R ∈ {3, 5, 9, 17, 33} against σ and chain depth, as the physical guardrail for the LLP's

@@ -14404,3 +14404,68 @@ dependence), or otherwise (killed: h acts through something else).
 > and missed the h-dependence by 2.3×. The prefactor of N's saddle-parking channel remains underived. Two
 > candidates have now been killed by tests aimed at them: hovering at ln λ per step (§131) and the window as
 > stated (§132).
+
+### 133 E24–E27 measured the exit on stage 2's saddle line, not on Σ — a third of the "drift toward the saddle" was geometry, and W along Σ is not flat
+
+*Scope: XK (E-070 → E-084@K1.2), Ω = 200, 400, 800 (here) and 1600 (laptop, PARDISO; it reproduces Ω = 400 to
+3e−13). The committed never-dipped fall flux through two cuts of the same Q-process chain, with the same
+construction: stage 2's saddle line x₂ = 0.606 (as E24–E27) and the lattice image of the joint separatrix Σ.
+`experiments/sigma_flux.py`, `results/sigma_flux.json`. The action along Σ, ε(x₁) = W_Σ(x₁) − W\*, comes from the ray
+family (`experiments/joint_action/sigma_profile.py`), Ω-free and computed before the flux runs. Predictions
+S0–S3 were written before running.*
+
+**The reading at issue.** E24, E26 and E27 binned the committed fall flux by x₁ where stage 2 crosses its saddle
+line. THEORIES (T-CASC-at, §124.12 and §124.14) then read that profile as "the region along Σ that carries the
+crossing flux". Σ coincides with the saddle line only near the joint saddle (3, 0.606). Below it Σ is higher
+(x₂ = 0.63 at x₁ = 2.0, 1.14 at 1.18). Starts just below Σ shadow it toward the joint saddle before descending.
+The deterministic map from a Σ-crossing to the saddle line is degenerate: most points just below Σ reach the
+line at x₁ → 3. So the saddle-line profile can drift toward the saddle from geometry alone.
+
+**The action along Σ is not flat.** The ray family hits Σ over x₁ = 1.18 – 2.995. A caustic near the saddle
+gives two branches, and W_Σ is their lower envelope. ε(x₁) falls monotonically toward the saddle:
+
+| x₁ | 1.22 | 1.40 | 1.60 | 2.00 | 2.50 | 2.88 | 2.99 |
+|---|---|---|---|---|---|---|---|
+| ε (×10⁻⁵) | 76 | 23 | 15 | 9.0 | 5.2 | 2.7 | 1.0 |
+
+The interior slope is ~1e−4 per unit x₁, so Ω·Δε reaches 1 only near Ω ~ 10⁴. That is the quantitative form of
+§124.14's "slow localisation" suspect, as a property of Σ.
+
+**Results.**
+- **S0 held.** With the cut on the saddle line, the generic code reproduces E26's stored densities to 3e−13.
+- **S1 held.** The totals through the two cuts agree to 1e−13 at every Ω; both equal the committed fall rate.
+- **S2 failed as written, and the other verdict failed too.** The mean-x₁ gap, saddle line minus Σ, is
+  0.060 / 0.102 / 0.158 / 0.197 at Ω = 200 / 400 / 800 / 1600. That is under the 0.2 bar at 400 and 800, but far
+  above the 0.05 at which E24's reading would stand. The criterion had no verdict for this middle (rule 19).
+
+  | Ω | 200 | 400 | 800 | 1600 |
+  |---|---|---|---|---|
+  | mean x₁, saddle line (E24) | 1.777 | 1.792 | 1.958 | 2.183 |
+  | mean x₁, Σ | 1.717 | 1.691 | 1.800 | 1.986 |
+  | sd x₁, saddle line | 0.649 | 0.629 | 0.617 | 0.577 |
+  | sd x₁, Σ | 0.670 | 0.660 | 0.687 | 0.706 |
+
+  About a third of E24's drift toward the saddle (0.14 of +0.41 from 200 to 1600) is the surface it was measured
+  on. **On Σ the exit is not narrowing.** Its spread grows, where on the saddle line it shrank.
+- **S3 failed as written.** The test is the second difference of the Σ-cut density across Ω = 400 / 800 / 1600,
+  where the prefactor power cancels, against −400·Δε with no free parameter. 12 of 34 fine (0.05) bins fall
+  outside the tolerance.
+  - **Where ε is large, the fine bins track the prediction:** −0.42 / −0.21 / −0.09 / −0.07 against
+    −0.36 / −0.20 / −0.13 / −0.10 over x₁ = 1.225–1.375.
+  - **In the interior** the predicted signal is under 0.05. The failures there are a bin-to-bin alternation of
+    ±0.1, consistent with lattice aliasing of the staircase cut (~20 columns per bin at Ω = 400).
+  - **Post hoc**, labelled as such: on 0.10-wide bins the interior (1.35–2.55) agrees within 0.03, and on 0.20-wide
+    bins (1.5–2.3) within 0.012. Near the saddle (2.65–2.85) it is off by ~0.1, in the caustic region where the
+    ray envelope is least certain.
+
+> **What §133 changes.**
+> - **The reading of E24–E27 is withdrawn in part** (their measurements stand as measured: on the saddle line).
+>   "The exit spreads over an O(1) stretch of Σ, drifting toward the saddle" becomes: on Σ the exit spreads,
+>   and over Ω = 200 → 1600 it widens. A third of the reported drift toward the saddle was the measuring
+>   surface.
+> - **W along Σ is not flat.** It slopes toward the saddle by ~1e−4 per unit x₁. That profile is consistent with
+>   the exact chain where the signal clears the lattice noise, but only on a post-hoc reading; the pre-registered
+>   test failed on aliasing.
+> - **Consequence for a (T-CASC-at).** Localisation at the saddle cannot appear before Ω ~ 10⁴ on this profile.
+>   Below that, the total's a ≈ 0 must come from the spread exit itself, which is what §124.14 measured locally
+>   (interior Ω^{½}). Why the total's a stays ≈ 0 is still not derived.

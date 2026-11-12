@@ -5479,6 +5479,14 @@ end fades, the saddle bin gains share, and the total keeps a ≈ −0.01 to Ω =
 prediction (a climbing above +0.05) failed. **Suspect:** a slow localisation at the saddle, which
 would make a = 0 the true asymptote. **Kill test:** the saddle bin's share must keep rising and the
 interior's fall, past Ω = 2000 (needs a solver beyond 64 GB).
+**→ §133: a reading correction to the entries above.** E24–E27 measured the exit where stage 2 crosses its
+*saddle line*, not on Σ. On Σ itself (Ω = 200–1600) the exit widens (sd 0.67 → 0.71), and a third of the reported
+drift toward the saddle was the measuring surface. W along Σ slopes toward the saddle by ~1e−4 per unit x₁ (ray
+family), so on Σ localisation cannot appear before Ω ~ 10⁴. The "slow localisation" suspect above is restated in
+that form. **Still open:** why the total's a ≈ 0 with a widening exit.
+**Kill test:** ∫ C(x₁) Ω^{b(x₁)} e^{−Ωε(x₁)} dx₁ along Σ, with ε from the rays and b(x₁) from the Σ-cut second
+differences, must reproduce the measured total a ≈ −0.01 over Ω = 800–2000 in absolute terms. It needs b on Σ
+read on bins wide enough to clear the aliasing (≥ 0.1).
 
 **§124.13: the mechanism holds on a second coupling shape (Hill n = 2), predicted beforehand.** The
 exact growth rate equals the minimum-action Γ to 0.1% in XK and XN. The −0.01 prefactor residual's

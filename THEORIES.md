@@ -5492,6 +5492,42 @@ within 1.25× in Z or c at Ω ≤ 55.
 
 ## §125 — the W-bit / Aeternum direction (from the Seam Registry)
 
+> **PARKED 2026-11-12 at §132.** This is the handoff for picking the arc up again; the detailed entries follow.
+>
+> **Settled (measured, with scope):**
+> - **§125:** W-bit's R = 2 cell reduces exactly to a 1-D map, validated against W-bit's own class. Its rates
+>   are exact, and its Arrhenius slope reaches S = 0.32891.
+> - **§126:** in two cells in series the near-miss mechanism transfers. Per-cell reliability is 16× low at
+>   σ = 0.25 in Z.
+> - **§127:** Γ is exact. Γ_Z = +0.0125 and Γ_N = −0.1066 = −S₂(b₂); in N, cell 1 parks on its saddle.
+> - **§128–§129:** the finite-σ slopes approach Γ non-monotonically and slowly. N is still 0.05 short at σ = 0.10
+>   (u ≈ −11).
+> - **§130:** the design window c ∈ (0.179, 0.358) has Γ(c) = −S₂(b₂(c)) exactly, zero at edge = ½. Its latency
+>   diverges as 6.310/√(c − c_min). At σ = 0.15 the trade-off is monotone and front-loaded.
+> - **§131–§132:** at fixed Γ_N, R ∝ c^{−7.1…−7.7}, and ρ falls 1.12–1.21 nats over h = 0.14 → 0.20.
+>
+> **Open, in the order to resume:**
+> 1. **T-WBIT-a⁵:** derive the saddle-parking prefactor. Two candidates are already killed (ln λ per step, §131;
+>    the window as stated, §132). The labelled rescue is a k(b₂) computed from cell 2's escape-path length, which
+>    must reproduce both c⁻⁷ and the 0.43 together.
+> 2. **The scope gap:** the arc applies to W-bit only if W-bit uses self-coupled (memory) cells. W-bit's own
+>    experiments are feedforward (σ = 5, dt = 1, no self-coupling). T-WBIT-b is out of scope until that changes.
+>    This is the first question to ask the W-bit side.
+> 3. **Untested design generality:** one map (a = 1.5, T = 0.5, dt = 0.5) and one healthy drive family. The
+>    edge-below-saddle rule has not been checked across W-bit's parameter space.
+>
+> **Tools and traps:**
+> - **Exact exits:** `wbit_qsd.exits_pos(M, σ, c, b₂, h=…)` is positive arithmetic and conserves mass to 1e−14.
+>   Use it below σ ≈ 0.16; §128's GMRES (`wbit_turn.exits_mf`) loses tiny q_fall to subtraction.
+> - **1-D rates:** `wbit_window.rate_pos` is positive, and exits at the saddle. `wbit_cell.flip_rate` exits at
+>   p < ½, which is wrong for a driven cell.
+> - **Actions:** `wbit_speed.colloc_fast` is collocation with an analytic gradient, good to L ≈ 400 (converge in
+>   L: rule 13). `wbit_action.escape_action(drive)` gives the 1-D actions.
+> - **Constants:** `wbit_cascade.DC` and `HI1` are rounded to 6 places. Use `wbit_speed.D_C_TRUE` near the
+>   bifurcation (§130's P2 failed on this).
+> - **Own route:** check cell 2's own route with `rate_pos`, not with action margins (§131).
+> - **Machines:** M = 960–1280 cells run on the laptop (64 GB); M ≤ 480 runs locally in minutes.
+
 **T-WBIT-a, open: does §124's mechanism hold in W-bit's cascade?** Two R = 2 cells in series, cell 2
 driven by cell 1 through Θ₂₁. The mechanism predicts that cell 2's errors with cell 1 correct grow
 relative to cell 1's flips like e^{Γ/σ²} when cell 2's edge (the least input keeping it bistable-high)

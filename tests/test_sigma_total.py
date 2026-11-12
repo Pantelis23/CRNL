@@ -19,7 +19,7 @@ def test_model_reproduces_stored_and_tracks_the_exact_total():
     C = F / (800 ** 0.5 * np.exp((GAMMA - eps(bins)) * 800))
     model = lambda o: float((C * o ** 0.5 * np.exp((GAMMA - eps(bins)) * o)).sum())
     offs = []
-    for w in ("800-1600", "1600-2000", "2000-2800"):
+    for w in ("800-1600", "1600-2000", "2000-2800", "2800-3400"):
         o1, o2 = map(int, w.split("-"))
         a_mod = (math.log(model(o2) / model(o1)) - GAMMA * (o2 - o1)) / math.log(o2 / o1)
         rec = s["S134"][w]

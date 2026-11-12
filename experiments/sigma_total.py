@@ -35,6 +35,16 @@ OUTCOMES (appended after running; predictions above left as written).
   M4 HELD: measured -0.0073 over 2000 -> 2800, against the model's +0.0136 (0.021 apart). The offsets run 0.074 /
      0.038 / 0.021: the model and the exact chain converge. Omega = 2800 is the first exact cell past 2000
      (PARDISO, 13 min per cut; the two cut totals agree to 2e-13). FINDINGS §134.
+
+ADDED AFTER OMEGA = 4000 FAILED, BEFORE OMEGA = 3400 RAN. T-CASC-au's kill test asked for Omega = 4000. PARDISO
+failed there with error -2 (insufficient memory), in-core and with out-of-core requested, on the 64 GB laptop.
+Stand-in, weaker than the registered test because the window is shorter: Omega = 3400.
+  M5  The measured a over 2800 -> 3400 lies within 0.03 of the model's +0.0024 (the model's value, computed before
+      the run), and the offset is below 0.021. The registered asymptotic question (does the measured a turn
+      down?) stays open unless the measured a here drops below -0.0073.
+  -> M5 HELD: measured -0.0026 against +0.0024 (offset 0.005). The offsets run 0.074 / 0.038 / 0.021 / 0.005. The
+     measured a is still rising (-0.0127 / -0.0118 / -0.0073 / -0.0026), so the turn-down stays open. On Sigma the
+     spread narrows: 0.704 / 0.692 / 0.679 at 2000 / 2800 / 3400 (29 min per cut on the laptop).
 """
 
 from __future__ import annotations

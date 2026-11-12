@@ -14509,3 +14509,19 @@ After that one calibration nothing is free: the model predicts the total's local
 >   8000 → 16000), with a limit set by ε right at the saddle, which the ray envelope resolves least well (a
 >   caustic). The measured a has so far risen slightly (−0.0127 → −0.0073); if the model holds, it must eventually
 >   turn down. Whether a → 0 or a negative value is open, with a kill test in THEORIES.
+
+#### 134.1 Ω = 3400: the model and the exact chain meet (offset 0.005); Ω = 4000 is out of reach
+
+The registered kill test (T-CASC-au) asked for Ω = 4000. PARDISO fails there with error −2 (insufficient memory)
+on the 64 GB laptop, both in-core and with out-of-core requested. Whether out-of-core mode actually engaged
+through pypardiso's parameter interface was not established. A weaker stand-in, M5, was written before the run:
+Ω = 3400, cap 1.1, with the model's a for 2800 → 3400 (+0.0024) computed beforehand.
+
+- **M5 held.** The measured a is −0.0026, the offset 0.005: the smallest yet (0.074 / 0.038 / 0.021 / 0.005).
+  The two cut totals agree to 1.3e−13, and each cut took 29 minutes.
+- **The measured a is still rising** (−0.0127 / −0.0118 / −0.0073 / −0.0026). The model's a falls through zero
+  near Ω ≈ 3000 and keeps falling. They have met, and the asymptotic question is whether the exact a now follows
+  the model down. **That is not tested:** it needs Ω ≥ 4000.
+- **On Σ the exit is now narrowing:** sd(x₁) = 0.704 / 0.692 / 0.679 at Ω = 2000 / 2800 / 3400, with the mean at
+  2.233. This is *consistent with* the low shoulder draining at rate ε(x₁), which the model predicts (suspect,
+  rule 17). Full localisation at the saddle would need Ω·Δε ~ 1 across the interior, near Ω ~ 10⁴.

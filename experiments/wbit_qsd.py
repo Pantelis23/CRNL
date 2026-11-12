@@ -49,9 +49,10 @@ from experiments.wbit_cell import fixed_points
 from experiments.wbit_turn import blocks
 
 
-def exits_pos(M, sigma, c, b2, tol=1e-13, tmax=200000, check=50):
+def exits_pos(M, sigma, c, b2, tol=1e-13, tmax=200000, check=50, h=H):
+    """h: cell 2's drive at a healthy input (sets the fall set and the start). Default H, as §126-§129."""
     K1, K2, x = blocks(M, sigma, c, b2)
-    lo2 = fixed_points(A, T, DT, H)[0]
+    lo2 = fixed_points(A, T, DT, h)[0]
     P1, P2 = np.meshgrid(x, x, indexing="ij")
     dip = P1 < 0.5
     fall = (~dip) & (P2 < lo2 + 0.02)
@@ -65,7 +66,7 @@ def exits_pos(M, sigma, c, b2, tol=1e-13, tmax=200000, check=50):
 
     b_fall = alive * Pmul(fall.astype(float))
     b_dip = alive * Pmul(dip.astype(float))
-    hi2 = fixed_points(A, T, DT, H)[-1]
+    hi2 = fixed_points(A, T, DT, h)[-1]
     d = np.where(alive, (P1 - HI1) ** 2 + (P2 - hi2) ** 2, np.inf)
     mu = np.zeros((M, M))
     mu[np.unravel_index(np.argmin(d), d.shape)] = 1.0

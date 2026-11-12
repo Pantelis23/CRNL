@@ -14314,3 +14314,54 @@ slow approach to Γ again, and it is not explained here.
 > an edge one third of the way below the saddle gets most of the benefit for under 2× the latency. This is a
 > design statement about two-cell cascades of this map. It is not tested across W-bit's parameter space, and
 > W-bit's own experiments do not use memory cells (T-WBIT-b).
+
+### 131 At fixed Γ, R falls like c⁻⁷: the window suspect survives a test it could have failed — after a confound
+
+*Scope: N's parked drive held fixed (b₂ = −0.10980, so Γ_N = −S₂(b₂) is identical in every cell); coupling c
+varied with the healthy drive h = b₂ + c(2·HI₁ − 1) adjusted to compensate (c = 0.20–0.365, edge 0.26–0.36, cell 2
+bistable at h throughout); σ = 0.15 and 0.12; exact R by §129's positive solver, M = 320 (M = 480 checked).
+`experiments/wbit_window.py`, `results/wbit_window.json`. T-WBIT-a‴. Predictions N1–N4 before the first run;
+N1′–N3′ after it, before the extension.*
+
+**The question.** §129's N slope approaches Γ_N slowly, about α′σ² behind with α′ ≈ 5. One candidate was killed
+before any run (rule 16): "hovering at a repelling saddle costs ln λ₁ per step" predicts α′ = 0.58, 9× too small.
+The suspect tested here is a *narrow window*. Cell 2's escape cost rises with cell 1's height u above its saddle,
+at rate S₂′·2c, so cell 1 must hover within ~σ²/(2cS₂′) of the saddle, far below its own noise (0.354σ). Each step
+of hovering then costs about ln(c/σ). That makes R depend on c even at fixed Γ, which plain large deviations does
+not.
+
+**The first run was confounded.**
+- **As printed:** across c = 0.20–0.34, R fell 950× at σ = 0.15, with fitted d ln R/d ln c = −10.4 (inside N1's
+  window), local slopes −15.8 / −9.0 / −7.5 (N2 failed), and −8.8 at σ = 0.12 (N3 failed).
+- **The confound:** holding b₂ fixed ties h to c, and at low c (low h) cell 2's *own* route, escaping with cell 1
+  healthy, is not negligible. It amounts to 0.74 / 0.45 / 0.10 / 0.003 of R at c = 0.20 / 0.23 / 0.26 / 0.30
+  (σ = 0.15).
+- **Why the pre-registration missed it:** the action margin used to vouch for those cells (S₂(h) − W\* = 0.12 at
+  c = 0.23) was not protection at this σ. N1's criterion could be met by the own route rather than the window
+  (rule 19), so N1–N3 are not read.
+- **The retraction, checked (rule 14).** The first own-route estimate (1.6 / 1.6 / 0.68 at c = 0.20 / 0.23 / 0.26)
+  used an exit at p < ½ rather than at cell 2's saddle, and overstated the own route. The corrected values above
+  come from a positive-arithmetic 1-D rate, validated against the direct solve where both are readable (5e−4 and
+  1e−6). The confound stands, smaller than first stated.
+
+**On clean cells it holds (N1′–N3′).** The extension used c = 0.30–0.365, where the own route is ≤ 0.3% of R and
+falls to 1e−6 of R at σ = 0.15:
+
+| c | 0.30 | 0.32 | 0.34 | 0.355 | 0.365 |
+|---|---|---|---|---|---|
+| R (σ = 0.15) | 3.66e−6 | 2.24e−6 | 1.44e−6 | 1.08e−6 | 9.25e−7 |
+| R (σ = 0.12) | 3.79e−8 | 2.29e−8 | 1.41e−8 | 1.02e−8 | 8.49e−9 |
+
+- **N1′ held:** d ln R/d ln c = −7.06 (σ = 0.15) and −7.69 (σ = 0.12), inside [−20, −5].
+- **N2′ held:** local slopes −7.60 / −7.30 / −6.62 / −5.62 (spread 1.35×) and −7.82 / −7.98 / −7.51 / −6.57 (1.21×).
+  The steepness eases toward c = 0.365, where h approaches the drive at which cell 2's low state vanishes.
+- **N3′ held:** the dependence grows slightly as σ falls (7.69 ≥ 7.06).
+- **N4 held:** M = 320 → 480 moves R by ≤ 0.8%.
+
+> **What §131 shows.** Γ alone does not set N's error rate at accessible noise. At identical Γ_N, R scales as
+> roughly c⁻⁷, a factor of 4 across a 22% change in coupling. Plain large deviations predicts no dependence. The
+> window *suspect* predicted a power law in c of about this size, and survived. Two things keep it a suspect.
+> First, its link to §129 is only consistent to a factor 1.3–1.6: with k ≈ 7 it gives α′ = k/2 ≈ 3.5 against the
+> measured 4.6–5.7. Second, c and h still move together, so an h-effect other than the own route is not excluded.
+> **The confound lesson** (rule 9 again): an action margin is not a contamination bound at finite σ. The margin
+> said the own route was suppressed by e^{−5.5}, and it was 45% of the signal.

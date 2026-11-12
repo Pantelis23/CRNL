@@ -5523,7 +5523,17 @@ kept rising** (−0.243 → −0.158 over σ = 0.18 → 0.10, every step, using 
 mass to 2e−14). The suspect survives. It is still 0.05 from Γ_N at u ≈ −11.
 **Still open, T-WBIT-a‴:** derive the saddle-parking prefactor, i.e. how the chance of hovering just above a
 repelling saddle without dipping scales with σ. **Kill test:** a derived prefactor C(σ) must reproduce §129's N
-slopes from Γ_N alone, in absolute terms (rule 16), not by fitting a slope.
+slopes from Γ_N alone, in absolute terms (rule 16), not by fitting a slope. **→ §131:** one candidate killed
+beforehand (hovering at ln λ₁ per step: α′ = 0.58 against ~5). The *window* suspect survived a discriminating
+test: at fixed Γ_N, R ∝ c^{−7.1} (σ = 0.15) and c^{−7.7} (σ = 0.12) on cells clean of cell 2's own route, where
+plain large deviations predicts no c-dependence. It is consistent with §129's α′ only to a factor 1.3–1.6.
+**Still open (T-WBIT-a⁗): is it c, or h?** In §131, c and h moved together.
+- **Kill test:** the opposite sweep. Hold c fixed (0.34) and vary h (0.14–0.20), which moves b₂ and so Γ, by the
+  closed form. Subtract Γ/σ² exactly.
+- **What the window suspect predicts:** the residual moves only through the window width's S₂′(b₂), by
+  −k·Δln S₂′ with k taken from §131 (≈ 7).
+- **What kills it:** a residual that moves by more than that, or in the other direction, means h acts through
+  something else.
 
 ~~Still open: the speed cost of the weak-coupling (edge-below-saddle) design.~~ **→ §130:** an exact price list.
 Γ(c) = −S₂(b₂(c)) across the window (to 3e−6), zero exactly at edge = ½. The follow latency diverges at the

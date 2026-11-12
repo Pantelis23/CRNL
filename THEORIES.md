@@ -5534,6 +5534,11 @@ plain large deviations predicts no c-dependence. It is consistent with §129's �
   −k·Δln S₂′ with k taken from §131 (≈ 7).
 - **What kills it:** a residual that moves by more than that, or in the other direction, means h acts through
   something else.
+**→ §132: KILLED as stated.** The residual falls the right way but by 0.437 / 0.433 of the prediction (1.12 / 1.21
+nats against 2.55 / 2.78), outside the factor-2 band. c and S₂′ do not enter as one product. The prefactor stays
+underived, with two candidates killed. **Open (T-WBIT-a⁵):** derive it. The one labelled rescue is a k that
+depends on b₂. Its kill test: compute k(b₂) from cell 2's escape-path length, and require it to reproduce §131's
+c⁻⁷ and §132's 0.43 together, in absolute terms.
 
 ~~Still open: the speed cost of the weak-coupling (edge-below-saddle) design.~~ **→ §130:** an exact price list.
 Γ(c) = −S₂(b₂(c)) across the window (to 3e−6), zero exactly at edge = ½. The follow latency diverges at the

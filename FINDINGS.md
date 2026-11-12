@@ -14365,3 +14365,42 @@ falls to 1e−6 of R at σ = 0.15:
 > measured 4.6–5.7. Second, c and h still move together, so an h-effect other than the own route is not excluded.
 > **The confound lesson** (rule 9 again): an action margin is not a contamination bound at finite σ. The margin
 > said the own route was suppressed by e^{−5.5}, and it was 45% of the signal.
+
+### 132 The opposite sweep kills the window suspect as stated: S₂′ enters at 0.43 of its predicted weight
+
+*Scope: c fixed at 0.34; healthy drive h = 0.14, 0.16, 0.18, 0.20, which moves b₂ = h − c(2·HI₁ − 1) over
+−0.152 … −0.092 (edge 0.42–0.33); σ = 0.15 and 0.12; exact R by §129's positive solver, M = 320.
+`experiments/wbit_opposite.py`, `results/wbit_opposite.json`. T-WBIT-a⁗. Predictions O0–O2 written before running,
+with k taken from §131's independent data.*
+
+**The test.** §131 moved c with b₂ fixed, so h moved too. Here c is fixed and h moves, which shifts Γ exactly
+(Γ = −S₂(b₂), §130). That shift is removed in the residual ρ = ln R + S₂(b₂)/σ². The window suspect says the
+prefactor is −k·ln(2c·S₂′(b₂)·κ/σ), so at fixed c ρ should fall by k·Δln S₂′ = k × 0.362: 2.55 nats at
+σ = 0.15 and 2.78 at 0.12. The verdict bands were inside a factor 2 (survives), below 0.5 nat (killed: no S₂′
+dependence), or otherwise (killed: h acts through something else).
+
+| h | 0.14 | 0.16 | 0.18 | 0.20 |
+|---|---|---|---|---|
+| R (σ = 0.15) | 5.09e−5 | 9.90e−6 | 1.73e−6 | 2.90e−7 |
+| ρ (σ = 0.15) | −7.846 | −8.295 | −8.681 | −8.963 |
+| ρ (σ = 0.12) | −9.752 | −10.223 | −10.637 | −10.957 |
+
+- **O0 held:** cell 2's own route is ≤ 6.6e−4 of R at every cell (≤ 7.9e−7 at σ = 0.12).
+- **O2 held:** ρ falls at every step.
+- **O1 killed the suspect as stated.** The drop is −1.117 and −1.205 nats, 0.437 and 0.433 of the prediction:
+  outside the bands, on the low side.
+  - The direction is right and the size is not.
+  - The window's form has c and S₂′ entering only as the product c·S₂′, with one k. The data give c an exponent
+    of about 7 (§131) and S₂′ an effective one of about 3.1–3.3.
+- **One way the suspect could still be rescued, labelled as such.** k is the number of steps cell 2 needs while
+  cell 1 hovers, and could depend on b₂, which this sweep moves (−0.152 … −0.092) while §131 held it at −0.110.
+  That rescue is post hoc and is not adopted. Its kill test would be to compute k(b₂) independently, from the
+  length of cell 2's escape path, and require it to reproduce both sweeps.
+
+> **What §131–§132 leave standing.** The measurements: at fixed Γ_N the never-dipped fall rate depends strongly
+> on the coupling (about c⁻⁷) and on the healthy drive (ρ falls 1.1–1.2 nats over h 0.14 → 0.20). The fraction
+> 0.43 of the window's prediction is the same at both σ. Both dependences are invisible to Γ, and both are
+> σ-robust across 0.15 → 0.12. The mechanism does not stand: the narrow-window account predicted the c-dependence
+> and missed the h-dependence by 2.3×. The prefactor of N's saddle-parking channel remains underived. Two
+> candidates have now been killed by tests aimed at them: hovering at ln λ per step (§131) and the window as
+> stated (§132).

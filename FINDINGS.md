@@ -14560,3 +14560,33 @@ model's prediction for 3400 → 4000 (−0.0047), was written before the last at
 >
 > The first two are results; the third is a precisely located gap. C(x₁), and so C = 0.63, remains calibrated,
 > not derived.
+
+#### 134.3 Why Ω = 4000 failed, and what it costs: a 32-bit overflow, then 345 GB
+
+*Scope: the laptop (64 GB RAM, ~300 GB page file, commit limit 363 GB); XK at Ω = 4000, cap 1.1; M6 still
+untested.*
+
+- **The −2 errors were an integer overflow, not memory.** PARDISO's analysis phase reports the factor's nonzeros
+  as −1,262,037,256: 3.03e9 wrapped past 2³¹ in the 32-bit interface that pypardiso calls. That fails whatever RAM
+  is available.
+- **The 64-bit fix.** `episode_committor` now has a `pardiso64` solver, which calls MKL's `pardiso_64` through
+  ctypes. It reproduces the stored Ω = 400 cell to 3.0e−13; the 32-bit route gives 2.6e−13.
+- **The Python-side fix.** `qprocess_J`'s LIL row pin, which cost tens of GB at Ω = 4000, is replaced by an
+  equivalent CSR edit. It is tested bit-identical, and the stored Ω = 200 and 400 totals reproduce exactly.
+- **Then memory.** The analysis predicted ~122 GB peak and ~132 GB for factor plus solve. In-core, paging into
+  the page file, the process grew to **345 GB committed** and the system commit reached 362.3 of 363.4 GB. It was
+  stopped at that point to protect the machine; the laptop returned to 17 GB committed.
+
+Ω = 4000 is therefore out of reach in-core on this machine. The remaining route is PARDISO's out-of-core mode
+through the 64-bit interface, with RAM capped. It has not been tried.
+
+**Then tried, and it never engaged.** The setup: `pardiso_64` with iparm(60) = 2, `MKL_PARDISO_OOC_PATH` set,
+`MKL_PARDISO_OOC_MAX_CORE_SIZE` = 16000 MB, and a per-minute memory monitor with an automatic kill above 330 GB
+committed.
+- **Zero out-of-core files were written** anywhere on the machine.
+- **Memory traced the in-core run.** Analysis rose to 302 GB, fell to 122 GB, then factorisation climbed again.
+  The solver reached exactly 345.1 GB, as in-core, and was killed at a system commit of 362.9 / 363.4 GB.
+- **Why it never engaged is not established.** Two candidates: the bundled mkl_rt ignores the out-of-core request
+  for this call, or the reordering and factor phases allocate before it applies.
+- **One number to keep:** MKL needed 345 GB for a factor whose own values and indices are ~36–48 GB (3.03e9
+  nonzeros). Almost all of the footprint is the library's working memory, not the factor.

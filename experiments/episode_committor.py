@@ -322,8 +322,18 @@ from experiments.weak_upstream import ARMS, element, pair_generator
 SOLVER = "superlu"          # or "pardiso" (MKL, 64-bit internals, out-of-core capable; --solver)
 
 
-def lu_solve(M, rhs, permc="COLAMD"):
-    """Solve M x = rhs (rhs a vector or an (n, k) matrix). Returns (x, factor nnz)."""
+def lu_solve(M, rhs, permc="COLAMD", coords=None):
+    """Solve M x = rhs (rhs a vector or an (n, k) matrix). Returns (x, factor nnz). coords: each unknown's
+    lattice coordinates, required by the KernRift solver (SOLVER = "kr", §134.4)."""
+    if SOLVER == "kr":
+        from experiments.krsolve.krsolve import LAST, kr_solve
+        if coords is None:
+            raise ValueError("SOLVER = 'kr' needs the unknowns' lattice coordinates")
+        from experiments.krsolve import krsolve as _K
+        x = _K.kr_solve(M, rhs, coords)
+        return x, LAST.get("factor_entries", -1)
+    if SOLVER == "pardiso64":
+        return _pardiso64(M, rhs)
     if SOLVER == "pardiso":
         import os
         import pypardiso
@@ -338,6 +348,62 @@ def lu_solve(M, rhs, permc="COLAMD"):
     x = lu.solve(np.asarray(rhs, dtype=float))
     nnz = int(lu.L.nnz + lu.U.nnz)
     del lu
+    return x, nnz
+
+
+def pin_row(At, k):
+    """Row k of a CSR matrix replaced by the unit row e_k, without leaving CSR (§134.3; identical to the old
+    tolil() route, tested)."""
+    At = At.tocsr(copy=True)
+    a, b = At.indptr[k], At.indptr[k + 1]
+    cols = At.indices[a:b]
+    At.data[a:b] = 0.0
+    hit = np.nonzero(cols == k)[0]
+    if len(hit):
+        At.data[a + hit[0]] = 1.0
+    else:
+        At = At.tolil(); At[k, k] = 1.0; At = At.tocsr()
+    At.eliminate_zeros()
+    return At
+
+
+def _pardiso64(M, rhs):
+    """MKL's 64-bit-integer PARDISO entry point (pardiso_64), via ctypes on pypardiso's mkl_rt. The 32-bit
+    interface pypardiso calls wraps the factor's nnz past 2^31 (Omega = 4000: 3.03e9) and fails with -2 (§134.3)."""
+    import ctypes
+    import pypardiso
+    ps = pypardiso.PyPardisoSolver(mtype=11)
+    fn = ps.libmkl.pardiso_64
+    i64 = ctypes.c_int64
+    p64 = ctypes.POINTER(i64)
+    pd = ctypes.POINTER(ctypes.c_double)
+    A = sp.csr_matrix(M)
+    A.sort_indices()
+    n = A.shape[0]
+    ia = A.indptr.astype(np.int64) + 1
+    ja = A.indices.astype(np.int64) + 1
+    data = np.ascontiguousarray(A.data, dtype=float)
+    b = np.ascontiguousarray(rhs, dtype=float)
+    x = np.zeros_like(b)
+    pt = np.zeros(64, dtype=np.int64)
+    iparm = np.asarray(ps.iparm, dtype=np.int64).copy()
+    import os
+    iparm[59] = int(os.environ.get("CRNL_PARDISO_OOC", "1"))
+    perm = np.zeros(n, dtype=np.int64)
+    err = i64(0)
+    nrhs = 1 if b.ndim == 1 else b.shape[1]
+
+    def call(phase):
+        fn(pt.ctypes.data_as(p64), ctypes.byref(i64(1)), ctypes.byref(i64(1)), ctypes.byref(i64(11)),
+           ctypes.byref(i64(phase)), ctypes.byref(i64(n)), data.ctypes.data_as(pd), ia.ctypes.data_as(p64),
+           ja.ctypes.data_as(p64), perm.ctypes.data_as(p64), ctypes.byref(i64(nrhs)), iparm.ctypes.data_as(p64),
+           ctypes.byref(i64(0)), b.ctypes.data_as(pd), x.ctypes.data_as(pd), ctypes.byref(err))
+        if err.value != 0:
+            raise RuntimeError(f"pardiso_64 phase {phase} failed with error {err.value}")
+
+    call(13)
+    nnz = int(iparm[17])
+    call(-1)
     return x, nnz
 
 
@@ -439,11 +505,9 @@ def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD", lower="sad"):
     k1 = int(np.clip(round(A.r3 * om) - sad1, 0, M1 - 1))
     k2 = int(np.clip(round(B.r3 * om) - base2, 0, M2 - 1))
     k = k1 * M2 + k2
-    At = Qt.T.tocsr().tolil()
-    At[k, :] = 0.0
-    At[k, k] = 1.0
+    At = pin_row(Qt.T.tocsr(), k)                                 # CSR edit; the LIL route cost tens of GB at 4000
     b = np.zeros(M1 * M2); b[k] = 1.0
-    pi, qprocess_J.last_nnz = lu_solve(At, b, permc)
+    pi, qprocess_J.last_nnz = lu_solve(At, b, permc, coords=(I1, I2))
     r_ = Qt.T @ pi
     r_[k] = 0.0                                                  # the pinned row is not an equation
     res = float(np.abs(r_).max() / np.abs(pi).max())
@@ -525,7 +589,7 @@ def fall_profile(A, B, om):
     rows.append(idx); cols.append(idx); vals.append(diag)
     M = sp.coo_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))),
                       shape=(M1 * K, M1 * K)).tocsc()
-    q = lu_solve(M, rhs)[0].reshape(M1, K)
+    q = lu_solve(M, rhs, coords=(I1, I2))[0].reshape(M1, K)
     row = sad2 - base2                                            # P's column for n2 = sad2
     _, mu_s = B.rates(np.full(M1, float(sad2)), n1s.astype(float), om, False)
     flux = np.clip(P[:, row], 0, None) * mu_s * q[:, -1]   # (n1, sad2) -> (n1, sad2-1), committed, original measure
@@ -643,7 +707,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", type=pathlib.Path, default=pathlib.Path("results/episode_committor.json"))
     ap.add_argument("--cells", default="X:40,X:55,Z:40,Z:55")
-    ap.add_argument("--solver", default="superlu", choices=["superlu", "pardiso"])
+    ap.add_argument("--solver", default="superlu", choices=["superlu", "pardiso", "pardiso64", "kr"])
     ap.add_argument("--profile", action="store_true", help="E13/E16: the never-dipped fall channels, per cell")
     ap.add_argument("--permc", default="COLAMD", help="SuperLU column ordering; MMD_AT_PLUS_A halves the fill on these lattices")
     ap.add_argument("--dump", default=None, help="directory: save J and f per cell as .npz (E8)")

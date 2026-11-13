@@ -1,0 +1,1084 @@
+// krsolve -- a lean sparse direct solver for CRNL's 2-D lattice systems (§134.4).
+//
+// Multifrontal LU with geometric nested dissection on the unknowns' lattice coordinates, no pivoting.
+// The systems are generator restrictions (M-matrices up to row signs), for which Gaussian elimination
+// without pivoting is stable. Written because MKL PARDISO needs 345 GB at Omega = 4000 for a factor whose
+// own size is ~36-48 GB (§134.3).
+//
+// Usage: solver IN OUT [threads]
+// IN  (little endian): u64 magic 0x564C4F53524B ("KRSOLV"), u64 n, u64 nnz,
+//     u32 x[n], u32 y[n] (lattice coordinates), u64 indptr[n+1], u32 indices[nnz], f64 data[nnz],
+//     f64 rhs[n]. The sparsity pattern must be structurally symmetric and connect only lattice neighbours.
+// OUT: f64 x[n].
+// Prints the symbolic statistics before allocating the factor, and the relative residual at the end.
+
+import "thread.kr"
+
+@shared static u64 cli_argc
+@shared static u64 cli_argv
+
+static u64 LEAF = 64
+static u64 PW = 48                 // panel width of the blocked partial LU
+static u64 NONE = 0xFFFFFFFFFFFFFFFF
+
+static u64 N = 0
+static u64 NNZ = 0
+static u64 CX = 0                  // u32[n]
+static u64 CY = 0                  // u32[n]
+static u64 IP = 0                  // u64[n+1]
+static u64 IX = 0                  // u32[nnz]
+static u64 DA = 0                  // f64[nnz]
+static u64 RHS = 0                 // f64[n]
+
+static u64 ORD = 0                 // u32[n]: elimination order (postorder of the dissection)
+static u64 POS = 0                 // u32[n]: position of each unknown in ORD
+static u64 TMP = 0                 // u32[n]
+static u64 HIST = 0                // u64[maxc + 2]
+
+static u64 NCAP = 0
+static u64 NN = 0                  // node count
+static u64 ND_START = 0            // u64[NCAP]
+static u64 ND_NV = 0
+static u64 ND_C0 = 0
+static u64 ND_C1 = 0
+static u64 ND_BOFF = 0             // offset (in u32 entries) of the node's boundary list in BPOOL
+static u64 ND_NB = 0
+static u64 ND_FOFF = 0             // offset (in f64 entries) of the node's factor block in FAC
+static u64 BPOOL = 0
+static u64 BCAP = 0
+static u64 BLEN = 0
+static u64 MARK = 0                // u32[n]
+static u64 MAP0 = 0                // top-phase child map
+static u64 SBUF = 0                // u32 scratch for one boundary list
+
+static u64 FAC = 0
+static u64 FRONT = 0
+static u64 STK = 0
+static u64 SP = 0                  // stack top, in f64 entries
+
+static u64 NTH = 1
+static u64 SYMBOLIC_ONLY = 0
+static u64 OOC = 0                 // 1: factor blocks streamed to a file
+static u64 OOC_FD = 0
+static u64 BLK = 0                 // one factor block (out-of-core solve)
+static u64 LBUF = 0                // L21 staging (out-of-core write)
+static u64 MAXBLK = 0
+static u64 MAXL = 0
+static u64 FLOPS = 0
+static u64 T_ASM = 0
+static u64 T_PANEL = 0
+static u64 T_TRAIL = 0
+static u64 T_STORE = 0
+static u64 T_SMALLF = 0
+static u64 G_F = 0                 // shared with the GEMM workers
+static u64 G_FN = 0
+static u64 G_K0 = 0
+static u64 G_K1 = 0
+
+fn ld32(u64 a, u64 i) -> u64 { return load32(a + i * 4) }
+fn st32(u64 a, u64 i, u64 v) { u32 w = v
+    store32(a + i * 4, w) }
+fn ld64(u64 a, u64 i) -> u64 { return load64(a + i * 8) }
+fn st64(u64 a, u64 i, u64 v) { store64(a + i * 8, v) }
+fn ldf(u64 a, u64 i) -> f64 {
+    f64 v = 0.0
+    u64 p = a + i * 8
+    unsafe { *(p as f64) -> v }
+    return v
+}
+fn stf(u64 a, u64 i, f64 v) {
+    u64 p = a + i * 8
+    unsafe { *(p as f64) = v }
+}
+
+fn kr_err(u64 v) -> u64 {
+    if v > 0xFFFFFFFFFFFFF000 { return 1 }
+    return 0
+}
+
+fn die(u64 msg) {
+    println_str(msg)
+    exit(2)
+}
+
+fn read_exact(u64 fd, u64 buf, u64 len) {
+    u64 off = 0
+    while off < len {
+        u64 want = len - off
+        if want > 0x40000000 { want = 0x40000000 }
+        u64 got = file_read(fd, buf + off, want)
+        if kr_err(got) != 0 { die("read failed") }
+        if got == 0 { die("short read") }
+        off = off + got
+    }
+}
+
+fn write_exact(u64 fd, u64 buf, u64 len) {
+    u64 off = 0
+    while off < len {
+        u64 want = len - off
+        if want > 0x40000000 { want = 0x40000000 }
+        u64 got = file_write(fd, buf + off, want)
+        if kr_err(got) != 0 { die("write failed") }
+        off = off + got
+    }
+}
+
+fn arg(u64 i) -> u64 { return load64(cli_argv + i * 8) }
+
+fn parse_u64(u64 s) -> u64 {
+    u64 v = 0
+    u64 c = load8(s)
+    while c >= 48 && c <= 57 {
+        v = v * 10 + (c - 48)
+        s = s + 1
+        c = load8(s)
+    }
+    return v
+}
+
+fn load_input(u64 path) {
+    u64 fd = file_open(path, 0)
+    if kr_err(fd) != 0 { die("cannot open input") }
+    u64 hdr = alloc(24)
+    read_exact(fd, hdr, 24)
+    if load64(hdr) != 0x564C4F53524B { die("bad magic") }
+    N = load64(hdr + 8)
+    NNZ = load64(hdr + 16)
+    CX = alloc(N * 4)
+    read_exact(fd, CX, N * 4)
+    CY = alloc(N * 4)
+    read_exact(fd, CY, N * 4)
+    IP = alloc((N + 1) * 8)
+    read_exact(fd, IP, (N + 1) * 8)
+    IX = alloc(NNZ * 4)
+    read_exact(fd, IX, NNZ * 4)
+    DA = alloc(NNZ * 8)
+    read_exact(fd, DA, NNZ * 8)
+    RHS = alloc(N * 8)
+    read_exact(fd, RHS, N * 8)
+    file_close(fd)
+}
+
+// ---------------------------------------------------------------- nested dissection
+
+fn mk_node(u64 start, u64 nv, u64 c0, u64 c1) -> u64 {
+    if NN >= NCAP { die("node capacity exceeded") }
+    u64 id = NN
+    st64(ND_START, id, start)
+    st64(ND_NV, id, nv)
+    st64(ND_C0, id, c0)
+    st64(ND_C1, id, c1)
+    NN = NN + 1
+    return id
+}
+
+fn coord(u64 v, u64 d) -> u64 {
+    if d == 0 { return ld32(CX, v) }
+    return ld32(CY, v)
+}
+
+fn nd(u64 lo, u64 hi) -> u64 {
+    u64 cnt = hi - lo
+    if cnt <= LEAF { return mk_node(lo, cnt, NONE, NONE) }
+    u64 x0 = NONE
+    u64 x1 = 0
+    u64 y0 = NONE
+    u64 y1 = 0
+    u64 t = lo
+    while t < hi {
+        u64 v = ld32(ORD, t)
+        u64 x = ld32(CX, v)
+        u64 y = ld32(CY, v)
+        if x < x0 { x0 = x }
+        if x > x1 { x1 = x }
+        if y < y0 { y0 = y }
+        if y > y1 { y1 = y }
+        t = t + 1
+    }
+    u64 ex = x1 - x0
+    u64 ey = y1 - y0
+    if ex == 0 && ey == 0 { return mk_node(lo, cnt, NONE, NONE) }
+    u64 d = 0
+    u64 base = x0
+    u64 ext = ex
+    if ey > ex {
+        d = 1
+        base = y0
+        ext = ey
+    }
+    // median coordinate along d
+    u64 k = 0
+    while k <= ext {
+        st64(HIST, k, 0)
+        k = k + 1
+    }
+    t = lo
+    while t < hi {
+        u64 v = ld32(ORD, t)
+        u64 o = coord(v, d) - base
+        st64(HIST, o, ld64(HIST, o) + 1)
+        t = t + 1
+    }
+    u64 half = cnt / 2
+    u64 cum = 0
+    u64 c = 0
+    k = 0
+    while k <= ext {
+        cum = cum + ld64(HIST, k)
+        if cum >= half {
+            c = k
+            break
+        }
+        k = k + 1
+    }
+    c = c + base
+    // three-way partition into TMP: < c, > c, == c
+    u64 w = 0
+    u64 pass = 0
+    u64 nl = 0
+    u64 nr = 0
+    while pass < 3 {
+        t = lo
+        while t < hi {
+            u64 v = ld32(ORD, t)
+            u64 cv = coord(v, d)
+            u64 take = 0
+            if pass == 0 && cv < c { take = 1 }
+            if pass == 1 && cv > c { take = 1 }
+            if pass == 2 && cv == c { take = 1 }
+            if take == 1 {
+                st32(TMP, w, v)
+                w = w + 1
+            }
+            t = t + 1
+        }
+        if pass == 0 { nl = w }
+        if pass == 1 { nr = w - nl }
+        pass = pass + 1
+    }
+    t = 0
+    while t < cnt {
+        st32(ORD, lo + t, ld32(TMP, t))
+        t = t + 1
+    }
+    u64 ns = cnt - nl - nr
+    u64 c0 = NONE
+    u64 c1 = NONE
+    if nl > 0 { c0 = nd(lo, lo + nl) }
+    if nr > 0 { c1 = nd(lo + nl, lo + nl + nr) }
+    return mk_node(lo + nl + nr, ns, c0, c1)
+}
+
+// ---------------------------------------------------------------- symbolic
+
+fn sort_u32(u64 a, u64 n) {
+    // heapsort, in place
+    if n < 2 { return }
+    u64 start = n / 2
+    while start > 0 {
+        start = start - 1
+        sift(a, start, n)
+    }
+    u64 end = n
+    while end > 1 {
+        end = end - 1
+        u64 tv = ld32(a, 0)
+        st32(a, 0, ld32(a, end))
+        st32(a, end, tv)
+        sift(a, 0, end)
+    }
+}
+
+fn sift(u64 a, u64 root, u64 n) {
+    while 1 {
+        u64 ch = root * 2 + 1
+        if ch >= n { return }
+        if ch + 1 < n && ld32(a, ch + 1) > ld32(a, ch) { ch = ch + 1 }
+        if ld32(a, root) >= ld32(a, ch) { return }
+        u64 tv = ld32(a, root)
+        st32(a, root, ld32(a, ch))
+        st32(a, ch, tv)
+        root = ch
+    }
+}
+
+fn bpool_reserve(u64 extra) {
+    if BLEN + extra <= BCAP { return }
+    u64 nc = BCAP * 2
+    if nc < BLEN + extra { nc = BLEN + extra }
+    u64 nb = alloc(nc * 4)
+    u64 i = 0
+    while i < BLEN {
+        st32(nb, i, ld32(BPOOL, i))
+        i = i + 1
+    }
+    if BPOOL != 0 { dealloc(BPOOL) }
+    BPOOL = nb
+    BCAP = nc
+}
+
+fn symbolic() -> u64 {
+    // returns the factor size in f64 entries; fills ND_BOFF / ND_NB / ND_FOFF; sets the stack and front peaks
+    u64 fac = 0
+    u64 sp = 0
+    u64 sp_max = 0
+    u64 f_max = 0
+    u64 id = 0
+    while id < NN {
+        u64 s = ld64(ND_START, id)
+        u64 nv = ld64(ND_NV, id)
+        u64 e = s + nv
+        u64 m = id + 1
+        u64 len = 0
+        u64 t = 0
+        while t < nv {
+            u64 i = ld32(ORD, s + t)
+            u64 p = ld64(IP, i)
+            u64 pe = ld64(IP, i + 1)
+            while p < pe {
+                u64 q = ld32(POS, ld32(IX, p))
+                // q < s: a neighbour inside this node's own subtree, already eliminated; its coupling
+                // arrives through the children's update matrices
+                if q >= e && ld32(MARK, q) != m {
+                    st32(MARK, q, m)
+                    st32(SBUF, len, q)
+                    len = len + 1
+                }
+                p = p + 1
+            }
+            t = t + 1
+        }
+        u64 cc = 0
+        while cc < 2 {
+            u64 ch = ld64(ND_C0, id)
+            if cc == 1 { ch = ld64(ND_C1, id) }
+            if ch != NONE {
+                u64 bo = ld64(ND_BOFF, ch)
+                u64 nb = ld64(ND_NB, ch)
+                u64 k = 0
+                while k < nb {
+                    u64 q = ld32(BPOOL, bo + k)
+                    if q >= e && ld32(MARK, q) != m {
+                        st32(MARK, q, m)
+                        st32(SBUF, len, q)
+                        len = len + 1
+                    }
+                    k = k + 1
+                }
+                sp = sp - nb * nb
+            }
+            cc = cc + 1
+        }
+        sort_u32(SBUF, len)
+        bpool_reserve(len)
+        st64(ND_BOFF, id, BLEN)
+        st64(ND_NB, id, len)
+        t = 0
+        while t < len {
+            st32(BPOOL, BLEN + t, ld32(SBUF, t))
+            t = t + 1
+        }
+        BLEN = BLEN + len
+        u64 f = nv + len
+        if f > f_max { f_max = f }
+        st64(ND_FOFF, id, fac)
+        fac = fac + nv * f + len * nv
+        if nv * f + len * nv > MAXBLK { MAXBLK = nv * f + len * nv }
+        if len * nv > MAXL { MAXL = len * nv }
+        FLOPS = FLOPS + 2 * nv * nv * nv / 3 + 2 * nv * nv * len + 2 * nv * len * len
+        sp = sp + len * len
+        if sp > sp_max { sp_max = sp }
+        id = id + 1
+    }
+    G_FN = f_max
+    SP = sp_max                    // reused below as the stack capacity
+    return fac
+}
+
+// ---------------------------------------------------------------- numeric
+
+fn gemm_core(u64 F, u64 f, u64 k0, u64 k1, u64 r0, u64 r1) {
+    // F[i][j] -= sum_{k in [k0,k1)} F[i][k] F[k][j], rows i in [r0, r1), columns j in [k1, f).
+    // Columns are tiled (JB) so the panel's rows stay in cache across i.
+    u64 JB = 256
+    u64 jb = k1
+    while jb < f {
+        u64 je = jb + JB
+        if je > f { je = f }
+        u64 i = r0
+        while i < r1 {
+            u64 rowi = F + i * f * 8
+            u64 k = k0
+            while k < k1 {
+                f64 lik = 0.0
+                u64 pl = rowi + k * 8
+                unsafe { *(pl as f64) -> lik }
+                if lik != 0.0 {
+                    u64 pa = rowi + jb * 8
+                    u64 pb = F + (k * f + jb) * 8
+                    u64 pend = rowi + je * 8
+                    while pa < pend {
+                        f64 a = 0.0
+                        f64 b = 0.0
+                        unsafe { *(pa as f64) -> a }
+                        unsafe { *(pb as f64) -> b }
+                        a = a - lik * b
+                        unsafe { *(pa as f64) = a }
+                        pa = pa + 8
+                        pb = pb + 8
+                    }
+                }
+                k = k + 1
+            }
+            i = i + 1
+        }
+        jb = je
+    }
+}
+
+fn gemm_rows(u64 r0, u64 r1, u64 unused) {
+    gemm_core(G_F, G_FN, G_K0, G_K1, r0, r1)
+}
+
+fn trailing_update(u64 F, u64 f, u64 k0, u64 k1, u64 par) {
+    u64 rows = f - k1
+    if par == 0 || NTH <= 1 || rows * (f - k1) < 200000 {
+        gemm_core(F, f, k0, k1, k1, f)
+        return
+    }
+    G_F = F
+    G_FN = f
+    G_K0 = k0
+    G_K1 = k1
+    u64 fp = fn_addr("gemm_rows")
+    u64 w = 0
+    while w < NTH {
+        u64 a = k1 + rows * w / NTH
+        u64 b = k1 + rows * (w + 1) / NTH
+        thread_pool_submit(w, fp, a, b, 0)
+        w = w + 1
+    }
+    thread_pool_wait()
+}
+
+fn partial_lu(u64 F, u64 f, u64 nv, u64 par) {
+    u64 kb = 0
+    while kb < nv {
+        u64 ke = kb + PW
+        if ke > nv { ke = nv }
+        // panel: columns [kb, ke), all rows below
+        u64 k = kb
+        while k < ke {
+            f64 piv = ldf(F, k * f + k)
+            if piv == 0.0 { die("zero pivot") }
+            u64 i = k + 1
+            while i < f {
+                f64 l = ldf(F, i * f + k) / piv
+                stf(F, i * f + k, l)
+                if l != 0.0 {
+                    u64 j = k + 1
+                    while j < ke {
+                        stf(F, i * f + j, ldf(F, i * f + j) - l * ldf(F, k * f + j))
+                        j = j + 1
+                    }
+                }
+                i = i + 1
+            }
+            k = k + 1
+        }
+        // U12 for the panel rows: apply the unit-lower panel to columns [ke, f)
+        k = kb
+        while k < ke {
+            u64 i = k + 1
+            while i < ke {
+                f64 l = ldf(F, i * f + k)
+                if l != 0.0 {
+                    u64 j = ke
+                    while j < f {
+                        stf(F, i * f + j, ldf(F, i * f + j) - l * ldf(F, k * f + j))
+                        j = j + 1
+                    }
+                }
+                i = i + 1
+            }
+            k = k + 1
+        }
+        if ke < f { trailing_update(F, f, kb, ke, par) }
+        kb = ke
+    }
+}
+
+fn bfind(u64 bo, u64 nb, u64 q) -> u64 {
+    // index of q in the sorted boundary list BPOOL[bo .. bo+nb)
+    u64 lo = 0
+    u64 hi = nb
+    while lo < hi {
+        u64 mid = (lo + hi) / 2
+        u64 v = ld32(BPOOL, bo + mid)
+        if v == q { return mid }
+        if v < q { lo = mid + 1 } else { hi = mid }
+    }
+    die("boundary lookup failed")
+    return 0
+}
+
+fn local_ix(u64 s, u64 nv, u64 bo, u64 nb, u64 q) -> u64 {
+    if q < s + nv { return q - s }
+    return nv + bfind(bo, nb, q)
+}
+
+fn pwrite_all(u64 fd, u64 buf, u64 len, u64 off) {
+    u64 done = 0
+    while done < len {
+        u64 want = len - done
+        if want > 0x40000000 { want = 0x40000000 }
+        u64 got = syscall_raw(18, fd, buf + done, want, off + done, 0, 0)
+        if kr_err(got) != 0 { die("pwrite failed") }
+        if got == 0 { die("pwrite wrote nothing") }
+        done = done + got
+    }
+}
+
+fn pread_all(u64 fd, u64 buf, u64 len, u64 off) {
+    u64 done = 0
+    while done < len {
+        u64 want = len - done
+        if want > 0x40000000 { want = 0x40000000 }
+        u64 got = syscall_raw(17, fd, buf + done, want, off + done, 0, 0)
+        if kr_err(got) != 0 { die("pread failed") }
+        if got == 0 { die("pread: short file") }
+        done = done + got
+    }
+}
+
+// Subtree plan (filled by plan_subtrees): roots, first nodes, saved root updates
+static u64 NSUB = 0
+static u64 SUB_ROOT = 0
+static u64 SUB_FIRST = 0
+static u64 SUB_SAVED = 0           // pointer per subtree to its root's update matrix (nb x nb)
+static u64 ROOTOF = 0              // u64[NCAP]: subtree index + 1 if the node is a subtree root, else 0
+static u64 INSUB = 0               // u64[NCAP]: 1 if the node belongs to a subtree
+static u64 NEXTJOB = 0             // atomic job counter (heap word)
+static u64 T_FRONT = 0             // per thread: front buffer, stack, map, L21 staging
+static u64 T_STK = 0
+static u64 T_MAP = 0
+static u64 T_LBUF = 0
+static u64 SUBSZ = 0
+static u64 TOPSTK = 0
+
+fn process_node(u64 id, u64 F, u64 stk, u64 sp, u64 map, u64 lbuf, u64 par, u64 top) -> u64 {
+    u64 s = ld64(ND_START, id)
+    u64 nv = ld64(ND_NV, id)
+    u64 nb = ld64(ND_NB, id)
+    u64 bo = ld64(ND_BOFF, id)
+    u64 f = nv + nb
+    u64 e = s + nv
+    u64 z = 0
+    while z < f * f {
+        store64(F + z * 8, 0)
+        z = z + 1
+    }
+    // original entries: own rows, and the own columns of boundary rows
+    u64 t = 0
+    while t < nv {
+        u64 i = ld32(ORD, s + t)
+        u64 p = ld64(IP, i)
+        u64 pe = ld64(IP, i + 1)
+        while p < pe {
+            u64 j = ld32(IX, p)
+            u64 q = ld32(POS, j)
+            if q >= s {
+                u64 lj = local_ix(s, nv, bo, nb, q)
+                stf(F, t * f + lj, ldf(F, t * f + lj) + ldf(DA, p))
+                if q >= e {
+                    u64 r = ld64(IP, j)
+                    u64 re = ld64(IP, j + 1)
+                    while r < re {
+                        if ld32(IX, r) == i {
+                            stf(F, lj * f + t, ldf(F, lj * f + t) + ldf(DA, r))
+                        }
+                        r = r + 1
+                    }
+                }
+            }
+            p = p + 1
+        }
+        t = t + 1
+    }
+    // extend-add the children's update matrices (right child first: it is on top of the stack)
+    u64 cc = 0
+    while cc < 2 {
+        u64 ch = ld64(ND_C1, id)
+        if cc == 1 { ch = ld64(ND_C0, id) }
+        if ch != NONE {
+            u64 cb = ld64(ND_BOFF, ch)
+            u64 cn = ld64(ND_NB, ch)
+            u64 U = 0
+            if top == 1 && ld64(ROOTOF, ch) != 0 {
+                U = ld64(SUB_SAVED, ld64(ROOTOF, ch) - 1)
+            } else {
+                sp = sp - cn * cn
+                U = stk + sp * 8
+            }
+            u64 a = 0
+            while a < cn {
+                st64(map, a, local_ix(s, nv, bo, nb, ld32(BPOOL, cb + a)))
+                a = a + 1
+            }
+            a = 0
+            while a < cn {
+                u64 la = ld64(map, a)
+                u64 rowF = F + la * f * 8
+                u64 rowU = U + a * cn * 8
+                u64 b = 0
+                while b < cn {
+                    u64 lb = ld64(map, b)
+                    stf(rowF, lb, ldf(rowF, lb) + ldf(rowU, b))
+                    b = b + 1
+                }
+                a = a + 1
+            }
+        }
+        cc = cc + 1
+    }
+    partial_lu(F, f, nv, par)
+    // store the factor block: own rows (nv x f), then the L21 block (nb x nv)
+    u64 fo = 0
+    u64 lo = lbuf
+    if OOC == 0 {
+        fo = FAC + ld64(ND_FOFF, id) * 8
+        t = 0
+        while t < nv * f {
+            store64(fo + t * 8, load64(F + t * 8))
+            t = t + 1
+        }
+        lo = fo + nv * f * 8
+    }
+    u64 a = 0
+    while a < nb {
+        u64 b = 0
+        while b < nv {
+            store64(lo + (a * nv + b) * 8, load64(F + ((nv + a) * f + b) * 8))
+            b = b + 1
+        }
+        a = a + 1
+    }
+    if OOC == 1 {
+        u64 off = ld64(ND_FOFF, id) * 8
+        pwrite_all(OOC_FD, F, nv * f * 8, off)
+        pwrite_all(OOC_FD, lbuf, nb * nv * 8, off + nv * f * 8)
+    }
+    // push the update matrix
+    u64 U = stk + sp * 8
+    a = 0
+    while a < nb {
+        u64 b = 0
+        while b < nb {
+            store64(U + (a * nb + b) * 8, load64(F + ((nv + a) * f + nv + b) * 8))
+            b = b + 1
+        }
+        a = a + 1
+    }
+    return sp + nb * nb
+}
+
+fn subtree_worker(u64 tid, u64 unused1, u64 unused2) {
+    u64 F = ld64(T_FRONT, tid)
+    u64 stk = ld64(T_STK, tid)
+    u64 map = ld64(T_MAP, tid)
+    u64 lbuf = ld64(T_LBUF, tid)
+    while 1 {
+        u64 j = atomic_add(NEXTJOB, 1)
+        if j >= NSUB { return }
+        u64 root = ld64(SUB_ROOT, j)
+        u64 id = ld64(SUB_FIRST, j)
+        u64 sp = 0
+        while id <= root {
+            sp = process_node(id, F, stk, sp, map, lbuf, 0, 0)
+            id = id + 1
+        }
+        // the root's update is the only thing left on this stack: keep it
+        u64 nb = ld64(ND_NB, root)
+        u64 dst = ld64(SUB_SAVED, j)
+        u64 k = 0
+        while k < nb * nb {
+            store64(dst + k * 8, load64(stk + k * 8))
+            k = k + 1
+        }
+    }
+}
+
+fn plan_subtrees() -> u64 {
+    // returns the bytes this plan allocates; fills the SUB_* / ROOTOF / INSUB arrays and per-thread buffers
+    SUBSZ = alloc(NN * 8 + 8)
+    u64 depth = alloc(NN * 8 + 8)
+    ROOTOF = alloc(NN * 8 + 8)
+    INSUB = alloc(NN * 8 + 8)
+    u64 id = 0
+    while id < NN {
+        u64 sz = 1
+        if ld64(ND_C0, id) != NONE { sz = sz + ld64(SUBSZ, ld64(ND_C0, id)) }
+        if ld64(ND_C1, id) != NONE { sz = sz + ld64(SUBSZ, ld64(ND_C1, id)) }
+        st64(SUBSZ, id, sz)
+        id = id + 1
+    }
+    st64(depth, NN - 1, 0)
+    id = NN
+    while id > 0 {
+        id = id - 1
+        u64 dd = ld64(depth, id) + 1
+        if ld64(ND_C0, id) != NONE { st64(depth, ld64(ND_C0, id), dd) }
+        if ld64(ND_C1, id) != NONE { st64(depth, ld64(ND_C1, id), dd) }
+    }
+    u64 L = 0
+    while (1 << L) < NTH * 4 { L = L + 1 }
+    SUB_ROOT = alloc(((1 << L) + 8) * 8)
+    SUB_FIRST = alloc(((1 << L) + 8) * 8)
+    SUB_SAVED = alloc(((1 << L) + 8) * 8)
+    NSUB = 0
+    id = 0
+    while id < NN {
+        u64 d = ld64(depth, id)
+        u64 leaf = 0
+        if ld64(ND_C0, id) == NONE && ld64(ND_C1, id) == NONE { leaf = 1 }
+        if d == L || (d < L && leaf == 1) {
+            st64(SUB_ROOT, NSUB, id)
+            st64(SUB_FIRST, NSUB, id + 1 - ld64(SUBSZ, id))
+            st64(ROOTOF, id, NSUB + 1)
+            NSUB = NSUB + 1
+        }
+        id = id + 1
+    }
+    // mark subtree members; per-subtree peaks
+    u64 front_max = 0
+    u64 stk_max = 0
+    u64 nbmax = 0
+    u64 lmax = 0
+    u64 bytes = 0
+    u64 j = 0
+    while j < NSUB {
+        u64 root = ld64(SUB_ROOT, j)
+        u64 a = ld64(SUB_FIRST, j)
+        u64 sp = 0
+        u64 peak = 0
+        while a <= root {
+            st64(INSUB, a, 1)
+            u64 nv = ld64(ND_NV, a)
+            u64 nb = ld64(ND_NB, a)
+            if ld64(ND_C0, a) != NONE { sp = sp - ld64(ND_NB, ld64(ND_C0, a)) * ld64(ND_NB, ld64(ND_C0, a)) }
+            if ld64(ND_C1, a) != NONE { sp = sp - ld64(ND_NB, ld64(ND_C1, a)) * ld64(ND_NB, ld64(ND_C1, a)) }
+            sp = sp + nb * nb
+            if sp > peak { peak = sp }
+            if nv + nb > front_max { front_max = nv + nb }
+            if nb > nbmax { nbmax = nb }
+            if nb * nv > lmax { lmax = nb * nv }
+            a = a + 1
+        }
+        if peak > stk_max { stk_max = peak }
+        u64 nbr = ld64(ND_NB, root)
+        st64(SUB_SAVED, j, alloc(nbr * nbr * 8 + 8))
+        bytes = bytes + nbr * nbr * 8
+        j = j + 1
+    }
+    T_FRONT = alloc(NTH * 8)
+    T_STK = alloc(NTH * 8)
+    T_MAP = alloc(NTH * 8)
+    T_LBUF = alloc(NTH * 8)
+    u64 w = 0
+    while w < NTH {
+        st64(T_FRONT, w, alloc(front_max * front_max * 8 + 8))
+        st64(T_STK, w, alloc(stk_max * 8 + 8))
+        st64(T_MAP, w, alloc(nbmax * 8 + 8))
+        st64(T_LBUF, w, alloc(lmax * 8 + 8))
+        bytes = bytes + (front_max * front_max + stk_max + nbmax + lmax) * 8
+        w = w + 1
+    }
+    // the top part's own stack: subtree roots contribute nothing to it (their updates are saved)
+    u64 sp = 0
+    u64 peak = 0
+    id = 0
+    while id < NN {
+        if ld64(INSUB, id) == 0 {
+            u64 cc = 0
+            while cc < 2 {
+                u64 ch = ld64(ND_C0, id)
+                if cc == 1 { ch = ld64(ND_C1, id) }
+                if ch != NONE && ld64(ROOTOF, ch) == 0 { sp = sp - ld64(ND_NB, ch) * ld64(ND_NB, ch) }
+                cc = cc + 1
+            }
+            sp = sp + ld64(ND_NB, id) * ld64(ND_NB, id)
+            if sp > peak { peak = sp }
+        }
+        id = id + 1
+    }
+    TOPSTK = peak
+    bytes = bytes + peak * 8
+    println(f"krsolve: {NSUB} subtrees at depth {L}; per-thread front {front_max}, stack {stk_max}; top stack {peak}")
+    return bytes
+}
+
+fn numeric() {
+    // phase 1: independent subtrees, one per worker at a time
+    NEXTJOB = alloc(8)
+    store64(NEXTJOB, 0)
+    u64 tq = time_ns()
+    if NTH > 1 {
+        u64 fp = fn_addr("subtree_worker")
+        u64 w = 0
+        while w < NTH {
+            thread_pool_submit(w, fp, w, 0, 0)
+            w = w + 1
+        }
+        thread_pool_wait()
+    } else {
+        subtree_worker(0, 0, 0)
+    }
+    u64 tr = time_ns()
+    // phase 2: the top of the tree, sequential over nodes, threads inside each front
+    u64 sp = 0
+    u64 id = 0
+    while id < NN {
+        if ld64(INSUB, id) == 0 {
+            sp = process_node(id, FRONT, STK, sp, MAP0, LBUF, 1, 1)
+        }
+        id = id + 1
+    }
+    println(f"krsolve: numeric split ms: subtrees {(tr - tq) / 1000000} top {(time_ns() - tr) / 1000000}")
+}
+
+fn block(u64 id) -> u64 {
+    if OOC == 0 { return FAC + ld64(ND_FOFF, id) * 8 }
+    u64 nv = ld64(ND_NV, id)
+    u64 f = nv + ld64(ND_NB, id)
+    pread_all(OOC_FD, BLK, (nv * f + (f - nv) * nv) * 8, ld64(ND_FOFF, id) * 8)
+    return BLK
+}
+
+fn solve(u64 y) {
+    // y: right-hand side in elimination order, overwritten by the solution in elimination order
+    u64 id = 0
+    while id < NN {
+        u64 s = ld64(ND_START, id)
+        u64 nv = ld64(ND_NV, id)
+        u64 nb = ld64(ND_NB, id)
+        u64 bo = ld64(ND_BOFF, id)
+        u64 f = nv + nb
+        u64 R = block(id)
+        u64 t = 0
+        while t < nv {
+            f64 acc = ldf(y, s + t)
+            u64 u = 0
+            while u < t {
+                acc = acc - ldf(R, t * f + u) * ldf(y, s + u)
+                u = u + 1
+            }
+            stf(y, s + t, acc)
+            t = t + 1
+        }
+        u64 L = R + nv * f * 8
+        u64 k = 0
+        while k < nb {
+            f64 acc = 0.0
+            t = 0
+            while t < nv {
+                acc = acc + ldf(L, k * nv + t) * ldf(y, s + t)
+                t = t + 1
+            }
+            u64 q = ld32(BPOOL, bo + k)
+            stf(y, q, ldf(y, q) - acc)
+            k = k + 1
+        }
+        id = id + 1
+    }
+    id = NN
+    while id > 0 {
+        id = id - 1
+        u64 s = ld64(ND_START, id)
+        u64 nv = ld64(ND_NV, id)
+        u64 nb = ld64(ND_NB, id)
+        u64 bo = ld64(ND_BOFF, id)
+        u64 f = nv + nb
+        u64 R = block(id)
+        u64 t = nv
+        while t > 0 {
+            t = t - 1
+            f64 acc = ldf(y, s + t)
+            u64 u = t + 1
+            while u < nv {
+                acc = acc - ldf(R, t * f + u) * ldf(y, s + u)
+                u = u + 1
+            }
+            u64 k = 0
+            while k < nb {
+                acc = acc - ldf(R, t * f + nv + k) * ldf(y, ld32(BPOOL, bo + k))
+                k = k + 1
+            }
+            stf(y, s + t, acc / ldf(R, t * f + t))
+        }
+    }
+}
+
+fn grid_input(u64 m1, u64 m2) {
+    // symbolic-only mode: a full m1 x m2 lattice with the 5-point pattern (values irrelevant)
+    N = m1 * m2
+    CX = alloc(N * 4)
+    CY = alloc(N * 4)
+    IP = alloc((N + 1) * 8)
+    IX = alloc(N * 5 * 4)
+    u64 nz = 0
+    u64 i = 0
+    while i < m1 {
+        u64 j = 0
+        while j < m2 {
+            u64 v = i * m2 + j
+            st32(CX, v, i)
+            st32(CY, v, j)
+            st64(IP, v, nz)
+            if i > 0 {
+                st32(IX, nz, v - m2)
+                nz = nz + 1
+            }
+            if j > 0 {
+                st32(IX, nz, v - 1)
+                nz = nz + 1
+            }
+            st32(IX, nz, v)
+            nz = nz + 1
+            if j + 1 < m2 {
+                st32(IX, nz, v + 1)
+                nz = nz + 1
+            }
+            if i + 1 < m1 {
+                st32(IX, nz, v + m2)
+                nz = nz + 1
+            }
+            j = j + 1
+        }
+        i = i + 1
+    }
+    st64(IP, N, nz)
+    NNZ = nz
+}
+
+fn main() {
+    if cli_argc < 3 { die("usage: solver IN OUT [threads] [factor-file]  |  solver --grid M1 M2") }
+    u64 a1 = arg(1)
+    if load8(a1) == 45 && load8(a1 + 1) == 45 && load8(a1 + 2) == 103 {
+        grid_input(parse_u64(arg(2)), parse_u64(arg(3)))
+        SYMBOLIC_ONLY = 1
+    }
+    if cli_argc > 3 { NTH = parse_u64(arg(3)) }
+    if NTH < 1 { NTH = 1 }
+    u64 t0 = time_ns()
+    if SYMBOLIC_ONLY == 0 { load_input(arg(1)) }
+    u64 t1 = time_ns()
+    println(f"krsolve: n={N} nnz={NNZ} threads={NTH} read {(t1 - t0) / 1000000} ms")
+    ORD = alloc(N * 4)
+    POS = alloc(N * 4)
+    TMP = alloc(N * 4)
+    u64 maxc = 0
+    u64 i = 0
+    while i < N {
+        st32(ORD, i, i)
+        if ld32(CX, i) > maxc { maxc = ld32(CX, i) }
+        if ld32(CY, i) > maxc { maxc = ld32(CY, i) }
+        i = i + 1
+    }
+    HIST = alloc((maxc + 2) * 8)
+    NCAP = N / 8 + 4096
+    ND_START = alloc(NCAP * 8)
+    ND_NV = alloc(NCAP * 8)
+    ND_C0 = alloc(NCAP * 8)
+    ND_C1 = alloc(NCAP * 8)
+    ND_BOFF = alloc(NCAP * 8)
+    ND_NB = alloc(NCAP * 8)
+    ND_FOFF = alloc(NCAP * 8)
+    nd(0, N)
+    i = 0
+    while i < N {
+        st32(POS, ld32(ORD, i), i)
+        i = i + 1
+    }
+    dealloc(TMP)
+    MARK = alloc(N * 4)
+    SBUF = alloc(N * 4)
+    BCAP = N + 1024
+    BPOOL = alloc(BCAP * 4)
+    u64 fac = symbolic()
+    u64 fmax = G_FN
+    u64 spmax = SP
+    u64 t2 = time_ns()
+    u64 gb = (fac + spmax + fmax * fmax) * 8 / 1000000000
+    println(f"krsolve: nodes={NN} factor_entries={fac} stack_peak={spmax} max_front={fmax} numeric_GB~{gb} symbolic {(t2 - t1) / 1000000} ms")
+    println(f"krsolve: flops~{FLOPS}")
+    if SYMBOLIC_ONLY == 1 { exit(0) }
+    dealloc(MARK)
+    dealloc(SBUF)
+    if cli_argc > 4 { OOC = 1 }
+    u64 planned = plan_subtrees()
+    println(f"krsolve: parallel plan allocates {planned / 1000000} MB")
+    if OOC == 0 { FAC = alloc(fac * 8 + 8) }
+    if OOC == 1 {
+        OOC_FD = file_open(arg(4), 1)
+        if kr_err(OOC_FD) != 0 { die("cannot open the factor file") }
+        LBUF = alloc(MAXL * 8 + 8)
+        BLK = alloc(MAXBLK * 8 + 8)
+        println(f"krsolve: out-of-core factor, {fac * 8 / 1000000000} GB to disk")
+    }
+    STK = alloc(TOPSTK * 8 + 8)
+    FRONT = alloc(fmax * fmax * 8 + 8)
+    MAP0 = alloc(fmax * 8 + 8)
+    if OOC == 0 { LBUF = 0 }
+    if NTH > 1 { thread_pool_init(NTH) }
+    numeric()
+    u64 t3 = time_ns()
+    println(f"krsolve: numeric {(t3 - t2) / 1000000} ms")
+    if OOC == 1 {
+        file_close(OOC_FD)
+        OOC_FD = file_open(arg(4), 0)
+        if kr_err(OOC_FD) != 0 { die("cannot reopen the factor file") }
+    }
+    u64 y = alloc(N * 8)
+    i = 0
+    while i < N {
+        stf(y, i, ldf(RHS, ld32(ORD, i)))
+        i = i + 1
+    }
+    solve(y)
+    u64 x = alloc(N * 8)
+    i = 0
+    while i < N {
+        stf(x, ld32(ORD, i), ldf(y, i))
+        i = i + 1
+    }
+    // relative residual max|Ax - b| / max|b|
+    f64 rmax = 0.0
+    f64 bmax = 0.0
+    i = 0
+    while i < N {
+        f64 acc = 0.0 - ldf(RHS, i)
+        u64 p = ld64(IP, i)
+        u64 pe = ld64(IP, i + 1)
+        while p < pe {
+            acc = acc + ldf(DA, p) * ldf(x, ld32(IX, p))
+            p = p + 1
+        }
+        f64 ab = acc
+        if acc < 0.0 { ab = 0.0 - acc }
+        if ab > rmax { rmax = ab }
+        f64 bb = ldf(RHS, i)
+        if bb < 0.0 { bb = 0.0 - bb }
+        if bb > bmax { bmax = bb }
+        i = i + 1
+    }
+    u64 t4 = time_ns()
+    f64 rel = rmax / bmax
+    println(f"krsolve: solve {(t4 - t3) / 1000000} ms  residual max|Ax-b|/max|b| = {rel}")
+    u64 fd = file_open(arg(2), 1)
+    if kr_err(fd) != 0 { die("cannot open output") }
+    write_exact(fd, x, N * 8)
+    file_close(fd)
+    if NTH > 1 { thread_pool_shutdown() }
+    exit(0)
+}

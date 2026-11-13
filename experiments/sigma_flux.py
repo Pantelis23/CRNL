@@ -68,6 +68,9 @@ import experiments.episode_committor as ec
 from experiments.weak_upstream import ARMS, element
 
 
+_QP_CACHE = {}
+
+
 def sigma_table(A, B, om_grid=None):
     xs = np.concatenate([np.linspace(A.r2 + 1e-3, 1.4, 80), np.linspace(1.4, 3.6, 120)[1:]])
     sg = ec.joint_separatrix(A, B, xs)
@@ -77,8 +80,12 @@ def sigma_table(A, B, om_grid=None):
 def cut_flux(A, B, om, cut="sad2", sig=None):
     m = A.cap(om) + 1
     sad1, sad2 = int(np.ceil(A.r2 * om)), int(np.ceil(B.r2 * om))
-    ec.qprocess_J(A, B, om, m, sad1, sad2, lower="rail")
-    L = ec.qprocess_J.last
+    key = (A.name, B.name, om, m, ec.SOLVER)
+    if _QP_CACHE.get("key") != key:                 # both cuts share the stationary law: solve it once
+        ec.qprocess_J(A, B, om, m, sad1, sad2, lower="rail")
+        _QP_CACHE.clear()
+        _QP_CACHE.update(key=key, last=ec.qprocess_J.last, ratio=ec.qprocess_J.last_ratio)
+    L = _QP_CACHE["last"]
     P, n1s, base2, psi_n1, M1, M2 = L["P"], L["n1s"], L["base2"], L["psi_n1"], L["M1"], L["M2"]
     lt1, mt1 = L["lt1"].reshape(M1, -1)[:, 0], L["mt1"].reshape(M1, -1)[:, 0]
     n2s = base2 + np.arange(M2)
@@ -119,7 +126,7 @@ def cut_flux(A, B, om, cut="sad2", sig=None):
     rhs -= np.where(dn < 0, mu2 / psi_n1[I1], 0.0)                 # the low rail: u = 1/psi (original measure)
     rows.append(np.arange(n)); cols.append(np.arange(n)); vals.append(diag)
     Mx = sp.coo_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))), shape=(n, n)).tocsc()
-    qv = ec.lu_solve(Mx, rhs)[0]
+    qv = ec.lu_solve(Mx, rhs, coords=(I1, I2))[0]
     q = np.zeros((M1, M2))
     q[I1, I2] = qv
     Pc = np.clip(P, 0.0, None)

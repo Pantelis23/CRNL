@@ -14588,5 +14588,46 @@ committed.
   The solver reached exactly 345.1 GB, as in-core, and was killed at a system commit of 362.9 / 363.4 GB.
 - **Why it never engaged is not established.** Two candidates: the bundled mkl_rt ignores the out-of-core request
   for this call, or the reordering and factor phases allocate before it applies.
-- **One number to keep:** MKL needed 345 GB for a factor whose own values and indices are ~36–48 GB (3.03e9
-  nonzeros). Almost all of the footprint is the library's working memory, not the factor.
+- ~~**One number to keep:** MKL needed 345 GB for a factor whose own values and indices are ~36–48 GB (3.03e9
+  nonzeros). Almost all of the footprint is the library's working memory, not the factor.~~ **WITHDRAWN (§134.4).**
+  - **What killed it.** The reported −1,262,037,256 is the factor's nonzero count mod 2³², and I assumed it had
+    wrapped once. It can have wrapped several times: 1.16e10 (twice) or 1.59e10 (three times). Either fits
+    PARDISO's own 132 GB estimate for factor plus solve better than 3.03e9 does.
+  - **An independent count.** The KernRift solver's symbolic phase on the same 9182 × 12601 lattice, with
+    geometric nested dissection, gives 2.31e10 entries (185 GB). METIS's ordering typically fills less.
+  - **So** the factor is of order 1e10 entries or more, and MKL's 345 GB was ~2–3× its factor, not ~8×. The
+    argument for a lean solver ("it would fit in RAM") was wrong. It survives only as "it can stream the factor to
+    disk", which is what §134.4 does.
+
+#### 134.4 A lean out-of-core solver in KernRift: validated to 1e−11 against the stored cells
+
+*Scope: the instrument only. `experiments/krsolve/` (`solver.kr`, `krsolve.py`; `thread.kr` is MLRift's thread pool,
+copied unchanged) and `tests/test_krsolve.py`. The Ω = 4000 result is recorded when it exists.*
+
+**The solver.**
+- **Algorithm.** Multifrontal LU with geometric nested dissection on the unknowns' lattice coordinates, and no
+  pivoting. The systems are generator restrictions, M-matrices up to row signs, for which elimination without
+  pivoting is stable.
+- **Parallelism.** About four subtrees per thread are factored concurrently; the top of the tree runs
+  sequentially, with the threads inside each front.
+- **Out-of-core.** Each node's factor block is written once to a precomputed offset (`pwrite`) and read back
+  (`pread`) by the two triangular solves, so the factor never has to fit in memory.
+- **How it is called.** `lu_solve` uses it as `SOLVER = "kr"`. `qprocess_J`, `fall_profile`'s committor and
+  `sigma_flux`'s committor pass their lattice coordinates. On the laptop it runs in WSL (Linux threads), driven
+  from Windows Python. `sigma_flux` now solves the shared stationary law once per (pair, Ω, box) instead of once
+  per cut.
+
+**Validation.**
+- **Against SuperLU,** on an irregular pinned lattice: agreement to 6.7e−16.
+- **Determinism:** 1 thread vs 20, and in-core vs out-of-core, are bit-identical.
+- **Against the stored cells:** the Σ-flux cells reproduce to 1.1e−12 (Ω = 200, 400) and to 8.1e−12 (Ω = 1600, cap
+  1.1, out-of-core, against the laptop's PARDISO values).
+- **Through the laptop's route:** the Windows → WSL path reproduces Ω = 400 to 3e−13.
+
+**Size.** The symbolic phase alone, on the 9182 × 12601 lattice (Ω = 4000, cap 1.1), gives 2.31e10 factor entries
+(185 GB, which fixed the §134.3 withdrawal), 4.6e13 flops, a largest front of 15482 and a 4 GB update stack.
+
+**Speed.**
+- On 20 threads the Ω = 1600 Σ committor (2.8e11 flops) takes 23.8 s. Tree parallelism gave 2.6×; tiling the
+  inner kernel gave nothing measurable.
+- About 12 GFLOP/s overall, against MKL's several-fold more. The point is memory, not speed.

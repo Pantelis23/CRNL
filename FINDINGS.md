@@ -14631,3 +14631,38 @@ copied unchanged) and `tests/test_krsolve.py`. The Ω = 4000 result is recorded 
 - On 20 threads the Ω = 1600 Σ committor (2.8e11 flops) takes 23.8 s. Tree parallelism gave 2.6×; tiling the
   inner kernel gave nothing measurable.
 - About 12 GFLOP/s overall, against MKL's several-fold more. The point is memory, not speed.
+
+#### 134.5 Ω = 4000, exact: M6 and T-CASC-au held, and the measured a crossed zero while the model's went negative
+
+*Scope: XK, Ω = 4000, cap 1.1, both cuts. Solved by krsolve (§134.4) out-of-core in WSL on the laptop, with a
+185 GB factor streamed to disk. The main solve took 82 min wall (about 8 cores busy on the top fronts); peak
+system commit was 117 of 363 GB, with the solver at ≤ 40 GB. The two cut totals agree to 3.0e−12. M6 (§134.1's
+docstring) and T-CASC-au's kill test (THEORIES) were both written before any Ω = 4000 cell existed.*
+
+| window | 800→1600 | 1600→2000 | 2000→2800 | 2800→3400 | **3400→4000** |
+|---|---|---|---|---|---|
+| model a | +0.061 | +0.026 | +0.014 | +0.0024 | **−0.0047** |
+| measured a | −0.0127 | −0.0118 | −0.0073 | −0.0026 | **+0.0009** |
+| model − measured | +0.074 | +0.038 | +0.021 | +0.005 | **−0.0056** |
+
+- **M6 held:** the measured +0.0009 is within 0.03 of −0.0047, with |offset| = 0.0056 ≤ 0.01.
+- **T-CASC-au's registered window held:** a(2800 → 4000) = −0.0010, against the predicted −0.0008 ± 0.03. Its kill
+  condition ("still rising, above +0.01") did not fire.
+- **What the numbers also show.** The measured a has risen at every step and has now crossed zero. The model's a
+  has gone negative, so for the first time the offset has changed sign: the exact chain is now above the model.
+  That is the direction §134.2 argued the model must eventually fail in, since its long-range drift rests on ε
+  within ~0.012 of the saddle, where the rays' ε violates the exact climb bound. But neither registered criterion
+  was built to detect a sign flip, and both held. So this is a pattern seen in one window, not a refutation, and
+  it is not claimed as one (rule 19).
+- **On Σ** the exit keeps narrowing: sd(x₁) = 0.704 / 0.692 / 0.679 / 0.665 at Ω = 2000 / 2800 / 3400 / 4000, with
+  the mean at 2.291.
+
+> **Status of the prefactor (consolidating §134–§134.5).**
+> - **Measured, to Ω = 4000:** R = C·e^{ΓΩ}·Ω^a with |a| ≤ 0.013 in every window from 800 on, rising monotonically
+>   through zero.
+> - **Explained to Ω ≈ 3400:** the spread-exit model with ε from the rays, with two forward tests held.
+> - **Beyond 3400:** the model's own extrapolation (negative a) is on the wrong side of the data for the first
+>   time, in the direction an exact bound predicts.
+> - **Still open: the asymptote.** a → 0 is what the data most simply suggest and what the bound allows. Whether
+>   the rise stops at 0 needs Ω > 4000. That is now a matter of time on this hardware, not of memory: krsolve's
+>   footprint at 4000 was 40 GB with the factor on disk.

@@ -5497,7 +5497,12 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   roughly 40 GB). The measured a over 2800 → 4000 must lie within 0.03 of −0.0008. A measured a still rising,
   above +0.01, means ε near the saddle (the caustic region) is wrong. **→ §134.1: Ω = 4000 failed on memory**
   (PARDISO −2). A stand-in at Ω = 3400 held: offset 0.005, with the measured a still rising (−0.0026). The test is
-  still open and needs a machine beyond 64 GB or a solver that does not factor.
+  still open and needs a machine beyond 64 GB or a solver that does not factor. **→ §134.5: run with krsolve (out-of-core),
+  it held.** a(2800 → 4000) = −0.0010; M6 held (+0.0009 against −0.0047). The measured a has risen through zero
+  while the model's turned negative: the first sign-flip of the offset, in the direction the climb bound predicts.
+  **Still open:** whether a stops at 0. **Next test:** Ω = 5000 (krsolve, out-of-core; factor ~300 GB on the
+  laptop's 954 GB WSL disk, an estimate by n log n scaling). The model predicts a(4000 → 5000) = −0.0114. If the measured a stays ≥ 0 there, the
+  model's asymptotics are refuted on data, not only on the bound.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

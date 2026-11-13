@@ -61,3 +61,16 @@ def test_saddle_climb_bound_and_the_envelope_violating_it():
     s = json.loads(RES.read_text())
     eps = eps_fn(s)
     assert eps(2.991) > 0.5 * h * 0.009 ** 2                   # the envelope is not W there
+
+
+def test_omega_4000_registered_windows():
+    """§134.5: M6 and T-CASC-au's window, both written before Omega = 4000 existed, and its conservation."""
+    s = json.loads(RES.read_text())
+    a, b = s["XK:4000:sad2:cap1.1"]["total"], s["XK:4000:sigma:cap1.1"]["total"]
+    assert abs(b / a - 1) < 1e-9
+    m6 = s["S134"]["3400-4000"]
+    assert abs(m6["a_measured"] - m6["a_model"]) <= 0.01
+    tc = s["S134"]["2800-4000"]
+    assert abs(tc["a_measured"] - tc["a_model"]) < 0.03 and tc["a_measured"] <= 0.01
+    seq = [s["S134"][w]["a_measured"] for w in ("800-1600", "1600-2000", "2000-2800", "2800-3400", "3400-4000")]
+    assert all(y > x for x, y in zip(seq, seq[1:]))       # measured a rises at every step

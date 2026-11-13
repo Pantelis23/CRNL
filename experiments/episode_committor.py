@@ -320,6 +320,11 @@ from experiments.weak_upstream import ARMS, element, pair_generator
 
 
 SOLVER = "superlu"          # or "pardiso" (MKL, 64-bit internals, out-of-core capable; --solver)
+# §134.6: the Q-process law is pinned at the rails; at the stage-1 saddle it is ~ e^{-0.155 Omega} of the pin, which
+# underflows double precision near Omega ~ 4700 (dip = 0 at 5000). Every consumer divides by dip, so pinning to an exact
+# power of two instead of 1 cancels exactly -- and is bit-identical wherever nothing underflowed. 2^900 leaves ~37
+# decades of overflow headroom and keeps dip normal to Omega ~ 8000.
+PIN_SCALE = 2.0 ** 900
 
 
 def lu_solve(M, rhs, permc="COLAMD", coords=None):
@@ -506,7 +511,7 @@ def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD", lower="sad"):
     k2 = int(np.clip(round(B.r3 * om) - base2, 0, M2 - 1))
     k = k1 * M2 + k2
     At = pin_row(Qt.T.tocsr(), k)                                 # CSR edit; the LIL route cost tens of GB at 4000
-    b = np.zeros(M1 * M2); b[k] = 1.0
+    b = np.zeros(M1 * M2); b[k] = PIN_SCALE
     pi, qprocess_J.last_nnz = lu_solve(At, b, permc, coords=(I1, I2))
     r_ = Qt.T @ pi
     r_[k] = 0.0                                                  # the pinned row is not an equation
@@ -521,6 +526,9 @@ def qprocess_J(A, B, om, m, sad1, sad2, permc="COLAMD", lower="sad"):
     dip = float(np.clip(P[0, :], 0, None).sum() / psi_n1[0] * mu1s[0])
     _, mu2s = B.rates(np.full(M1, float(base2)), n1s.astype(float), om, False)
     fall = float((np.clip(P[:, 0], 0, None) / psi_n1 * mu2s).sum())   # into the boundary below
+    if not (np.isfinite(P).all() and 2.2250738585072014e-308 < dip < np.inf):
+        raise FloatingPointError(f"Q-process law out of double range at Omega={om}: dip={dip!r}, "
+                                 f"max={np.nanmax(P)!r} (PIN_SCALE={PIN_SCALE!r}; §134.6)")
     qprocess_J.last_ratio = fall / dip
     qprocess_J.last = dict(P=P, n1s=n1s, n2s=n2s, base2=base2, psi_n1=psi_n1, dip=dip, lt1=lt1, mt1=mt1,
                            M1=M1, M2=M2)

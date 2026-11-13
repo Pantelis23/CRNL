@@ -14666,3 +14666,28 @@ docstring) and T-CASC-au's kill test (THEORIES) were both written before any Ω 
 > - **Still open: the asymptote.** a → 0 is what the data most simply suggest and what the bound allows. Whether
 >   the rise stops at 0 needs Ω > 4000. That is now a matter of time on this hardware, not of memory: krsolve's
 >   footprint at 4000 was 40 GB with the factor on disk.
+
+#### 134.6 The first Ω = 5000 run was lost to underflow, not to the solver; the pin is now 2^900
+
+*Scope: XK, cap 1.1, Q-process law pinned at the rails. The magnitudes come from krsolve at Ω = 400–1600 (local)
+and from the stored Ω = 5000 solution vector (laptop). This is an instrument note; it changes no published number.*
+
+- **What happened.** krsolve's half-storage version (one factor of 1.47e11 bytes, 147 GB, on disk) finished the
+  Ω = 5000 Q-process solve. The solution was finite and non-negative, with max 1.0002. Python then stopped on
+  `fall / dip` with dip = 0. The n₁ = sad1 row of the law was exactly zero, 23.1 M of the 180.7 M entries were zero,
+  and 72.4 M were subnormal.
+- **Why.** The law is pinned to 1 at the rails, and at the stage-1 saddle it is exponentially small in Ω. Measured:
+  ln dip = −52.2 / −113.8 / −175.7 / −237.7 at Ω = 400 / 800 / 1200 / 1600, a slope of −0.1549 per unit Ω. That
+  extrapolates to −609 at Ω = 4000 and −764 at 5000. Doubles end at −708 (normal) and −744.4 (subnormal). So
+  4000 was 99 nats inside the range and 5000 was past its end. The law's far tails already underflow from Ω = 1200
+  on, but their weight relative to dip is ≤ e^{−135} at 4000.
+- **The fix.** Every consumer of the law divides by dip, so the pin's value cancels. Pinning to 2^900 instead of 1
+  is exact in floating point. It is bit-identical to the pin-1 totals and sd at Ω = 400, 800 and **1600** (the
+  1600 tails that underflowed at pin 1 contribute exactly nothing). It matches the stored 1600 cells to 2.2e−12
+  and 1.9e−12, the same as before. 2^900 leaves about 37 decades below overflow and keeps dip normal to Ω ≈ 8000.
+  `qprocess_J` now raises if dip leaves the normal range, rather than dividing by zero; there is a test of both.
+- **What it does not touch.** §134.5's Ω = 4000 cells came from the pin-1 law with dip ≈ e^{−609}, which is normal
+  and 43 decades above the edge. They stand.
+- **Lesson, as a pattern rather than a rule:** a pinned linear solve carries its own scale, and at large Ω the
+  scale is the first thing to fail. The 32-bit factor overflow (§134.3) and this underflow are the same kind of
+  failure: a representable range that the problem outgrew between one Ω and the next.

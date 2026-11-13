@@ -49,3 +49,17 @@ def test_action_along_sigma_falls_toward_the_saddle():
     x, S = r[:, 1], r[:, 3] - ws
     env = [S[(x >= a) & (x < a + 0.1)].min() for a in (1.3, 1.6, 2.0, 2.4, 2.8)]
     assert all(b < a for a, b in zip(env, env[1:])) and min(env) > 0
+
+
+def test_pin_scale_cancels_exactly_and_underflow_fails_loudly(xk, monkeypatch):
+    """§134.6: the pin is a power of two, so totals are bit-identical to pin = 1 where nothing underflows; a pin
+    small enough to underflow dip must raise rather than divide by zero (the Omega = 5000 failure)."""
+    A, B = xk
+    tot = {}
+    for s in (1.0, 2.0 ** 900):
+        monkeypatch.setattr(ec, "PIN_SCALE", s)
+        tot[s] = cut_flux(A, B, 120, "sad2")
+    assert tot[1.0]["total"] == tot[2.0 ** 900]["total"] and tot[1.0]["sd_x1"] == tot[2.0 ** 900]["sd_x1"]
+    monkeypatch.setattr(ec, "PIN_SCALE", 2.0 ** -1060)
+    with pytest.raises(FloatingPointError):
+        cut_flux(A, B, 120, "sad2")

@@ -80,7 +80,7 @@ def sigma_table(A, B, om_grid=None):
 def cut_flux(A, B, om, cut="sad2", sig=None):
     m = A.cap(om) + 1
     sad1, sad2 = int(np.ceil(A.r2 * om)), int(np.ceil(B.r2 * om))
-    key = (A.name, B.name, om, m, ec.SOLVER)
+    key = (A.name, B.name, om, m, ec.SOLVER, ec.PIN_SCALE)
     if _QP_CACHE.get("key") != key:                 # both cuts share the stationary law: solve it once
         ec.qprocess_J(A, B, om, m, sad1, sad2, lower="rail")
         _QP_CACHE.clear()

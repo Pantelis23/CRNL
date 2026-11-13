@@ -14646,6 +14646,10 @@ docstring) and T-CASC-au's kill test (THEORIES) were both written before any Ω 
 | model − measured | +0.074 | +0.038 | +0.021 | +0.005 | **−0.0056** |
 
 - **M6 held:** the measured +0.0009 is within 0.03 of −0.0047, with |offset| = 0.0056 ≤ 0.01.
+  > **Annotation added in §134.7 (the line above is left as printed).** The measured a uses Γ = 7.340e−3 from
+  > the rays, and the verdict depends on it: M6 holds only for Γ in [7.3388, 7.3442]e−3. The ray value is inside
+  > that range. Independent minimum action (§134.7) reached 7.3369e−3 at N = 6400 and was still rising. So M6's
+  > "held" is **conditional on Γ ≥ 7.3388e−3**, which is not yet settled.
 - **T-CASC-au's registered window held:** a(2800 → 4000) = −0.0010, against the predicted −0.0008 ± 0.03. Its kill
   condition ("still rising, above +0.01") did not fire.
 - **What the numbers also show.** The measured a has risen at every step and has now crossed zero. The model's a
@@ -14691,3 +14695,69 @@ and from the stored Ω = 5000 solution vector (laptop). This is an instrument no
 - **Lesson, as a pattern rather than a rule:** a pinned linear solve carries its own scale, and at large Ω the
   scale is the first thing to fail. The 32-bit factor overflow (§134.3) and this underflow are the same kind of
   failure: a representable range that the problem outgrew between one Ω and the next.
+
+#### 134.7 Ω = 5000, exact: M7 refuted, M8 held, and every verdict that rests on Γ needs Γ to about 1e−6
+
+*Scope: XK, Ω = 5000, cap 1.1, both cuts. Solved by krsolve (half-storage, out-of-core, 147 GB factor) in WSL
+Ubuntu on the laptop. The main solve took 2 h 18 min; the Σ cut took 16 min. M7 and M8 (`experiments/sigma_total.py`)
+were written before any Ω = 5000 cell existed. The minimum-action check of Γ (`experiments/joint_action/mam_converge.py`,
+XK, N = 100–6400) had its criteria written before it ran.*
+
+- **The cells.** Totals 5.453820059519e15 (saddle cut) and 5.453820059549e15 (Σ cut) agree to 5.6e−12. On Σ:
+  mean x₁ = 2.370, sd(x₁) = 0.639.
+- **M8 held:** sd(x₁) on Σ is 0.639, below Ω = 4000's 0.665. The run of sd values is 0.704 / 0.692 / 0.679 / 0.665
+  / 0.639 at Ω = 2000 / 2800 / 3400 / 4000 / 5000, so the exit keeps narrowing.
+- **M7, by its registered rule: REFUTED.** a(4000 → 5000) = **+0.0051** ≥ 0, against the model's −0.0114. The
+  measured a now runs −0.0127 / −0.0118 / −0.0073 / −0.0026 / +0.0009 / +0.0051 over the windows from 800 → 1600
+  to 4000 → 5000.
+
+**The rule-19 check on M7 found a dependence the rule did not state.** The measured a is
+(ln T₂/T₁ − Γ·ΔΩ)/ln(Ω₂/Ω₁). An error δΓ therefore shifts each window by δΓ·ΔΩ/ln(Ω₂/Ω₁) ≈ δΓ·Ω_mid. That shift
+grows with Ω, so a wrong Γ **by itself** makes a appear to rise. That is the shape §134.2–§134.5 reported. M7
+prints "refuted" only for Γ < 7.34114e−3. Fitting the exact totals with Γ free:
+
+| fit (data from) | Γ | a | max \|resid\| in ln T |
+|---|---|---|---|
+| c + ΓΩ + a ln Ω (800) | 7.34538e−3 | −0.0196 | 3.8e−4 |
+| same (1600) | 7.34624e−3 | −0.0223 | 9.4e−5 |
+| same (2000) | 7.34594e−3 | −0.0212 | 4.7e−5 |
+| + b/Ω (800) | 7.34694e−3 | −0.0268 | 1.3e−4 |
+| + b/Ω (1600) | 7.34455e−3 | −0.0121 | 4.6e−6 |
+| Γ fixed at 7.340e−3, a constant (2000) | — | −0.0020 | 1.15e−3 |
+
+With Γ free the data are fitted 20–40× better, by a constant a ≈ −0.02 and Γ ≈ 7.345e−3. So the data alone cannot
+tell "a rising" apart from "Γ is 5e−6 too low". The free fits from 200 and 400 are poor (residuals 1e−2 and 4e−3)
+and are not used.
+
+**The kill test: Γ by direct minimum action, never before run for XK.** X's ray Γ had been checked by MAM to
+1.3e−6; XK's had not. mam.py's action, with each N started from the previous path:
+
+| N | 100 | 200 | 400 | 800 | 1600 | 3200 | 6400 |
+|---|---|---|---|---|---|---|---|
+| Γ_MAM (e−3) | 7.311018 | 7.329363 | 7.334580 | 7.335956 | 7.336251 | 7.336740 | 7.336913 |
+| increment (e−7) | | 183.4 | 52.2 | 13.8 | 3.0 | 4.9 | 1.7 |
+
+- **G1 held:** Γ_MAM rises with every N.
+- **G2, as written: UNRESOLVED.** No N exceeds 7.3410e−3, so the rays are not refuted. But the increments are
+  not geometric (1600 → 3200 is larger than 800 → 1600), so the optimiser did not fully converge at some N
+  (rule 13), and no extrapolation lands within 1e−6 of 7.340e−3. Candidate limits:
+  - from the last two increments, with ratio 0.35: 7.33700e−3;
+  - assuming 1/N² convergence: 7.33697e−3;
+  - assuming 1/N: 7.33708e−3;
+  - to reach 7.345e−3 the sequence would need 47 more increments the size of its last, that is, a ratio of
+    about 0.98 per doubling of N. The observed ratios are 0.21–0.35, apart from the 1600 → 3200 step (1.6).
+- **What the two methods say together.** Rays give 7.3402e−3; MAM gives ≥ 7.3369e−3 and is still rising.
+  Neither supports 7.345e−3. The discrete action is not a rigorous bound; "from below" in Γ is how X behaved.
+
+**What follows, read across the Γ that the two methods allow, [7.3369, 7.3402]e−3:**
+- **M7's "refuted" holds across the whole interval.** a(4000 → 5000) runs from +0.0042 (rays) to +0.0190
+  (MAM at 6400), all ≥ 0. It would flip only if Γ exceeded 7.34114e−3, which neither method gives. **The model's
+  negative asymptotics are refuted on data.**
+- **M6's "held" (§134.5) is conditional:** it needs Γ ≥ 7.3388e−3. That is annotated in place.
+- **The rise in a is not explained by an error in Γ** unless both methods are wrong in the same direction by 5e−6,
+  which is 11–17 times the rays' spread and above where MAM is heading. The free-Γ fits' better residuals then point
+  to curvature in the prefactor beyond Ω^a. That is **a suspect, not a result** (rule 17); its kill test is in
+  THEORIES (T-CASC-au).
+- **What this does not settle:** a_∞. With the rays' Γ, a is +0.0051 and still rising. A Γ near MAM's value would
+  raise every window's a by up to 0.014 at Ω = 5000. Any statement about a's sign or value now needs Γ to about
+  1e−7, which neither method has reached.

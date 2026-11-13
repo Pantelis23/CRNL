@@ -68,6 +68,11 @@ ADDED 2026-11-13 AFTER OMEGA = 4000, BEFORE OMEGA = 5000 RAN.
         -0.0014 < a_measured < 0               -> UNRESOLVED (between the two), and written as such.
       (The bands cannot overlap: -0.0114 + 0.01 = -0.0014.)
   M8  On Sigma the exit keeps narrowing: sd(x1) at Omega = 5000 is below 4000's 0.665.
+  -> M7 REFUTED: a(4000 -> 5000) = +0.0051 (Gamma = 7.340e-3), and >= 0 for every Gamma < 7.34114e-3 -- which
+     covers both rays (7.3402e-3) and minimum action (>= 7.3369e-3, still rising). But the rule never stated that
+     the measured a shifts by dGamma * Omega: with Gamma free, the totals prefer a constant a ~ -0.02 at
+     Gamma ~ 7.345e-3. M6 is conditional on Gamma >= 7.3388e-3. FINDINGS §134.7.
+  -> M8 HELD: sd(x1) = 0.639 < 0.665.
 """
 
 from __future__ import annotations

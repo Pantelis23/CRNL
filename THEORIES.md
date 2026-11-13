@@ -5503,6 +5503,19 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   **Still open:** whether a stops at 0. **Next test:** Ω = 5000 (krsolve, out-of-core; factor ~300 GB on the
   laptop's 954 GB WSL disk, an estimate by n log n scaling). The model predicts a(4000 → 5000) = −0.0114. If the measured a stays ≥ 0 there, the
   model's asymptotics are refuted on data, not only on the bound.
+  **→ §134.7: run (the factor was 147 GB, not ~300). M7 REFUTED, M8 held.** a(4000 → 5000) = +0.0051 with the
+  rays' Γ, and ≥ 0 for every Γ that rays or minimum action allow. **The model's negative asymptotics are refuted
+  on data.** But the check found that every measured a, and so M6 and M7 alike, depends on Γ to about 1e−6:
+  δΓ shifts a by δΓ·Ω. With Γ free, the totals fit 20–40× better with a constant a ≈ −0.02 and Γ ≈ 7.345e−3.
+  Neither the rays (7.3402e−3) nor XK's first minimum-action run (≥ 7.3369e−3 at N = 6400, still rising) supports
+  that Γ. M6 is now conditional on Γ ≥ 7.3388e−3.
+  **Open (T-CASC-av): Γ for XK to 1e−7, then a's shape.**
+  - **Suspect:** the free-Γ fit's preference is curvature in the prefactor beyond Ω^a, not an error in Γ.
+  - **Kill test:** converge MAM past N = 6400, with the optimiser verified converged at each N (the 1600 → 3200
+    increment broke the geometric sequence). Or use a method exact at the saddle (Riccati transport of Z, §134.2(ii)).
+  - **What would decide it:** if Γ settles at ≥ 7.344e−3, the suspect is dead and a ≈ −0.02 is constant, so §134's
+    "a rising through zero" was Γ all along (rule 21). If Γ settles in [7.3369, 7.3402]e−3, a is really rising
+    and is positive at Ω = 5000, and a_∞ remains open.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

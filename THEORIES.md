@@ -5498,6 +5498,14 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   above +0.01, means ε near the saddle (the caustic region) is wrong. **→ §134.1: Ω = 4000 failed on memory**
   (PARDISO −2). A stand-in at Ω = 3400 held: offset 0.005, with the measured a still rising (−0.0026). The test is
   still open and needs a machine beyond 64 GB or a solver that does not factor.
+**→ §134.2: the status, consolidated.**
+- **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
+- **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε
+  exceeds the exact climb bound 0.075δ²). The bound gives a_∞ ≥ 0 only if the density prefactor at the saddle does
+  not decay.
+- **What would decide it:** (i) the exact chain at Ω ≥ 4000, where the written M6 (−0.0047 ± 0.03) is the first
+  test; or (ii) W near the saddle from a method exact there, such as the Riccati transport of Z along the
+  instanton into the saddle, which §124.11 stopped at the caustic.
 
 **§124.13: the mechanism holds on a second coupling shape (Hill n = 2), predicted beforehand.** The
 exact growth rate equals the minimum-action Γ to 0.1% in XK and XN. The −0.01 prefactor residual's

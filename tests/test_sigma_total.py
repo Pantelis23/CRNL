@@ -35,3 +35,29 @@ def test_cap_and_conservation():
     for om in (2000, 2800):
         a, b = s[f"XK:{om}:sad2:cap1.1"]["total"], s[f"XK:{om}:sigma:cap1.1"]["total"]
         assert abs(b / a - 1) < 1e-9
+
+
+def test_saddle_climb_bound_and_the_envelope_violating_it():
+    """§134.2: h along Sigma at the joint saddle, and the ray envelope above 0.5 h delta^2 near the saddle."""
+    import os
+    import subprocess
+    import sys
+    root = Path(__file__).resolve().parents[1]
+    code = (
+        "import numpy as np\n"
+        "from scipy.linalg import solve_continuous_lyapunov\n"
+        "import model\nfrom model import *\n"
+        "xs1, xs2 = 3.0, R2_2\n"
+        "f1p = 2*A1*xs1 - (3*xs1*xs1 + C1); hh, dh = model.hill(xs1), model.dhill(xs1)\n"
+        "f2p = 2*hh*A2*xs2 - (3*xs2*xs2 + C2)\n"
+        "A = np.array([[f1p,0.0],[dh*A2*xs2*xs2, f2p]]); D = np.diag([2*(A1*xs1*xs1+B1), 2*(hh*A2*xs2*xs2+B2)])\n"
+        "Z = np.linalg.inv(solve_continuous_lyapunov(A, -D))\n"
+        "w, v = np.linalg.eig(A); es = np.real(v[:, np.argmin(np.real(w))]); es = es/es[0]\n"
+        "print(float(es@Z@es))\n")
+    out = subprocess.run([sys.executable, "-c", code], cwd=root / "experiments" / "joint_action",
+                         env={**os.environ, "HILL_K": "1.2"}, capture_output=True, text=True, check=True)
+    h = float(out.stdout.strip())
+    assert abs(h - 0.150044) < 1e-5
+    s = json.loads(RES.read_text())
+    eps = eps_fn(s)
+    assert eps(2.991) > 0.5 * h * 0.009 ** 2                   # the envelope is not W there

@@ -45,6 +45,20 @@ Stand-in, weaker than the registered test because the window is shorter: Omega =
   -> M5 HELD: measured -0.0026 against +0.0024 (offset 0.005). The offsets run 0.074 / 0.038 / 0.021 / 0.005. The
      measured a is still rising (-0.0127 / -0.0118 / -0.0073 / -0.0026), so the turn-down stays open. On Sigma the
      spread narrows: 0.704 / 0.692 / 0.679 at 2000 / 2800 / 3400 (29 min per cut on the laptop).
+
+ADDED 2026-11-13, WHILE OMEGA = 4000 WAS RUNNING (out-of-core PARDISO, 16 GB in-core cap), BEFORE IT RETURNED.
+  M6  The unchanged model (the one M1-M5 tested) gives a = -0.0047 over 3400 -> 4000. The measured a lies within
+      0.03 of that, and |offset| <= 0.01.
+  An exact bound, computed today: at the joint saddle (3, 0.606), the Lyapunov form gives h = 0.1500 along Sigma's
+  tangent (equal to stage 1's own well curvature 2|f1'|/D11). Climbing back along Sigma after reaching the saddle
+  is a feasible path, so eps(3 - delta) <= 0.075 delta^2 + O(delta^3). The ray envelope EXCEEDS this bound for
+  delta < ~0.012 (9.6e-6 against 6.1e-6 at delta = 0.009), so the envelope is not W there. The model's
+  extrapolation to negative a (-0.018 at 4000 -> 8000, -0.046 at 16000 -> 64000) rests on that region, and does
+  not hold asymptotically. A first attempt to substitute the bound for eps as an estimate (a -> -0.59) was wrong:
+  a bound may only be used as a bound. It was discarded.
+  -> M6 NOT RUN. Omega = 4000 failed a third time with PARDISO -2, with out-of-core mode confirmed requested
+     (pypardiso's set_iparm is 1-based, so iparm(60) = 2 reached MKL) and a 16 GB in-core cap. The test stands,
+     written, for a larger machine. FINDINGS §134.2.
 """
 
 from __future__ import annotations

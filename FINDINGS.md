@@ -14525,3 +14525,38 @@ through pypardiso's parameter interface was not established. A weaker stand-in, 
 - **On Σ the exit is now narrowing:** sd(x₁) = 0.704 / 0.692 / 0.679 at Ω = 2000 / 2800 / 3400, with the mean at
   2.233. This is *consistent with* the low shoulder draining at rate ε(x₁), which the model predicts (suspect,
   rule 17). Full localisation at the saddle would need Ω·Δε ~ 1 across the interior, near Ω ~ 10⁴.
+
+#### 134.2 What holds about the prefactor, and why the asymptote is not determined
+
+*Scope: XK. An exact local computation at the joint saddle (3, 0.606) (`joint_action/prefactor.saddle_lyapunov`,
+HILL_K = 1.2), and three failed attempts at Ω = 4000 (PARDISO −2 in-core, out-of-core with a 50 GB cap, and
+out-of-core with a 16 GB cap; pypardiso's `set_iparm` is 1-based, so the out-of-core flag did reach MKL). M6, the
+model's prediction for 3400 → 4000 (−0.0047), was written before the last attempt and was never tested.*
+
+**An exact bound at the saddle.**
+- **The value.** The Lyapunov form gives a curvature h = 0.1500 along Σ's tangent at the joint saddle, close to
+  stage 1's own well curvature (0.1502).
+- **Why it bounds ε.** Reaching the saddle and then climbing back along Σ is a feasible path, so
+  ε(3 − δ) ≤ ½hδ² = 0.075δ² to leading order.
+- **The ray envelope violates it.** For δ < ~0.012 it lies above the bound (9.6e−6 against 6.1e−6 at δ = 0.009),
+  so near the saddle the envelope is not W.
+- **A slip, corrected:** I first substituted the bound for ε as an estimate. The model then drained the bins at
+  and beyond the saddle that carry large measured flux, and printed a → −0.59. A bound used as an estimate is a
+  harness doing work the chemistry cannot (rule 10). That result was discarded before any use.
+
+> **Conclusion (what holds).**
+> 1. **Measured.** Over Ω = 800–3400 the never-dipped term is R = C·e^{ΓΩ}·Ω^a with |a| ≤ 0.013 in every window:
+>    −0.0127 / −0.0118 / −0.0073 / −0.0026. Γ was fixed beforehand by minimum action (§124.9); the cells are exact
+>    and conserve their totals to 1e−13; cap 1.1 is validated to 6e−8.
+> 2. **Explained at accessible Ω.** A spread exit on Σ, with local Ω^½ at every point and drained by W's slope
+>    along Σ, reproduces it from one calibration. The offsets are 0.074 / 0.038 / 0.021 / 0.005, and the last two
+>    windows were predicted before they were computed (§134, §134.1).
+> 3. **Not determined: the asymptote.** The model's extrapolation (a → −0.02 … −0.05 at Ω ~ 10⁴) rests on its ε
+>    within ~0.012 of the saddle, and there the rays' ε violates an exact bound. The bound would give a_∞ ≥ 0, but
+>    only if the quasi-stationary density's prefactor at the saddle does not decay with Ω, which the degenerate
+>    approach to the saddle (§124.11) does not guarantee. Whether a_∞ = 0, ½, or something else needs either the
+>    exact chain at Ω ≥ 4000 (beyond this hardware with factorising solvers) or W within 0.012 of the saddle by a
+>    method that is exact there.
+>
+> The first two are results; the third is a precisely located gap. C(x₁), and so C = 0.63, remains calibrated,
+> not derived.

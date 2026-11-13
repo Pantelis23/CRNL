@@ -366,7 +366,7 @@ fn symbolic() -> u64 {
                     }
                     k = k + 1
                 }
-                sp = sp - nb * nb
+                sp = sp - nb * (nb + 1)
             }
             cc = cc + 1
         }
@@ -383,11 +383,11 @@ fn symbolic() -> u64 {
         u64 f = nv + len
         if f > f_max { f_max = f }
         st64(ND_FOFF, id, fac)
-        fac = fac + nv * f + len * nv
-        if nv * f + len * nv > MAXBLK { MAXBLK = nv * f + len * nv }
-        if len * nv > MAXL { MAXL = len * nv }
+        u64 ublk = nv * (f + 1) - nv * (nv - 1) / 2       // upper rows t..f of the own rows, rhs column included
+        fac = fac + ublk
+        if ublk > MAXBLK { MAXBLK = ublk }
         FLOPS = FLOPS + 2 * nv * nv * nv / 3 + 2 * nv * nv * len + 2 * nv * len * len
-        sp = sp + len * len
+        sp = sp + len * (len + 1)
         if sp > sp_max { sp_max = sp }
         id = id + 1
     }
@@ -397,16 +397,20 @@ fn symbolic() -> u64 {
 }
 
 // ---------------------------------------------------------------- numeric
+//
+// Single right-hand side (§134.6): every front carries the rhs as one extra column (stride ld = f + 1), so the
+// forward solve happens inside the factorisation and only the upper rows of each node are kept:
+// row t of the own rows, columns t .. f (the rhs column last). Updates passed to the parent are nb x (nb + 1).
 
-fn gemm_core(u64 F, u64 f, u64 k0, u64 k1, u64 r0, u64 r1) {
-    // F[i][j] -= sum_{k in [k0,k1)} F[i][k] F[k][j], rows i in [r0, r1), columns j in [k1, f).
+fn gemm_core(u64 F, u64 ld, u64 cend, u64 k0, u64 k1, u64 r0, u64 r1) {
+    // F[i][j] -= sum_{k in [k0,k1)} F[i][k] F[k][j], rows i in [r0, r1), columns j in [k1, cend), row stride ld.
     // 2 x 2 register blocks accumulated over the whole panel; scalar edges.
     u64 i = r0
     while i + 1 < r1 {
-        u64 ra = F + i * f * 8
-        u64 rb = ra + f * 8
+        u64 ra = F + i * ld * 8
+        u64 rb = ra + ld * 8
         u64 j = k1
-        while j + 1 < f {
+        while j + 1 < cend {
             f64 c00 = 0.0
             f64 c01 = 0.0
             f64 c10 = 0.0
@@ -419,7 +423,7 @@ fn gemm_core(u64 F, u64 f, u64 k0, u64 k1, u64 r0, u64 r1) {
                 f64 b1 = 0.0
                 u64 pa0 = ra + k * 8
                 u64 pa1 = rb + k * 8
-                u64 pb = F + (k * f + j) * 8
+                u64 pb = F + (k * ld + j) * 8
                 u64 pb1 = pb + 8
                 unsafe { *(pa0 as f64) -> a0 }
                 unsafe { *(pa1 as f64) -> a1 }
@@ -437,12 +441,12 @@ fn gemm_core(u64 F, u64 f, u64 k0, u64 k1, u64 r0, u64 r1) {
             stf(rb, j + 1, ldf(rb, j + 1) - c11)
             j = j + 2
         }
-        if j < f {
+        if j < cend {
             f64 c0 = 0.0
             f64 c1 = 0.0
             u64 k = k0
             while k < k1 {
-                f64 bkj = ldf(F, k * f + j)
+                f64 bkj = ldf(F, k * ld + j)
                 c0 = c0 + ldf(ra, k) * bkj
                 c1 = c1 + ldf(rb, k) * bkj
                 k = k + 1
@@ -453,13 +457,13 @@ fn gemm_core(u64 F, u64 f, u64 k0, u64 k1, u64 r0, u64 r1) {
         i = i + 2
     }
     if i < r1 {
-        u64 ra = F + i * f * 8
+        u64 ra = F + i * ld * 8
         u64 j = k1
-        while j < f {
+        while j < cend {
             f64 c = 0.0
             u64 k = k0
             while k < k1 {
-                c = c + ldf(ra, k) * ldf(F, k * f + j)
+                c = c + ldf(ra, k) * ldf(F, k * ld + j)
                 k = k + 1
             }
             stf(ra, j, ldf(ra, j) - c)
@@ -468,37 +472,31 @@ fn gemm_core(u64 F, u64 f, u64 k0, u64 k1, u64 r0, u64 r1) {
     }
 }
 
-fn gemm_rows(u64 r0, u64 r1, u64 unused) {
-    gemm_core(G_F, G_FN, G_K0, G_K1, r0, r1)
-}
-
-fn trailing_update(u64 F, u64 f, u64 k0, u64 k1, u64 par) {
-    u64 rows = f - k1
-    if par == 0 || NTH <= 1 || rows * (f - k1) < 200000 {
-        gemm_core(F, f, k0, k1, k1, f)
-        return
-    }
-    G_F = F
-    G_FN = f
-    G_K0 = k0
-    G_K1 = k1
-    u64 fp = fn_addr("gemm_rows")
-    u64 w = 0
-    while w < NTH {
-        u64 a = k1 + rows * w / NTH
-        u64 b = k1 + rows * (w + 1) / NTH
-        thread_pool_submit(w, fp, a, b, 0)
-        w = w + 1
-    }
-    thread_pool_wait()
-}
-
-// ---- parallel helpers for the top fronts (one front at a time, so the G_* globals are safe there)
+static u64 G_LD = 0
 static u64 G_KB = 0
 static u64 G_KE = 0
 static u64 G_U = 0
 static u64 G_CN = 0
 static u64 G_MAP = 0
+
+fn gemm_rows(u64 r0, u64 r1, u64 unused) {
+    gemm_core(G_F, G_LD, G_LD, G_K0, G_K1, r0, r1)
+}
+
+fn trailing_update(u64 F, u64 f, u64 k0, u64 k1, u64 par) {
+    // rows [k1, f), columns [k1, f + 1)
+    u64 ld = f + 1
+    u64 rows = f - k1
+    if par == 0 || NTH <= 1 || rows * (ld - k1) < 200000 {
+        gemm_core(F, ld, ld, k0, k1, k1, f)
+        return
+    }
+    G_F = F
+    G_LD = ld
+    G_K0 = k0
+    G_K1 = k1
+    par_for(fn_addr("gemm_rows"), k1, f)
+}
 
 fn par_for(u64 fp, u64 lo, u64 hi) {
     u64 n = hi - lo
@@ -510,40 +508,40 @@ fn par_for(u64 fp, u64 lo, u64 hi) {
     thread_pool_wait()
 }
 
-fn l21_rows(u64 r0, u64 r1, u64 unused) { l21_core(G_F, G_FN, G_KB, G_KE, r0, r1) }
+fn l21_rows(u64 r0, u64 r1, u64 unused) { l21_core(G_F, G_LD, G_KB, G_KE, r0, r1) }
 
-fn l21_core(u64 F, u64 f, u64 kb, u64 ke, u64 r0, u64 r1) {
+fn l21_core(u64 F, u64 ld, u64 kb, u64 ke, u64 r0, u64 r1) {
     // rows i in [r0, r1) below the panel: F[i][kb..ke) <- F[i][kb..ke) U11^{-1}
     u64 i = r0
     while i < r1 {
         u64 k = kb
         while k < ke {
-            f64 v = ldf(F, i * f + k)
+            f64 v = ldf(F, i * ld + k)
             u64 kk = kb
             while kk < k {
-                v = v - ldf(F, i * f + kk) * ldf(F, kk * f + k)
+                v = v - ldf(F, i * ld + kk) * ldf(F, kk * ld + k)
                 kk = kk + 1
             }
-            stf(F, i * f + k, v / ldf(F, k * f + k))
+            stf(F, i * ld + k, v / ldf(F, k * ld + k))
             k = k + 1
         }
         i = i + 1
     }
 }
 
-fn u12_cols(u64 c0, u64 c1, u64 unused) { u12_core(G_F, G_FN, G_KB, G_KE, c0, c1) }
+fn u12_cols(u64 c0, u64 c1, u64 unused) { u12_core(G_F, G_LD, G_KB, G_KE, c0, c1) }
 
-fn u12_core(u64 F, u64 f, u64 kb, u64 ke, u64 c0, u64 c1) {
+fn u12_core(u64 F, u64 ld, u64 kb, u64 ke, u64 c0, u64 c1) {
     // panel rows: F[i][c0..c1) -= sum_{k<i} L[i][k] F[k][c0..c1), i in (kb, ke)
     u64 i = kb + 1
     while i < ke {
         u64 k = kb
         while k < i {
-            f64 l = ldf(F, i * f + k)
+            f64 l = ldf(F, i * ld + k)
             if l != 0.0 {
-                u64 pa = F + (i * f + c0) * 8
-                u64 pb = F + (k * f + c0) * 8
-                u64 pend = F + (i * f + c1) * 8
+                u64 pa = F + (i * ld + c0) * 8
+                u64 pb = F + (k * ld + c0) * 8
+                u64 pend = F + (i * ld + c1) * 8
                 while pa < pend {
                     f64 x = 0.0
                     f64 y = 0.0
@@ -569,16 +567,16 @@ fn zero_range(u64 z0, u64 z1, u64 unused) {
     }
 }
 
-fn extend_rows(u64 a0, u64 a1, u64 unused) { extend_core(G_F, G_FN, G_U, G_CN, G_MAP, a0, a1) }
+fn extend_rows(u64 a0, u64 a1, u64 unused) { extend_core(G_F, G_LD, G_U, G_CN, G_MAP, a0, a1) }
 
-fn extend_core(u64 F, u64 f, u64 U, u64 cn, u64 map, u64 a0, u64 a1) {
-    // rows [a0, a1) of the child update U (cn x cn) added into the front through map
+fn extend_core(u64 F, u64 ld, u64 U, u64 cn, u64 map, u64 a0, u64 a1) {
+    // rows [a0, a1) of the child update U (cn x (cn + 1)) added into the front through map (map[cn] = rhs column)
     u64 a = a0
     while a < a1 {
-        u64 rowF = F + ld64(map, a) * f * 8
-        u64 rowU = U + a * cn * 8
+        u64 rowF = F + ld64(map, a) * ld * 8
+        u64 rowU = U + a * (cn + 1) * 8
         u64 b = 0
-        while b < cn {
+        while b <= cn {
             u64 lb = ld64(map, b)
             stf(rowF, lb, ldf(rowF, lb) + ldf(rowU, b))
             b = b + 1
@@ -588,6 +586,7 @@ fn extend_core(u64 F, u64 f, u64 U, u64 cn, u64 map, u64 a0, u64 a1) {
 }
 
 fn partial_lu(u64 F, u64 f, u64 nv, u64 par) {
+    u64 ld = f + 1
     u64 big = 0
     if par == 1 && NTH > 1 && f >= 1500 { big = 1 }
     u64 kb = 0
@@ -597,16 +596,16 @@ fn partial_lu(u64 F, u64 f, u64 nv, u64 par) {
         // 1. the diagonal block (rows and columns [kb, ke)): unblocked LU
         u64 k = kb
         while k < ke {
-            f64 piv = ldf(F, k * f + k)
+            f64 piv = ldf(F, k * ld + k)
             if piv == 0.0 { die("zero pivot") }
             u64 i = k + 1
             while i < ke {
-                f64 l = ldf(F, i * f + k) / piv
-                stf(F, i * f + k, l)
+                f64 l = ldf(F, i * ld + k) / piv
+                stf(F, i * ld + k, l)
                 if l != 0.0 {
                     u64 j = k + 1
                     while j < ke {
-                        stf(F, i * f + j, ldf(F, i * f + j) - l * ldf(F, k * f + j))
+                        stf(F, i * ld + j, ldf(F, i * ld + j) - l * ldf(F, k * ld + j))
                         j = j + 1
                     }
                 }
@@ -614,22 +613,20 @@ fn partial_lu(u64 F, u64 f, u64 nv, u64 par) {
             }
             k = k + 1
         }
-        // 2. L21 for the rows below the panel, 3. U12 for the panel rows
-        if ke < f {
-            if big == 1 {
-                G_F = F
-                G_FN = f
-                G_KB = kb
-                G_KE = ke
-                par_for(fn_addr("l21_rows"), ke, f)
-                par_for(fn_addr("u12_cols"), ke, f)
-            } else {
-                l21_core(F, f, kb, ke, ke, f)
-                u12_core(F, f, kb, ke, ke, f)
-            }
-            // 4. trailing update of rows and columns [ke, f)
-            trailing_update(F, f, kb, ke, par)
+        // 2. L21 for the rows below the panel; 3. U12 for the panel rows (columns [ke, f], rhs included)
+        if big == 1 {
+            G_F = F
+            G_LD = ld
+            G_KB = kb
+            G_KE = ke
+            if ke < f { par_for(fn_addr("l21_rows"), ke, f) }
+            par_for(fn_addr("u12_cols"), ke, ld)
+        } else {
+            if ke < f { l21_core(F, ld, kb, ke, ke, f) }
+            u12_core(F, ld, kb, ke, ke, ld)
         }
+        // 4. trailing update of rows [ke, f) and columns [ke, f]
+        if ke < f { trailing_update(F, f, kb, ke, par) }
         kb = ke
     }
 }
@@ -681,38 +678,40 @@ fn pread_all(u64 fd, u64 buf, u64 len, u64 off) {
 static u64 NSUB = 0
 static u64 SUB_ROOT = 0
 static u64 SUB_FIRST = 0
-static u64 SUB_SAVED = 0           // pointer per subtree to its root's update matrix (nb x nb)
-static u64 ROOTOF = 0              // u64[NCAP]: subtree index + 1 if the node is a subtree root, else 0
-static u64 INSUB = 0               // u64[NCAP]: 1 if the node belongs to a subtree
+static u64 SUB_SAVED = 0           // pointer per subtree to its root's update matrix (nb x (nb + 1))
+static u64 ROOTOF = 0              // u64[NN]: subtree index + 1 if the node is a subtree root, else 0
+static u64 INSUB = 0               // u64[NN]: 1 if the node belongs to a subtree
 static u64 NEXTJOB = 0             // atomic job counter (heap word)
-static u64 T_FRONT = 0             // per thread: front buffer, stack, map, L21 staging
+static u64 T_FRONT = 0             // per thread: front buffer, stack, map, packing buffer
 static u64 T_STK = 0
 static u64 T_MAP = 0
 static u64 T_LBUF = 0
 static u64 SUBSZ = 0
 static u64 TOPSTK = 0
 
-fn process_node(u64 id, u64 F, u64 stk, u64 sp, u64 map, u64 lbuf, u64 par, u64 top) -> u64 {
+fn process_node(u64 id, u64 F, u64 stk, u64 sp, u64 map, u64 pbuf, u64 par, u64 top) -> u64 {
     u64 s = ld64(ND_START, id)
     u64 nv = ld64(ND_NV, id)
     u64 nb = ld64(ND_NB, id)
     u64 bo = ld64(ND_BOFF, id)
     u64 f = nv + nb
+    u64 ld = f + 1
     u64 e = s + nv
     if par == 1 && NTH > 1 && f >= 1500 {
         G_F = F
-        par_for(fn_addr("zero_range"), 0, f * f)
+        par_for(fn_addr("zero_range"), 0, f * ld)
     } else {
         u64 z = 0
-        while z < f * f {
+        while z < f * ld {
             store64(F + z * 8, 0)
             z = z + 1
         }
     }
-    // original entries: own rows, and the own columns of boundary rows
+    // original entries: own rows (and their rhs), and the own columns of boundary rows
     u64 t = 0
     while t < nv {
         u64 i = ld32(ORD, s + t)
+        stf(F, t * ld + f, ldf(RHS, i))
         u64 p = ld64(IP, i)
         u64 pe = ld64(IP, i + 1)
         while p < pe {
@@ -720,13 +719,13 @@ fn process_node(u64 id, u64 F, u64 stk, u64 sp, u64 map, u64 lbuf, u64 par, u64 
             u64 q = ld32(POS, j)
             if q >= s {
                 u64 lj = local_ix(s, nv, bo, nb, q)
-                stf(F, t * f + lj, ldf(F, t * f + lj) + ldf(DA, p))
+                stf(F, t * ld + lj, ldf(F, t * ld + lj) + ldf(DA, p))
                 if q >= e {
                     u64 r = ld64(IP, j)
                     u64 re = ld64(IP, j + 1)
                     while r < re {
                         if ld32(IX, r) == i {
-                            stf(F, lj * f + t, ldf(F, lj * f + t) + ldf(DA, r))
+                            stf(F, lj * ld + t, ldf(F, lj * ld + t) + ldf(DA, r))
                         }
                         r = r + 1
                     }
@@ -748,7 +747,7 @@ fn process_node(u64 id, u64 F, u64 stk, u64 sp, u64 map, u64 lbuf, u64 par, u64 
             if top == 1 && ld64(ROOTOF, ch) != 0 {
                 U = ld64(SUB_SAVED, ld64(ROOTOF, ch) - 1)
             } else {
-                sp = sp - cn * cn
+                sp = sp - cn * (cn + 1)
                 U = stk + sp * 8
             }
             u64 a = 0
@@ -756,65 +755,57 @@ fn process_node(u64 id, u64 F, u64 stk, u64 sp, u64 map, u64 lbuf, u64 par, u64 
                 st64(map, a, local_ix(s, nv, bo, nb, ld32(BPOOL, cb + a)))
                 a = a + 1
             }
+            st64(map, cn, f)
             if par == 1 && NTH > 1 && cn >= 1500 {
                 G_F = F
-                G_FN = f
+                G_LD = ld
                 G_U = U
                 G_CN = cn
                 G_MAP = map
                 par_for(fn_addr("extend_rows"), 0, cn)
             } else {
-                extend_core(F, f, U, cn, map, 0, cn)
+                extend_core(F, ld, U, cn, map, 0, cn)
             }
         }
         cc = cc + 1
     }
     partial_lu(F, f, nv, par)
-    // store the factor block: own rows (nv x f), then the L21 block (nb x nv)
-    u64 fo = 0
-    u64 lo = lbuf
-    if OOC == 0 {
-        fo = FAC + ld64(ND_FOFF, id) * 8
-        t = 0
-        while t < nv * f {
-            store64(fo + t * 8, load64(F + t * 8))
-            t = t + 1
+    // keep the upper rows of the own block: row t, columns t .. f (rhs last), packed
+    u64 dst = pbuf
+    if OOC == 0 { dst = FAC + ld64(ND_FOFF, id) * 8 }
+    u64 w = 0
+    t = 0
+    while t < nv {
+        u64 src = F + (t * ld + t) * 8
+        u64 c = ld - t
+        u64 k = 0
+        while k < c {
+            store64(dst + (w + k) * 8, load64(src + k * 8))
+            k = k + 1
         }
-        lo = fo + nv * f * 8
+        w = w + c
+        t = t + 1
     }
+    if OOC == 1 { pwrite_all(OOC_FD, pbuf, w * 8, ld64(ND_FOFF, id) * 8) }
+    // push the update matrix: rows nv .. f-1, columns nv .. f (rhs last)
+    u64 U = stk + sp * 8
     u64 a = 0
     while a < nb {
         u64 b = 0
-        while b < nv {
-            store64(lo + (a * nv + b) * 8, load64(F + ((nv + a) * f + b) * 8))
+        while b <= nb {
+            store64(U + (a * (nb + 1) + b) * 8, load64(F + ((nv + a) * ld + nv + b) * 8))
             b = b + 1
         }
         a = a + 1
     }
-    if OOC == 1 {
-        u64 off = ld64(ND_FOFF, id) * 8
-        pwrite_all(OOC_FD, F, nv * f * 8, off)
-        pwrite_all(OOC_FD, lbuf, nb * nv * 8, off + nv * f * 8)
-    }
-    // push the update matrix
-    u64 U = stk + sp * 8
-    a = 0
-    while a < nb {
-        u64 b = 0
-        while b < nb {
-            store64(U + (a * nb + b) * 8, load64(F + ((nv + a) * f + nv + b) * 8))
-            b = b + 1
-        }
-        a = a + 1
-    }
-    return sp + nb * nb
+    return sp + nb * (nb + 1)
 }
 
 fn subtree_worker(u64 tid, u64 unused1, u64 unused2) {
     u64 F = ld64(T_FRONT, tid)
     u64 stk = ld64(T_STK, tid)
     u64 map = ld64(T_MAP, tid)
-    u64 lbuf = ld64(T_LBUF, tid)
+    u64 pbuf = ld64(T_LBUF, tid)
     while 1 {
         u64 j = atomic_add(NEXTJOB, 1)
         if j >= NSUB { return }
@@ -822,18 +813,24 @@ fn subtree_worker(u64 tid, u64 unused1, u64 unused2) {
         u64 id = ld64(SUB_FIRST, j)
         u64 sp = 0
         while id <= root {
-            sp = process_node(id, F, stk, sp, map, lbuf, 0, 0)
+            sp = process_node(id, F, stk, sp, map, pbuf, 0, 0)
             id = id + 1
         }
         // the root's update is the only thing left on this stack: keep it
         u64 nb = ld64(ND_NB, root)
         u64 dst = ld64(SUB_SAVED, j)
         u64 k = 0
-        while k < nb * nb {
+        while k < nb * (nb + 1) {
             store64(dst + k * 8, load64(stk + k * 8))
             k = k + 1
         }
     }
+}
+
+fn ublock(u64 id) -> u64 {
+    u64 nv = ld64(ND_NV, id)
+    u64 f = nv + ld64(ND_NB, id)
+    return nv * (f + 1) - nv * (nv - 1) / 2
 }
 
 fn plan_subtrees() -> u64 {
@@ -877,11 +874,10 @@ fn plan_subtrees() -> u64 {
         }
         id = id + 1
     }
-    // mark subtree members; per-subtree peaks
     u64 front_max = 0
     u64 stk_max = 0
     u64 nbmax = 0
-    u64 lmax = 0
+    u64 blkmax = 0
     u64 bytes = 0
     u64 j = 0
     while j < NSUB {
@@ -893,19 +889,19 @@ fn plan_subtrees() -> u64 {
             st64(INSUB, a, 1)
             u64 nv = ld64(ND_NV, a)
             u64 nb = ld64(ND_NB, a)
-            if ld64(ND_C0, a) != NONE { sp = sp - ld64(ND_NB, ld64(ND_C0, a)) * ld64(ND_NB, ld64(ND_C0, a)) }
-            if ld64(ND_C1, a) != NONE { sp = sp - ld64(ND_NB, ld64(ND_C1, a)) * ld64(ND_NB, ld64(ND_C1, a)) }
-            sp = sp + nb * nb
+            if ld64(ND_C0, a) != NONE { sp = sp - ld64(ND_NB, ld64(ND_C0, a)) * (ld64(ND_NB, ld64(ND_C0, a)) + 1) }
+            if ld64(ND_C1, a) != NONE { sp = sp - ld64(ND_NB, ld64(ND_C1, a)) * (ld64(ND_NB, ld64(ND_C1, a)) + 1) }
+            sp = sp + nb * (nb + 1)
             if sp > peak { peak = sp }
             if nv + nb > front_max { front_max = nv + nb }
             if nb > nbmax { nbmax = nb }
-            if nb * nv > lmax { lmax = nb * nv }
+            if ublock(a) > blkmax { blkmax = ublock(a) }
             a = a + 1
         }
         if peak > stk_max { stk_max = peak }
         u64 nbr = ld64(ND_NB, root)
-        st64(SUB_SAVED, j, alloc(nbr * nbr * 8 + 8))
-        bytes = bytes + nbr * nbr * 8
+        st64(SUB_SAVED, j, alloc(nbr * (nbr + 1) * 8 + 8))
+        bytes = bytes + nbr * (nbr + 1) * 8
         j = j + 1
     }
     T_FRONT = alloc(NTH * 8)
@@ -914,11 +910,11 @@ fn plan_subtrees() -> u64 {
     T_LBUF = alloc(NTH * 8)
     u64 w = 0
     while w < NTH {
-        st64(T_FRONT, w, alloc(front_max * front_max * 8 + 8))
+        st64(T_FRONT, w, alloc(front_max * (front_max + 1) * 8 + 8))
         st64(T_STK, w, alloc(stk_max * 8 + 8))
-        st64(T_MAP, w, alloc(nbmax * 8 + 8))
-        st64(T_LBUF, w, alloc(lmax * 8 + 8))
-        bytes = bytes + (front_max * front_max + stk_max + nbmax + lmax) * 8
+        st64(T_MAP, w, alloc((nbmax + 1) * 8 + 8))
+        st64(T_LBUF, w, alloc(blkmax * 8 + 8))
+        bytes = bytes + (front_max * (front_max + 1) + stk_max + nbmax + 1 + blkmax) * 8
         w = w + 1
     }
     // the top part's own stack: subtree roots contribute nothing to it (their updates are saved)
@@ -931,10 +927,10 @@ fn plan_subtrees() -> u64 {
             while cc < 2 {
                 u64 ch = ld64(ND_C0, id)
                 if cc == 1 { ch = ld64(ND_C1, id) }
-                if ch != NONE && ld64(ROOTOF, ch) == 0 { sp = sp - ld64(ND_NB, ch) * ld64(ND_NB, ch) }
+                if ch != NONE && ld64(ROOTOF, ch) == 0 { sp = sp - ld64(ND_NB, ch) * (ld64(ND_NB, ch) + 1) }
                 cc = cc + 1
             }
-            sp = sp + ld64(ND_NB, id) * ld64(ND_NB, id)
+            sp = sp + ld64(ND_NB, id) * (ld64(ND_NB, id) + 1)
             if sp > peak { peak = sp }
         }
         id = id + 1
@@ -946,7 +942,6 @@ fn plan_subtrees() -> u64 {
 }
 
 fn numeric() {
-    // phase 1: independent subtrees, one per worker at a time
     NEXTJOB = alloc(8)
     store64(NEXTJOB, 0)
     u64 tq = time_ns()
@@ -962,7 +957,6 @@ fn numeric() {
         subtree_worker(0, 0, 0)
     }
     u64 tr = time_ns()
-    // phase 2: the top of the tree, sequential over nodes, threads inside each front
     u64 sp = 0
     u64 id = 0
     while id < NN {
@@ -976,49 +970,14 @@ fn numeric() {
 
 fn block(u64 id) -> u64 {
     if OOC == 0 { return FAC + ld64(ND_FOFF, id) * 8 }
-    u64 nv = ld64(ND_NV, id)
-    u64 f = nv + ld64(ND_NB, id)
-    pread_all(OOC_FD, BLK, (nv * f + (f - nv) * nv) * 8, ld64(ND_FOFF, id) * 8)
+    pread_all(OOC_FD, BLK, ublock(id) * 8, ld64(ND_FOFF, id) * 8)
     return BLK
 }
 
 fn solve(u64 y) {
-    // y: right-hand side in elimination order, overwritten by the solution in elimination order
-    u64 id = 0
-    while id < NN {
-        u64 s = ld64(ND_START, id)
-        u64 nv = ld64(ND_NV, id)
-        u64 nb = ld64(ND_NB, id)
-        u64 bo = ld64(ND_BOFF, id)
-        u64 f = nv + nb
-        u64 R = block(id)
-        u64 t = 0
-        while t < nv {
-            f64 acc = ldf(y, s + t)
-            u64 u = 0
-            while u < t {
-                acc = acc - ldf(R, t * f + u) * ldf(y, s + u)
-                u = u + 1
-            }
-            stf(y, s + t, acc)
-            t = t + 1
-        }
-        u64 L = R + nv * f * 8
-        u64 k = 0
-        while k < nb {
-            f64 acc = 0.0
-            t = 0
-            while t < nv {
-                acc = acc + ldf(L, k * nv + t) * ldf(y, s + t)
-                t = t + 1
-            }
-            u64 q = ld32(BPOOL, bo + k)
-            stf(y, q, ldf(y, q) - acc)
-            k = k + 1
-        }
-        id = id + 1
-    }
-    id = NN
+    // backward substitution only: the forward solve ran inside the factorisation (the rhs column).
+    // y: solution in elimination order (written)
+    u64 id = NN
     while id > 0 {
         id = id - 1
         u64 s = ld64(ND_START, id)
@@ -1026,22 +985,26 @@ fn solve(u64 y) {
         u64 nb = ld64(ND_NB, id)
         u64 bo = ld64(ND_BOFF, id)
         u64 f = nv + nb
+        u64 ld = f + 1
         u64 R = block(id)
+        // row t is packed at offset rowoff(t) = t*ld - t(t-1)/2 and holds columns t .. f
         u64 t = nv
         while t > 0 {
             t = t - 1
-            f64 acc = ldf(y, s + t)
+            u64 ro = t * ld - t * (t - 1) / 2
+            u64 base = ro - t                        // so that column c is at R[base + c]
+            f64 acc = ldf(R, base + f)               // the forward-solved rhs
             u64 u = t + 1
             while u < nv {
-                acc = acc - ldf(R, t * f + u) * ldf(y, s + u)
+                acc = acc - ldf(R, base + u) * ldf(y, s + u)
                 u = u + 1
             }
             u64 k = 0
             while k < nb {
-                acc = acc - ldf(R, t * f + nv + k) * ldf(y, ld32(BPOOL, bo + k))
+                acc = acc - ldf(R, base + nv + k) * ldf(y, ld32(BPOOL, bo + k))
                 k = k + 1
             }
-            stf(y, s + t, acc / ldf(R, t * f + t))
+            stf(y, s + t, acc / ldf(R, base + t))
         }
     }
 }
@@ -1089,7 +1052,7 @@ fn grid_input(u64 m1, u64 m2) {
 }
 
 fn main() {
-    if cli_argc < 3 { die("usage: solver IN OUT [threads] [factor-file]  |  solver --grid M1 M2") }
+    if cli_argc < 3 { die("usage: solver IN OUT [threads] [factor-file [rm-input]]  |  solver --grid M1 M2") }
     u64 a1 = arg(1)
     if load8(a1) == 45 && load8(a1 + 1) == 45 && load8(a1 + 2) == 103 {
         grid_input(parse_u64(arg(2)), parse_u64(arg(3)))
@@ -1099,6 +1062,11 @@ fn main() {
     if NTH < 1 { NTH = 1 }
     u64 t0 = time_ns()
     if SYMBOLIC_ONLY == 0 { load_input(arg(1)) }
+    if cli_argc > 5 && SYMBOLIC_ONLY == 0 {
+        u64 r = syscall_raw(87, arg(1), 0, 0, 0, 0, 0)     // unlink: frees the disk the input used
+        if kr_err(r) != 0 { die("could not delete the input file") }
+        println("krsolve: input file deleted after loading")
+    }
     u64 t1 = time_ns()
     println(f"krsolve: n={N} nnz={NNZ} threads={NTH} read {(t1 - t0) / 1000000} ms")
     ORD = alloc(N * 4)
@@ -1149,14 +1117,13 @@ fn main() {
     if OOC == 1 {
         OOC_FD = file_open(arg(4), 1)
         if kr_err(OOC_FD) != 0 { die("cannot open the factor file") }
-        LBUF = alloc(MAXL * 8 + 8)
         BLK = alloc(MAXBLK * 8 + 8)
         println(f"krsolve: out-of-core factor, {fac * 8 / 1000000000} GB to disk")
     }
     STK = alloc(TOPSTK * 8 + 8)
-    FRONT = alloc(fmax * fmax * 8 + 8)
-    MAP0 = alloc(fmax * 8 + 8)
-    if OOC == 0 { LBUF = 0 }
+    FRONT = alloc(fmax * (fmax + 1) * 8 + 8)
+    MAP0 = alloc((fmax + 2) * 8 + 8)
+    LBUF = alloc(MAXBLK * 8 + 8)                     // packing buffer for one node's upper rows
     if NTH > 1 { thread_pool_init(NTH) }
     numeric()
     u64 t3 = time_ns()
@@ -1167,11 +1134,6 @@ fn main() {
         if kr_err(OOC_FD) != 0 { die("cannot reopen the factor file") }
     }
     u64 y = alloc(N * 8)
-    i = 0
-    while i < N {
-        stf(y, i, ldf(RHS, ld32(ORD, i)))
-        i = i + 1
-    }
     solve(y)
     u64 x = alloc(N * 8)
     i = 0

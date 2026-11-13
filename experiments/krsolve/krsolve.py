@@ -5,7 +5,8 @@ must connect only lattice neighbours (it is symmetrised here with explicit zeros
 The binary is experiments/krsolve/solver (build: krc --arch=x86_64 solver.kr -o solver), or KRSOLVE_BIN.
 KRSOLVE_CMD may prefix the command (e.g. "wsl -d NVIDIA-Workbench --" with KRSOLVE_BIN a Linux path), and
 KRSOLVE_DIR sets where the exchange files go (default: a temp directory); KRSOLVE_FACTOR, if set, is the file the
-factor is streamed to (out-of-core, in the solver's own path space).
+factor is streamed to (out-of-core, in the solver's own path space); with it, KRSOLVE_RM_INPUT=1 has the solver
+delete its input file once loaded.
 """
 
 from __future__ import annotations
@@ -66,6 +67,8 @@ def kr_solve(M, rhs, coords, threads=None):
     cmd = pre + [binary, mp(fin), mp(fout), str(threads)]
     if os.environ.get("KRSOLVE_FACTOR"):                 # out-of-core: factor blocks streamed to this file
         cmd.append(os.environ["KRSOLVE_FACTOR"])
+        if os.environ.get("KRSOLVE_RM_INPUT"):           # the solver deletes the input once loaded (disk)
+            cmd.append("rm-input")
     r = subprocess.run(cmd, capture_output=True, text=True)
     LAST.clear()
     LAST.update({"stdout": r.stdout, "returncode": r.returncode, "n": n, "nnz": nnz})
@@ -81,6 +84,7 @@ def kr_solve(M, rhs, coords, threads=None):
             LAST["residual"] = float(line.split("=")[-1])
     if not os.environ.get("KRSOLVE_DIR"):
         for f in (fin, fout):
-            os.remove(f)
+            if os.path.exists(f):
+                os.remove(f)
         os.rmdir(d)
     return x

@@ -59,6 +59,15 @@ ADDED 2026-11-13, WHILE OMEGA = 4000 WAS RUNNING (out-of-core PARDISO, 16 GB in-
   -> M6 NOT RUN. Omega = 4000 failed a third time with PARDISO -2, with out-of-core mode confirmed requested
      (pypardiso's set_iparm is 1-based, so iparm(60) = 2 reached MKL) and a 16 GB in-core cap. The test stands,
      written, for a larger machine. FINDINGS §134.2.
+  (M6 was later run with krsolve, out-of-core: HELD, +0.0009 against -0.0047. FINDINGS §134.5.)
+
+ADDED 2026-11-13 AFTER OMEGA = 4000, BEFORE OMEGA = 5000 RAN.
+  M7  The unchanged model gives a = -0.0114 over 4000 -> 5000. The verdict depends on where the measured a lands:
+        a_measured >= 0                        -> the model's negative asymptotics are REFUTED on data;
+        |a_measured - (-0.0114)| <= 0.01       -> the model SURVIVES this window;
+        -0.0014 < a_measured < 0               -> UNRESOLVED (between the two), and written as such.
+      (The bands cannot overlap: -0.0114 + 0.01 = -0.0014.)
+  M8  On Sigma the exit keeps narrowing: sd(x1) at Omega = 5000 is below 4000's 0.665.
 """
 
 from __future__ import annotations

@@ -400,40 +400,71 @@ fn symbolic() -> u64 {
 
 fn gemm_core(u64 F, u64 f, u64 k0, u64 k1, u64 r0, u64 r1) {
     // F[i][j] -= sum_{k in [k0,k1)} F[i][k] F[k][j], rows i in [r0, r1), columns j in [k1, f).
-    // Columns are tiled (JB) so the panel's rows stay in cache across i.
-    u64 JB = 256
-    u64 jb = k1
-    while jb < f {
-        u64 je = jb + JB
-        if je > f { je = f }
-        u64 i = r0
-        while i < r1 {
-            u64 rowi = F + i * f * 8
+    // 2 x 2 register blocks accumulated over the whole panel; scalar edges.
+    u64 i = r0
+    while i + 1 < r1 {
+        u64 ra = F + i * f * 8
+        u64 rb = ra + f * 8
+        u64 j = k1
+        while j + 1 < f {
+            f64 c00 = 0.0
+            f64 c01 = 0.0
+            f64 c10 = 0.0
+            f64 c11 = 0.0
             u64 k = k0
             while k < k1 {
-                f64 lik = 0.0
-                u64 pl = rowi + k * 8
-                unsafe { *(pl as f64) -> lik }
-                if lik != 0.0 {
-                    u64 pa = rowi + jb * 8
-                    u64 pb = F + (k * f + jb) * 8
-                    u64 pend = rowi + je * 8
-                    while pa < pend {
-                        f64 a = 0.0
-                        f64 b = 0.0
-                        unsafe { *(pa as f64) -> a }
-                        unsafe { *(pb as f64) -> b }
-                        a = a - lik * b
-                        unsafe { *(pa as f64) = a }
-                        pa = pa + 8
-                        pb = pb + 8
-                    }
-                }
+                f64 a0 = 0.0
+                f64 a1 = 0.0
+                f64 b0 = 0.0
+                f64 b1 = 0.0
+                u64 pa0 = ra + k * 8
+                u64 pa1 = rb + k * 8
+                u64 pb = F + (k * f + j) * 8
+                u64 pb1 = pb + 8
+                unsafe { *(pa0 as f64) -> a0 }
+                unsafe { *(pa1 as f64) -> a1 }
+                unsafe { *(pb as f64) -> b0 }
+                unsafe { *(pb1 as f64) -> b1 }
+                c00 = c00 + a0 * b0
+                c01 = c01 + a0 * b1
+                c10 = c10 + a1 * b0
+                c11 = c11 + a1 * b1
                 k = k + 1
             }
-            i = i + 1
+            stf(ra, j, ldf(ra, j) - c00)
+            stf(ra, j + 1, ldf(ra, j + 1) - c01)
+            stf(rb, j, ldf(rb, j) - c10)
+            stf(rb, j + 1, ldf(rb, j + 1) - c11)
+            j = j + 2
         }
-        jb = je
+        if j < f {
+            f64 c0 = 0.0
+            f64 c1 = 0.0
+            u64 k = k0
+            while k < k1 {
+                f64 bkj = ldf(F, k * f + j)
+                c0 = c0 + ldf(ra, k) * bkj
+                c1 = c1 + ldf(rb, k) * bkj
+                k = k + 1
+            }
+            stf(ra, j, ldf(ra, j) - c0)
+            stf(rb, j, ldf(rb, j) - c1)
+        }
+        i = i + 2
+    }
+    if i < r1 {
+        u64 ra = F + i * f * 8
+        u64 j = k1
+        while j < f {
+            f64 c = 0.0
+            u64 k = k0
+            while k < k1 {
+                c = c + ldf(ra, k) * ldf(F, k * f + j)
+                k = k + 1
+            }
+            stf(ra, j, ldf(ra, j) - c)
+            j = j + 1
+        }
     }
 }
 
@@ -462,18 +493,114 @@ fn trailing_update(u64 F, u64 f, u64 k0, u64 k1, u64 par) {
     thread_pool_wait()
 }
 
+// ---- parallel helpers for the top fronts (one front at a time, so the G_* globals are safe there)
+static u64 G_KB = 0
+static u64 G_KE = 0
+static u64 G_U = 0
+static u64 G_CN = 0
+static u64 G_MAP = 0
+
+fn par_for(u64 fp, u64 lo, u64 hi) {
+    u64 n = hi - lo
+    u64 w = 0
+    while w < NTH {
+        thread_pool_submit(w, fp, lo + n * w / NTH, lo + n * (w + 1) / NTH, 0)
+        w = w + 1
+    }
+    thread_pool_wait()
+}
+
+fn l21_rows(u64 r0, u64 r1, u64 unused) { l21_core(G_F, G_FN, G_KB, G_KE, r0, r1) }
+
+fn l21_core(u64 F, u64 f, u64 kb, u64 ke, u64 r0, u64 r1) {
+    // rows i in [r0, r1) below the panel: F[i][kb..ke) <- F[i][kb..ke) U11^{-1}
+    u64 i = r0
+    while i < r1 {
+        u64 k = kb
+        while k < ke {
+            f64 v = ldf(F, i * f + k)
+            u64 kk = kb
+            while kk < k {
+                v = v - ldf(F, i * f + kk) * ldf(F, kk * f + k)
+                kk = kk + 1
+            }
+            stf(F, i * f + k, v / ldf(F, k * f + k))
+            k = k + 1
+        }
+        i = i + 1
+    }
+}
+
+fn u12_cols(u64 c0, u64 c1, u64 unused) { u12_core(G_F, G_FN, G_KB, G_KE, c0, c1) }
+
+fn u12_core(u64 F, u64 f, u64 kb, u64 ke, u64 c0, u64 c1) {
+    // panel rows: F[i][c0..c1) -= sum_{k<i} L[i][k] F[k][c0..c1), i in (kb, ke)
+    u64 i = kb + 1
+    while i < ke {
+        u64 k = kb
+        while k < i {
+            f64 l = ldf(F, i * f + k)
+            if l != 0.0 {
+                u64 pa = F + (i * f + c0) * 8
+                u64 pb = F + (k * f + c0) * 8
+                u64 pend = F + (i * f + c1) * 8
+                while pa < pend {
+                    f64 x = 0.0
+                    f64 y = 0.0
+                    unsafe { *(pa as f64) -> x }
+                    unsafe { *(pb as f64) -> y }
+                    x = x - l * y
+                    unsafe { *(pa as f64) = x }
+                    pa = pa + 8
+                    pb = pb + 8
+                }
+            }
+            k = k + 1
+        }
+        i = i + 1
+    }
+}
+
+fn zero_range(u64 z0, u64 z1, u64 unused) {
+    u64 z = z0
+    while z < z1 {
+        store64(G_F + z * 8, 0)
+        z = z + 1
+    }
+}
+
+fn extend_rows(u64 a0, u64 a1, u64 unused) { extend_core(G_F, G_FN, G_U, G_CN, G_MAP, a0, a1) }
+
+fn extend_core(u64 F, u64 f, u64 U, u64 cn, u64 map, u64 a0, u64 a1) {
+    // rows [a0, a1) of the child update U (cn x cn) added into the front through map
+    u64 a = a0
+    while a < a1 {
+        u64 rowF = F + ld64(map, a) * f * 8
+        u64 rowU = U + a * cn * 8
+        u64 b = 0
+        while b < cn {
+            u64 lb = ld64(map, b)
+            stf(rowF, lb, ldf(rowF, lb) + ldf(rowU, b))
+            b = b + 1
+        }
+        a = a + 1
+    }
+}
+
 fn partial_lu(u64 F, u64 f, u64 nv, u64 par) {
+    u64 big = 0
+    if par == 1 && NTH > 1 && f >= 1500 { big = 1 }
     u64 kb = 0
     while kb < nv {
         u64 ke = kb + PW
         if ke > nv { ke = nv }
-        // panel: columns [kb, ke), all rows below
+        // 1. the diagonal block (rows and columns [kb, ke)): unblocked LU
         u64 k = kb
         while k < ke {
             f64 piv = ldf(F, k * f + k)
             if piv == 0.0 { die("zero pivot") }
             u64 i = k + 1
-            while i < f {
+            while i < ke {
                 f64 l = ldf(F, i * f + k) / piv
                 stf(F, i * f + k, l)
                 if l != 0.0 {
@@ -487,24 +614,22 @@ fn partial_lu(u64 F, u64 f, u64 nv, u64 par) {
             }
             k = k + 1
         }
-        // U12 for the panel rows: apply the unit-lower panel to columns [ke, f)
-        k = kb
-        while k < ke {
-            u64 i = k + 1
-            while i < ke {
-                f64 l = ldf(F, i * f + k)
-                if l != 0.0 {
-                    u64 j = ke
-                    while j < f {
-                        stf(F, i * f + j, ldf(F, i * f + j) - l * ldf(F, k * f + j))
-                        j = j + 1
-                    }
-                }
-                i = i + 1
+        // 2. L21 for the rows below the panel, 3. U12 for the panel rows
+        if ke < f {
+            if big == 1 {
+                G_F = F
+                G_FN = f
+                G_KB = kb
+                G_KE = ke
+                par_for(fn_addr("l21_rows"), ke, f)
+                par_for(fn_addr("u12_cols"), ke, f)
+            } else {
+                l21_core(F, f, kb, ke, ke, f)
+                u12_core(F, f, kb, ke, ke, f)
             }
-            k = k + 1
+            // 4. trailing update of rows and columns [ke, f)
+            trailing_update(F, f, kb, ke, par)
         }
-        if ke < f { trailing_update(F, f, kb, ke, par) }
         kb = ke
     }
 }
@@ -574,10 +699,15 @@ fn process_node(u64 id, u64 F, u64 stk, u64 sp, u64 map, u64 lbuf, u64 par, u64 
     u64 bo = ld64(ND_BOFF, id)
     u64 f = nv + nb
     u64 e = s + nv
-    u64 z = 0
-    while z < f * f {
-        store64(F + z * 8, 0)
-        z = z + 1
+    if par == 1 && NTH > 1 && f >= 1500 {
+        G_F = F
+        par_for(fn_addr("zero_range"), 0, f * f)
+    } else {
+        u64 z = 0
+        while z < f * f {
+            store64(F + z * 8, 0)
+            z = z + 1
+        }
     }
     // original entries: own rows, and the own columns of boundary rows
     u64 t = 0
@@ -626,18 +756,15 @@ fn process_node(u64 id, u64 F, u64 stk, u64 sp, u64 map, u64 lbuf, u64 par, u64 
                 st64(map, a, local_ix(s, nv, bo, nb, ld32(BPOOL, cb + a)))
                 a = a + 1
             }
-            a = 0
-            while a < cn {
-                u64 la = ld64(map, a)
-                u64 rowF = F + la * f * 8
-                u64 rowU = U + a * cn * 8
-                u64 b = 0
-                while b < cn {
-                    u64 lb = ld64(map, b)
-                    stf(rowF, lb, ldf(rowF, lb) + ldf(rowU, b))
-                    b = b + 1
-                }
-                a = a + 1
+            if par == 1 && NTH > 1 && cn >= 1500 {
+                G_F = F
+                G_FN = f
+                G_U = U
+                G_CN = cn
+                G_MAP = map
+                par_for(fn_addr("extend_rows"), 0, cn)
+            } else {
+                extend_core(F, f, U, cn, map, 0, cn)
             }
         }
         cc = cc + 1
@@ -1011,7 +1138,7 @@ fn main() {
     u64 t2 = time_ns()
     u64 gb = (fac + spmax + fmax * fmax) * 8 / 1000000000
     println(f"krsolve: nodes={NN} factor_entries={fac} stack_peak={spmax} max_front={fmax} numeric_GB~{gb} symbolic {(t2 - t1) / 1000000} ms")
-    println(f"krsolve: flops~{FLOPS}")
+    println(f"krsolve: flops~{FLOPS} boundary_pool_entries={BLEN}")
     if SYMBOLIC_ONLY == 1 { exit(0) }
     dealloc(MARK)
     dealloc(SBUF)

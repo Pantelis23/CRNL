@@ -36,6 +36,10 @@
       "200": 0.15406076,
       "400": 0.15405679,
       "800": 0.15405548
+    },
+    "bvp": {
+      "W_star": 0.1540536705,
+      "Gamma": 0.00168823963
     }
   },
   "b": {
@@ -153,7 +157,12 @@
         "Gamma": 0.007336912500555015
       }
     },
-    "mam_note": "\u00a7134.7: rises with N; not geometric (optimiser not fully converged at some N); max 7.336913e-3 at N=6400; extrapolations 7.33697-7.33708e-3. The quoted Gamma_err 1e-6 for the rays is not confirmed."
+    "mam_note": "\u00a7134.7: rises with N; not geometric (optimiser not fully converged at some N); max 7.336913e-3 at N=6400; extrapolations 7.33697-7.33708e-3. The quoted Gamma_err 1e-6 for the rays is not confirmed.",
+    "bvp": {
+      "W_star": 0.1484037485,
+      "Gamma": 0.0073381616,
+      "note": "\u00a7134.8: heteroclinic BVP, converged to ~1e-11 in end offsets and tol; validated on X (1.68823963e-3 vs rays 1.688372e-3). The rays Gamma above (0.00734) is 2e-6 high: its |p|->0 extrapolation undershoots W*."
+    }
   },
   "XN": {
     "pair": "E-070 -> E-084@K1.2@N2 (Hill exponent 2; \u00a7124.13)",

@@ -5516,6 +5516,23 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   - **What would decide it:** if Γ settles at ≥ 7.344e−3, the suspect is dead and a ≈ −0.02 is constant, so §134's
     "a rising through zero" was Γ all along (rule 21). If Γ settles in [7.3369, 7.3402]e−3, a is really rising
     and is positive at Ω = 5000, and a_∞ remains open.
+  ~~T-CASC-av~~ **→ §134.8: closed.** A heteroclinic BVP gives Γ = 7.338162e−3, converged to ~1e−11 on all its axes
+  and validated on X to 1.3e−7. The rays' extrapolation was 2e−6 high. So a really rises: +0.0134 at 4000 → 5000.
+  **M6 failed** (offset −0.0124), M7 is refuted, and the suspect "a second lower-action route" is dead (30 MAM starts,
+  one route). The free-Γ preference is not Γ. At the true Γ no Ω^a (+ 1/Ω) form fits, and the excess slope grows.
+  The rise sits in the saddle bins x₁ ∈ [2.95, 3.05] (28% of the flux at 5000, local exponents +0.55 to +0.93).
+  **Exact:** W's Hessian along Σ at the joint saddle is **zero** on the instanton manifold (Z_B eigenvalues −0.660 and
+  0, the zero mode along Σ's tangent).
+  **Open (T-CASC-aw): the shape of the exit's core at the saddle, and a_∞.**
+  - **Suspect:** with W flat to second order along Σ, ε ∝ |δ|³ near B. The core is then Ω^{−1/3} wide, and
+    a_∞ = 1/2 − 1/3 = +1/6. This is untested. The 1/2 is the spread-exit model's local prefactor, itself a suspect at
+    the saddle.
+  - **Kill test, exact part:** W's third derivative along Σ at B, from the cubic term of the Lagrangian manifold
+    (Taylor-expand the stable manifold of B in the Hamiltonian flow). If it vanishes too, the core goes as Ω^{−1/4}
+    or wider, and +1/6 is dead.
+  - **Kill test, measured part:** re-bin the Σ-cut flux near the saddle at bin width ≤ 0.005, at Ω = 1600–4000.
+    Locally and on the laptop that is a re-run of the stored cells with a finer `flux_density`. The core's width
+    must scale as Ω^{−1/3}, not Ω^{−1/2}, within the rule-21 caveat (report the window).
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

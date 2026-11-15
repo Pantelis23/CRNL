@@ -14650,6 +14650,9 @@ docstring) and T-CASC-au's kill test (THEORIES) were both written before any Ω 
   > the rays, and the verdict depends on it: M6 holds only for Γ in [7.3388, 7.3442]e−3. The ray value is inside
   > that range. Independent minimum action (§134.7) reached 7.3369e−3 at N = 6400 and was still rising. So M6's
   > "held" is **conditional on Γ ≥ 7.3388e−3**, which is not yet settled.
+  >
+  > **Withdrawn in §134.8.** Converged Γ = 7.338162e−3 (heteroclinic BVP) is below that threshold. At it the offset
+  > is −0.0124, so **M6 failed**.
 - **T-CASC-au's registered window held:** a(2800 → 4000) = −0.0010, against the predicted −0.0008 ± 0.03. Its kill
   condition ("still rising, above +0.01") did not fire.
 - **What the numbers also show.** The measured a has risen at every step and has now crossed zero. The model's a
@@ -14761,3 +14764,92 @@ and are not used.
 - **What this does not settle:** a_∞. With the rays' Γ, a is +0.0051 and still rising. A Γ near MAM's value would
   raise every window's a by up to 0.014 at Ω = 5000. Any statement about a's sign or value now needs Γ to about
   1e−7, which neither method has reached.
+
+#### 134.8 Γ for XK is 7.338162e−3 (a third method, converged): M6 fails, and the rise in a sits at the saddle
+
+*Scope: XK and, as validation, X. Local machine.*
+- *Γ by a heteroclinic boundary-value problem (`experiments/joint_action/bvp_gamma.py`), independent of the rays and
+  of MAM, run with its criteria written beforehand.*
+- *A 30-start MAM search at N = 400 (`mam_multistart.py`).*
+- *A per-bin reading of the stored Σ-cut flux at Ω = 2800–5000.*
+- *The exact Hessian of W at the joint saddle.*
+
+**The method.** The minimum-action path is the heteroclinic orbit of the WKB Hamiltonian flow from (A, p = 0) to
+(B, p = 0). It is solved on [0, T] with projection boundary conditions and a phase condition |x(0) − A| = ε_A. The
+action carries exact-to-O(δ³) end corrections ½δx·p. Without the phase condition the problem went near-singular as the
+offsets shrank: time translation is broken only by the manifolds' curvature, and the mesh grew to 10⁵–10⁶ nodes.
+Energy conservation makes one of B's two projection rows redundant. Dropping B's deterministic-mode row converges;
+dropping the other diverged.
+
+| | Γ (e−3) | numerical axes |
+|---|---|---|
+| X (validation) | 1.68823963 | end offsets 1e−3 → 1e−7, tol 1e−7 → 1e−10: steady to ~1e−11 |
+| X, rays (§124) | 1.688372 | the BVP is 1.3e−7 below, inside the rays' stated 2e−6. **B1 held** |
+| **XK** | **7.3381616** | the same axes: steady to ~1e−11 |
+| XK, rays (§124.9) | 7.3394–7.3402 | **2.0e−6 high** |
+| XK, MAM N = 6400 (§134.7) | 7.336913 | below the BVP by 1.25e−6, rising toward it |
+
+**Why the rays were high.** Every real ray hit on Σ has S ≥ 0.1484127596, above the BVP's W\* = 0.1484037485, as an
+upper bound must be. Only the rays' extrapolation to |p| → 0 falls below it: 0.1484025122, linear in |p|² from
+|p| ≥ 1.9e−3. My expectation, written in the docstring, was that the BVP would land within 1e−6 of the rays. That was
+**wrong**.
+
+**B2, read across every window at the BVP's Γ.** The measured a moves up by 1.84e−6·Ω_eff:
+
+| window | model a | measured a (Γ_rays 7.340e−3) | **measured a (Γ_BVP)** | **model − measured** |
+|---|---|---|---|---|
+| 800→1600 | +0.0613 | −0.0127 | −0.0105 | +0.0718 |
+| 1600→2000 | +0.0260 | −0.0118 | −0.0085 | +0.0345 |
+| 2000→2800 | +0.0136 | −0.0073 | −0.0029 | +0.0165 |
+| 2800→3400 | +0.0024 | −0.0026 | +0.0031 | −0.0007 |
+| 3400→4000 | −0.0047 | +0.0009 | +0.0077 | −0.0124 |
+| 4000→5000 | −0.0114 | +0.0051 | +0.0134 | −0.0247 |
+
+- **M6 FAILS:** |offset| = 0.0124 > 0.01. §134.5's "held" (annotated conditional in §134.7) is withdrawn. The
+  struck reading stays there.
+- **M7: refuted, more strongly** (+0.0134 against −0.0114).
+- **T-CASC-au's registered window still held:** a(2800 → 4000) = +0.0052, within 0.03 of −0.0008 and below +0.01.
+- **§134's "model explains the prefactor to Ω ≈ 3400" narrows to "the model crosses the data near 3400".** The
+  offset falls through zero there and reaches −0.025 by 5000. Two of the model's forward tests are now held at one
+  Ω and failed at the next.
+- **The free-Γ fits (§134.7) wanted 7.345e−3; the BVP excludes that by 7e−6.** At the BVP's Γ, a constant a fits
+  the totals poorly (max residual 1.5e−3 from Ω = 2000). So do Ω^a·(1 + b/Ω), Ω^a·e^{b ln²Ω} and Ω^a with b/Ω + c/Ω²
+  (1.2e−4 to 3.5e−4, with unstable coefficients). Only Ω^a·e^{b√Ω} fits (1.6e−5, b = 0.0018), and nothing here
+  motivates that form. The local slope d ln R/dΩ exceeds Γ by +1.0 / +2.1 / +3.0 e−6 at Ω_eff ≈ 3100 / 3700 / 4500.
+
+**Suspect 1, killed: a second, lower-action route.** An excess above Γ that keeps growing is what a lower-action
+route, subdominant at small Ω, would produce. All 30 MAM starts end on one route: the same min x₁ = 1.2704 at
+x₂ ≈ 1.18–1.19, both orders of stage drop, waypoints over x₁ ∈ [1.02, 2.4] and x₂ ∈ [0.7, 2.0]. All 30 also end
+above the BVP's W\*.
+- **The criterion as written (S1) would have printed "killed W\*'s globality".** Eight starts ended 1e−7 to 5.9e−7
+  below the X-path start. They are the same route, with MAM's N = 400 node placement scattering W by about ±6e−7.
+  The 1e−7 threshold sat inside the method's own noise. The test that settles it is "a different path, or a W below
+  the converged W\*", and that is the one recorded (rule 19).
+
+**Reading the cells: the rise is at the saddle.** Local exponents of the Σ-cut flux per 0.05 bin in x₁, at Γ_BVP:
+
+| x₁ | share at Ω = 5000 | 2800→3400 | 3400→4000 | 4000→5000 |
+|---|---|---|---|---|
+| 1.275 | 0.024 | −1.32 | −1.61 | −2.04 |
+| 1.475 | 0.028 | −0.20 | −0.24 | −0.44 |
+| 1.975 | 0.014 | +0.24 | +0.16 | +0.07 |
+| 2.475 | 0.014 | +0.27 | +0.29 | +0.29 |
+| 2.825 | 0.026 | +0.46 | +0.26 | +0.34 |
+| 2.925 | 0.074 | +0.33 | +0.25 | +0.15 |
+| **2.975** | **0.155** | **+0.79** | **+0.55** | **+0.78** |
+| **3.025** | **0.123** | **+0.68** | **+0.93** | **+0.60** |
+| 3.075 | 0.020 | −0.34 | −0.49 | −0.70 |
+
+The bins at the saddle carry 28% of the flux at Ω = 5000, and it grows there faster than the model's local Ω^½.
+Bin-to-bin scatter is about ±0.2. The total's a rises as their share grows.
+
+**An exact fact at the saddle.** On the instanton's Lagrangian manifold at B (p = Z_B δx, from the stable subspace of
+the linearised flow), Z_B has eigenvalues −0.6601 and **0**. The zero mode is Σ's tangent (the deterministic stable
+direction, p = 0): t·Z_B·t = −4e−21. **So W along Σ is flat to second order at the joint saddle.** §134.2's climb
+bound ε ≤ 0.075δ² holds, but it is not tight. The local W rises at least as δ³ along Σ, not as ½hδ².
+
+> **Suspect 2 (not a result): a non-Gaussian saddle core.** If ε ∝ |δ|³ along Σ near B, the core of the exit is
+> Ω^{−1/3} wide rather than Ω^{−1/2}. With the local Ω^½ prefactor this would give a_∞ = 1/2 − 1/3 = +1/6. That is
+> the direction the data move, and fast core bins are what it would need. The kill test is in THEORIES
+> (T-CASC-aw). It needs W's third derivative along Σ at B, and the core's width measured in fine bins, which the
+> stored 0.05 bins cannot resolve.

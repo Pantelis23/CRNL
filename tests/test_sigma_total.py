@@ -97,3 +97,32 @@ def test_xk_minimum_action_rises_and_stays_below_the_flip():
     ja = json.loads((RES.parent / "joint_action.json").read_text())["XK"]["mam"]
     g = [ja[k]["Gamma"] for k in sorted(ja, key=int)]
     assert all(y > x for x, y in zip(g, g[1:])) and max(g) < 7.3410e-3
+
+
+def test_bvp_gamma_converged_and_its_verdicts():
+    """§134.8: the BVP's Gamma is steady across its offset and tol axes (X validated against the rays); at it M6
+    fails, M7 stays refuted, and T-CASC-au's window holds."""
+    R = RES.parent
+    for name, ref, err in (("bvp_x_tol1e-06_drop0.json", 1.688372e-3, 2e-6), ("bvp_xk_tol1e-06_drop0.json", None, None)):
+        c = json.loads((R / name).read_text())["cells"]
+        tail = [x["Gamma"] for x in c if x["status"] == 0 and max(x["offset_A"], x["offset_B"]) < 2e-5]
+        assert len(tail) >= 3 and max(tail) - min(tail) < 1e-10
+        if ref is not None:
+            assert abs(tail[-1] - ref) < err
+    G = tail[-1]
+    assert 7.3381e-3 < G < 7.3382e-3
+    s = json.loads(RES.read_text())
+    T = {o: s[f"XK:{o}:sad2:cap1.1"]["total"] for o in (2800, 3400, 4000, 5000)}
+    a = lambda o1, o2: (math.log(T[o2] / T[o1]) - G * (o2 - o1)) / math.log(o2 / o1)
+    assert abs(s["S134"]["3400-4000"]["a_model"] - a(3400, 4000)) > 0.01                  # M6 fails
+    assert a(4000, 5000) >= 0                                                              # M7 refuted
+    tc = a(2800, 4000)
+    assert abs(tc - s["S134"]["2800-4000"]["a_model"]) < 0.03 and tc <= 0.01                # T-CASC-au window held
+
+
+def test_multistart_finds_one_route_above_the_bvp():
+    """§134.8: every MAM start lands on the same route and above the BVP's W*; the second-route suspect is dead."""
+    m = json.loads((RES.parent / "mam_multistart_xk.json").read_text())
+    c = json.loads((RES.parent / "bvp_xk_tol1e-06_drop0.json").read_text())["cells"]
+    W_bvp = c[-1]["W"]
+    assert len(m) == 30 and all(abs(r["min_x1"] - 1.2704) < 1e-3 for r in m) and all(r["W"] > W_bvp for r in m)

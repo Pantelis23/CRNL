@@ -14853,3 +14853,35 @@ bound ε ≤ 0.075δ² holds, but it is not tight. The local W rises at least as
 > the direction the data move, and fast core bins are what it would need. The kill test is in THEORIES
 > (T-CASC-aw). It needs W's third derivative along Σ at B, and the core's width measured in fine bins, which the
 > stored 0.05 bins cannot resolve.
+
+#### 134.9 The saddle core's width at Ω ≤ 1600: between Ω^{−1/3} and Ω^{−1/2}, not resolved
+
+*Scope: XK, cap 1.1, Σ cut, Ω = 400 / 800 / 1200 / 1600 (krsolve, local), with the unbinned flux per n₁
+(`cut_flux(..., raw=True)`, `experiments/sigma_core.py`). Criteria were written before running. A local run at
+Ω = 2000 and 2800 was stopped by the host for low memory (29 GB machine) before any cell finished.*
+
+- **Instrument (C2): held.** The raw flux, re-binned into 0.05 bins, reproduces the stored 1600 cell exactly.
+- **C1 as written measured the lattice.** The raw per-n₁ flux is spiky, because the staircase Σ cut puts the
+  stage-1 moves across each step into one n₁. Its "FWHM" was 1.25/Ω at every Ω. This is recorded as a criterion
+  that could only print one value (rule 19).
+- **C1′ (Gaussian-smoothed density at h = 0.01 and 0.02), revised before re-running:**
+
+| Ω | share within \|x₁ − 3\| ≤ 0.05 | FWHM (h = 0.01) | FWHM (h = 0.02) |
+|---|---|---|---|
+| 400 | 0.044 | 0.3191 | 0.3369 |
+| 800 | 0.073 | 0.2365 | 0.2567 |
+| 1200 | 0.096 | 0.2124 | 0.2186 |
+| 1600 | 0.120 | 0.1797 | 0.1856 |
+
+  ν_eff per window (h = 0.01 / 0.02):
+  - 400 → 800: 0.43 / 0.39
+  - 800 → 1200: 0.27 / 0.40
+  - 1200 → 1600: 0.58 / 0.57
+  - 400 → 1600 overall: 0.41 / 0.43
+- **The registered rule prints "suspect dead"** (the largest window gives ν_eff ≥ 0.45 on both h). **It is not acted
+  on.** Window-to-window scatter is ±0.15, which is larger than the 1/3-versus-1/2 gap the rule is meant to
+  resolve, and the deciding window has the smallest Ω ratio (4/3). The overall 0.41–0.43 lies between the two
+  hypotheses. **Status: UNRESOLVED.** The withdrawal of a suspect is held to the same standard as an assertion
+  (rule 14).
+- **What is measured:** the near-saddle hump narrows (FWHM 0.32 → 0.18 over Ω = 400 → 1600) and its share of the
+  flux grows (0.044 → 0.120; 0.28 at Ω = 5000 from §134.8's bins). These are two separate readings.

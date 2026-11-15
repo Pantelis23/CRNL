@@ -77,7 +77,7 @@ def sigma_table(A, B, om_grid=None):
     return xs, sg
 
 
-def cut_flux(A, B, om, cut="sad2", sig=None):
+def cut_flux(A, B, om, cut="sad2", sig=None, raw=False):
     m = A.cap(om) + 1
     sad1, sad2 = int(np.ceil(A.r2 * om)), int(np.ceil(B.r2 * om))
     key = (A.name, B.name, om, m, ec.SOLVER, ec.PIN_SCALE)
@@ -147,6 +147,8 @@ def cut_flux(A, B, om, cut="sad2", sig=None):
                 flux[j] += float((Pc[i, ks] * rate * q[j, ks]).sum())
     dens = [float(flux[(x1 >= 1.0 + 0.05 * k) & (x1 < 1.05 + 0.05 * k)].sum() / L["dip"] / 0.05) for k in range(44)]
     tot = float(flux.sum() / L["dip"])
+    if raw:                                                        # §134.9: the unbinned flux, per n1 (not stored)
+        return x1, flux / L["dip"]
     return {"omega": om, "cut": cut, "total": tot, "mean_x1": float((flux * x1).sum() / flux.sum()),
             "sd_x1": float(np.sqrt(max((flux * x1 ** 2).sum() / flux.sum() - ((flux * x1).sum() / flux.sum()) ** 2, 0))),
             "flux_bins_x1": [round(1.025 + 0.05 * k, 4) for k in range(44)], "flux_density": dens}

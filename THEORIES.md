@@ -5533,6 +5533,11 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   - **Kill test, measured part:** re-bin the Σ-cut flux near the saddle at bin width ≤ 0.005, at Ω = 1600–4000.
     Locally and on the laptop that is a re-run of the stored cells with a finer `flux_density`. The core's width
     must scale as Ω^{−1/3}, not Ω^{−1/2}, within the rule-21 caveat (report the window).
+  **→ §134.9: measured to Ω = 1600, unresolved.** The smoothed core gives ν_eff 0.41–0.43 over 400 → 1600, with
+  windows scattering 0.27–0.58. The registered rule's "dead", which came from the noisiest window, is not acted on.
+  **Next:** the cells at Ω = 2800 and 4000 with `raw=True`, on the laptop (2800 does not fit in this machine's 29 GB).
+  That gives windows of ratio ≥ 1.4 and 2.5 against 1600. Use the same two kernels and the same bands, read per
+  window.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

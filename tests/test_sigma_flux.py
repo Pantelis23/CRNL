@@ -63,3 +63,14 @@ def test_pin_scale_cancels_exactly_and_underflow_fails_loudly(xk, monkeypatch):
     monkeypatch.setattr(ec, "PIN_SCALE", 2.0 ** -1060)
     with pytest.raises(FloatingPointError):
         cut_flux(A, B, 120, "sad2")
+
+
+def test_raw_flux_rebins_to_the_binned_cell(xk):
+    """§134.9: cut_flux(raw=True) is the same flux, unbinned: re-binned it reproduces the binned density to rounding."""
+    A, B = xk
+    sig = sigma_table(A, B)
+    x1, f = cut_flux(A, B, 120, "sigma", sig, raw=True)
+    d = np.array(cut_flux(A, B, 120, "sigma", sig)["flux_density"])
+    rb = np.array([f[(x1 >= 1.0 + 0.05 * k) & (x1 < 1.05 + 0.05 * k)].sum() / 0.05 for k in range(44)])
+    m = d > 1e-12 * d.max()
+    assert np.max(np.abs(rb[m] / d[m] - 1)) < 1e-12

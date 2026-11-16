@@ -5597,6 +5597,12 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
     inner problem without the Dirichlet line). Its Ω-power at H is β.
   - **The laptop cells (kill test (a), Ω = 2800 and 4000) bear on both:** suspect 4 needs E to turn down
     eventually, and suspect 5 needs it to settle.
+  **→ §134.14: run.** E = +0.3726 (1600 → 2800) and +0.3737 (2800 → 4000). It is levelling off at about 0.374.
+  This supports suspect 5. Suspect 4 is not dead, but it has shown no turn-down through Ω = 4000.
+  - **New inconsistency:** the density excess predicts a core b of about 0.87, against a measured 0.72–0.80, so the
+    flux half partly cancels it.
+  - **Next:** suspect 5's own kill test (a pair with a different μ). The exact inner problem at a non-absorbed μ > 1
+    saddle would also predict 0.374 or not; that would close it.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

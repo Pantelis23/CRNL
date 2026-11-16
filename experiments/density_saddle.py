@@ -72,3 +72,16 @@ if __name__ == "__main__":
 #    decimals by Omega = 800 (last-window slopes +0.003 / +0.001 / +0.000 / -0.001 / -0.005 / -0.009 / -0.013 going
 #    toward H); the point (2.68, 0.62) just short of H relaxes with slope -0.33 -> -0.055. Only AT H does the density
 #    carry a growing positive power (+0.37). results/density_along_path.json; experiments/density_along_path.py.
+#
+# ADDED BEFORE THE LAPTOP CELLS (Omega = 1600 check, 2800, 4000; §134.14), the reading of T-CASC-ax kill test (a):
+#   1600 must reproduce the local L = +0.145193 to <= 1e-6 (laptop route check).
+#   E(1600->2800) or E(2800->4000) > 0.5             -> suspect 4 (ridge collection, excess <= 1/2) is DEAD.
+#   E falling in both windows, below 0.35 by 2800->4000 -> supports suspect 4 (the turn-down it needs).
+#   E within [0.35, 0.42] in both windows, no trend    -> supports suspect 5 (a settled local exponent).
+#   Anything else -> UNRESOLVED, written as such. None of these is decisive alone: 4 needs an eventual decline it may
+#   not show by 4000, and 5's "settled" is a trend read over two windows (rule 21: windows reported).
+# -> §134.14 (laptop): 1600 reproduced bit-for-bit (L = +0.14519328219140). L(2800) = +0.353721, L(4000) = +0.487019.
+#    E(1600->2800) = +0.3726, E(2800->4000) = +0.3737; increments +0.0046 then +0.0011 -> flattening near 0.374.
+#    Registered reading: both windows in [0.35, 0.42] with a vanishing trend -> SUPPORTS suspect 5 (a settled local
+#    exponent); suspect 4 not dead (<= 0.5) but shows no turn-down by 4000. Residuals 1.5e-9 / 3.7e-9 (D2's fixed 1e-10
+#    again fails as written; rule 20).

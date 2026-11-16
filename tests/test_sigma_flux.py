@@ -124,3 +124,15 @@ def test_ridge_test_premise_and_convergence():
     E = lambda d, a, b: (d[b]["L"] - d[a]["L"]) / math.log(int(b) / int(a))
     assert abs(E(x, "1200", "1600") - E(k, "1200", "1600")) < 0.01
     assert abs(E(x, "200", "400") - E(k, "200", "400")) > 0.2
+
+
+def test_saddle_density_excess_levels_off():
+    """§134.14: the excess at H rises in every window but its increments shrink, and the two largest windows sit in
+    [0.35, 0.42] within 0.005 of each other."""
+    import math
+    d = json.loads((ROOT / "results" / "density_saddle.json").read_text())
+    ks = sorted(d, key=int)
+    E = [(d[b]["L"] - d[a]["L"]) / math.log(int(b) / int(a)) for a, b in zip(ks, ks[1:])]
+    inc = [y - x for x, y in zip(E, E[1:])]
+    assert all(v > 0 for v in inc) and all(b < a for a, b in zip(inc, inc[1:]))
+    assert all(0.35 <= e <= 0.42 for e in E[-2:]) and abs(E[-1] - E[-2]) < 0.005

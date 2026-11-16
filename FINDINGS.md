@@ -15047,3 +15047,26 @@ criterion was tightened in `experiments/ridge_x.py`'s docstring before running. 
   - A common limit points to a **local exponent set by the saddle**. Ridge collection would make the limit depend
     on the ridge.
   - This is a pattern seen at two pairs in one Ω range, not a verdict. Its kill test is in THEORIES.
+
+#### 134.14 The density excess at the saddle settles at ≈ 0.374 through Ω = 4000: a local exponent, not yet a ridge turn-down
+
+*Scope: XK, cap 1.1, the Q-process law at H, Ω = 1600 (reproduction check), 2800 and 4000 (laptop, WSL krsolve
+out-of-core). The reading was added to `experiments/density_saddle.py`'s docstring before these cells existed.*
+
+- **Route check:** the laptop reproduced the local Ω = 1600 value bit for bit (L = +0.14519328219140).
+- **The excess E = dL/d ln Ω at H, every window:**
+
+| window | 200→400 | 400→800 | 800→1200 | 1200→1600 | **1600→2800** | **2800→4000** |
+|---|---|---|---|---|---|---|
+| E | +0.302 | +0.336 | +0.360 | +0.368 | **+0.3726** | **+0.3737** |
+
+  The increments shrink: +0.034, +0.024, +0.008, +0.0046, +0.0011. The excess is **levelling off at about 0.374**.
+  This is reported with its window, Ω = 1600–4000 (rule 21). It is not an exponent until something says why.
+- **Registered reading.** Both new windows lie in [0.35, 0.42] with a vanishing trend, which **supports suspect 5**
+  (a settled local exponent). **Suspect 4** (ridge collection) is not dead, since E ≤ ½, but it has shown none of
+  the turn-down it needs, through Ω = 4000.
+- D2's fixed 1e−10 residual gate fails again as written (1.5e−9 and 3.7e−9; rule 20). The pin is exact.
+- **What this does to a_∞.** If the density at H carries Ω^{0.374} relative to WKB, the saddle core's flux grows as
+  Ω^{0.374 + ½ − ½} relative to the Maier–Stein O(1). That puts §134.10's core b near ½ + 0.374 = 0.874, against a
+  measured 0.72–0.80, the wrong side by 0.07–0.15. **So the density excess alone over-predicts the core's growth.**
+  Something in the flux half partly cancels it. This is unexplained and recorded, not used.

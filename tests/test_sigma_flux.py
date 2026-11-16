@@ -136,3 +136,17 @@ def test_saddle_density_excess_levels_off():
     inc = [y - x for x, y in zip(E, E[1:])]
     assert all(v > 0 for v in inc) and all(b < a for a, b in zip(inc, inc[1:]))
     assert all(0.35 <= e <= 0.42 for e in E[-2:]) and abs(E[-1] - E[-2]) < 0.005
+
+
+def test_pair_s_bvp_and_density_excess():
+    """§134.15: S's W* is steady along the BVP continuation (Schur-projected A), and its saddle excess is still
+    climbing at Omega = 1600, below XK's."""
+    import math
+    c = json.loads((ROOT / "results" / "bvp_s_tol1e-06_drop0.json").read_text())["cells"]
+    W = [x["W"] for x in c if x.get("axis") != "tol" and x["status"] == 0 and x["offset_A"] <= 1e-5
+         and x["offset_B"] <= 1e-4]
+    assert len(W) >= 3 and max(W) - min(W) < 1e-9 and abs(W[-1] - 0.14457152566) < 2e-9
+    d = json.loads((ROOT / "results" / "density_mu_S.json").read_text())
+    ks = sorted(d, key=int)
+    E = [(d[b]["L"] - d[a]["L"]) / math.log(int(b) / int(a)) for a, b in zip(ks, ks[1:])]
+    assert all(y > x for x, y in zip(E, E[1:])) and E[-1] < 0.368 - 0.05

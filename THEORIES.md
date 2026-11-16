@@ -5603,6 +5603,9 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
     flux half partly cancels it.
   - **Next:** suspect 5's own kill test (a pair with a different μ). The exact inner problem at a non-absorbed μ > 1
     saddle would also predict 0.374 or not; that would close it.
+  **→ §134.15: pair S (μ = 3.33) run to Ω = 1600, UNRESOLVED.** E_S = +0.270 then +0.293, still climbing, and 0.075
+  below XK.
+  - **Next:** S at Ω = 2800 and 4000 on the laptop, with the same K1/K2 reading applied to the 2800 → 4000 window.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

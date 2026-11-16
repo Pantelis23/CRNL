@@ -15070,3 +15070,28 @@ out-of-core). The reading was added to `experiments/density_saddle.py`'s docstri
   Ω^{0.374 + ½ − ½} relative to the Maier–Stein O(1). That puts §134.10's core b near ½ + 0.374 = 0.874, against a
   measured 0.72–0.80, the wrong side by 0.07–0.15. **So the density excess alone over-predicts the core's growth.**
   Something in the flux half partly cancels it. This is unexplained and recorded, not used.
+
+#### 134.15 A saddle with a different μ (pair S, μ = 3.33): the excess is lower and still climbing at Ω = 1600, unresolved
+
+*Scope: pair S (E-070 → E-070, K = 1), cap 1.1, Ω = 200–1600 (krsolve, local), `experiments/density_mu.py`. The
+criterion was written before running. W\*(S) is from the heteroclinic BVP.*
+
+- **Instrument change, disclosed.** S's identical stages make the deterministic Jacobian at A a Jordan block, so
+  `np.linalg.eig`'s eigenvectors there are near-parallel and the projection rows came out as garbage (singular
+  Newton, NaN). `bvp_gamma.py` now takes A's subspace from a sorted real Schur form and pads A's end with the matrix
+  exponential. **X's and XK's W\* reproduce to every printed digit** (0.1540536704836 and 0.1484037484986).
+- **W\*(S) = 0.14457152566**, steady to about 5e−10 while both end offsets are small (A ≤ 1e−5, B ≤ 1e−4). The last two steps, where B's end
+  drifted to 5e−4 and 2e−3, move it by up to 2.3e−9 (the end correction is exact only to O(δ³)). Γ_S = 1.11704e−2. B's end drifts
+  along the deterministic unstable mode (dropped-row residual 1.0). That mode has p = 0, so W does not move.
+- **The excess at H for S:**
+
+| window | 200→400 | 400→800 | 800→1200 | 1200→1600 |
+|---|---|---|---|---|
+| E_S (μ = 3.33) | −0.845 | +0.050 | +0.270 | +0.293 |
+| E_XK (μ = 5.21) | +0.302 | +0.336 | +0.360 | +0.368 |
+
+- **Verdict as registered: UNRESOLVED.** E_S is 0.075 below XK in the last window, so K1 (dead) fails. K2
+  (survives) needs the last increment below 0.02, and it is 0.023, so S has not settled. The rule flagged this case
+  beforehand: S's ridge differs, and §134.13 showed the ridge controls how E approaches its limit.
+- **What would settle it:** Ω = 2800 and 4000 for S, as §134.14 did for XK. If S settles visibly below 0.37,
+  suspect 5 survives with β depending on μ. If it climbs to about 0.37, suspect 5 dies and the 0.37 is not set by μ.

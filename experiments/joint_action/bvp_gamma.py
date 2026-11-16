@@ -63,7 +63,16 @@ def projector_rows(J, keep):
     return np.real_if_close(W[drop]).real
 
 
-LA = projector_rows(jac(A), "unstable")                     # (y0 - A) has no stable-mode component
+def schur_complement_rows(J, keep):
+    """Rows spanning the orthogonal complement of J's unstable ("rhp") or stable ("lhp") invariant subspace, from a
+    sorted real Schur form -- stable when J is defective (pair S: identical stages make A's Jacobian a Jordan block,
+    where eig's eigenvectors are near-parallel and their inverse is garbage; §134.15)."""
+    from scipy.linalg import schur
+    T, Z, k = schur(J, output="real", sort=keep)
+    return Z[:, k:].T
+
+
+LA = schur_complement_rows(jac(A), "rhp")                   # (y0 - A) lies in A's unstable subspace
 LB = projector_rows(jac(B), "stable")                       # (yT - B) has no unstable-mode component
 
 
@@ -137,11 +146,12 @@ def extend(r, dA, dB, n=200):
     modes -- the linearised flow, exact to first order near each hyperbolic point."""
     t = np.linspace(0, r.x[-1], 3001)                       # resample: solve_bvp never removes nodes
     Y = r.sol(t)[:4].T
-    cA = np.linalg.lstsq(VA, (Y[0] - A).astype(complex), rcond=None)[0]
+    from scipy.linalg import expm
+    JA = jac(A)
     cB = np.linalg.lstsq(VB, (Y[-1] - B).astype(complex), rcond=None)[0]
     sa = np.linspace(-dA, 0, n + 1)[:-1] if dA > 0 else np.zeros(0)
     sb = np.linspace(0, dB, n + 1)[1:] if dB > 0 else np.zeros(0)
-    Ya = (A[:, None] + VA @ (cA[:, None] * np.exp(WA[:, None] * sa[None, :]))).real.T
+    Ya = np.array([A + expm(JA * v) @ (Y[0] - A) for v in sa]).reshape(-1, 4)   # linear flow, defective-safe
     Yb = (B[:, None] + VB @ (cB[:, None] * np.exp(WB[:, None] * sb[None, :]))).real.T
     tn = np.concatenate([sa, t, t[-1] + sb]) + dA
     Yn = np.vstack([Ya, Y, Yb])
@@ -174,7 +184,7 @@ if __name__ == "__main__":
                              "dropped_row_residual": dr2, "axis": "tol"})
         print(f"  tol axis: tol={tt:g} st={r2.status} nodes={len(r2.x)} W={W2:.13f} Gamma={V1(S1) - W2:.11e} "
               f"offB={ob2:.1e}", flush=True)
-    name = ("bvp_x" if KH == 1.0 else "bvp_xk") + f"_tol{tol:g}_drop{DROP}.json"
+    name = os.environ.get("BVP_NAME") or (("bvp_x" if KH == 1.0 else "bvp_xk") + f"_tol{tol:g}_drop{DROP}.json")
     (HERE.parents[1] / "results" / name).write_text(json.dumps(out, indent=1))
 
 # OUTCOME (§134.8). Development: fixed-T projection BCs alone went near-singular as the end offsets shrank (time

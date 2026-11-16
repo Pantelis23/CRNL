@@ -5559,6 +5559,20 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
     finite-Ω effect and this suspect is dead.
   - **What would decide a_∞:** an exact b. The measured +0.0134 at 4000 → 5000 is still rising toward whatever
     b − ½ is.
+  **→ §134.11: the exact part has a literature answer, and it conflicts with the measurement.**
+  - XK's saddle is Maier–Stein's μ > 1 case (μ = 5.21; SIAM J. Appl. Math. 57 (1997)). Their rate prefactor has no
+    anomalous Ω-power, with K(H) finite. So the theory gives **b = ½ and a_∞ = 0**.
+  - Measured: b = 0.72–0.80, steady over 400–4000.
+  - Separately, the 18% excess core width is not their skew (c = 0.20; predicted asymmetry 0.1%).
+  **Two suspects now, one test between them:**
+  - **(i) finite-Ω.** The measured b is pre-asymptotic, the drift toward ½ is slow, and a_∞ = 0.
+  - **(ii) outside the theory.** The joint chain violates an assumption: a second absorbing boundary (the dip line
+    x₁ = s₁), the Doob conditioning, or jumps instead of diffusion. Then b ≠ ½ can be real.
+  - **Kill test (absolute, rule 16):** compute Maier–Stein's eq. 86 for this chain. That means K(H) by integrating
+    the transport and Riccati equations along the BVP's orbit, then the saddle core's absolute flux relative to the
+    dip, compared with the measured core flux at Ω = 1600–4000.
+    - If the ratio measured/predicted tends to 1, falling like the measured b's excess, (i) holds.
+    - If it grows as Ω^{0.25}, (ii) holds, and the assumption at fault must be found.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

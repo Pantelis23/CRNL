@@ -89,3 +89,12 @@ def test_core_width_scales_as_the_exact_gaussian():
         f = c[om]["h0.01"]["fwhm"]
         r.append(math.sqrt(f * f - (2.3548 * 0.01) ** 2) / (2 * math.sqrt(math.log(2) / (0.5 * 0.1502 * int(om)))))
     assert max(r) - min(r) < 0.05 and 1.1 < min(r) < 1.25
+
+
+def test_maier_stein_class_and_skew_do_not_explain_the_core():
+    """§134.11: XK's saddle has mu > 1, its wedge-side rate is h/2, and the skew (c = 0.20) is far too small to
+    produce the measured 18% excess width."""
+    m = json.loads((ROOT / "results" / "ms_core_xk.json").read_text())
+    assert m["mu"] > 1 and abs(m["k_wedge_x1"] - 0.1502 / 2) < 2e-4
+    assert abs(m["k_wedge_x1"] / m["k_other_x1"] - 1) < 0.01
+    assert all(1.15 < c["ratio_meas_over_pred"] < 1.22 for c in m["cells"].values())

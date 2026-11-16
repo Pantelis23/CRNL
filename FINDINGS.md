@@ -14947,3 +14947,38 @@ bands were written in §134.9 before these cells existed.*
 > b ≈ 3/4, not 1/2. Once the window is wider than the core (core width ∝ Ω^{−½}, so 0.1 is crossed near
 > Ω ≈ 6000 at the measured 1.18× width), the core's total grows as Ω^{b−½} ≈ Ω^{¼}. If the core dominates, then
 > a_∞ = b − ½ ≈ +¼. Kill test in THEORIES (T-CASC-ax).
+
+#### 134.11 Named in 1994: XK's saddle is Maier–Stein's μ > 1 case, and that theory conflicts with the measured core exponent
+
+*Scope: XK's joint saddle, local linear algebra, against §134.10's stored widths
+(`experiments/joint_action/ms_core.py`, criteria written before computing c). Literature (rule 21):
+**Maier & Stein, "Limiting exit location distributions in the stochastic exit problem", SIAM J. Appl. Math. 57
+(1997), arXiv adap-org/9407003.** Their eq. 78 is read from extracted PDF text; it agrees with both limits the paper
+states.*
+
+- **The class.** μ = |λ_s(H)|/λ_u(H) = 5.6858 / 1.0917 = **5.21 > 1**. In this case:
+  - the exit-location density on the separatrix lives on the ε^{½} = Ω^{−½} lengthscale, which is §134.10's
+    measured ν ≈ ½;
+  - the most probable exit path approaches H along the noise mode at rate λ_u, which is what the BVP's orbit does
+    (offset ∝ e^{−1.09t}, §134.8);
+  - the density is generically two-sided Gaussian, because of a forbidden wedge. The wedge-side rate is exactly the
+    climb value: λ_s/D₁₁ = 0.07519 = h/2.
+- **MS1 FAILED.** In Maier–Stein's normal form, c = **+0.201**, against μ − 1 = 4.21, so the other side's rate is
+  0.07502. The predicted width ratio is 1.001. The measured FWHM is 1.17 / 1.18 / 1.19 × the prediction, so **the
+  18% excess is not the Maier–Stein skew.** The measured core is also symmetric (w_left ≈ w_right at 1600 and 4000).
+  My expectation was wrong.
+- **The conflict.** For μ > 1 the theory's rate prefactor carries **no anomalous power of Ω**: their eq. 86 has a
+  constant prefactor with K(H) finite. I checked that the transport integrand −[tr B + ½ tr(D Z)] vanishes at H
+  for the μ > 1 Hessian, so K has a finite limit along the MPEP.
+  - So the core's own total should scale as Ω⁰ relative to the dip. The dip is Kramers-like: ln dip + V₁(s₁)Ω
+    rises at 1.02 / 1.04 / 1.04 per ln Ω (§134.6's values). That is the pin's Ω¹, so the normalised dip is Ω⁰.
+  - The core's density should then grow as Ω^{½}, which is the spread-exit model's local value.
+  - **§134.10 measured 0.72–0.80, steady over Ω = 400–4000.**
+- **Consequences.**
+  - If the theory's asymptotics apply, **a_∞ = 0** once the saddle dominates. Suspect 3 (b = 3/4, a_∞ = +¼) is then
+    a finite-Ω effect.
+  - Otherwise the joint chain is outside the theory's assumptions, and that needs to be named. Candidates:
+    - the domain has a second absorbing boundary, stage 1's dip at x₁ = s₁;
+    - the Q-process is Doob-conditioned;
+    - the process is a jump process, not a diffusion.
+  - Neither is settled. Two suspects stay open with one kill test between them (THEORIES, T-CASC-ax).

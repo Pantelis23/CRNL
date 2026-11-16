@@ -5573,6 +5573,19 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
     dip, compared with the measured core flux at Ω = 1600–4000.
     - If the ratio measured/predicted tends to 1, falling like the measured b's excess, (i) holds.
     - If it grows as Ω^{0.25}, (ii) holds, and the assumption at fault must be found.
+  **→ §134.12: the anomaly is located in the density at H.**
+  - Along the optimal path the exact density is WKB-regular: ln P + ΩW → ln K(x), with slopes ≤ 0.01 by Ω = 800.
+  - At H itself, ln P(H) + ΩW\* grows at +0.30 → +0.37 per ln Ω and is still rising.
+  - So suspect (ii) "outside the theory" narrows: the chain obeys WKB everywhere it was tested except at the saddle
+    point. Suspect (i) "finite-Ω" gains a named mechanism.
+  **Suspect 4, ridge collection** (replaces "b = 3/4" as the leading account). P(H) collects the near-flat ridge of
+  Σ, where W stays within about 1e−4 of W\*, through Σ's free inflow into H. The excess power is then at most ½ and
+  fades once Ω·ε along the ridge passes 1, so a_∞ = 0.
+  - **Kill test (a), measured:** the excess dL/d ln Ω at H on the laptop cells, Ω = 2800 and 4000. Ridge collection
+    needs it to stay ≤ ½ and eventually turn down. A value above ½, or still climbing past ½, kills it.
+  - **Kill test (b), cross-pair:** in X (K = 1), Σ's ridge differs. The excess at X's saddle must track how much of
+    X's Σ lies within 1/Ω of W\*, measured from X's own flux bins. If X shows the same +0.37 regardless, the ridge is
+    not the cause.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

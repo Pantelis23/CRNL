@@ -14982,3 +14982,42 @@ states.*
     - the Q-process is Doob-conditioned;
     - the process is a jump process, not a diffusion.
   - Neither is settled. Two suspects stay open with one kill test between them (THEORIES, T-CASC-ax).
+
+#### 134.12 The anomalous Ω-power is in the density at the saddle itself; along the optimal path the exact density is WKB-regular
+
+*Scope: XK, cap 1.1, the Q-process stationary law pinned at the rails, Ω = 200 / 400 / 800 / 1200 / 1600 (krsolve,
+local). `experiments/density_saddle.py` (D1, D2) and `experiments/density_along_path.py` (D3). D3 was registered after
+D1's result but before it ran. W comes from the BVP orbit (§134.8). The original measure is P/ψ.*
+
+**D1 (at H).** L = ln P(H) + ΩW\* = −0.549 / −0.340 / −0.107 / +0.039 / +0.145. Per window, dL/d ln Ω is
+**+0.302 / +0.336 / +0.360 / +0.368**.
+- Regular WKB (K(H) finite, Maier–Stein μ > 1) needs the slope to tend to 0. **D1 failed:** the slope rises toward
+  about 0.37–0.4.
+- An error in W\* cannot do this: it would make the slope grow linearly in Ω, and these values saturate.
+- My expectation, that the anomaly would sit in the flux and committor half, was **wrong**.
+- D2 as written failed on a fixed 1e−10 residual: the residuals were 2.9e−10 and 8.0e−10 at 800–1600 (rule 20).
+  The pin was exactly 1 throughout.
+
+**D3 (along the path): the harness is clean and the anomaly is local to H.**
+
+| point on the orbit | W | dL/d ln Ω, last window (1200 → 1600) | L at Ω = 1600 (≈ ln K) |
+|---|---|---|---|
+| (1.730, 2.499) | 0.09692 | +0.003 | +0.620 |
+| (1.447, 1.999) | 0.12907 | +0.001 | +0.605 |
+| (1.276, 1.299) | 0.14540 | +0.000 | +0.279 |
+| (1.290, 1.000) | 0.14757 | −0.001 | −0.051 |
+| (1.620, 0.700) | 0.14825 | −0.009 | −1.001 |
+| (1.949, 0.650) | 0.14831 | −0.013 | −1.474 |
+| (2.682, 0.620) | 0.14836 | −0.055 (from −0.33) | −1.536 |
+| **H** | 0.148404 | **+0.368** | +0.145 |
+
+- Along the optimal path the exact chain's density converges to K(x)e^{−ΩW(x)} at every point, to three decimals
+  by Ω = 800. **This is an absolute test of the WKB picture against the exact chain, and it held.** It also rules
+  out the pin and ψ as the cause.
+- Only at the saddle does P carry a growing positive power of Ω.
+
+> **Suspect 4 (not a result): ridge collection at H.** Σ's deterministic flow converges on H at rate λ_s = 5.69, and
+> W along Σ stays within about 1e−4 of W\* over a long stretch. Probability reaching any point of that near-flat ridge
+> drains into H along Σ at no extra cost. So P(H) would collect a one-parameter family of near-optimal arrivals, not a
+> single path: an extra power up to Ω^{½}, fading only once Ω·ε along the ridge exceeds 1. That would make the excess
+> pre-asymptotic and a_∞ = 0, consistent with Maier–Stein. Kill test in THEORIES (T-CASC-ax).

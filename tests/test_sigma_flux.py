@@ -98,3 +98,16 @@ def test_maier_stein_class_and_skew_do_not_explain_the_core():
     assert m["mu"] > 1 and abs(m["k_wedge_x1"] - 0.1502 / 2) < 2e-4
     assert abs(m["k_wedge_x1"] / m["k_other_x1"] - 1) < 0.01
     assert all(1.15 < c["ratio_meas_over_pred"] < 1.22 for c in m["cells"].values())
+
+
+def test_density_is_wkb_regular_along_the_path_and_anomalous_at_the_saddle():
+    """§134.12: ln P + Omega W converges along the optimal path (last-window slope <= 0.01 in magnitude away from H),
+    while at H itself it keeps growing (slope > 0.3 in every window)."""
+    import math
+    d = json.loads((ROOT / "results" / "density_saddle.json").read_text())
+    ks = sorted(d, key=int)
+    assert all((d[b]["L"] - d[a]["L"]) / math.log(int(b) / int(a)) > 0.3 for a, b in zip(ks, ks[1:]))
+    p = json.loads((ROOT / "results" / "density_along_path.json").read_text())
+    for x2t in ("2.5", "2.0", "1.6", "1.3", "1.0", "0.8", "0.7"):
+        s = (p["1600"][x2t]["L"] - p["1200"][x2t]["L"]) / math.log(1600 / 1200)
+        assert abs(s) <= 0.01

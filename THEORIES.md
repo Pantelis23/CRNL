@@ -5586,6 +5586,17 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   - **Kill test (b), cross-pair:** in X (K = 1), Σ's ridge differs. The excess at X's saddle must track how much of
     X's Σ lies within 1/Ω of W\*, measured from X's own flux bins. If X shows the same +0.37 regardless, the ridge is
     not the cause.
+  **→ §134.13, (b) run.** X's ridge is 3.7× larger than XK's, and in the early windows its excess is larger, in the
+  ridge direction. So suspect 4 is not killed. But both pairs' excesses converge onto about 0.36–0.37 by
+  Ω = 1200–1600.
+  **Suspect 5 (competing with 4): a local saddle exponent.** The density at H carries Ω^{β} with β fixed by H's
+  linearisation (μ = 5.21 for both pairs; c differs). The ridge sets only how β is approached.
+  - **Kill test:** a pair whose saddle has a different μ, for example a different stage-2 element, so λ_u changes.
+    If β moves with μ, suspect 5 survives. If β stays at 0.37 while μ changes, it dies.
+  - **The decisive version is exact:** the inner solution at H for a non-absorbed saddle of μ > 1 (Maier–Stein's
+    inner problem without the Dirichlet line). Its Ω-power at H is β.
+  - **The laptop cells (kill test (a), Ω = 2800 and 4000) bear on both:** suspect 4 needs E to turn down
+    eventually, and suspect 5 needs it to settle.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

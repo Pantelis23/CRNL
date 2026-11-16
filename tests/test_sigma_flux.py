@@ -111,3 +111,16 @@ def test_density_is_wkb_regular_along_the_path_and_anomalous_at_the_saddle():
     for x2t in ("2.5", "2.0", "1.6", "1.3", "1.0", "0.8", "0.7"):
         s = (p["1600"][x2t]["L"] - p["1200"][x2t]["L"]) / math.log(1600 / 1200)
         assert abs(s) <= 0.01
+
+
+def test_ridge_test_premise_and_convergence():
+    """§134.13: X's ridge differs from XK's by > 2x at Omega = 1600 (the test's premise), and the two pairs' saddle
+    excesses converge to within 0.01 in the last window while differing by > 0.2 in the first."""
+    import math
+    x = json.loads((ROOT / "results" / "ridge_x.json").read_text())
+    k = json.loads((ROOT / "results" / "density_saddle.json").read_text())
+    c = json.loads((ROOT / "results" / "sigma_core.json").read_text())
+    assert c["1600"]["share_within_0.05"] / x["1600"]["core_share"] > 2
+    E = lambda d, a, b: (d[b]["L"] - d[a]["L"]) / math.log(int(b) / int(a))
+    assert abs(E(x, "1200", "1600") - E(k, "1200", "1600")) < 0.01
+    assert abs(E(x, "200", "400") - E(k, "200", "400")) > 0.2

@@ -15021,3 +15021,29 @@ D1's result but before it ran. W comes from the BVP orbit (§134.8). The origina
 > drains into H along Σ at no extra cost. So P(H) would collect a one-parameter family of near-optimal arrivals, not a
 > single path: an extra power up to Ω^{½}, fading only once Ω·ε along the ridge exceeds 1. That would make the excess
 > pre-asymptotic and a_∞ = 0, consistent with Maier–Stein. Kill test in THEORIES (T-CASC-ax).
+
+#### 134.13 Across pairs, the density excess at the saddle converges to a common ~0.37 despite a 3.7× different ridge
+
+*Scope: pair X (E-070 → E-084, K = 1), cap 1.1, Ω = 200–1600 (krsolve, local), against XK's §134.12 values. The
+criterion was tightened in `experiments/ridge_x.py`'s docstring before running. W\*(X) = 0.1540536705 (BVP,
+§134.8).*
+
+| Ω window | E(X) = dL/d ln Ω at H | E(XK) | \|difference\| |
+|---|---|---|---|
+| 200 → 400 | +0.888 | +0.302 | 0.59 |
+| 400 → 800 | +0.580 | +0.336 | 0.24 |
+| 800 → 1200 | +0.393 | +0.360 | 0.033 |
+| 1200 → 1600 | +0.359 | +0.368 | 0.009 |
+
+- **Ridge occupancy.** X's Σ-cut flux within |x₁ − 3| ≤ 0.05 is 0.040 / 0.032 / 0.029 / 0.028 / 0.032 of its total.
+  XK's is 0.044 → 0.120. At Ω = 1600 the two differ 3.7×, so **R1's premise holds**: the ridges differ enough to
+  test.
+- **Registered verdict: suspect 4 is not killed.** E is not within ±0.03 in every window. In the early windows the
+  difference runs in R3's direction: more ridge, larger excess.
+- **A pattern I did not predict.** The two pairs' E values converge from opposite sides onto **about 0.36–0.37** by
+  Ω = 1200–1600, even though their ridge occupancies differ 3.7×.
+  - The pairs share the saddle H. Stage 1 is identical, and the Hill factor is normalised to 1 at x₁ = 3, so H's
+    linearisation is the same apart from the off-diagonal c.
+  - A common limit points to a **local exponent set by the saddle**. Ridge collection would make the limit depend
+    on the ridge.
+  - This is a pattern seen at two pairs in one Ω range, not a verdict. Its kill test is in THEORIES.

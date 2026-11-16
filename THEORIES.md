@@ -5538,6 +5538,27 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   **Next:** the cells at Ω = 2800 and 4000 with `raw=True`, on the laptop (2800 does not fit in this machine's 29 GB).
   That gives windows of ratio ≥ 1.4 and 2.5 against 1600. Use the same two kernels and the same bands, read per
   window.
+  ~~T-CASC-aw~~ **→ §134.10: closed, and the suspect is dead.**
+  - §134.8's "zero Hessian along Σ" was computed on B's stable manifold (the cost to B), which is the wrong one.
+    On B's unstable manifold, where A's unstable manifold lands, the Hessian along x₁ is 0.1502 = h. The climb
+    bound is the exact local W.
+  - Measured: the core narrows with ν_eff ≈ 0.48 (kernel width removed; raw 0.43–0.47; registered verdict
+    UNRESOLVED on kernel disagreement, no window in the cubic band). The absolute width is 1.18× the prediction from
+    e^{−½hΩδ²}, steadily.
+  - The rise in a is located: the flux inside |x₁ − 3| ≤ 0.05 grows as Ω^{0.72–0.80}·e^{ΓΩ}, steady over
+    Ω = 400–4000, while the rest of Σ is drained.
+  **Open (T-CASC-ax): the local prefactor exponent b at the joint saddle, and a_∞.**
+  - **Suspect:** b = 3/4, not the spread-exit model's 1/2. The core's total would then grow as Ω^{b−½}, so
+    a_∞ = +¼ if the core dominates.
+  - **Kill test, measured part:** with the unbinned flux, the density at δ = 0 in windows |δ| ≤ 0.01 and 0.02 must
+    give the same b as the 0.05 window. A window scaled as Ω^{−½} (for example |δ| ≤ 2× the predicted FWHM) must
+    give b − ½. Both must stay flat across Ω (rule 21: report the windows). Needs the raw flux stored per Ω, not
+    only its summary.
+  - **Kill test, exact part:** the Ω-power of the WKB density prefactor at the saddle, from the transport equation
+    along the instanton, normalised as the dip normalises it. If it gives b = 1/2, the measured 0.75 is a
+    finite-Ω effect and this suspect is dead.
+  - **What would decide a_∞:** an exact b. The measured +0.0134 at 4000 → 5000 is still rising toward whatever
+    b − ½ is.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

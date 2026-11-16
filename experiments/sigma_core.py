@@ -99,3 +99,11 @@ if __name__ == "__main__":
 #   scatter (0.27 -> 0.58, +-0.15) exceeds the 1/3-vs-1/2 gap the rule is meant to resolve, so the verdict rests on
 #   the noisiest window (ratio 4/3). Recorded as printed and NOT acted on: UNRESOLVED (rule 19; rule 14 -- a
 #   withdrawal is a claim too). Needs windows with ratio >= 2 at larger Omega.
+
+# OUTCOME (§134.10), Omega = 1600 / 2800 / 4000 (laptop; 1600 identical to local to 1e-15):
+#   FWHM h=0.01: 0.1797 / 0.1374 / 0.1168; h=0.02: 0.1856 / 0.1457 / 0.1249. nu_eff 1600->4000: 0.471 (h=0.01),
+#   0.433 (h=0.02) -> C1' UNRESOLVED by its rule (kernels disagree on the largest window); no window from 1600 on is
+#   in the cubic band. Kernel width removed in quadrature (post hoc): 0.48 on both. The premise was wrong besides:
+#   on B's UNSTABLE manifold (where A's unstable manifold lands) the Hessian along x1 is 0.1502 = h, not 0; the
+#   Gaussian width from it is 0.152 / 0.115 / 0.096, measured 1.17 / 1.18 / 1.19 x that. My expectation (nu ~0.3-0.4)
+#   was WRONG. The core window's flux grows as Omega^{0.72-0.80} e^{Gamma Omega} over 400-4000.

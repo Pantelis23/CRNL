@@ -14843,10 +14843,15 @@ above the BVP's W\*.
 The bins at the saddle carry 28% of the flux at Ω = 5000, and it grows there faster than the model's local Ω^½.
 Bin-to-bin scatter is about ±0.2. The total's a rises as their share grows.
 
-**An exact fact at the saddle.** On the instanton's Lagrangian manifold at B (p = Z_B δx, from the stable subspace of
+~~**An exact fact at the saddle.**~~ *(withdrawn in §134.10: computed on the wrong manifold; the original text is kept below)* On the instanton's Lagrangian manifold at B (p = Z_B δx, from the stable subspace of
 the linearised flow), Z_B has eigenvalues −0.6601 and **0**. The zero mode is Σ's tangent (the deterministic stable
 direction, p = 0): t·Z_B·t = −4e−21. **So W along Σ is flat to second order at the joint saddle.** §134.2's climb
 bound ε ≤ 0.075δ² holds, but it is not tight. The local W rises at least as δ³ along Σ, not as ½hδ².
+
+> **Withdrawn (§134.10).** Z_B was taken from B's **stable** subspace. Trajectories there run *into* B, so that
+> manifold carries the cost of reaching B from nearby, not W from A. A's unstable manifold, which carries the
+> instanton into B, accumulates on B's **unstable** manifold (λ-lemma). There the Hessian along x₁ is **0.1502 = h**.
+> So the climb bound ε ≈ 0.075δ² is the exact local W along Σ, and Suspect 2's premise was false.
 
 > **Suspect 2 (not a result): a non-Gaussian saddle core.** If ε ∝ |δ|³ along Σ near B, the core of the exit is
 > Ω^{−1/3} wide rather than Ω^{−1/2}. With the local Ω^½ prefactor this would give a_∞ = 1/2 − 1/3 = +1/6. That is
@@ -14860,7 +14865,7 @@ bound ε ≤ 0.075δ² holds, but it is not tight. The local W rises at least as
 (`cut_flux(..., raw=True)`, `experiments/sigma_core.py`). Criteria were written before running. A local run at
 Ω = 2000 and 2800 was stopped by the host for low memory (29 GB machine) before any cell finished.*
 
-- **Instrument (C2): held.** The raw flux, re-binned into 0.05 bins, reproduces the stored 1600 cell exactly.
+- **Instrument (C2): held.** The raw flux, re-binned into 0.05 bins, reproduces the stored 1600 cell to 2.5e−12.
 - **C1 as written measured the lattice.** The raw per-n₁ flux is spiky, because the staircase Σ cut puts the
   stage-1 moves across each step into one n₁. Its "FWHM" was 1.25/Ω at every Ω. This is recorded as a criterion
   that could only print one value (rule 19).
@@ -14885,3 +14890,60 @@ bound ε ≤ 0.075δ² holds, but it is not tight. The local W rises at least as
   (rule 14).
 - **What is measured:** the near-saddle hump narrows (FWHM 0.32 → 0.18 over Ω = 400 → 1600) and its share of the
   flux grows (0.044 → 0.120; 0.28 at Ω = 5000 from §134.8's bins). These are two separate readings.
+
+#### 134.10 The saddle core is Gaussian with W's exact curvature, and its density grows as Ω^{0.72–0.80}: the rise in a, located
+
+*Scope: XK, cap 1.1, Σ cut. Unbinned flux at Ω = 1600 (local and laptop; identical to 1e−15), 2800 and 4000
+(laptop, WSL krsolve out-of-core). The 2800 and 4000 totals match the stored cells to 3.5e−12 and 2.2e−11. C1′'s
+bands were written in §134.9 before these cells existed.*
+
+| Ω | share within \|x₁ − 3\| ≤ 0.05 | FWHM h = 0.01 | FWHM h = 0.02 |
+|---|---|---|---|
+| 1600 | 0.120 | 0.1797 | 0.1856 |
+| 2800 | 0.185 | 0.1374 | 0.1457 |
+| 4000 | 0.239 | 0.1168 | 0.1249 |
+
+**C1′ by its registered rule: UNRESOLVED.**
+
+| window (ratio) | ν_eff, h = 0.01 | ν_eff, h = 0.02 | h = 0.01 / 0.02, kernel width removed (post hoc) |
+|---|---|---|---|
+| 1600 → 2800 (1.75) | 0.480 | 0.433 | 0.49 / 0.47 |
+| 2800 → 4000 (1.43) | 0.455 | 0.433 | 0.47 / 0.49 |
+| **1600 → 4000 (2.5)** | **0.471** | **0.433** | **0.48 / 0.48** |
+
+- On the largest window, h = 0.01 clears the 0.45 needed for "dead" and h = 0.02 does not, so the kernels disagree.
+- No window from 1600 on reaches the cubic band [0.25, 0.42] on either kernel.
+- The h = 0.02 shortfall is the kernel's own width, which is a larger fraction of a narrower core. Subtracting it in
+  quadrature brings both kernels to 0.48. That correction assumes Gaussian shapes and was not registered.
+
+**What decides it is an exact local fact, the corrected version of §134.8's:**
+- On B's unstable manifold, which is where A's unstable manifold lands, p = Z_u δx with Z_u = diag(0.1502, 0).
+  W along Σ is therefore W* + ½·0.1502·δ²: the climb bound is the exact local W.
+- **The absolute test (rule 16).** A core shaped e^{−½hΩδ²} predicts FWHM = 0.152 / 0.115 / 0.096 at
+  Ω = 1600 / 2800 / 4000. The measured widths (h = 0.01, kernel removed) are **1.17 / 1.18 / 1.19 ×** the
+  prediction. The scaling is right (ν = ½) and the absolute width runs a steady 18% wide. That excess is unexplained
+  and is not used.
+- **Suspect 2 (cubic core, a_∞ = +1/6) is dead.** Its premise came from the wrong manifold, and the measured
+  scaling is ½.
+
+**Where the rise in a comes from: the core's density, measured.** Exponents at Γ = 7.338162e−3:
+
+| window | a of the flux within \|x₁ − 3\| ≤ 0.05 | a of the rest of Σ |
+|---|---|---|
+| 400 → 800 | +0.803 | +0.043 |
+| 800 → 1600 | +0.719 | −0.087 |
+| 1600 → 2800 | +0.760 | −0.141 |
+| 2800 → 4000 | +0.729 | −0.188 |
+
+- Inside a fixed window narrower than the core, the flux at the saddle grows as **Ω^{0.72–0.80}·e^{ΓΩ}**, with no
+  drift over a 10× range in Ω.
+- The rest of Σ is drained harder as Ω grows.
+- The total's a rises because the core's share grows: 0.044 at Ω = 400, 0.239 at 4000, and about 0.28 at 5000
+  from the bins.
+- The spread-exit model's local Ω^½ is **wrong at the saddle by about Ω^{0.25}**. This is the source of every
+  failure of the model from Ω ≈ 3400 on.
+
+> **Suspect 3 (not a result).** The local prefactor of the exit density at the joint saddle is Ω^{b} with
+> b ≈ 3/4, not 1/2. Once the window is wider than the core (core width ∝ Ω^{−½}, so 0.1 is crossed near
+> Ω ≈ 6000 at the measured 1.18× width), the core's total grows as Ω^{b−½} ≈ Ω^{¼}. If the core dominates, then
+> a_∞ = b − ½ ≈ +¼. Kill test in THEORIES (T-CASC-ax).

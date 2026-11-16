@@ -74,3 +74,18 @@ def test_raw_flux_rebins_to_the_binned_cell(xk):
     rb = np.array([f[(x1 >= 1.0 + 0.05 * k) & (x1 < 1.05 + 0.05 * k)].sum() / 0.05 for k in range(44)])
     m = d > 1e-12 * d.max()
     assert np.max(np.abs(rb[m] / d[m] - 1)) < 1e-12
+
+
+def test_core_width_scales_as_the_exact_gaussian():
+    """§134.10: the stored core widths shrink with nu_eff in [0.43, 0.5] on both kernels over 1600 -> 4000 (never in
+    the cubic band), and track the exact Gaussian e^{-h Omega d^2 / 2}, h = 0.1502, at a steady ~1.18x."""
+    import math
+    c = json.loads((ROOT / "results" / "sigma_core.json").read_text())
+    for h in ("h0.01", "h0.02"):
+        nu = math.log(c["1600"][h]["fwhm"] / c["4000"][h]["fwhm"]) / math.log(2.5)
+        assert 0.43 <= nu <= 0.5
+    r = []
+    for om in ("1600", "2800", "4000"):
+        f = c[om]["h0.01"]["fwhm"]
+        r.append(math.sqrt(f * f - (2.3548 * 0.01) ** 2) / (2 * math.sqrt(math.log(2) / (0.5 * 0.1502 * int(om)))))
+    assert max(r) - min(r) < 0.05 and 1.1 < min(r) < 1.25

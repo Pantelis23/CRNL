@@ -61,3 +61,14 @@ if __name__ == "__main__":
 # K1 FAILS (1200->1600 is 0.075 below XK's 0.368). K2 FAILS narrowly (difference >= 0.05, but the last increment is
 # 0.023, not < 0.02: S has not settled). Verdict UNRESOLVED as written. S starts far lower and is still climbing at 1600
 # -- the not-yet-settled case flagged in advance. Needs Omega = 2800 and 4000.
+#
+# ADDED BEFORE THE LAPTOP CELLS (S at Omega = 1600 check, 2800, 4000; §134.16). Same K1/K2, applied to 2800 -> 4000:
+#   1600 must reproduce L = -0.5842937965367412 to <= 1e-9 (laptop route).
+#   K1: E_S(2800->4000) within +-0.02 of XK's +0.3737 and |E_S(2800->4000) - E_S(1600->2800)| < 0.01 -> suspect 5 DEAD.
+#   K2: E_S(2800->4000) differs from +0.3737 by >= 0.05 and that last increment < 0.02 in size -> suspect 5 SURVIVES.
+#   Otherwise UNRESOLVED.
+# -> §134.16 (laptop): 1600 reproduced exactly. L(2800) = -0.412112, L(4000) = -0.298760. E_S(1600->2800) = +0.3077,
+#    E_S(2800->4000) = +0.3178. K2 HOLDS as written: 0.056 below XK's +0.3737 and last increment 0.010 < 0.02 ->
+#    suspect 5 SURVIVES (beta moves with mu). Caveat (rule 15): still rising, increments 0.023 / 0.015 / 0.010; a geometric
+#    tail (ratio ~0.65) gives ~0.337, a slower (logarithmic) approach cannot be excluded from three increments.
+#    My expectation (K2) held.

@@ -150,3 +150,13 @@ def test_pair_s_bvp_and_density_excess():
     ks = sorted(d, key=int)
     E = [(d[b]["L"] - d[a]["L"]) / math.log(int(b) / int(a)) for a, b in zip(ks, ks[1:])]
     assert all(y > x for x, y in zip(E, E[1:])) and E[-1] < 0.368 - 0.05
+
+
+def test_saddle_exponent_moves_with_mu():
+    """§134.16: at 2800 -> 4000 pair S (mu = 3.33) sits >= 0.05 below XK (mu = 5.21) with a last increment < 0.02."""
+    import math
+    E = lambda d, a, b: (d[b]["L"] - d[a]["L"]) / math.log(int(b) / int(a))
+    s = json.loads((ROOT / "results" / "density_mu_S.json").read_text())
+    k = json.loads((ROOT / "results" / "density_saddle.json").read_text())
+    es, ek = E(s, "2800", "4000"), E(k, "2800", "4000")
+    assert ek - es >= 0.05 and abs(es - E(s, "1600", "2800")) < 0.02

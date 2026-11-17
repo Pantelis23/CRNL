@@ -5606,6 +5606,15 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   **→ §134.15: pair S (μ = 3.33) run to Ω = 1600, UNRESOLVED.** E_S = +0.270 then +0.293, still climbing, and 0.075
   below XK.
   - **Next:** S at Ω = 2800 and 4000 on the laptop, with the same K1/K2 reading applied to the 2800 → 4000 window.
+  **→ §134.16: run. K2 holds and suspect 5 survives.** E_S = +0.3077, then +0.3178, settling 0.04–0.06 below XK. The
+  density excess at the saddle is a local exponent β(μ): β(5.21) ≈ 0.374, β(3.33) ≈ 0.32–0.34 on a geometric tail.
+  **Open (T-CASC-ay): β(μ) exactly, and what it makes a_∞.**
+  - **Kill test, exact:** the inner (O(Ω^{−½})) problem at a saddle of a non-absorbed 2-D chain with μ > 1. That is
+    Maier–Stein's eq. 65 with the Dirichlet line removed, since our Q-process does not absorb at Σ. Its Ω-power at H
+    must give about 0.374 at μ = 5.21 and about 0.33 at μ = 3.33. A derivation that misses either value by more than
+    S's tail uncertainty kills it.
+  - **Kill test, measured:** a third μ, for example pair Z (μ = 4.61). Its excess must fall between S and XK.
+  - **Separately, still unexplained:** why the density excess over-predicts the core's flux exponent (§134.14).
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

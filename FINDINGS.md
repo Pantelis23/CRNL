@@ -15095,3 +15095,25 @@ criterion was written before running. W\*(S) is from the heteroclinic BVP.*
   beforehand: S's ridge differs, and §134.13 showed the ridge controls how E approaches its limit.
 - **What would settle it:** Ω = 2800 and 4000 for S, as §134.14 did for XK. If S settles visibly below 0.37,
   suspect 5 survives with β depending on μ. If it climbs to about 0.37, suspect 5 dies and the 0.37 is not set by μ.
+
+#### 134.16 The saddle exponent moves with μ: pair S settles about 0.04–0.06 below XK (suspect 5 survives)
+
+*Scope: pair S, cap 1.1, Ω = 1600 (reproduction check, identical), 2800 and 4000 (laptop, WSL krsolve
+out-of-core). K1 and K2 were applied to the 2800 → 4000 window as registered in `experiments/density_mu.py` before
+these cells existed.*
+
+| window | 800→1200 | 1200→1600 | 1600→2800 | 2800→4000 |
+|---|---|---|---|---|
+| E_S (μ = 3.33) | +0.270 | +0.293 | +0.3077 | **+0.3178** |
+| E_XK (μ = 5.21) | +0.360 | +0.368 | +0.3726 | **+0.3737** |
+
+- **K2 holds as written.** At 2800 → 4000, E_S is 0.056 below XK, and its last increment is 0.010 < 0.02.
+  **Suspect 5 survives: the excess exponent at the saddle depends on the saddle's μ.** X (μ = 5.21, c different)
+  converged onto XK, and S (μ = 3.33) sits lower.
+- **Candidate limits (rule 15).** S is still rising, with increments 0.023, 0.015, 0.010.
+  - A geometric tail at the observed ratio of about 0.65 gives **≈ 0.337**.
+  - A slower, logarithmic approach cannot be excluded from three increments. It would close more of the 0.056 gap.
+  - XK's own tail is fast (increments 0.0046, 0.0011), so its limit is ≈ 0.374.
+  - So β(μ = 3.33) lies somewhere in [0.32, 0.37). It is below β(μ = 5.21) on every reading but the slowest.
+- **Not claimed.** No formula β(μ). Two values of μ do not fix a function, and rule 21 says to derive one before
+  reading any numerology into it.

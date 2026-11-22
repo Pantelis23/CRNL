@@ -15215,3 +15215,28 @@ slopes of L = ln P + ΩW\*.
   up the incoming side. It is **not confined to the inner zone**. It is carried by the incoming flow above H, which
   points to candidate 1: outer data that is not the single-ray WKB.
 - **Caution:** at Ω = 1600, r = +10 is 0.31 away in x₂, which is no longer near H.
+
+#### 134.22 krsolve now proves each solve: componentwise backward error checked in two processes, and a checksummed factor
+
+*Scope: the solver (`experiments/krsolve/solver.kr`, `krsolve.py`). Instrument only: no published number changes.
+Prompted by unstable RAM on the local machine (a kernel panic traced to systemd executing an unreadable page, on a
+board without ECC). A silent bit flip in a 147 GB factor would otherwise raise no error.*
+
+- **The solver's printed residual never checked anything.** KernRift formats f64 with fixed decimals, so the
+  "max|Ax−b|/max|b| = 0.000000" line read zero for every good solve. Nothing used it: §134.4–134.5's validations
+  were all Python-side comparisons against SuperLU, PARDISO and the stored cells. It also used the wrong measure for
+  a pinned right-hand side (a single 2^900 entry), since dividing by max|b| can hide a solution that is wrong
+  everywhere else.
+- **Now:** the componentwise backward error max_i |Ax − b|_i / (Σ_j |a_ij x_j| + |b_i|) (Oettli–Prager), printed as
+  an integer mantissa and exponent. Python recomputes it independently, from the caller's own matrix, in a separate
+  process, and raises if either value exceeds 1e−6. That threshold is a corruption guard, orders of magnitude above
+  rounding, not a precision gate.
+  - Measured on XK's Q-process: 1.814e−15 / 3.785e−15 / 4.735e−15 at Ω = 200 / 400 / 800.
+  - The solver and Python agree to the last printed digit.
+  - **The solves are componentwise backward-stable at machine precision.** Iterative refinement could not improve
+    this, and in half-storage mode each refinement step would cost a full factorisation. It was not added.
+- **Factor checksums.** Each node's packed block gets an FNV-1a hash over its 64-bit words when written, and the
+  hash is verified when the block is read back for the solve, in memory and out of core.
+  - **Fault injection:** `corrupt-test` flips one bit of a written block, and the solve aborts with "factor block
+    checksum mismatch" in both modes (tested).
+  - The argument `-` in the factor slot now means an in-memory factor, so flags can follow it.

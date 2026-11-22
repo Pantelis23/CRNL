@@ -49,6 +49,22 @@ def write_system(path, M, rhs, coords):
     return n, S.nnz
 
 
+def backward_error(M, x, rhs, chunk=2_000_000):
+    """max_i |Mx - b|_i / (sum_j |m_ij x_j| + |b_i|), computed row-chunk by row-chunk (no full |M| copy)."""
+    C = M.tocsr() if not sp.isspmatrix_csr(M) else M
+    ax = np.abs(x)
+    worst = 0.0
+    for a in range(0, C.shape[0], chunk):
+        b = min(a + chunk, C.shape[0])
+        blk = C[a:b]
+        r = blk @ x - rhs[a:b]
+        den = abs(blk) @ ax + np.abs(rhs[a:b])
+        ok = den > 0
+        if ok.any():
+            worst = max(worst, float(np.max(np.abs(r[ok]) / den[ok])))
+    return worst
+
+
 def kr_solve(M, rhs, coords, threads=None):
     rhs = np.asarray(rhs, dtype=float)
     if rhs.ndim != 1:
@@ -58,7 +74,6 @@ def kr_solve(M, rhs, coords, threads=None):
     Path(d).mkdir(parents=True, exist_ok=True)
     fin, fout = str(Path(d) / "system.bin"), str(Path(d) / "x.bin")
     n, nnz = write_system(fin, M, rhs, coords)
-    del M
     binary = os.environ.get("KRSOLVE_BIN", str(HERE / "solver"))
     pre = shlex.split(os.environ.get("KRSOLVE_CMD", ""))
     to_bin = os.environ.get("KRSOLVE_PATHMAP")          # e.g. "C:/=/mnt/c/" for WSL
@@ -69,6 +84,10 @@ def kr_solve(M, rhs, coords, threads=None):
         cmd.append(os.environ["KRSOLVE_FACTOR"])
         if os.environ.get("KRSOLVE_RM_INPUT"):           # the solver deletes the input once loaded (disk)
             cmd.append("rm-input")
+    if os.environ.get("KRSOLVE_CORRUPT_TEST"):           # §134.22: flip one factor bit to prove the checksum fires
+        if not os.environ.get("KRSOLVE_FACTOR"):
+            cmd.append("-")                              # in-memory factor; flags start at argument 5
+        cmd.append("corrupt-test")
     r = subprocess.run(cmd, capture_output=True, text=True)
     LAST.clear()
     LAST.update({"stdout": r.stdout, "returncode": r.returncode, "n": n, "nnz": nnz})
@@ -82,6 +101,18 @@ def kr_solve(M, rhs, coords, threads=None):
             LAST["factor_entries"] = int(line.split("factor_entries=")[1].split()[0])
         if "residual" in line:
             LAST["residual"] = float(line.split("=")[-1])
+        for key in ("backward_error", "residual_rel"):                 # "krsolve: KEY mant=M exp10=-E"
+            if f"krsolve: {key} mant=" in line:
+                mant = int(line.split("mant=")[1].split()[0]); e = int(line.split("exp10=")[1])
+                LAST[key] = mant * 10.0 ** e
+    # §134.22: the componentwise backward error recomputed here, from the caller's matrix, in another process -- a fault
+    # in the solver's own copy of A, its factor, or x shows up as a large value. A corruption guard, not a precision gate.
+    LAST["backward_error_py"] = backward_error(M, x, rhs)
+    lim = float(os.environ.get("KRSOLVE_BERR_MAX", "1e-6"))
+    worst = max(LAST.get("backward_error", 0.0), LAST["backward_error_py"])
+    if not np.isfinite(worst) or worst > lim:
+        raise RuntimeError(f"krsolve: backward error {worst:.3e} exceeds {lim:g} (solver {LAST.get('backward_error')}, "
+                           f"python {LAST['backward_error_py']:.3e}) -- the solve is not trusted")
     if not os.environ.get("KRSOLVE_DIR"):
         for f in (fin, fout):
             if os.path.exists(f):

@@ -44,6 +44,8 @@ static u64 ND_C1 = 0
 static u64 ND_BOFF = 0             // offset (in u32 entries) of the node's boundary list in BPOOL
 static u64 ND_NB = 0
 static u64 ND_FOFF = 0             // offset (in f64 entries) of the node's factor block in FAC
+static u64 ND_CK = 0               // FNV-1a checksum of each node's packed block, taken when written (§134.22)
+static u64 CORRUPT_TEST = 0        // 1: flip one bit of node 0's block after writing it, to prove the check fires
 static u64 BPOOL = 0
 static u64 BCAP = 0
 static u64 BLEN = 0
@@ -125,6 +127,46 @@ fn write_exact(u64 fd, u64 buf, u64 len) {
 }
 
 fn arg(u64 i) -> u64 { return load64(cli_argv + i * 8) }
+
+fn streq(u64 a, u64 b) -> u64 {
+    u64 i = 0
+    while load8(a + i) == load8(b + i) {
+        if load8(a + i) == 0 { return 1 }
+        i = i + 1
+    }
+    return 0
+}
+
+fn print_sci(u64 which, f64 v) {
+    // fixed-decimal f64 printing rounds anything below ~1e-6 to 0.0 -- which hid every small residual until §134.22;
+    // print v = mant * 10^(-e) with a 4-digit integer mantissa instead
+    if v <= 0.0 {
+        if which == 1 { println("krsolve: backward_error mant=0 exp10=0") } else { println("krsolve: residual_rel mant=0 exp10=0") }
+        return
+    }
+    u64 e = 0
+    while v < 1000.0 && e < 400 {
+        v = v * 10.0
+        e = e + 1
+    }
+    while v >= 10000.0 {
+        v = v / 10.0
+        e = e - 1
+    }
+    u64 mant = f64_to_int(v)
+    if which == 1 { println(f"krsolve: backward_error mant={mant} exp10=-{e}") } else { println(f"krsolve: residual_rel mant={mant} exp10=-{e}") }
+}
+
+fn fnv_words(u64 buf, u64 nw) -> u64 {
+    // FNV-1a over 64-bit words: any single flipped bit changes the result
+    u64 h = 14695981039346656037
+    u64 i = 0
+    while i < nw {
+        h = (h ^ load64(buf + i * 8)) * 1099511628211
+        i = i + 1
+    }
+    return h
+}
 
 fn parse_u64(u64 s) -> u64 {
     u64 v = 0
@@ -786,6 +828,8 @@ fn process_node(u64 id, u64 F, u64 stk, u64 sp, u64 map, u64 pbuf, u64 par, u64 
         w = w + c
         t = t + 1
     }
+    st64(ND_CK, id, fnv_words(dst, w))
+    if CORRUPT_TEST == 1 && id == 0 { store64(dst, load64(dst) ^ 1) }   // after the checksum: a one-bit fault
     if OOC == 1 { pwrite_all(OOC_FD, pbuf, w * 8, ld64(ND_FOFF, id) * 8) }
     // push the update matrix: rows nv .. f-1, columns nv .. f (rhs last)
     u64 U = stk + sp * 8
@@ -969,8 +1013,13 @@ fn numeric() {
 }
 
 fn block(u64 id) -> u64 {
-    if OOC == 0 { return FAC + ld64(ND_FOFF, id) * 8 }
+    if OOC == 0 {
+        u64 R0 = FAC + ld64(ND_FOFF, id) * 8
+        if fnv_words(R0, ublock(id)) != ld64(ND_CK, id) { die("krsolve: factor block checksum mismatch (memory corruption?)") }
+        return R0
+    }
     pread_all(OOC_FD, BLK, ublock(id) * 8, ld64(ND_FOFF, id) * 8)
+    if fnv_words(BLK, ublock(id)) != ld64(ND_CK, id) { die("krsolve: factor block checksum mismatch (disk or memory corruption?)") }
     return BLK
 }
 
@@ -1052,7 +1101,7 @@ fn grid_input(u64 m1, u64 m2) {
 }
 
 fn main() {
-    if cli_argc < 3 { die("usage: solver IN OUT [threads] [factor-file [rm-input]]  |  solver --grid M1 M2") }
+    if cli_argc < 3 { die("usage: solver IN OUT [threads] [factor-file|- [rm-input] [corrupt-test]]  |  solver --grid M1 M2") }
     u64 a1 = arg(1)
     if load8(a1) == 45 && load8(a1 + 1) == 45 && load8(a1 + 2) == 103 {
         grid_input(parse_u64(arg(2)), parse_u64(arg(3)))
@@ -1062,7 +1111,14 @@ fn main() {
     if NTH < 1 { NTH = 1 }
     u64 t0 = time_ns()
     if SYMBOLIC_ONLY == 0 { load_input(arg(1)) }
-    if cli_argc > 5 && SYMBOLIC_ONLY == 0 {
+    u64 ai = 5
+    u64 rm_input = 0
+    while ai < cli_argc {
+        if streq(arg(ai), "rm-input") == 1 { rm_input = 1 }
+        if streq(arg(ai), "corrupt-test") == 1 { CORRUPT_TEST = 1 }
+        ai = ai + 1
+    }
+    if rm_input == 1 && SYMBOLIC_ONLY == 0 {
         u64 r = syscall_raw(87, arg(1), 0, 0, 0, 0, 0)     // unlink: frees the disk the input used
         if kr_err(r) != 0 { die("could not delete the input file") }
         println("krsolve: input file deleted after loading")
@@ -1089,6 +1145,7 @@ fn main() {
     ND_BOFF = alloc(NCAP * 8)
     ND_NB = alloc(NCAP * 8)
     ND_FOFF = alloc(NCAP * 8)
+    ND_CK = alloc(NCAP * 8)
     nd(0, N)
     i = 0
     while i < N {
@@ -1110,7 +1167,9 @@ fn main() {
     if SYMBOLIC_ONLY == 1 { exit(0) }
     dealloc(MARK)
     dealloc(SBUF)
-    if cli_argc > 4 { OOC = 1 }
+    if cli_argc > 4 {
+        if streq(arg(4), "-") == 0 { OOC = 1 }                  // "-": keep the factor in memory (flags may follow)
+    }
     u64 planned = plan_subtrees()
     println(f"krsolve: parallel plan allocates {planned / 1000000} MB")
     if OOC == 0 { FAC = alloc(fac * 8 + 8) }
@@ -1141,29 +1200,41 @@ fn main() {
         stf(x, ld32(ORD, i), ldf(y, i))
         i = i + 1
     }
-    // relative residual max|Ax - b| / max|b|
+    // relative residual max|Ax - b| / max|b|, and the componentwise backward error
+    // max_i |Ax - b|_i / (sum_j |a_ij x_j| + |b_i|) (Oettli-Prager): every row on its own scale
     f64 rmax = 0.0
     f64 bmax = 0.0
+    f64 berr = 0.0
     i = 0
     while i < N {
         f64 acc = 0.0 - ldf(RHS, i)
+        f64 bb = ldf(RHS, i)
+        if bb < 0.0 { bb = 0.0 - bb }
+        f64 den = bb
         u64 p = ld64(IP, i)
         u64 pe = ld64(IP, i + 1)
         while p < pe {
-            acc = acc + ldf(DA, p) * ldf(x, ld32(IX, p))
+            f64 term = ldf(DA, p) * ldf(x, ld32(IX, p))
+            acc = acc + term
+            if term < 0.0 { term = 0.0 - term }
+            den = den + term
             p = p + 1
         }
         f64 ab = acc
         if acc < 0.0 { ab = 0.0 - acc }
         if ab > rmax { rmax = ab }
-        f64 bb = ldf(RHS, i)
-        if bb < 0.0 { bb = 0.0 - bb }
         if bb > bmax { bmax = bb }
+        if den > 0.0 {
+            f64 be = ab / den
+            if be > berr { berr = be }
+        }
         i = i + 1
     }
     u64 t4 = time_ns()
     f64 rel = rmax / bmax
     println(f"krsolve: solve {(t4 - t3) / 1000000} ms  residual max|Ax-b|/max|b| = {rel}")
+    print_sci(1, berr)
+    print_sci(2, rel)
     u64 fd = file_open(arg(2), 1)
     if kr_err(fd) != 0 { die("cannot open output") }
     write_exact(fd, x, N * 8)

@@ -74,3 +74,29 @@ def test_matches_superlu_threads_and_out_of_core(binary, tmp_path):
 def test_symbolic_grid_mode(binary):
     out = subprocess.run([str(binary), "--grid", "100", "120"], check=True, capture_output=True, text=True).stdout
     assert "factor_entries=" in out and "flops~" in out
+
+
+def test_backward_error_reported_and_agrees_with_python(binary, tmp_path, monkeypatch):
+    """§134.22: the solver prints its componentwise backward error (it used to print 0.000000 for any small value), and
+    it agrees with the one recomputed in Python from the caller's matrix; both sit at machine precision."""
+    from experiments.krsolve import krsolve as K
+    M, b, co = lattice_system(3)
+    monkeypatch.setenv("KRSOLVE_BIN", str(binary))
+    monkeypatch.setenv("KRSOLVE_DIR", str(tmp_path))
+    K.kr_solve(M, b, co, threads=2)
+    be, bp = K.LAST["backward_error"], K.LAST["backward_error_py"]
+    assert 0 < be < 1e-13 and abs(be / bp - 1) < 1e-2
+
+
+@pytest.mark.parametrize("ooc", [False, True])
+def test_one_flipped_factor_bit_is_caught(binary, tmp_path, monkeypatch, ooc):
+    """§134.22: a single bit flipped in a written factor block aborts the solve -- in memory and out of core."""
+    from experiments.krsolve import krsolve as K
+    M, b, co = lattice_system(4)
+    monkeypatch.setenv("KRSOLVE_BIN", str(binary))
+    monkeypatch.setenv("KRSOLVE_DIR", str(tmp_path))
+    monkeypatch.setenv("KRSOLVE_CORRUPT_TEST", "1")
+    if ooc:
+        monkeypatch.setenv("KRSOLVE_FACTOR", str(tmp_path / "f.bin"))
+    with pytest.raises(RuntimeError, match="checksum mismatch"):
+        K.kr_solve(M, b, co, threads=2)

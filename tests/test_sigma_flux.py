@@ -179,3 +179,12 @@ def test_gaussian_inner_saddle_verified():
     assert all(abs(v - 1) < 1e-6 for v in c["W1"].values())
     fine = c["W2"]["0.0005"]
     assert all(abs(r["ratio"] - 1) < 0.01 and abs(r["z"]) < 2 for r in fine.values())
+
+
+def test_excess_profile_rises_up_the_incoming_side():
+    """§134.21: at fixed stretched distance along x2 through H, the excess's last-window slope rises monotonically from
+    below H to above it (r = -3 .. +10)."""
+    import math
+    d = json.loads((ROOT / "results" / "excess_profile.json").read_text())
+    s = [(d["1600"][r]["L_flat"] - d["1200"][r]["L_flat"]) / math.log(1600 / 1200) for r in ("-3", "-1", "0", "1", "3", "10")]
+    assert all(b > a for a, b in zip(s, s[1:])) and s[0] < 0.15 and s[-1] > 1.0

@@ -15186,3 +15186,32 @@ running).*
 - **So §134.17 stands.** The linear saddle fed along the incoming optimal path gives β = 0, and suspect 5 stays dead
   as a mechanism. The tension with §134.18's μ-ordering is now a modelling question: what the full chain carries into
   H that a linear saddle fed along a single incoming path does not.
+
+#### 134.20–134.21 Where the saddle excess lives: not made by the rates' nonlinearity, and not confined to the inner zone
+
+*Scope: XK, cap 1.1, Q-process law, Ω = 400–1600 (local). `experiments/inner_linear_box.py` and
+`experiments/excess_profile.py`; each criterion was registered before its run.*
+
+**§134.20, linear rates inside a box around H.** The box is |x₁ − 3| ≤ 0.3, |x₂ − 0.606| ≤ 0.05, with the exact P on
+its boundary.
+- **N2, the instrument: held.** With exact rates inside, the box solve reproduces P(H) to 1e−13.
+- **N1: unresolved.** ln(P_lin(H)/P(H)) = +0.057 / +0.125 / +0.207 at Ω = 400 / 800 / 1600. Linear rates make P(H)
+  *larger*, by about +0.1 per ln Ω. That is neither "unchanged" nor candidate 2's predicted fall: the rates'
+  nonlinearity suppresses part of the excess rather than making it.
+- **Caveat (rule 13):** the box is fixed physically, so its stretched size grows as √Ω. Box size was not varied.
+- My expectation was wrong.
+
+**§134.21, the excess at fixed stretched distance r along the normal (x₂) through H.** These are last-window
+slopes of L = ln P + ΩW\*.
+
+| r (tube widths, (ΩZ₂₂)^{−½}) | −3 | −1 | 0 (H) | +1 | +3 | +10 |
+|---|---|---|---|---|---|---|
+| dL/d ln Ω | +0.088 | +0.279 | +0.368 | +0.454 | +0.618 | +1.128, still rising |
+
+- A W that is quadratic near H contributes only a constant at fixed r, because Ω·δ² = r²/Z. So the slopes measure
+  the excess, not the W = W\* approximation used off H.
+- **As registered (symmetric branches): unresolved.**
+- **The pattern:** the excess rises monotonically across H, from about 0 below it to more than 1 several tube widths
+  up the incoming side. It is **not confined to the inner zone**. It is carried by the incoming flow above H, which
+  points to candidate 1: outer data that is not the single-ray WKB.
+- **Caution:** at Ω = 1600, r = +10 is 0.31 away in x₂, which is no longer near H.

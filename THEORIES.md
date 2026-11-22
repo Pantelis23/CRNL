@@ -5644,6 +5644,14 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
     add the quadratic drift terms at H to the inner model.
   - **(3) The jump process.** The CME's non-Gaussian increments at the saddle. Kill test: the same pair's
     diffusion (Langevin) approximation, solved like the Q-process. If its E matches the CME's, (3) dies.
+  **→ §134.20–21.**
+  - Linear rates inside a box around H make P(H) *larger* (+0.1 per ln Ω), so candidate 2 does not make the excess,
+    though box size was not varied.
+  - At fixed stretched distance the excess rises from about 0 below H to more than 1 up the incoming side. It is
+    carried by the incoming flow, not built at the inner scale.
+  - **This points at candidate 1.** Next: the exact chain's L along the BVP orbit at fixed *stretched* distance
+    from H (not fixed physical distance, as §134.12 did), to see where along the incoming path the regular
+    ln K(x) turns into the growing excess.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

@@ -15108,7 +15108,10 @@ these cells existed.*
 | E_XK (μ = 5.21) | +0.360 | +0.368 | +0.3726 | **+0.3737** |
 
 - **K2 holds as written.** At 2800 → 4000, E_S is 0.056 below XK, and its last increment is 0.010 < 0.02.
-  **Suspect 5 survives: the excess exponent at the saddle depends on the saddle's μ.** X (μ = 5.21, c different)
+  **Suspect 5 survives: the excess exponent at the saddle depends on the saddle's μ.**
+  > **Annotation (§134.17): "depends on μ" was a confounded reading (rule 9).** Pair S changed the whole stage-2
+  > element, so Σ's shape and ridge changed along with μ. The local linear saddle gives β = 0 at both μ (§134.17).
+  > What holds is "the two pairs' excesses differ". The claim that μ is the cause is withdrawn. X (μ = 5.21, c different)
   converged onto XK, and S (μ = 3.33) sits lower.
 - **Candidate limits (rule 15).** S is still rising, with increments 0.023, 0.015, 0.010.
   - A geometric tail at the observed ratio of about 0.65 gives **≈ 0.337**.
@@ -15117,3 +15120,69 @@ these cells existed.*
   - So β(μ = 3.33) lies somewhere in [0.32, 0.37). It is below β(μ = 5.21) on every reading but the slowest.
 - **Not claimed.** No formula β(μ). Two values of μ do not fix a function, and rule 21 says to derive one before
   reading any numerology into it.
+
+
+#### 134.17 The linear saddle alone gives β = 0 at both μ: the excess at H is not local; suspect 5 is dead as a mechanism
+
+*Scope: Maier–Stein's normal form B = [[1, 0], [c, −μ]], D = I, at XK's (μ, c) = (5.208, +0.201) and S's
+(3.333, +0.114). An exact computation: closed-form Gaussian Green's functions integrated over time
+(`experiments/joint_action/saddle_inner.py`). The predictions were written before running.*
+
+- **The setup.** Along the MPEP the WKB transport integrand vanishes exactly at H: on the noise-mode Lagrangian
+  plane, tr(B + DZ) = λ_s − λ_u. So K stays finite, and any Ω-power at H would have to come from the inner region,
+  which is a linear problem. That problem is fed from a point source far up the incoming MPEP direction, e_in ≈
+  (−0.999, −0.048); the optimal path climbs the unstable normal direction into the saddle. The quantity computed is
+  the inner density at H relative to the WKB continuation along that ray.
+- **The result.** β = 0 for both pairs: flat to ±0.0004 over stretched r = 5–200, at ρ = 10⁶. The linear saddle is
+  WKB-regular for μ > 1, consistent with Maier–Stein's O(1) prefactor. **I1 failed. My expectation was wrong.**
+- **What dies.** Suspect 5, "β is set by H's linearisation", is dead: the linearisation gives 0 for both μ.
+- **What stands.** The exact chain's excess at H (+0.374 for XK, about 0.32 for S, §134.14–16) is a measurement.
+  §134.16's "moves with μ" is annotated as confounded: S changed Σ's whole geometry, not only μ.
+- **What it implies.** The excess is **non-local**: it comes from something the linear saddle lacks. The linear
+  model's Σ (the stable axis) climbs as ½hδ² forever. The real Σ is quadratic near H (§134.10's core) but nearly
+  flat far from it, with W within about 1e−4 of W\* (the rays' ε; Ω·ε ≤ 0.6 through Ω = 4000). Probability reaching
+  that far ridge drains into H along Σ for free. **Suspect 4 (ridge collection) is the leading account again.**
+  Its kill test is in THEORIES and is now direct.
+- **Instrument note.** A generic solve lost all precision once Σ_t's eigenvalues differed by about 1e19. The closed
+  form in B's eigencoordinates, through a Schur complement, has no cancellation.
+
+#### 134.18 Every pair's optimal path runs inside its own tube's width of Σ near H, and that gap does not order the excess
+
+*Scope: XK, X and S. BVP orbits (tol 1e−6) against `sigma_table`'s Σ, at x₁ = 1.9–2.95
+(`experiments/joint_action/graze_gap.py`). This is a check after §134.17, with no registered criterion. It is read as
+a measurement only.*
+
+| pair | μ | orbit height above Σ, x₁ = 1.9 → 2.95 | in tube widths (Ω Z₂₂)^{−½}, Ω = 1600 / 4000 | E at H, largest window |
+|---|---|---|---|---|
+| XK | 5.21 | +0.018 → +0.007 | 0.59–0.22 / 0.93–0.36 | 0.374 (2800 → 4000) |
+| X | 5.21 | +0.0037 → +0.0015 | 0.12–0.05 / 0.19–0.08 | 0.359 (1200 → 1600) |
+| S | 3.33 | +0.027 → +0.006 | 0.65–0.15 / 1.04–0.24 | 0.318 (2800 → 4000) |
+
+- **At every accessible Ω, the incoming flow overlaps Σ near H.** All three paths sit within about one tube width of
+  the separatrix. That makes the "absorb the far ridge" test of §134.17 unrunnable as designed: any absorbing band on
+  Σ also cuts the optimal path (rules 9 and 10, caught before running).
+- **The gap does not order E.** XK and S have similar gaps and different E; X and XK differ fivefold in gap and agree
+  on E. So a gap-controlled crossover (a near-grazing regime giving way to β = 0 for Ω ≫ 1/(Z₂₂ d²) ~ 10⁴) is not
+  supported as a one-variable account.
+- **The ordering that holds is by μ** (equal μ gives equal E), the reading §134.17 called confounded.
+- **This is in tension with §134.17's β = 0 for every μ.** Rule 14: killing suspect 5 rests entirely on that one
+  linear computation. It needs an independent check before it is leaned on (THEORIES, T-CASC-az).
+
+#### 134.19 §134.17's β = 0 re-verified independently: the linear-saddle computation is correct
+
+*Scope: XK's (μ, c), the Gaussian Green's-function integral of §134.17, checked two independent ways
+(`experiments/joint_action/saddle_inner_check.py`; the criteria were revised in `saddle_inner_grid.py` before
+running).*
+
+- **The first design was infeasible as registered, and is recorded as such.** A grid solve of the stationary
+  Fokker–Planck equation with the source at ρ = 30 cannot reach the density at H, which is e^{−900}: a direct sparse
+  solve resolves only about 1e−16 of its peak. The grid's "v(0) ≈ 1e−76" was round-off, alongside 212 625 negative
+  values. The registered V1 and V2 could only have printed noise (rule 19).
+- **W1, normalisation: held.** ∫G_t dy = 1.00000000 at t = 0.3, 1, 3 and 10, by quadrature in B's eigencoordinates.
+  An X₁–X₂ grid had read 9.195 at t = 10; that was a quadrature artefact of the Gaussian's thin, tilted ridge.
+- **W2, Monte Carlo: held by its registered trend in dt.** 10⁶ Euler–Maruyama paths from ρ = 2, with a 10-batch sigma.
+  MC/Gaussian at H is 0.932 (z = −3.2) at dt = 1e−3 and 0.992 (z = −0.3) at 5e−4. On the ray it is 0.988, then 0.994.
+  This is the scheme's O(dt) bias shrinking toward 1.
+- **So §134.17 stands.** The linear saddle fed along the incoming optimal path gives β = 0, and suspect 5 stays dead
+  as a mechanism. The tension with §134.18's μ-ordering is now a modelling question: what the full chain carries into
+  H that a linear saddle fed along a single incoming path does not.

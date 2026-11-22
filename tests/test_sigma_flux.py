@@ -160,3 +160,22 @@ def test_saddle_exponent_moves_with_mu():
     k = json.loads((ROOT / "results" / "density_saddle.json").read_text())
     es, ek = E(s, "2800", "4000"), E(k, "2800", "4000")
     assert ek - es >= 0.05 and abs(es - E(s, "1600", "2800")) < 0.02
+
+
+def test_linear_saddle_is_wkb_regular_at_both_mu():
+    """§134.17: the exact linear inner saddle gives beta = 0 (|beta| <= 0.002 over r = 5-200) at XK's and S's (mu, c)."""
+    import numpy as np
+    for tag in ("xk", "s"):
+        run = json.loads((ROOT / "results" / f"saddle_inner_{tag}.json").read_text())["runs"]["1e+06"]
+        r, sl = np.array(run["r"]), np.array(run["slope"]) / 2
+        m = (r >= 5) & (r <= 200)
+        assert np.all(np.abs(sl[m]) <= 0.002)
+
+
+def test_gaussian_inner_saddle_verified():
+    """§134.19: the closed-form Green's function integrates to 1, and Monte Carlo agrees with the time-integrated
+    density to within 1% at the finer dt (|z| < 2)."""
+    c = json.loads((ROOT / "results" / "saddle_inner_check_xk.json").read_text())
+    assert all(abs(v - 1) < 1e-6 for v in c["W1"].values())
+    fine = c["W2"]["0.0005"]
+    assert all(abs(r["ratio"] - 1) < 0.01 and abs(r["z"]) < 2 for r in fine.values())

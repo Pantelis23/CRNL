@@ -5615,6 +5615,35 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
     S's tail uncertainty kills it.
   - **Kill test, measured:** a third μ, for example pair Z (μ = 4.61). Its excess must fall between S and XK.
   - **Separately, still unexplained:** why the density excess over-predicts the core's flux exponent (§134.14).
+  **→ §134.17: the exact local part, run. The linear saddle gives β = 0 at both μ, so suspect 5 is dead as a
+  mechanism.** §134.16's "moves with μ" is confounded, because S also changed Σ. The excess is non-local.
+  **Open (T-CASC-az): what non-local inflow makes the density at H grow as Ω^{0.37}.**
+  - **Leading suspect: 4, ridge collection.** Probability reaching Σ's far, nearly flat ridge (W − W\* about 1e−4)
+    drains into H along Σ.
+  - **Kill test, direct, in the exact chain:** absorb the Q-process on Σ's far part, the states just below the cut
+    for x₁ < x_cut, so ridge probability cannot reach H, and re-measure E at H for x_cut = 2.0, 2.5, 2.8 at
+    Ω = 400–1600.
+    - Suspect 4 predicts E collapses toward 0 as more of the ridge is cut.
+    - If E is unchanged with the whole far ridge absorbed, suspect 4 dies too, and the inflow must be named anew.
+  **→ §134.18: that kill test is unrunnable as designed.** All three pairs' optimal paths run within about one tube
+  width of Σ near H, so absorbing the ridge also cuts the path. The orbit-to-Σ gap does not order E (XK ≈ S in gap,
+  different E; X ≪ XK in gap, same E). μ does order it, in tension with §134.17.
+  **First, re-verify §134.17** (rule 14: a withdrawal is a claim). Check `saddle_inner.py` against an independent
+  solve of the same linear saddle: the stationary Fokker–Planck equation on a grid with the same far source, or a
+  2-D linear-saddle birth–death chain solved exactly. If the independent solve finds β ≠ 0, §134.17 is withdrawn and
+  suspect 5 returns. If it confirms 0, the μ-ordering needs a non-linear or non-local cause, still unnamed.
+  **→ §134.19: confirmed.** The Gaussian computation passes normalisation (to 1e−8) and Monte Carlo (0.992 and 0.994
+  at the finer dt). β = 0 for the linear saddle stands.
+  **Open (T-CASC-ba): what the full chain carries into H that the linear saddle does not.** Candidates, each with a
+  kill test:
+  - **(1) Outer data off the asymptotic ray.** The real incoming tube overlaps Σ (§134.18), so the outer data at
+    the inner scale is not the single-ray WKB the model assumes. Kill test: feed the linear saddle from the exact
+    chain's own density on a circle of stretched radius R around H at Ω = 1600 (the measured P there, not a far
+    point source), and see whether it reproduces E.
+  - **(2) Nonlinearity at scale Ω^{−½}:** the curvature of Σ and of the drift across the inner region. Kill test:
+    add the quadratic drift terms at H to the inner model.
+  - **(3) The jump process.** The CME's non-Gaussian increments at the saddle. Kill test: the same pair's
+    diffusion (Langevin) approximation, solved like the Q-process. If its E matches the CME's, (3) dies.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

@@ -241,3 +241,13 @@ def test_grazing_limit_formula():
         assert e < f and abs(e / f - 1) < 0.03
     g = json.loads((ROOT / "results" / "saddle_graze_grid4.json").read_text())
     assert all(abs(a - b) <= 0.0025 for v in g.values() for a, b in zip(v["E_grid4"], v["E_grid1"]))
+
+
+def test_finite_gap_form_has_the_right_structure():
+    """§134.31: E0 F(z) orders the geometries as the linear model does, and reaches its limits (X-like near E0 = 0.404,
+    the control decaying); its residual against the model stays within 0.012 for the three grazing geometries."""
+    g = json.loads((ROOT / "results" / "graze_formula.json").read_text())
+    for name in ("XK_like", "X_like", "S_like"):
+        assert max(abs(a - b) for a, b in zip(g[name]["E_formula"], g[name]["E_linear"])) < 0.012
+    assert g["X_like"]["E_formula"][-1] > g["XK_like"]["E_formula"][-1] > g["S_like"]["E_formula"][-1]
+    assert g["control_gap0.10"]["E_formula"][-1] < 0.02

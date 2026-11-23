@@ -15456,3 +15456,32 @@ running (`results/saddle_graze_limit_dips.json`).*
 - So all four μ approach (μ − 1)/(2μ) from below with no turnaround. The formula is supported at every μ tested.
 - **Rule 13 again.** The grid needed for convergence grows with λ. The 4× grid that sufficed at μ = 5.21 and 10 was
   not enough at small μ and large λ.
+
+#### 134.31 A closed form for the finite gap, E = E₀·F(z): the right structure, missing subleading terms
+
+*Scope: the linear saddle's converged-grid values (§134.29) against a leading-order Laplace derivation
+(`experiments/joint_action/graze_formula.py`). The derivation and its criteria were written before comparing.*
+
+**Derivation.** The source sits off Σ by a stretched λg₀. After the inflow reaches the inner scale, the Gaussian at H
+carries exp(−λ²g₀²/(e^{2t} − 1)) beyond the action, so v(H)·e^{S(H)} ∝ erf(z)/(λg₀). That gives:
+
+> **E = E₀·F(z)**, with F(z) = 2z·e^{−z²}/(√π·erf z) and z = g₀·L₀^{−1/μ}·λ^{1−1/μ}.
+
+It reproduces both limits: E₀ as z → 0, and 0 as z → ∞.
+
+| geometry | z | formula | linear model | max \|Δ\| |
+|---|---|---|---|---|
+| XK-like | 0.10–0.26 | 0.400 → 0.389 | 0.397 → 0.381 | 0.009 |
+| X-like | 0.02–0.06 | 0.404 → 0.403 | 0.401 → 0.392 | 0.011 |
+| S-like | 0.07–0.16 | 0.348 → 0.345 | 0.346 → 0.339 | 0.007 |
+| control | 0.95–2.42 | 0.170 → 0.007 | 0.204 → 0.047 | 0.050 |
+
+- **F1 failed as registered** (within 0.01 everywhere). The scaling variable, both limits and the ordering are right.
+  Two subleading terms are missing:
+  - **Small z:** an offset of about 0.01 at finite λ. The g = 0 model itself reaches E₀ only slowly (§134.29).
+  - **Large z:** the model's decay is slower than erf's tail.
+- **F2 is therefore not credited to the derivation.** For the record, the formula gives 0.389 for XK against the
+  chain's 0.374.
+- **What stands.** The mechanism (§134.28: the linear saddle fed along the near-grazing path) is confirmed
+  numerically in absolute terms, and the zero-gap limit E₀ = (μ − 1)/(2μ) is supported (§134.29–30). The full
+  E(μ, z) is known only as the leading-order form above.

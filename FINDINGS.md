@@ -15440,3 +15440,19 @@ orders accordingly: X-like (smallest gap) 0.392, XK-like 0.381, S-like 0.339 bel
 
 **§134.28 re-verified on the 4× grid:** every window moves by at most 0.002 (X-like's last window 0.3904 → 0.3922;
 XK-like's 0.3800 → 0.3805). It stands.
+
+#### 134.30 The small-μ dips of §134.29 were grid artefacts; E₀ = (μ − 1)/(2μ) now holds monotonically at all four μ
+
+*Scope: as §134.29, μ = 2 and 3.33, with a 16× time grid and λ² up to 1 638 400. The reading was registered before
+running (`results/saddle_graze_limit_dips.json`).*
+
+| μ | formula | 4× grid | 16× grid |
+|---|---|---|---|
+| 2 | 0.2500 | 0.2475 / 0.2467 / 0.2402, falling | **0.2480 / 0.2487 / 0.2484** |
+| 3.33 | 0.3500 | 0.3439 / 0.3410 / 0.3244, falling | **0.3454 / 0.3468 / 0.3472**, rising |
+
+- On the 4× grid the dips grew with λ. On the 16× grid they are gone: μ = 2 sits about 0.002 below its limit, and
+  μ = 3.33 rises monotonically toward it.
+- So all four μ approach (μ − 1)/(2μ) from below with no turnaround. The formula is supported at every μ tested.
+- **Rule 13 again.** The grid needed for convergence grows with λ. The 4× grid that sufficed at μ = 5.21 and 10 was
+  not enough at small μ and large λ.

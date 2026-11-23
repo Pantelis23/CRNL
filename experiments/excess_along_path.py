@@ -26,7 +26,9 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-ORBIT = Path("/tmp/claude-1000/bvp_xk_orbit.npy")
+PAIR = os.environ.get("PAIR", "XK")
+HK = {"XK": "1.2", "X": "1.0"}[PAIR]
+ORBIT = Path(f"/tmp/claude-1000/bvp_{PAIR.lower()}_orbit.npy")
 
 
 def orbit():
@@ -42,7 +44,7 @@ def orbit():
         "    t, Y, epsA = extend(r, 0.2 if oa > 3e-7 else 0.0, 1.0 if ob > 3e-7 else 0.0)\n"
         f"np.save('{ORBIT}', r.sol(np.linspace(0, r.x[-1], 200001)))\n"
         "print('orbit W', W)\n")
-    env = dict(os.environ, HILL_K="1.2", BVP_DROP="0")
+    env = dict(os.environ, HILL_K=HK, BVP_DROP="0")
     subprocess.run([sys.executable, "-c", code], cwd=ROOT / "experiments" / "joint_action", env=env, check=True)
     return np.load(ORBIT)
 
@@ -53,10 +55,10 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         ec.SOLVER = sys.argv[2]
     Yo = orbit()
-    A, B = element(ARMS["XK"][0]), element(ARMS["XK"][1])
+    A, B = element(ARMS[PAIR][0]), element(ARMS[PAIR][1])
     H = np.array([3.0, B.r2])
     sys.path.insert(0, str(ROOT / "experiments" / "joint_action"))
-    os.environ["HILL_K"] = "1.2"
+    os.environ["HILL_K"] = HK
     from model import lam1, mu1, lam2, mu2
     Dh = np.sqrt(np.array([lam1(3.0) + mu1(3.0), lam2(3.0, B.r2) + mu2(B.r2)]))
     dist = np.sqrt(((Yo[0] - H[0]) / Dh[0]) ** 2 + ((Yo[1] - H[1]) / Dh[1]) ** 2)   # |D^{-1/2}(x - H)|
@@ -82,7 +84,8 @@ if __name__ == "__main__":
                            "dist_err": float(abs(dist[k] - target) / target)}
         out[str(om)] = row
         print(om, " ".join(f"r{k}:{v['L']:+.3f}" for k, v in row.items()), flush=True)
-    (ROOT / "results" / "excess_along_path.json").write_text(json.dumps(out, indent=1))
+    name = "excess_along_path.json" if PAIR == "XK" else f"excess_along_path_{PAIR}.json"
+    (ROOT / "results" / name).write_text(json.dumps(out, indent=1))
     ks = sorted(out, key=int)
     for r in rs:
         s = [(out[b][str(r)]["L"] - out[a][str(r)]["L"]) / math.log(int(b) / int(a)) for a, b in zip(ks, ks[1:])]
@@ -95,3 +98,12 @@ if __name__ == "__main__":
 # P1 FAILED: not monotone. A DEPLETION zone at r ~ 5-20 (density falls further below the WKB continuation as Omega
 # grows, slopes to -0.9) separates the regular outer path from the excess inside r ~ 2. P2's half-crossover is
 # ill-defined on a non-monotone profile -- recorded, not read. My expectation (monotone, r_c ~ few) was WRONG.
+
+# REGISTERED BEFORE THE PAIR-X RUN (§134.26, suspect 6's kill test). Depletion depth = the most negative last-window
+# (1200 -> 1600) slope over r = 5, 10, 20. XK: -0.682. X's orbit lies 5x closer to Sigma in tube units (§134.18), so
+#   X's depth < -0.682 - 0.1 (deeper)            -> suspect 6 (effective grazing) SURVIVES;
+#   X's depth >= -0.682 (not deeper)              -> suspect 6 DIES;
+#   in between                                    -> UNRESOLVED.
+# OUTCOME (§134.26), pair X, last window 1200 -> 1600: r=5 -0.856, r=10 -1.094, r=20 -0.565 (XK: -0.682 / -0.619 / -0.288).
+# X's depth -1.094 < -0.782 -> suspect 6 SURVIVES as registered; deeper at every r in the zone. Caveat (rule 9): X and
+# XK also differ in coupling, W* and Sigma's shape, so this supports suspect 6 but does not isolate it.

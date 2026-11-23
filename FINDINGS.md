@@ -15327,3 +15327,21 @@ snapped to the pin, so those cells are excluded.
 > along the most probable exit path, and the exit acquires anomalous Ω-powers. Asymptotically XK's μ = 5.2, so it
 > should not graze. But §134.18 found the path within about one tube width of Σ at every accessible Ω, so it may graze
 > effectively in this range. Kill test in THEORIES (T-CASC-ba).
+
+#### 134.26 Suspect 6's kill test: the depletion is deeper where the path runs closer to Σ
+
+*Scope: pair X against XK, cap 1.1, Ω = 400–1600 (local), on each pair's own BVP orbit at fixed stretched r
+(`experiments/excess_along_path.py`, `PAIR=X`). The criterion was registered before running.*
+
+| r | X, last window | XK, last window |
+|---|---|---|
+| 5 | −0.856 | −0.682 |
+| 10 | **−1.094** | −0.619 |
+| 20 | −0.565 | −0.288 |
+
+- **Registered verdict: suspect 6 survives.** X's depletion depth is −1.094, beyond the threshold of −0.782. X's
+  path lies about 5× closer to Σ in tube units (§134.18), and its depletion is deeper at every r in the zone, as
+  effective grazing predicts.
+- **Caveat (rule 9):** X and XK also differ in coupling, W\* and Σ's shape. This supports suspect 6; it does not
+  isolate it.
+- The r = 40 cells at Ω = 400 and 800 are invalid, again because the point would lie beyond the orbit.

@@ -197,3 +197,12 @@ def test_depletion_zone_along_the_incoming_path():
     d = json.loads((ROOT / "results" / "excess_along_path.json").read_text())
     s = {r: (d["1600"][r]["L"] - d["1200"][r]["L"]) / math.log(1600 / 1200) for r in ("1", "5", "10")}
     assert s["1"] > 0.2 and s["5"] < -0.3 and s["10"] < -0.3
+
+
+def test_depletion_deeper_for_the_closer_path():
+    """§134.26: pair X (path 5x closer to Sigma) has a deeper depletion than XK at r = 5, 10 and 20."""
+    import math
+    x = json.loads((ROOT / "results" / "excess_along_path_X.json").read_text())
+    k = json.loads((ROOT / "results" / "excess_along_path.json").read_text())
+    sl = lambda d, r: (d["1600"][r]["L"] - d["1200"][r]["L"]) / math.log(1600 / 1200)
+    assert all(sl(x, r) < sl(k, r) for r in ("5", "10", "20")) and min(sl(x, r) for r in ("5", "10", "20")) < -0.782

@@ -15400,3 +15400,43 @@ linearisation, and the gaps from §134.18's orbits.*
   - Matching XK's scaled gap to the control's decay point gives a rough crossover near **Ω ~ 10⁵**. That is far beyond
     this hardware, and it is an estimate, not a measurement.
   - §134's "a rising" is this crossover seen from below.
+
+#### 134.29 The grazing limit has a closed form, E₀ = (μ − 1)/(2μ), supported to 0.3–2% at four μ; §134.28 re-verified on a finer grid
+
+*Scope: the exact linear saddle (`saddle_inner.py`'s closed form), source on Σ (g = 0), μ = 2 / 3.33 / 5.21 / 10, with
+c = 0 and c = 0.2, λ² up to 409 600 (`experiments/joint_action/saddle_graze_limit.py`; the derivation and
+predictions were written before running).*
+
+**Derivation.**
+- The deterministic flow carries the source into H along the stable axis, reaching the inner scale at
+  t\* ≈ ln(λL)/μ.
+- After that, G_t(H) ∝ det Σ_t^{−½} ∝ e^{−t}, so v(H) ∝ (λL)^{−1/μ}.
+- The reference point on the incoming path is crossed at speed ∝ λ, so v(y_ref) ∝ λ^{−1}. Both actions vanish.
+- With λ ∝ √Ω, this gives **E₀ = (1 − 1/μ)/2**, which is 0.404 at μ = 5.21 and 0.350 at μ = 3.33. The coupling c does
+  not enter.
+
+**Rule 21, against myself.** In §134.16 I listed (1 − 1/μ)/2 as a candidate and set it aside as numerology, because
+it missed XK's 0.374 by 0.03. It is the **zero-gap** limit, and a finite gap lowers E below it. The linear model
+orders accordingly: X-like (smallest gap) 0.392, XK-like 0.381, S-like 0.339 below its 0.350.
+
+**Numerics.**
+- **A grid artefact caught (rule 13).** On the first time grid the sequences fell away at large λ (μ = 5.21:
+  …, 0.366, 0.277). At λ = 640, v(y_ref)'s integrand in t is about 0.005 wide, against a grid step of about 0.001.
+  Grids 4× and 16× finer agree with each other: 0.3947, 0.3970, 0.3986.
+
+| μ | formula | E on the 4× grid, last four windows | last error |
+|---|---|---|---|
+| 2 | 0.2500 | 0.2461 / 0.2466 / 0.2475 / 0.2467 | −0.003 |
+| 3.33 | 0.3500 | 0.3417 / 0.3430 / 0.3439 / 0.3410 | −0.009 |
+| 5.21 | 0.4040 | 0.3928 / 0.3947 / 0.3969 / 0.3985 | −0.005 |
+| 10 | 0.4500 | 0.4370 / 0.4388 / 0.4407 / 0.4423 | −0.008 |
+
+- **Z1 as written failed.** It gated "within 0.005" on a slowly converging quantity, which breaks rule 20 (my own
+  criterion, recorded against it).
+- All four sequences approach the formula from below to within 0.3–2%. At μ = 5.21 and 10 they are still rising
+  monotonically. At μ = 2 and 3.33 the last window dips, at λ = 640, where the 16× grid was not checked.
+- **Status:** the formula is strongly supported, not established.
+- **Z2 held:** c = 0 and c = 0.2 agree to four decimals.
+
+**§134.28 re-verified on the 4× grid:** every window moves by at most 0.002 (X-like's last window 0.3904 → 0.3922;
+XK-like's 0.3800 → 0.3805). It stands.

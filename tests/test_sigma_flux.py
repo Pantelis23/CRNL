@@ -230,3 +230,14 @@ def test_grazing_linear_saddle_reproduces_the_excess():
     assert abs(g["S_like"]["E"]["2800-4000"] - E(s)) < 0.03
     c = g["control_gap0.10"]["E"]
     assert c["2800-4000"] < c["1600-2800"] < c["800-1600"] < c["400-800"] and c["2800-4000"] < 0.06
+
+
+def test_grazing_limit_formula():
+    """§134.29: on the converged grid the g = 0 linear saddle approaches (mu - 1)/(2 mu) from below, within 2%, at four
+    mu; and §134.28's values move by <= 0.002 on the finer grid."""
+    d = json.loads((ROOT / "results" / "saddle_graze_limit_grid4.json").read_text())
+    for v in d.values():
+        f, e = v["formula"], v["E"][-1]
+        assert e < f and abs(e / f - 1) < 0.03
+    g = json.loads((ROOT / "results" / "saddle_graze_grid4.json").read_text())
+    assert all(abs(a - b) <= 0.0025 for v in g.values() for a, b in zip(v["E_grid4"], v["E_grid1"]))

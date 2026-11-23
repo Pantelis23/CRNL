@@ -216,3 +216,17 @@ def test_depletion_ordering_x_deepest_xn_xk_close():
     depth = {p: min((v["1600"][r]["L"] - v["1200"][r]["L"]) / math.log(1600 / 1200) for r in ("5", "10", "20"))
              for p, v in d.items()}
     assert depth["X"] < depth["XK"] - 0.2 and depth["X"] < depth["XN"] - 0.2 and abs(depth["XN"] - depth["XK"]) < 0.05
+
+
+def test_grazing_linear_saddle_reproduces_the_excess():
+    """§134.28: the linear saddle fed along the chain's near-grazing path matches the chain's saddle excess in absolute
+    terms (XK within 0.015, S within 0.03); a non-grazing control decays."""
+    import math
+    g = json.loads((ROOT / "results" / "saddle_graze.json").read_text())
+    k = json.loads((ROOT / "results" / "density_saddle.json").read_text())
+    s = json.loads((ROOT / "results" / "density_mu_S.json").read_text())
+    E = lambda d: (d["4000"]["L"] - d["2800"]["L"]) / math.log(4000 / 2800)
+    assert abs(g["XK_like"]["E"]["2800-4000"] - E(k)) < 0.015
+    assert abs(g["S_like"]["E"]["2800-4000"] - E(s)) < 0.03
+    c = g["control_gap0.10"]["E"]
+    assert c["2800-4000"] < c["1600-2800"] < c["800-1600"] < c["400-800"] and c["2800-4000"] < 0.06

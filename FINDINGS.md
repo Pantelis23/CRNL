@@ -15367,3 +15367,36 @@ These are last-window slopes, 1200 → 1600.
   before registering.
 - X remains clearly the deepest; XN and XK are indistinguishable. Suspect 6 stands where §134.26 left it: supported
   by X against XK, not isolated.
+
+#### 134.28 The saddle excess is a near-grazing crossover: the exact linear saddle reproduces it in absolute terms at two μ
+
+*Scope: Maier–Stein's normal form (exact Gaussian Green's functions, `saddle_inner.py`'s verified closed form, §134.19)
+fed by a source on the chain's own incoming geometry. The source sits a normal offset g₀ = gap/√D₂₂ from Σ and
+L₀ = 1.1/√D₁₁ upstream along it. The chain's Ω-scaling is a uniform stretch by √(Ωλ_u). E_lin is the excess at H
+relative to a fixed point on the incoming path, the analogue of the chain's E (`experiments/joint_action/saddle_graze.py`;
+predictions registered before each run). No parameter is fitted: μ, c, D and λ_u come from each pair's
+linearisation, and the gaps from §134.18's orbits.*
+
+| geometry | μ | E_lin, windows 400→800 / 800→1600 / 1600→2800 / 2800→4000 | chain's E at H |
+|---|---|---|---|
+| XK-like (gap 0.0107) | 5.21 | +0.397 / +0.388 / **+0.384 / +0.380** | **+0.373 / +0.374** |
+| X-like (gap 0.0024) | 5.21 | +0.400 / +0.393 / +0.391 / +0.390 | +0.393 → +0.359 at 1600, converging from above |
+| S-like (gap 0.0122) | 3.33 | +0.346 / +0.340 / +0.339 / **+0.339** | **+0.318**, rising; geometric-tail estimate ≈ 0.337 |
+| control (gap 0.10) | 5.21 | +0.204 / +0.132 / +0.077 / +0.047 | — |
+
+- **G1 holds:** XK-like matches the chain within 0.01.
+- **S holds** (registered before running): within 0.021 of the chain, and on its extrapolated limit. **The μ-dependence
+  is carried by the model.**
+- **G2 as written failed** at 1600 → 2800 (0.077 against |E| < 0.05) and held at 2800 → 4000. That gate was a fixed
+  tolerance on a converging quantity (rule 20), recorded against the criterion. The control is plainly decaying
+  toward 0.
+- **What this establishes.** The Ω-power at the joint saddle comes from the incoming optimal path running within about
+  a tube width of Σ. It is a finite-Ω crossover controlled by the scaled gap g√(Ωλ_u). At small scaled gap it barely
+  depends on the gap (XK and X agree, as in the chain) and depends on μ. At large scaled gap it decays to 0.
+- Suspect 6 becomes a **mechanism with independent absolute confirmations**, two pairs at different μ plus a control.
+  It is still not a closed form for E(μ) (rule 21: no formula is read from two values).
+- **The consequence for a_∞.** For a fixed physical gap the scaled gap grows as √Ω, so the excess must die away and
+  **a_∞ = 0**, consistent with Maier–Stein's O(1) prefactor for μ > 1.
+  - Matching XK's scaled gap to the control's decay point gives a rough crossover near **Ω ~ 10⁵**. That is far beyond
+    this hardware, and it is an estimate, not a measurement.
+  - §134's "a rising" is this crossover seen from below.

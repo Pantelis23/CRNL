@@ -5652,6 +5652,13 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   - **This points at candidate 1.** Next: the exact chain's L along the BVP orbit at fixed *stretched* distance
     from H (not fixed physical distance, as §134.12 did), to see where along the incoming path the regular
     ln K(x) turns into the growing excess.
+  **→ §134.25: not monotone.** There is a depletion zone at stretched r ≈ 5–20 along the incoming path (slopes down
+  to −0.9), and the excess sits only inside r ≈ 2.
+  **Suspect 6: effective grazing at finite Ω** (Maier–Stein's μ < 1 phenomenology arising at μ = 5.2, because the
+  path lies within about a tube width of Σ).
+  - **Kill test:** the depletion's depth must scale with the path-to-Σ gap in tube units, (gap)·√(ΩZ₂₂).
+  - Compare X (gap 5× smaller than XK) against XK at matched stretched r. If X's depletion is not deeper, suspect 6
+    dies.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

@@ -188,3 +188,12 @@ def test_excess_profile_rises_up_the_incoming_side():
     d = json.loads((ROOT / "results" / "excess_profile.json").read_text())
     s = [(d["1600"][r]["L_flat"] - d["1200"][r]["L_flat"]) / math.log(1600 / 1200) for r in ("-3", "-1", "0", "1", "3", "10")]
     assert all(b > a for a, b in zip(s, s[1:])) and s[0] < 0.15 and s[-1] > 1.0
+
+
+def test_depletion_zone_along_the_incoming_path():
+    """§134.25: on the orbit at fixed stretched distance, r = 5 and 10 have negative last-window slopes while r = 1 is
+    positive (the excess sits only near H)."""
+    import math
+    d = json.loads((ROOT / "results" / "excess_along_path.json").read_text())
+    s = {r: (d["1600"][r]["L"] - d["1200"][r]["L"]) / math.log(1600 / 1200) for r in ("1", "5", "10")}
+    assert s["1"] > 0.2 and s["5"] < -0.3 and s["10"] < -0.3

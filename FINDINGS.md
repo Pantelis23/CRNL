@@ -15301,3 +15301,29 @@ power limit). At 3.0e12 flops per solve:
 - **Where krsolve stands:** about 25–30% of the scalar ceiling and 5–8% of the vector ceiling. The rest needs
   KernRift: register allocation for loop-carried f64 values, inlining, FMA and SIMD. These are listed in
   `experiments/krsolve/KERNRIFT_REQUESTS.md`.
+
+#### 134.25 Along the incoming path the density is depleted a few tube widths from H; the excess sits only inside about 2
+
+*Scope: XK, cap 1.1, Q-process law (P/ψ), Ω = 400–1600 (local), at points on the BVP orbit a fixed stretched
+distance r = √Ω·|D^{−½}(x − H)| from H (`experiments/excess_along_path.py`; predictions registered before running).*
+
+| r | dL/d ln Ω per window: 400→800 / 800→1200 / 1200→1600 |
+|---|---|
+| 1 | +0.18 / +0.25 / +0.29, heading toward H's +0.37 |
+| 2 | −0.15 / +0.03 / +0.11 |
+| 5 | −0.92 / −0.96 / −0.68 |
+| 10 | −0.35 / −0.48 / −0.62 |
+| 20 | −0.10 / −0.25 / −0.29 |
+
+At r = 40 only the 1200 → 1600 window is valid (+0.40). At Ω = 400 and 800 that point would lie beyond the orbit and
+snapped to the pin, so those cells are excluded.
+
+- **P1 failed: the profile is not monotone.** A **depletion zone** at r ≈ 5–20, where the density falls further
+  below its WKB continuation as Ω grows, separates the regular outer path (§134.12) from the excess inside r ≈ 2.
+- P2's half-crossover cannot be read on a non-monotone profile. That is recorded, not forced.
+- My expectation, monotone with a crossover of a few units, was wrong.
+
+> **Suspect 6 (not a result): effective grazing.** In Maier–Stein's grazing case (μ < 1), K(x) vanishes approaching H
+> along the most probable exit path, and the exit acquires anomalous Ω-powers. Asymptotically XK's μ = 5.2, so it
+> should not graze. But §134.18 found the path within about one tube width of Σ at every accessible Ω, so it may graze
+> effectively in this range. Kill test in THEORIES (T-CASC-ba).

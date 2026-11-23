@@ -206,3 +206,13 @@ def test_depletion_deeper_for_the_closer_path():
     k = json.loads((ROOT / "results" / "excess_along_path.json").read_text())
     sl = lambda d, r: (d["1600"][r]["L"] - d["1200"][r]["L"]) / math.log(1600 / 1200)
     assert all(sl(x, r) < sl(k, r) for r in ("5", "10", "20")) and min(sl(x, r) for r in ("5", "10", "20")) < -0.782
+
+
+def test_depletion_ordering_x_deepest_xn_xk_close():
+    """§134.27: X's depletion is deepest; XN and XK (gap ratio ~1.5) agree within 0.05 at the deepest r."""
+    import math
+    d = {p: json.loads((ROOT / "results" / f).read_text()) for p, f in
+         (("X", "excess_along_path_X.json"), ("XK", "excess_along_path.json"), ("XN", "excess_along_path_XN.json"))}
+    depth = {p: min((v["1600"][r]["L"] - v["1200"][r]["L"]) / math.log(1600 / 1200) for r in ("5", "10", "20"))
+             for p, v in d.items()}
+    assert depth["X"] < depth["XK"] - 0.2 and depth["X"] < depth["XN"] - 0.2 and abs(depth["XN"] - depth["XK"]) < 0.05

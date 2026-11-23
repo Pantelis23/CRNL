@@ -15345,3 +15345,25 @@ snapped to the pin, so those cells are excluded.
 - **Caveat (rule 9):** X and XK also differ in coupling, W\* and Σ's shape. This supports suspect 6; it does not
   isolate it.
 - The r = 40 cells at Ω = 400 and 800 are invalid, again because the point would lie beyond the orbit.
+
+#### 134.27 The isolating test at fixed μ (pair XN): unresolved, because the gap lever was too small
+
+*Scope: pair XN (XK with Hill exponent 2; the same μ = 5.21 at H, different c and Σ), cap 1.1, Ω = 400–1600 (local).
+W\*(XN) = 0.1482882 by BVP; the rays' Γ is off by about 7e−6 again. The criterion was registered after measuring the
+gap and before measuring the depletion.*
+
+| r | XN (gap 0.32–0.89 tube widths at Ω = 1600) | XK (0.22–0.59) | X (0.05–0.12) |
+|---|---|---|---|
+| 5 | −0.517 | −0.682 | −0.856 |
+| 10 | −0.717 | −0.619 | −1.094 |
+| 20 | −0.251 | −0.288 | −0.565 |
+
+These are last-window slopes, 1200 → 1600.
+
+- **Registered verdict: UNRESOLVED.** XN's depletion depth (−0.717) is within ±0.05 of XK's (−0.682). Per r it is
+  mixed: shallower at 5 and 20, deeper at 10.
+- **The design had a flaw (rule 19).** XN's gap is only about 1.5× XK's, against X's 5×, which is too little lever to
+  show an ordering. The premise "the gaps differ enough" should have been checked against the expected effect
+  before registering.
+- X remains clearly the deepest; XN and XK are indistinguishable. Suspect 6 stands where §134.26 left it: supported
+  by X against XK, not isolated.

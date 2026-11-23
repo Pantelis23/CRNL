@@ -27,7 +27,8 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 PAIR = os.environ.get("PAIR", "XK")
-HK = {"XK": "1.2", "X": "1.0"}[PAIR]
+HK = {"XK": "1.2", "X": "1.0", "XN": "1.2"}[PAIR]
+HN = {"XN": "2"}.get(PAIR, "4")
 ORBIT = Path(f"/tmp/claude-1000/bvp_{PAIR.lower()}_orbit.npy")
 
 
@@ -44,7 +45,7 @@ def orbit():
         "    t, Y, epsA = extend(r, 0.2 if oa > 3e-7 else 0.0, 1.0 if ob > 3e-7 else 0.0)\n"
         f"np.save('{ORBIT}', r.sol(np.linspace(0, r.x[-1], 200001)))\n"
         "print('orbit W', W)\n")
-    env = dict(os.environ, HILL_K=HK, BVP_DROP="0")
+    env = dict(os.environ, HILL_K=HK, HILL_N=HN, BVP_DROP="0")
     subprocess.run([sys.executable, "-c", code], cwd=ROOT / "experiments" / "joint_action", env=env, check=True)
     return np.load(ORBIT)
 
@@ -59,6 +60,7 @@ if __name__ == "__main__":
     H = np.array([3.0, B.r2])
     sys.path.insert(0, str(ROOT / "experiments" / "joint_action"))
     os.environ["HILL_K"] = HK
+    os.environ["HILL_N"] = HN
     from model import lam1, mu1, lam2, mu2
     Dh = np.sqrt(np.array([lam1(3.0) + mu1(3.0), lam2(3.0, B.r2) + mu2(B.r2)]))
     dist = np.sqrt(((Yo[0] - H[0]) / Dh[0]) ** 2 + ((Yo[1] - H[1]) / Dh[1]) ** 2)   # |D^{-1/2}(x - H)|
@@ -107,3 +109,13 @@ if __name__ == "__main__":
 # OUTCOME (§134.26), pair X, last window 1200 -> 1600: r=5 -0.856, r=10 -1.094, r=20 -0.565 (XK: -0.682 / -0.619 / -0.288).
 # X's depth -1.094 < -0.782 -> suspect 6 SURVIVES as registered; deeper at every r in the zone. Caveat (rule 9): X and
 # XK also differ in coupling, W* and Sigma's shape, so this supports suspect 6 but does not isolate it.
+
+# REGISTERED BEFORE THE PAIR-XN RUN (§134.27, the isolating test). XN = XK with Hill exponent 2: same mu = 5.21 at H,
+# different c and Sigma. Measured first (setup, graze_gap.py): the path-to-Sigma gap in tube units at Omega = 1600 is
+# X 0.05-0.12 < XK 0.22-0.59 < XN 0.32-0.89. Suspect 6 needs depletion depth to order with the gap at FIXED mu:
+#   XN's depth > -0.682 + 0.05 (shallower than XK)  -> suspect 6 SURVIVES, with mu held fixed;
+#   XN's depth < -0.682 - 0.05 (deeper than XK)     -> suspect 6 DIES;
+#   otherwise UNRESOLVED.
+# OUTCOME (§134.27), XN, last window: r=5 -0.517, r=10 -0.717, r=20 -0.251 (XK -0.682 / -0.619 / -0.288).
+# XN's depth -0.717 is within +-0.05 of XK's -0.682 -> UNRESOLVED as registered; mixed per r. Design flaw (rule 19):
+# XN's gap is only ~1.5x XK's (vs X's 5x), too little lever to show an ordering -- the premise was not checked first.

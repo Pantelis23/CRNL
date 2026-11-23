@@ -5659,6 +5659,26 @@ prefactor is the spread exit's local growth drained by W's slope along Σ.
   - **Kill test:** the depletion's depth must scale with the path-to-Σ gap in tube units, (gap)·√(ΩZ₂₂).
   - Compare X (gap 5× smaller than XK) against XK at matched stretched r. If X's depletion is not deeper, suspect 6
     dies.
+  **→ §134.26: suspect 6 survives** its kill test: X's depletion is deeper (−1.09 against −0.68), but X also differs
+  in coupling and Σ (rule 9).
+  **→ §134.27: the fixed-μ isolating test (pair XN) is unresolved** (−0.717 against −0.682). The gap lever, about 1.5×,
+  was too small, a rule-19 design flaw.
+  ~~T-CASC-ba~~ **→ §134.28: closed.** The exact linear saddle fed along the chain's own near-grazing path reproduces
+  the saddle excess in absolute terms (XK 0.380 against 0.374; S 0.339 against 0.318, about 0.337 extrapolated). A
+  non-grazing control decays. The excess is a finite-Ω crossover in the scaled gap, so **a_∞ = 0**, with a rough
+  crossover near Ω ~ 10⁵.
+  **Open (T-CASC-bb): E(μ, gap) in closed form.**
+  - **→ §134.29–30:** the zero-gap limit **E₀ = (μ − 1)/(2μ)** is derived and approached monotonically from below at
+    μ = 2, 3.33, 5.21 and 10 on a converged grid (grid artefacts caught twice). It is independent of c. Rule 21:
+    §134.16 had set this formula aside as numerology.
+  - **→ §134.31:** a leading-order finite-gap form E = E₀·F(z), F(z) = 2z·e^{−z²}/(√π·erf z),
+    z = g₀·L₀^{−1/μ}·λ^{1−1/μ}. Its structure is right, but it misses a small-z offset of about 0.01 and a slower
+    large-z tail. F1 failed, so F2 was not credited.
+  - **→ §134.32:** a smooth stable cutoff halves the tail residual and leaves the offset, as predicted. **Parked:**
+    E₀, the mechanism and the scaling are established. Finer than about 0.01–0.02 needs the early-time expansion, and
+    the linear model already computes it exactly.
+  - *Process note:* the THEORIES updates for §134.26–134.32 failed silently (anchor mismatches inside larger
+    commands) and were restored together here. Rule 5 was broken for seven commits.
 **→ §134.2: the status, consolidated.**
 - **Results:** |a| ≤ 0.013 over Ω = 800–3400, explained by the spread-exit model with two forward tests held.
 - **Not determined: a_∞.** The extrapolating model is provably wrong within 0.012 of the saddle (the rays' ε

@@ -15485,3 +15485,24 @@ It reproduces both limits: E₀ as z → 0, and 0 as z → ∞.
 - **What stands.** The mechanism (§134.28: the linear saddle fed along the near-grazing path) is confirmed
   numerically in absolute terms, and the zero-gap limit E₀ = (μ − 1)/(2μ) is supported (§134.29–30). The full
   E(μ, z) is known only as the leading-order form above.
+
+#### 134.32 The next order (a smooth stable cutoff) fixes half the tail and none of the offset; the closed-form refinement stops here
+
+*Scope: as §134.31. Keeping the stable direction's factor exp(−b·u^{2μ}) instead of a step gives
+v(H)·e^{S(H)} ∝ I(a, b) = ∫₀^∞ exp(−a·u² − b·u^{2μ}) du (`results/graze_formula_I.json`; split predictions
+registered before running).*
+
+| geometry | max \|E_I − E_linear\| | §134.31's form |
+|---|---|---|
+| XK-like | 0.0129 | 0.009 |
+| X-like | 0.0115 | 0.011 |
+| S-like | 0.0081 | 0.007 |
+| control | 0.0240 | 0.050 |
+
+- **G-offset held:** the small-z offset is unchanged, as predicted, since I(0, b) gives E₀ exactly.
+- **G-tail failed as registered:** the control's residual halved but did not reach 0.01.
+- **So the residual has at least two sources beyond this order:** an early-time or reference-point term of about 0.01
+  at small z, and a large-z tail term this form only partly captures.
+- **The closed-form refinement stops here.** The mechanism (§134.28), the zero-gap limit (§134.29–30), the scaling
+  variable z and a_∞ = 0 stand. Finer agreement than about 0.01–0.02 needs the full early-time analysis, and the
+  linear model computes that already, exactly.

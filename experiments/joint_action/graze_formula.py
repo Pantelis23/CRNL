@@ -67,3 +67,12 @@ if __name__ == "__main__":
 # The structure is right -- the scaling variable z, both limits, the ordering -- but two subleading terms are missing:
 # a ~0.01 finite-lam offset at small z (the g = 0 model itself reaches E0 only slowly, §134.29) and a slower large-z
 # tail than erf's. F2 is therefore not credited to the derivation (formula XK 0.389 vs chain 0.374).
+
+# REGISTERED BEFORE RUNNING (§134.32): keep the stable direction's smooth factor instead of a step at u*:
+#   v(H) e^{S(H)} ~ I(a, b) = int_0^inf exp(-a u^2 - b u^{2 mu}) du, a = lam^2 g0^2, b = mu lam^2 L0^2;  Q = ln I + (1/2) ln Omega.
+# At a = 0 this is E0 exactly at every lam, so it CANNOT produce the small-z finite-lam offset (that must come from early
+# times u ~ 1 or from the reference point). Predictions: G-tail -- it closes the control's large-z residual to <= 0.01;
+# G-offset -- it leaves the small-z offset (~0.01) unchanged. Either failing says the split of the residual is wrong.
+# OUTCOME (§134.32): I-form vs linear, max |d|: XK 0.0129, X 0.0115, S 0.0081, control 0.0240 (from 0.050).
+# G-offset HELD (small-z offset unchanged, ~0.011). G-tail FAILED as registered (control halved, not <= 0.01). The
+# residual has an early-time / reference-point term (~0.01) and a tail term only partly fixed here. Refinement stopped.

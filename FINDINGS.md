@@ -15240,3 +15240,34 @@ board without ECC). A silent bit flip in a 147 GB factor would otherwise raise n
   - **Fault injection:** `corrupt-test` flips one bit of a written block, and the solve aborts with "factor block
     checksum mismatch" in both modes (tested).
   - The argument `-` in the factor slot now means an in-memory factor, so flags can follow it.
+
+#### 134.23 Why the top fronts stop scaling: per-core compute, set by krc keeping loop-carried f64s on the stack
+
+*Scope: krsolve, one fixed system (XK's Ω = 1600 Q-process: n = 18.5 M, 1.85e9 factor entries, max front 6193),
+in memory, on the local Ryzen 9 7900X (12 cores, 2 threads each). Every variant's solution was compared against the
+committed kernel's. Repeated baseline runs scatter by about ±1 s.*
+
+| variant | subtrees (s) | top (s) | result vs committed |
+|---|---|---|---|
+| committed (2×2 register block) | 28.9 | **78.0** | — |
+| column-tiled GEMM, JT = 64 / 256 / 1024 | 29.0–29.3 | 77.0–77.6 | bit-identical |
+| parallel thresholds lowered (front ≥ 256) | 29.3 | 78.1 | bit-identical |
+| 12 threads instead of 24 | 44.3 | 90.5 | bit-identical |
+| k-unrolled ×4 through `ldf()` | 84.9 | 279.8 | 9.6e−13 |
+| **k-unrolled ×2, in-body locals** | **27.3** | **70.2** | 6.8e−13 |
+
+- **The top phase is 95% `partial_lu`** (instrumented: 81 of 85 s). The serial steps (zeroing, assembly, packing and
+  writing, update push) total about 4 s.
+- **Refuted, with its mechanism:**
+  - **Shared-L3 bandwidth.** Column tiling does nothing. FINDINGS' earlier "tiling gained nothing" stands.
+  - **Serial mid-size fronts.** Lowering the parallel thresholds does nothing.
+- **Located: 12 → 24 threads gives only 1.16× on the top phase**, against 1.5× on the subtrees. The top phase is
+  FP-bound per *physical* core, and two hardware threads share one core's FP units. It runs at about 28 GFLOP/s,
+  roughly 2.3 GFLOP/s per core.
+- **The machine code shows why.** It is scalar SSE2 (`mulsd`/`addsd`, no FMA, no packed SIMD). The four loop-carried
+  accumulators live on the stack (`0xd0(%rsp)`…`0x118(%rsp)`), so every k-step does a store/load round trip per
+  accumulator, while locals declared *inside* the loop body stay in xmm registers. `ldf` is an un-inlined function
+  call, which is why the ×4 unroll written through it was 3.6× slower.
+- **Kept: the ×2 unroll with in-body locals,** 10% faster on the top phase, backward error unchanged (1.065e−16).
+- **Not a CRNL fix:** register allocation for loop-carried f64 locals in `krc` (and inlining `ldf`) would remove
+  the round trips. That is the change with a several-fold gain, and it belongs to KernRift.

@@ -458,6 +458,35 @@ fn gemm_core(u64 F, u64 ld, u64 cend, u64 k0, u64 k1, u64 r0, u64 r1) {
             f64 c10 = 0.0
             f64 c11 = 0.0
             u64 k = k0
+            // §134.23: krc keeps loop-carried f64 locals on the stack (each accumulator update is a store/load round
+            // trip) but keeps in-body locals in registers. Two k-steps per statement halve the round trips.
+            while k + 1 < k1 {
+                f64 x0 = 0.0
+                f64 x1 = 0.0
+                f64 y0 = 0.0
+                f64 y1 = 0.0
+                f64 p0 = 0.0
+                f64 p1 = 0.0
+                f64 r0v = 0.0
+                f64 r1v = 0.0
+                u64 qa = ra + k * 8
+                u64 qb = rb + k * 8
+                u64 qk = F + (k * ld + j) * 8
+                u64 qk1 = qk + ld * 8
+                unsafe { *(qa as f64) -> x0 }
+                unsafe { *((qa + 8) as f64) -> x1 }
+                unsafe { *(qb as f64) -> y0 }
+                unsafe { *((qb + 8) as f64) -> y1 }
+                unsafe { *(qk as f64) -> p0 }
+                unsafe { *((qk + 8) as f64) -> p1 }
+                unsafe { *(qk1 as f64) -> r0v }
+                unsafe { *((qk1 + 8) as f64) -> r1v }
+                c00 = c00 + (x0 * p0 + x1 * r0v)
+                c01 = c01 + (x0 * p1 + x1 * r1v)
+                c10 = c10 + (y0 * p0 + y1 * r0v)
+                c11 = c11 + (y0 * p1 + y1 * r1v)
+                k = k + 2
+            }
             while k < k1 {
                 f64 a0 = 0.0
                 f64 a1 = 0.0

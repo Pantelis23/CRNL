@@ -15271,3 +15271,33 @@ committed kernel's. Repeated baseline runs scatter by about ±1 s.*
 - **Kept: the ×2 unroll with in-body locals,** 10% faster on the top phase, backward error unchanged (1.065e−16).
 - **Not a CRNL fix:** register allocation for loop-carried f64 locals in `krc` (and inlining `ldf`) would remove
   the round trips. That is the change with a several-fold gain, and it belongs to KernRift.
+
+#### 134.24 Dynamic chunking in par_for: the hybrid laptop's top phase 25% faster; the laptop's ceilings measured
+
+*Scope: krsolve on XK's Ω = 1600 Q-process system, in memory. Local: Ryzen 9 7900X, 12 cores × 2 threads. Laptop:
+Core Ultra 9 275HX, 24 cores, no SMT; Intel specifies 8 P-cores (Lion Cove) and 16 E-cores (Skymont); AVX2 and FMA,
+no AVX-512. The laptop's binaries ran in WSL Ubuntu.*
+
+**The laptop's ceiling.** Its ceilings are my estimates from the microarchitecture and are not measured: about
+200 GFLOP/s for ideal scalar code, and about 1 TFLOP/s for AVX2 + FMA (600–800 GFLOP/s realistically under a laptop's
+power limit). At 3.0e12 flops per solve:
+
+| machine, kernel | threads | subtrees (s) | top (s) | ≈ GFLOP/s overall |
+|---|---|---|---|---|
+| desktop, §134.23 kernel | 24 | 27.3 | 70.2 | 31 |
+| desktop, + dynamic chunking | 24 | 27.4 | **65.2** | 32 |
+| laptop, §134.23 kernel | 24 / 16 / 8 | 13.5 / 22.3 / 47.3 | 47.8 / 49.8 / 62.2 | 49 |
+| **laptop, + dynamic chunking** | 24 / 16 | 13.1 / 21.5 | **36.1** / 36.7 | **61** |
+
+- **Before the change,** the laptop's top phase barely improved from 16 to 24 threads, while its subtrees scaled
+  3.5× from 8 to 24. `par_for` gave every thread an equal share of each front, so the slowest cores set the pace.
+- **Now** the range is cut into about 8 chunks per thread, claimed off an atomic counter. On the hybrid laptop the
+  top phase is 25% faster; on the uniform desktop it is 7% faster.
+- **Rounding, and a refuted prediction.** I predicted bit-identical output. It differs from the §134.23 kernel by at
+  most 1.9e−15 (10% of entries): chunk boundaries move which rows take the GEMM's scalar odd-row path, whose k-sums are
+  grouped differently from the 2×2 path since §134.23's unroll. The backward error is unchanged (1.065e−16).
+  - `test_krsolve`'s exact 1-thread versus 4-thread equality still holds, because its small lattice never reaches
+    `par_for`. On large fronts, results now differ between thread counts at about 1e−15.
+- **Where krsolve stands:** about 25–30% of the scalar ceiling and 5–8% of the vector ceiling. The rest needs
+  KernRift: register allocation for loop-carried f64 values, inlining, FMA and SIMD. These are listed in
+  `experiments/krsolve/KERNRIFT_REQUESTS.md`.

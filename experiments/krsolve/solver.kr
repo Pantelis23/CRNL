@@ -569,11 +569,42 @@ fn trailing_update(u64 F, u64 f, u64 k0, u64 k1, u64 par) {
     par_for(fn_addr("gemm_rows"), k1, f)
 }
 
+// §134.24: dynamic chunking. The range is cut into ~8 chunks per thread and each thread claims the next chunk off an
+// atomic counter, so fast cores (P-cores on a hybrid CPU) take more chunks than slow ones instead of every thread
+// waiting for the slowest equal share. Every job par_for runs does the same per-entry arithmetic however the range is
+// split, so results are bit-identical to the static split.
+static u64 PF_FP = 0
+static u64 PF_LO = 0
+static u64 PF_HI = 0
+static u64 PF_CH = 0
+static u64 PF_NEXT = 0             // heap word: next chunk index
+
+fn pf_worker(u64 unused0, u64 unused1, u64 unused2) {
+    while 1 {
+        u64 k = atomic_add(PF_NEXT, 1)
+        u64 a = PF_LO + k * PF_CH
+        if a >= PF_HI { return }
+        u64 b = a + PF_CH
+        if b > PF_HI { b = PF_HI }
+        call_ptr(PF_FP, a, b, 0)
+    }
+}
+
 fn par_for(u64 fp, u64 lo, u64 hi) {
+    if hi <= lo { return }
+    if PF_NEXT == 0 { PF_NEXT = alloc(8) }
     u64 n = hi - lo
+    u64 chunks = NTH * 8
+    u64 ch = (n + chunks - 1) / chunks
+    if ch < 1 { ch = 1 }
+    PF_FP = fp
+    PF_LO = lo
+    PF_HI = hi
+    PF_CH = ch
+    store64(PF_NEXT, 0)
     u64 w = 0
     while w < NTH {
-        thread_pool_submit(w, fp, lo + n * w / NTH, lo + n * (w + 1) / NTH, 0)
+        thread_pool_submit(w, fn_addr("pf_worker"), 0, 0, 0)
         w = w + 1
     }
     thread_pool_wait()
